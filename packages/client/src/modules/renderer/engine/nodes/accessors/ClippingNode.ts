@@ -1,5 +1,5 @@
 import { Node } from '../core/Node.js';
-import { asNode, hsl } from '../shadernode/ShaderNodes.js';
+import { hsl } from '../shadernode/ShaderNodes.js';
 import { positionView } from './PositionNode.js';
 import { diffuseColor, property } from '../core/PropertyNode.js';
 import { loop } from '../utils/LoopNode.js';
@@ -104,5 +104,5 @@ enum NodeVariant {
   Alpha = 'alpha',
 }
 
-export const clipping = () => asNode(new ClippingNode(NodeVariant.Distance));
-export const clippingAlpha = () => asNode(new ClippingNode(NodeVariant.Alpha));
+export const clipping = () => new ClippingNode(NodeVariant.Distance);
+export const clippingAlpha = () => new ClippingNode(NodeVariant.Alpha);

@@ -2,7 +2,7 @@ import { Node } from '../core/Node.js';
 import { NodeUpdateStage } from '../core/constants.js';
 import { asNode } from '../shadernode/ShaderNodes.js';
 import { attribute } from '../core/AttributeNode.js';
-import { reference, referenceBuffer } from './ReferenceNode.js';
+import { reference } from './ReferenceNode.js';
 import { add } from '../math/OperatorNode.js';
 import { normalLocal } from './NormalNode.js';
 import { positionLocal } from './PositionNode.js';
@@ -35,9 +35,10 @@ export class SkinningNode extends Node {
     if (useReference) {
       this.bindMatrixNode = reference('bindMatrix', TypeName.mat4);
       this.bindMatrixInverseNode = reference('bindMatrixInverse', TypeName.mat4);
-      this.boneMatricesNode = referenceBuffer(
+      this.boneMatricesNode = reference(
         'skeleton.boneMatrices',
         TypeName.mat4,
+        undefined,
         skinnedMesh.skeleton.bones.length,
       );
     } else {

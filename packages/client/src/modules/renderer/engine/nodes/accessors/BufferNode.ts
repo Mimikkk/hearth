@@ -1,5 +1,4 @@
 import { UniformNode } from '../core/UniformNode.js';
-import { asNode } from '../shadernode/ShaderNodes.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
 export class BufferNode<T> extends UniformNode<T> {
@@ -16,4 +15,4 @@ export class BufferNode<T> extends UniformNode<T> {
   }
 }
 
-export const buffer = <T>(value: T, type: TypeName, count: number) => asNode(new BufferNode(value, type, count));
+export const buffer = <T>(value: T, type: TypeName, count: number) => new BufferNode(value, type, count);

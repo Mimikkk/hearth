@@ -1,6 +1,5 @@
 import { InputNode } from '../core/InputNode.js';
 import { varying } from '../core/VaryingNode.js';
-import { asNode } from '../shadernode/ShaderNodes.js';
 import { Attribute, Buffer, BufferUse } from '@modules/renderer/engine/engine.js';
 import { ShaderStage, TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { BufferStep } from '@modules/renderer/engine/hearth/constants.js';
@@ -93,8 +92,7 @@ export class BufferAttributeNode<T> extends InputNode<T> {
 
 BufferAttributeNode.prototype.isBufferNode = true;
 
-export const bufferAttribute = (array, type, stride, offset) =>
-  asNode(new BufferAttributeNode(array, type, stride, offset));
+export const bufferAttribute = (array, type, stride, offset) => new BufferAttributeNode(array, type, stride, offset);
 
 export const dynamicBufferAttribute = (array, type, stride, offset) =>
   bufferAttribute(array, type, stride, offset).setUsage(BufferUse.DynamicDraw);

@@ -1,5 +1,5 @@
 import { ReferenceNode } from './ReferenceNode.js';
-import { asNode } from '../shadernode/ShaderNodes.js';
+import { asCommand } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.as.js';
 
 export class MaterialReferenceNode extends ReferenceNode {
   constructor(property, inputType, material = null) {
@@ -17,4 +17,4 @@ export class MaterialReferenceNode extends ReferenceNode {
   }
 }
 
-export const materialReference = (name, type, material) => asNode(new MaterialReferenceNode(name, type, material));
+export const materialReference = asCommand(MaterialReferenceNode);

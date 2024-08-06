@@ -1,11 +1,10 @@
 import * as Engine from '@modules/renderer/engine/engine.js';
 import {
-  MeshStandardNodeMaterial,
-  NodeUpdateStage,
-  Node,
-  asNode,
-  uniform,
   cubeTexture,
+  MeshStandardNodeMaterial,
+  Node,
+  NodeUpdateStage,
+  uniform,
 } from '@modules/renderer/engine/nodes/Nodes.js';
 
 import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
@@ -68,7 +67,7 @@ async function init() {
     'resources/textures/cube/SwedishRoyalCastle/nz.jpg',
   ]);
 
-  const instanceUniform = asNode(new InstanceUniformNode());
+  const instanceUniform = new InstanceUniformNode();
   const cubeTextureNode = cubeTexture(cTexture);
 
   const material = new MeshStandardNodeMaterial();

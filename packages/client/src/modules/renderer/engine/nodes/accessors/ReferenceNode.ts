@@ -3,9 +3,12 @@ import { NodeUpdateStage } from '../core/constants.js';
 import { uniform } from '../core/UniformNode.js';
 import { texture } from './TextureNode.js';
 import { buffer } from './BufferNode.js';
-import { asNode } from '../shadernode/ShaderNodes.js';
+import { asCommand, asNode, asNodes } from '../shadernode/ShaderNodes.js';
 import { uniforms } from './UniformsNode.js';
 import { ArrayElementNode } from '../utils/ArrayElementNode.js';
+import { ConstNode } from '@modules/renderer/engine/nodes/core/ConstNode.js';
+import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
+import { Entity } from '@modules/renderer/engine/core/Entity.js';
 
 export class ReferenceElementNode extends ArrayElementNode {
   constructor(referenceNode, indexNode) {
@@ -30,13 +33,13 @@ export class ReferenceElementNode extends ArrayElementNode {
 }
 
 export class ReferenceNode extends Node {
-  constructor(property, uniformType, object = null, count = null) {
+  constructor(property: string, uniformType: TypeName, object?: Entity, count?: ConstNode<number>) {
     super();
 
     this.property = property;
     this.uniformType = uniformType;
-    this.object = object;
-    this.count = count;
+    this.object = object ?? null;
+    this.count = count?.value ?? null;
 
     this.properties = property.split('.');
     this.reference = null;
@@ -45,8 +48,8 @@ export class ReferenceNode extends Node {
     this.stage = NodeUpdateStage.Object;
   }
 
-  element(indexNode) {
-    return asNode(new ReferenceElementNode(this, asNode(indexNode)));
+  element(index) {
+    return new ReferenceElementNode(this, asNode(index));
   }
 
   setNodeType(uniformType) {
@@ -110,5 +113,4 @@ export class ReferenceNode extends Node {
   }
 }
 
-export const reference = (name, type, object) => asNode(new ReferenceNode(name, type, object));
-export const referenceBuffer = (name, type, count, object) => asNode(new ReferenceNode(name, type, object, count));
+export const reference = asCommand(ReferenceNode);
