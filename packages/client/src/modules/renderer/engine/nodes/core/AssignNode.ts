@@ -2,6 +2,7 @@ import { TempNode } from '../core/TempNode.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { Node } from '../core/Node.js';
+import { asNode } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.as.js';
 
 export class AssignNode extends TempNode {
   constructor(
@@ -9,6 +10,8 @@ export class AssignNode extends TempNode {
     public to: Node,
   ) {
     super();
+    if (!Node.is(from)) this.from = asNode(from);
+    if (!Node.is(to)) this.to = asNode(to);
   }
 
   hasDependencies() {

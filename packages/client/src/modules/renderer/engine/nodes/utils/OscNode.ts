@@ -1,6 +1,6 @@
 import { Node } from '../core/Node.js';
 import { timerLocal } from './TimerNode.js';
-import { asNode, asCommand } from '../shadernode/ShaderNodes.js';
+import { asCommand } from '../shadernode/ShaderNodes.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
@@ -16,7 +16,7 @@ export class OscNode extends Node {
   }
 
   setup(): Node {
-    const time = asNode(this.timeNode);
+    const time = this.timeNode;
 
     switch (this.method) {
       case NodeVariant.Sine:
@@ -43,23 +43,23 @@ enum NodeVariant {
   Sawtooth = 'sawtooth',
 }
 
-export const oscSine = asCommand(
-  class extends OscNode {
-    method = NodeVariant.Sine;
-  },
-);
-export const oscSquare = asCommand(
-  class extends OscNode {
-    method = NodeVariant.Square;
-  },
-);
-export const oscTriangle = asCommand(
-  class extends OscNode {
-    method = NodeVariant.Triangle;
-  },
-);
-export const oscSawtooth = asCommand(
-  class extends OscNode {
-    method = NodeVariant.Sawtooth;
-  },
-);
+export class SineNode extends OscNode {
+  method = NodeVariant.Sine;
+}
+
+export class SquareNode extends OscNode {
+  method = NodeVariant.Square;
+}
+
+export class TriangleNode extends OscNode {
+  method = NodeVariant.Triangle;
+}
+
+export class SawtoothNode extends OscNode {
+  method = NodeVariant.Sawtooth;
+}
+
+export const oscSine = asCommand(SineNode);
+export const oscSquare = asCommand(SquareNode);
+export const oscTriangle = asCommand(TriangleNode);
+export const oscSawtooth = asCommand(SawtoothNode);

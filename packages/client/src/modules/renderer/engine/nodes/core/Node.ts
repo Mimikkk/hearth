@@ -8,7 +8,7 @@ import type { SetNode } from '@modules/renderer/engine/nodes/utils/SetNode.js';
 import type { SplitNode } from '@modules/renderer/engine/nodes/utils/SplitNode.js';
 import type { ArrayElementNode } from '@modules/renderer/engine/nodes/utils/ArrayElementNode.js';
 import { asNode } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.as.js';
-import type { ConstNode } from '@modules/renderer/engine/nodes/core/ConstNode.js';
+import { ConstNode } from '@modules/renderer/engine/nodes/core/ConstNode.js';
 import { implIndexAccess, implSwizzle } from '@modules/renderer/engine/nodes/core/Node.swizzle.js';
 import { NodeStack } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.stack.js';
 import { StackNode } from '@modules/renderer/engine/nodes/core/StackNode.js';
@@ -265,19 +265,9 @@ export class Node {
 
   assign(value: Node): this {
     const assign = Node.Map.assign;
-    NodeStack.get()!.push(Node.as(new assign(this, Node.as(value))));
+    NodeStack.get()!.push(new assign(this, value));
 
     return this;
-  }
-
-  at(index: number): ArrayElementNode {
-    const element = Node.Map.element;
-
-    return Node.as(new element(this, new ConstNode(index, TypeName.u32))) as ArrayElementNode;
-  }
-
-  setAt(index: number, value: any): void {
-    this.at(index).assign(value);
   }
 
   [index: number]: ArrayElementNode;

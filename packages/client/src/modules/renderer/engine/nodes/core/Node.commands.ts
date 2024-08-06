@@ -8,38 +8,38 @@ const asNodes = (array: any[]): Node[] => {
   return array;
 };
 
-export const implCommand = (name: string, node: any) => {
+export const implCommand = (name: string, command: any) => {
   Node.prototype[name] = function (...value: any): Node {
-    return Node.as(new node(Node.as(this), ...asNodes(value)));
+    return new command(this, ...asNodes(value));
   };
 
   StackNode.prototype[name] = function (...value: any): Node {
-    return this.push(Node.as(new node(Node.as(value[0]), ...asNodes(value))));
+    return this.push(new command(asNode(value[0]), ...asNodes(value)));
   };
 
   Node.prototype[`${name}Assign`] = function (...value: any): Node {
-    return this.assign(Node.as(new node(Node.as(this), ...asNodes(value))));
+    return this.assign(new command(this, ...asNodes(value)));
   };
 
   StackNode.prototype[`${name}Assign`] = function (...value: any): Node {
-    return this.push(Node.as(new AssignNode(Node.as(value[0]), node(...asNodes(value)))));
+    return this.push(new AssignNode(asNode(value[0]), command(...asNodes(value))));
   };
 };
 
-export const implPrimitive = (name: string, node: any) => {
+export const implPrimitive = (name: string, primitive: any) => {
   Node.prototype[name] = function (...value: any): Node {
-    return Node.as(node(Node.as(this), ...asNodes(value)));
+    return primitive(this, ...asNodes(value));
   };
 
   StackNode.prototype[name] = function (...value: any): Node {
-    return this.push(Node.as(node(Node.as(value[0]), ...asNodes(value))));
+    return this.push(primitive(asNode(value[0]), ...asNodes(value)));
   };
 
   Node.prototype[`${name}Assign`] = function (...value: any): Node {
-    return this.assign(Node.as(node(Node.as(this), ...asNodes(value))));
+    return this.assign(primitive(this, ...asNodes(value)));
   };
 
   StackNode.prototype[`${name}Assign`] = function (...value: any): Node {
-    return this.push(Node.as(new AssignNode(Node.as(value[0]), node(...asNodes(value)))));
+    return this.push(new AssignNode(asNode(value[0]), primitive(...asNodes(value))));
   };
 };

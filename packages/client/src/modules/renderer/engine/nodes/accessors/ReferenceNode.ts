@@ -8,14 +8,12 @@ import { uniforms } from './UniformsNode.js';
 import { ArrayElementNode } from '../utils/ArrayElementNode.js';
 import { ConstNode } from '@modules/renderer/engine/nodes/core/ConstNode.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
-import { Entity } from '@modules/renderer/engine/core/Entity.js';
-import { IndexNode } from '@modules/renderer/engine/nodes/core/IndexNode.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 
 export class ReferenceElementNode extends ArrayElementNode {
   constructor(
     public reference: ReferenceNode,
-    index: IndexNode,
+    index: ConstNode<number>,
   ) {
     super(reference, index);
   }

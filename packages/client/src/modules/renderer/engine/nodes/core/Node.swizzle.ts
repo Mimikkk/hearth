@@ -2,10 +2,9 @@ import type { SetNode } from '@modules/renderer/engine/nodes/utils/SetNode.js';
 import type { SplitNode } from '@modules/renderer/engine/nodes/utils/SplitNode.js';
 import { Node } from './Node.js';
 import type { ArrayElementNode } from '@modules/renderer/engine/nodes/utils/ArrayElementNode.js';
-import { ConstNode } from '@modules/renderer/engine/nodes/core/ConstNode.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
+import { asConst } from '@modules/renderer/engine/nodes/shadernode/utils.js';
 
-// remove this and implement it directly.
 export const implSwizzle = () => {
   const swizzleXyzw = [
     'x',
@@ -141,7 +140,7 @@ export const implSwizzle = () => {
         get(): SplitNode {
           const split = Node.Map.split;
 
-          return Node.as(new split(this, key)) as SplitNode;
+          return new split(this, key);
         },
         set(value: any): void {
           this[key].assign(value);
@@ -157,7 +156,7 @@ export const implSwizzle = () => {
         get(): SplitNode {
           const split = Node.Map.split;
 
-          return Node.as(new split(this, swizzleXyzw[i])) as SplitNode;
+          return new split(this, swizzleXyzw[i]);
         },
         set(value: any): void {
           this[swizzleXyzw[i]].assign(value);
@@ -174,7 +173,7 @@ export const implSwizzle = () => {
     Node.prototype[`set${key.toUpperCase()}`] = function (value: any): SetNode {
       const set = Node.Map.set;
 
-      return Node.as(new set(this, key, value)) as SetNode;
+      return new set(this, key, value);
     };
   }
 
@@ -183,12 +182,11 @@ export const implSwizzle = () => {
     Node.prototype[`set${swizzleRgba[i].toUpperCase()}`] = function (value: any): SetNode {
       const set = Node.Map.set;
 
-      return Node.as(new set(this, swizzleXyzw[i], value)) as SetNode;
+      return new set(this, swizzleXyzw[i], value);
     };
   }
 };
 
-// remove this and implement it directly.
 export const implIndexAccess = () => {
   const indices = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
 
@@ -199,7 +197,7 @@ export const implIndexAccess = () => {
         get(): ArrayElementNode {
           const element = Node.Map.element;
 
-          return Node.as(new element(this, new ConstNode(index, TypeName.u32))) as ArrayElementNode;
+          return new element(this, asConst(index, TypeName.u32));
         },
         set(value: any): void {
           this[+index].assign(value);
