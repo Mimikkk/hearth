@@ -27,20 +27,18 @@ export class ShaderCallNode extends Node {
       let fn = shaders.get(shader);
 
       if (!fn) {
-        fn = asNode(builder.buildFunctionNode(shader));
+        fn = builder.buildFunctionNode(shader);
 
         shaders.set(shader, fn);
       }
 
       if (builder.currentFunctionNode) builder.currentFunctionNode.includes.push(fn);
 
-      return asNode(fn.call(parameters));
+      return fn.call(parameters);
     }
 
     const fn = shader.fn;
-    const output = parameters !== null ? fn(parameters, builder.stack, builder) : fn(builder.stack, builder);
-
-    return asNode(output);
+    return parameters !== null ? fn(parameters, builder.stack, builder) : fn(builder.stack, builder);
   }
 
   setup(builder: NodeBuilder): Node {
@@ -79,7 +77,7 @@ export class ShaderNode<Fn extends (...params: any) => any = any> extends Node {
   call(inputs?: Parameters<Fn>[0]): ShaderCallNode {
     for (const name in inputs) inputs[name] = asNode(inputs[name]);
 
-    return new ShaderCallNode(this, inputs) as ShaderCallNode;
+    return new ShaderCallNode(this, inputs);
   }
 
   setup() {

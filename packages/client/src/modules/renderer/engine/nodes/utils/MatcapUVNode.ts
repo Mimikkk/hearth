@@ -10,7 +10,7 @@ export class MatcapUVNode extends TempNode {
   }
 
   setup() {
-    const x = vec3(positionViewDirection.z, asNode(0), positionViewDirection.x.negate()).normalize();
+    const x = vec3(positionViewDirection.z, 0, positionViewDirection.x.negate()).normalize();
     const y = positionViewDirection.cross(x);
 
     return vec2(x.dot(transformedNormalView), y.dot(transformedNormalView)).mul(0.495).add(0.5);

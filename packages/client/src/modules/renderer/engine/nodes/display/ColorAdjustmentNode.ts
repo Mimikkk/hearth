@@ -90,7 +90,7 @@ export const luminance = (color, luma = lumaCoeffs) => dot(color, luma);
 
 class ThresholdNode extends MixNode {
   constructor(color, threshold) {
-    super(vec3(0.0), asNode(color), luminance(color).sub(asNode(threshold)).max(0));
+    super(vec3(0.0), color, luminance(color).sub(asNode(threshold)).max(0));
   }
 }
 

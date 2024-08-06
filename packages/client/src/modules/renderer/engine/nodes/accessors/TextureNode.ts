@@ -192,14 +192,14 @@ export class TextureNode extends UniformNode {
     const textureNode = this.clone();
     textureNode.uvNode = uvNode;
 
-    return asNode(textureNode);
+    return textureNode;
   }
 
   blur(levelNode) {
     const textureNode = this.clone();
     textureNode.levelNode = levelNode.mul(maxMipLevel(textureNode));
 
-    return asNode(textureNode);
+    return textureNode;
   }
 
   level(levelNode) {
@@ -217,14 +217,14 @@ export class TextureNode extends UniformNode {
     const textureNode = this.clone();
     textureNode.compareNode = asNode(compareNode);
 
-    return asNode(textureNode);
+    return textureNode;
   }
 
   depth(depthNode) {
     const textureNode = this.clone();
     textureNode.depthNode = asNode(depthNode);
 
-    return asNode(textureNode);
+    return textureNode;
   }
 
   update() {
