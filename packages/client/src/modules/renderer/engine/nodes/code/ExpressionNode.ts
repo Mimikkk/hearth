@@ -11,7 +11,7 @@ export class ExpressionNode extends Node {
     super(nodeType);
   }
 
-  generate(builder: NodeBuilder, output: string | null = null): string | void {
+  generate(builder: NodeBuilder, output: string | null = null): string {
     const type = this.getNodeType(builder);
     const snippet = this.snippet;
 
@@ -20,6 +20,8 @@ export class ExpressionNode extends Node {
     } else {
       return builder.format(`(${snippet})`, type, output);
     }
+
+    return '';
   }
 }
 

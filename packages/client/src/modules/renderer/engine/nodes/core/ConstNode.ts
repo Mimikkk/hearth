@@ -1,6 +1,7 @@
 import { InputNode } from './InputNode.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
+import { Node } from '@modules/renderer/engine/nodes/core/Node.js';
 
 export class ConstNode<T = any> extends InputNode {
   constructor(value: T, type: TypeName = TypeName.ofValue(value)) {
@@ -18,4 +19,4 @@ export class ConstNode<T = any> extends InputNode {
   }
 }
 
-export type NodeVal<T = any> = ConstNode<T> | T;
+export type NodeVal<T = any> = ConstNode<T> | Node | T;
