@@ -1,4 +1,3 @@
-import { getValueType } from '@modules/renderer/engine/nodes/core/NodeUtils.js';
 import { asConst } from '@modules/renderer/engine/nodes/shadernode/utils.js';
 import { Hsl, hsl } from '@modules/renderer/engine/nodes/shadernode/hsl.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
@@ -28,7 +27,7 @@ type Coerce<T> = T extends Node
               : never;
 
 export const asNode = <T>(value: T): Coerce<T> => {
-  switch (getValueType(value)) {
+  switch (TypeName.ofValue(value)) {
     case null:
     case undefined:
     case TypeName.string:
@@ -46,9 +45,21 @@ export const asNodes = (array: any[]): Node[] => {
   return array;
 };
 
+type ReverseCoerce<T> = T extends Node
+  ? T
+  : T extends null
+    ? T | null
+    : T extends undefined
+      ? T | undefined
+      : T extends ConstNode<infer U>
+        ? ConstNode<U> | U
+        : T extends Hsl<infer U>
+          ? Hsl<U> | U
+          : T;
+
 export const asCommand =
   <T extends new (...params: any) => any>(NodeClass: T) =>
-  (...params: ConstructorParameters<T>): InstanceType<T> =>
+  (...params: ReverseCoerce<ConstructorParameters<T>>): InstanceType<T> =>
     new NodeClass(...asNodes(params));
 
 Node.as = asNode;

@@ -1,5 +1,4 @@
 import { Node } from '../core/Node.js';
-import { getValueType } from '../core/NodeUtils.js';
 import { buffer } from '../accessors/BufferNode.js';
 import { instanceIndex } from '../core/IndexNode.js';
 import { f32, asCommand } from '../shadernode/ShaderNodes.js';
@@ -21,8 +20,8 @@ export class RangeNode extends Node {
   }
 
   getVectorLength(builder: NodeBuilder): number {
-    const minLength = TypeName.size(getValueType(this.minNode.value));
-    const maxLength = TypeName.size(getValueType(this.maxNode.value));
+    const minLength = TypeName.size(TypeName.ofValue(this.minNode.value));
+    const maxLength = TypeName.size(TypeName.ofValue(this.maxNode.value));
 
     return minLength > maxLength ? minLength : maxLength;
   }
@@ -42,8 +41,8 @@ export class RangeNode extends Node {
       const minValue = this.minNode.value;
       const maxValue = this.maxNode.value;
 
-      const minLength = TypeName.size(getValueType(minValue));
-      const maxLength = TypeName.size(getValueType(maxValue));
+      const minLength = TypeName.size(TypeName.ofValue(minValue));
+      const maxLength = TypeName.size(TypeName.ofValue(maxValue));
 
       min = min || Vec4.new();
       max = max || Vec4.new();

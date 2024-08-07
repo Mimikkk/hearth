@@ -1,10 +1,9 @@
 import { InputNode } from './InputNode.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
-import { getValueType } from '@modules/renderer/engine/nodes/core/NodeUtils.js';
 
 export class ConstNode<T = any> extends InputNode {
-  constructor(value: T, type: TypeName = getValueType(value)) {
+  constructor(value: T, type: TypeName = TypeName.ofValue(value)) {
     super(value, type);
   }
 
@@ -18,3 +17,5 @@ export class ConstNode<T = any> extends InputNode {
     return builder.format(this.generateConst(builder), type, output);
   }
 }
+
+export type NodeVal<T> = ConstNode<T> | T;

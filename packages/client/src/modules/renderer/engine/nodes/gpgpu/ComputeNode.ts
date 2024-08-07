@@ -38,7 +38,7 @@ export class ComputeNode extends Node {
     frame.hearth.compute(this);
   }
 
-  generate(builder: NodeBuilder) {
+  generate(builder: NodeBuilder): string {
     const { shaderStage } = builder;
 
     if (shaderStage === ShaderStage.Compute) {

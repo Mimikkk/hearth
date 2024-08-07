@@ -141,4 +141,3 @@ export * from './functions/material/getGeometryRoughness.js';
 export * from './functions/material/getRoughness.js';
 export * from './functions/PhongLightModel.js';
 export * from './functions/PhysicalLightModel.js';
-export * from './shadernode/ShaderNode.map.js';

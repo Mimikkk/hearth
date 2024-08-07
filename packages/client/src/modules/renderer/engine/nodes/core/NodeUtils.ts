@@ -1,5 +1,3 @@
-import { Color, Mat3, Mat4, Vec2, Vec3, Vec4 } from '@modules/renderer/engine/engine.js';
-import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import type { Node } from '@modules/renderer/engine/nodes/core/Node.js';
 
 export function getCacheKey(object: Node, force = false) {
@@ -42,59 +40,4 @@ export function* getNodeChildren(node: Node) {
       }
     }
   }
-}
-
-export function getValueType(value: any): TypeName | undefined {
-  if (value === undefined || value === null) return;
-
-  if (value.isNode) return TypeName.node;
-  const typeOf = typeof value;
-  if (typeOf === 'number') return TypeName.f32;
-  if (typeOf === 'string') return TypeName.string;
-  if (typeOf === 'boolean') return TypeName.bool;
-  if (typeOf === 'function') return TypeName.shader;
-  if (Vec2.is(value)) return TypeName.vec2;
-  if (Vec3.is(value)) return TypeName.vec3;
-  if (Vec4.is(value)) return TypeName.vec4;
-  if (Mat3.is(value)) return TypeName.mat3;
-  if (Mat4.is(value)) return TypeName.mat4;
-  if (Color.is(value)) return TypeName.color;
-  return;
-}
-
-export function getValueFromType(type: TypeName, ...params: any) {
-  if (type === TypeName.color) return Color.new(...params);
-
-  if (type === TypeName.vec2 || type === TypeName.uvec2 || type === TypeName.bvec2 || type === TypeName.ivec2) {
-    if (params.length === 1) return Vec2.new(params[0], params[0]);
-    return Vec2.new(...params);
-  }
-
-  if (type === TypeName.vec3 || type === TypeName.uvec3 || type === TypeName.bvec3 || type === TypeName.ivec3) {
-    if (params.length === 1) return Vec3.new(params[0], params[0], params[0]);
-    return Vec3.new(...params);
-  }
-
-  if (type === TypeName.vec4 || type === TypeName.uvec4 || type === TypeName.bvec4 || type === TypeName.ivec4) {
-    if (params.length === 1) return Vec4.new(params[0], params[0], params[0], params[0]);
-    return Vec4.new(...params);
-  }
-
-  if (type === TypeName.mat3 || type === TypeName.imat3 || type === TypeName.umat3 || type === TypeName.bmat3) {
-    return Mat3.fromColumnOrder(...params);
-  }
-
-  if (type === TypeName.mat4 || type === TypeName.imat4 || type === TypeName.umat4 || type === TypeName.bmat4) {
-    return Mat4.fromColumnOrder(...params);
-  }
-
-  if (type === TypeName.bool) {
-    return params[0] || false;
-  }
-
-  if (type === TypeName.f32 || type === TypeName.i32 || type === TypeName.u32) {
-    return params[0] || 0;
-  }
-
-  throw new Error(`Unknown type: ${type}`);
 }

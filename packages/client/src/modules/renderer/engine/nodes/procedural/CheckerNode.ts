@@ -1,10 +1,10 @@
 import { TempNode } from '../core/TempNode.js';
-import { uv } from '../accessors/UVNode.js';
+import { uv, UVNode } from '../accessors/UVNode.js';
 import { hsl, asCommand } from '../shadernode/ShaderNodes.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { implCommand } from '@modules/renderer/engine/nodes/core/Node.commands.js';
 
-const checkerShaderNode = hsl((inputs: { uv: Node }) => {
+const checkerShaderNode = hsl((inputs: { uv: UVNode }) => {
   const uv = inputs.uv.mul(2.0);
 
   const cx = uv.x.floor();

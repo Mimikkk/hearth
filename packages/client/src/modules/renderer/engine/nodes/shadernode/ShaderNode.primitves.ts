@@ -1,4 +1,3 @@
-import { getValueFromType } from '@modules/renderer/engine/nodes/core/NodeUtils.js';
 import { asConst } from '@modules/renderer/engine/nodes/shadernode/utils.js';
 import { ConvertNode } from '@modules/renderer/engine/nodes/utils/ConvertNode.js';
 import { JoinNode } from '@modules/renderer/engine/nodes/utils/JoinNode.js';
@@ -22,7 +21,7 @@ const primitive = (type: TypeName) => {
 
   return (...params: Node[]) => {
     if (params.length === 0 || (!isComponent && params.every(param => typeof param !== 'object')))
-      params = [getValueFromType(type, ...params)];
+      params = [TypeName.asValue(type, ...params)];
 
     if (params.length === 1) {
       const node = asConst(params[0], type);

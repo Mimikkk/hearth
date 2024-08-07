@@ -6,6 +6,7 @@ import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
 import { Vec4 } from '@modules/renderer/engine/math/Vec4.js';
 import { Mat3 } from '@modules/renderer/engine/math/Mat3.js';
 import { Mat4 } from '@modules/renderer/engine/math/Mat4.js';
+import type { Node } from '@modules/renderer/engine/nodes/core/Node.js';
 
 export enum ShaderStage {
   Vertex = 'vertex',
@@ -412,7 +413,8 @@ export namespace TypeName {
   ): Mat4;
   export function asValue(type: TypeName.bool, a?: boolean): boolean;
   export function asValue(type: TypeName.f32 | TypeName.i32 | TypeName.u32, a?: number): number;
-  export function asValue(type: TypeName, ...params: any): any {
+  export function asValue(type: any, ...params: any): any;
+  export function asValue(type: any, ...params: any): any {
     switch (type) {
       case TypeName.f32:
       case TypeName.i32:
@@ -457,7 +459,7 @@ export namespace TypeName {
     }
   }
 
-  export function ofValue(value: undefined | null): undefined;
+  export function ofValue(value: undefined | null): TypeName.void;
   export function ofValue(value: Vec2): TypeName.vec2;
   export function ofValue(value: Vec3): TypeName.vec3;
   export function ofValue(value: Vec4): TypeName.vec4;
@@ -469,8 +471,8 @@ export namespace TypeName {
   export function ofValue(value: string): TypeName.string;
   export function ofValue(value: Function): TypeName.shader;
   export function ofValue(value: Node): TypeName.node;
-  export function ofValue(value: any): undefined;
-  export function ofValue(value: any): any {
+  export function ofValue(value: unknown): TypeName;
+  export function ofValue(value: any): TypeName {
     if (value === undefined || value === null) return;
 
     if (value.isNode) return TypeName.node;

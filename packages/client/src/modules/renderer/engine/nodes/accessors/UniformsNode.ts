@@ -1,6 +1,5 @@
 import { asCommand, asNode } from '../shadernode/ShaderNodes.js';
 import { NodeUpdateStage } from '../core/constants.js';
-import { getValueType } from '../core/NodeUtils.js';
 import { ArrayElementNode } from '../utils/ArrayElementNode.js';
 import { BufferNode } from './BufferNode.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
@@ -86,7 +85,7 @@ export class UniformsNode extends BufferNode {
   setup(builder) {
     const length = this.array.length;
 
-    this._elementType = this.elementType === null ? getValueType(this.array[0]) : this.elementType;
+    this._elementType = this.elementType === null ? TypeName.ofValue(this.array[0]) : this.elementType;
     this._elementLength = TypeName.size(this._elementType);
 
     this.value = new Float32Array(length * 4);
