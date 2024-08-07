@@ -10,7 +10,7 @@ export abstract class InputNode<T = any> extends Node {
     super(type);
   }
 
-  getNodeType(): TypeName {
+  getNodeType(builder: NodeBuilder): TypeName {
     if (!this.nodeType) return TypeName.ofValue(this.value)!;
     return this.nodeType;
   }

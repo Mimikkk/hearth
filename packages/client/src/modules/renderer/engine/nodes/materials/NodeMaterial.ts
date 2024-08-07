@@ -1,5 +1,5 @@
 import { ColorSpace, ShaderMaterial } from '@modules/renderer/engine/engine.js';
-import { getCacheKey } from '../core/NodeUtils.js';
+import { getNodeCacheKey } from '../core/NodeUtils.js';
 import { attribute } from '../core/AttributeNode.js';
 import { diffuseColor, output } from '../core/PropertyNode.js';
 import {
@@ -86,7 +86,7 @@ export class NodeMaterial extends ShaderMaterial {
   }
 
   customProgramCacheKey() {
-    return this.type + getCacheKey(this);
+    return this.type + getNodeCacheKey(this);
   }
 
   build(builder) {

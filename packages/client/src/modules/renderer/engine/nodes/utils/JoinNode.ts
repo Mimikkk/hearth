@@ -28,21 +28,21 @@ export class JoinNode extends TempNode {
 
     const primitiveType = TypeName.component(type);
 
-    const snippetValues = [];
+    const codes = [];
 
     for (const input of nodes) {
-      let inputSnippet = input.build(builder);
+      let code = input.build(builder);
 
-      const inputPrimitiveType = TypeName.component(input.getNodeType(builder));
+      const type = TypeName.component(input.getNodeType(builder));
 
-      if (inputPrimitiveType !== primitiveType) {
-        inputSnippet = builder.format(inputSnippet, inputPrimitiveType, primitiveType);
+      if (type !== primitiveType) {
+        code = builder.format(code, type, primitiveType);
       }
 
-      snippetValues.push(inputSnippet);
+      codes.push(code);
     }
 
-    const snippet = `${TypeName.repr(type)}(${snippetValues.join(', ')})`;
+    const snippet = `${TypeName.repr(type)}(${codes.join(', ')})`;
 
     return builder.format(snippet, type, output);
   }

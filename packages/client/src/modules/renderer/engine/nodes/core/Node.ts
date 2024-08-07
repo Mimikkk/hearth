@@ -1,5 +1,5 @@
 import { NodeUpdateStage } from './constants.js';
-import { getCacheKey, getNodeChildren } from './NodeUtils.js';
+import { getNodeCacheKey, getNodeChildren } from './NodeUtils.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { NodeFrame } from '@modules/renderer/engine/nodes/core/NodeFrame.js';
 import { BuildStage, TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
@@ -103,7 +103,7 @@ export class Node {
     force = force || this.version !== this._cacheKeyVersion;
 
     if (force === true || this._cacheKey === null) {
-      this._cacheKey = getCacheKey(this, force);
+      this._cacheKey = getNodeCacheKey(this, force);
       this._cacheKeyVersion = this.version;
     }
 
