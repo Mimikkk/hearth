@@ -7,8 +7,11 @@ import { positionLocal } from './PositionNode.js';
 import { normalLocal } from './NormalNode.js';
 import { textureLoad } from './TextureNode.js';
 import { vertexIndex } from '../core/IndexNode.js';
-import { DataArrayTexture, TextureDataType, Vec2, Vec4 } from '@modules/renderer/engine/engine.js';
 import { loop } from '../utils/LoopNode.js';
+import { Vec4 } from '@modules/renderer/engine/math/Vec4.js';
+import { DataArrayTexture } from '@modules/renderer/engine/entities/textures/DataArrayTexture.js';
+import { TextureDataType } from '@modules/renderer/engine/constants.js';
+import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
 
 const morphTextures = new WeakMap();
 const morphVec4 = Vec4.new();

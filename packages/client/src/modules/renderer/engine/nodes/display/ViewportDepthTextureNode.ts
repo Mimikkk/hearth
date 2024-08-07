@@ -1,8 +1,8 @@
 import { ViewportTextureNode } from './ViewportTextureNode.js';
 import { asCommand } from '../shadernode/ShaderNodes.js';
 import { viewportTopLeft } from './ViewportNode.js';
-import { DepthTexture } from '@modules/renderer/engine/engine.js';
 import { implCommand } from '@modules/renderer/engine/nodes/core/Node.commands.js';
+import { DepthTexture } from '@modules/renderer/engine/entities/textures/DepthTexture.js';
 
 let sharedDepthbuffer = null;
 

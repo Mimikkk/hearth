@@ -2,10 +2,11 @@ import { Node } from '../core/Node.js';
 import { NodeUpdateStage } from '../core/constants.js';
 import { uniform } from '../core/UniformNode.js';
 import { vec2 } from '../shadernode/ShaderNodes.js';
-import { Vec2, Vec4 } from '@modules/renderer/engine/engine.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import NodeFrame from '@modules/renderer/engine/nodes/core/NodeFrame.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
+import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
+import { Vec4 } from '@modules/renderer/engine/math/Vec4.js';
 
 export class ViewportNode extends Node {
   constructor(public scope: Variant) {

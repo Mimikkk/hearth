@@ -1,11 +1,6 @@
-import {
-  DataTexture,
-  MagnificationTextureFilter,
-  MinificationTextureFilter,
-  Wrapping,
-} from '@modules/renderer/engine/engine.js';
-
 import * as UTIF from 'utif';
+import { DataTexture } from '@modules/renderer/engine/entities/textures/DataTexture.js';
+import { MagnificationTextureFilter, MinificationTextureFilter, Wrapping } from '@modules/renderer/engine/constants.js';
 
 interface ParseResult {
   data: Uint8Array;

@@ -1,4 +1,11 @@
-import { Attribute, BufferUse, Color, Geometry, Material, Mesh, Sphere, Vec3 } from '../engine.js';
+import { Mesh } from '@modules/renderer/engine/entities/Mesh.js';
+import { Color } from '@modules/renderer/engine/math/Color.js';
+import { Material } from '@modules/renderer/engine/entities/materials/Material.js';
+import { Geometry } from '@modules/renderer/engine/core/Geometry.js';
+import { Attribute } from '@modules/renderer/engine/core/Attribute.js';
+import { BufferUse } from '@modules/renderer/engine/constants.js';
+import { Sphere } from '@modules/renderer/engine/math/Sphere.js';
+import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
 
 export class MarchingCubes extends Mesh {
   declare isMarchingCubes: true;

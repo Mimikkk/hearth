@@ -1,51 +1,3 @@
-import {
-  AnimationClip,
-  Bone,
-  Box3,
-  Buffer,
-  Attribute,
-  Camera,
-  Color,
-  ColorManagement,
-  ColorSpace,
-  DirectionalLight,
-  Entity,
-  Filter,
-  Geometry,
-  Group,
-  InstancedMesh,
-  InterpolationMode,
-  Line,
-  LineBasicMaterial,
-  LineSegments,
-  LoaderUtils,
-  Mat4,
-  Material,
-  MathUtils,
-  Mesh,
-  MeshBasicMaterial,
-  MeshPhysicalMaterial,
-  MeshStandardMaterial,
-  NumberKeyframeTrack,
-  OrthographicCamera,
-  PerspectiveCamera,
-  PointLight,
-  Points,
-  PointsMaterial,
-  PropertyBinding,
-  Quaternion,
-  QuaternionKeyframeTrack,
-  Side,
-  Skeleton,
-  SkinnedMesh,
-  Sphere,
-  SpotLight,
-  Texture,
-  Vec2,
-  Vec3,
-  VectorKeyframeTrack,
-  Wrapping,
-} from '@modules/renderer/engine/engine.js';
 import { toTrianglesDrawMode } from '../../../utils/GeometryUtils.js';
 import { FileLoader, ResponseType } from '@modules/renderer/engine/loaders/files/FileLoader/FileLoader.js';
 import { ImageBitmapLoader } from '@modules/renderer/engine/loaders/textures/ImageBitmapLoader/ImageBitmapLoader.js';
@@ -57,6 +9,33 @@ import { classLoader } from '@modules/renderer/engine/loaders/types.js';
 import { BufferStep } from '@modules/renderer/engine/hearth/constants.js';
 import { CubicSplineInterpolant } from '@modules/renderer/engine/math/interpolants/CubicSplineInterpolant.js';
 import { CubicSplineQuaternionInterpolant } from '@modules/renderer/engine/math/interpolants/CubicSplineQuaternionInterpolant.js';
+import { Entity } from '@modules/renderer/engine/core/Entity.js';
+import { Group } from '@modules/renderer/engine/entities/Group.js';
+import { Mesh } from '@modules/renderer/engine/entities/Mesh.js';
+import { SkinnedMesh } from '@modules/renderer/engine/entities/SkinnedMesh.js';
+import { Material } from '@modules/renderer/engine/entities/materials/Material.js';
+import { Texture } from '@modules/renderer/engine/entities/textures/Texture.js';
+import { AnimationClip } from '@modules/renderer/engine/animation/AnimationClip.js';
+import { Camera } from '@modules/renderer/engine/entities/cameras/Camera.js';
+import { LoaderUtils } from '@modules/renderer/engine/loaders/LoaderUtils.js';
+import { Color } from '@modules/renderer/engine/math/Color.js';
+import { ColorSpace, Filter, InterpolationMode, Side, Wrapping } from '@modules/renderer/engine/constants.js';
+import { DirectionalLight } from '@modules/renderer/engine/entities/lights/DirectionalLight.js';
+import { PointLight } from '@modules/renderer/engine/entities/lights/PointLight.js';
+import { SpotLight } from '@modules/renderer/engine/entities/lights/SpotLight.js';
+import { MeshBasicMaterial } from '@modules/renderer/engine/entities/materials/MeshBasicMaterial.js';
+import { MeshPhysicalMaterial } from '@modules/renderer/engine/entities/materials/MeshPhysicalMaterial.js';
+import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
+import { Mat4 } from '@modules/renderer/engine/math/Mat4.js';
+import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
+import { Quaternion } from '@modules/renderer/engine/math/Quaternion.js';
+import { InstancedMesh } from '@modules/renderer/engine/entities/InstancedMesh.js';
+import { Attribute } from '@modules/renderer/engine/core/Attribute.js';
+import { MeshStandardMaterial } from '@modules/renderer/engine/entities/materials/MeshStandardMaterial.js';
+import { PointsMaterial } from '@modules/renderer/engine/entities/materials/PointsMaterial.js';
+import { LineBasicMaterial } from '@modules/renderer/engine/entities/materials/LineBasicMaterial.js';
+import { PropertyBinding } from '@modules/renderer/engine/animation/PropertyBinding.js';
+import { Geometry } from '@modules/renderer/engine/core/Geometry.js';
 
 export type PluginFn = (parser: Parser) => Plugin;
 

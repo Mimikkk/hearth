@@ -4,8 +4,7 @@ import { directionToColor } from '../utils/PackingNode.js';
 import { materialOpacity } from '../accessors/MaterialNode.js';
 import { transformedNormalView } from '../accessors/NormalNode.js';
 import { f32, vec4 } from '../shadernode/ShaderNodes.js';
-
-import { MeshNormalMaterial } from '@modules/renderer/engine/engine.js';
+import { MeshNormalMaterial } from '@modules/renderer/engine/entities/materials/MeshNormalMaterial.js';
 
 const defaultValues = new MeshNormalMaterial();
 

@@ -1,6 +1,5 @@
 import { NodeMaterial } from './NodeMaterial.js';
-
-import { LineBasicMaterial } from '@modules/renderer/engine/engine.js';
+import { LineBasicMaterial } from '@modules/renderer/engine/entities/materials/LineBasicMaterial.js';
 
 const defaultValues = new LineBasicMaterial();
 

@@ -6,8 +6,7 @@ import { getRoughness } from '../functions/material/getRoughness.js';
 import { PhysicalLightModel } from '../functions/PhysicalLightModel.js';
 import { f32, vec3, vec4 } from '../shadernode/ShaderNodes.js';
 import { Node } from '../core/Node.js';
-
-import { MeshStandardMaterial } from '@modules/renderer/engine/engine.js';
+import { MeshStandardMaterial } from '@modules/renderer/engine/entities/materials/MeshStandardMaterial.js';
 
 const _defaults = new MeshStandardMaterial();
 

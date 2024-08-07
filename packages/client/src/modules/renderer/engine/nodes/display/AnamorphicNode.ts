@@ -6,10 +6,11 @@ import { NodeUpdateStage } from '../core/constants.js';
 import { threshold } from './ColorAdjustmentNode.js';
 import { uv } from '../accessors/UVNode.js';
 import { texturePass } from './PassNode.js';
-import { RenderTarget, Vec2 } from '@modules/renderer/engine/engine.js';
 import { QuadMesh } from '@modules/renderer/engine/entities/QuadMesh.js';
 import { ConstNode } from '@modules/renderer/engine/nodes/core/ConstNode.js';
 import { implCommand } from '@modules/renderer/engine/nodes/core/Node.commands.js';
+import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
+import { RenderTarget } from '@modules/renderer/engine/hearth/core/RenderTarget.js';
 
 const quadMesh = new QuadMesh();
 

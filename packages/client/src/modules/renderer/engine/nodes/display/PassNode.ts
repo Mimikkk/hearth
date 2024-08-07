@@ -4,18 +4,14 @@ import { NodeUpdateStage } from '../core/constants.js';
 import { asCommand } from '../shadernode/ShaderNodes.js';
 import { uniform, UniformNode } from '../core/UniformNode.js';
 import { perspectiveDepthToViewZ, viewZToOrthographicDepth } from './ViewportDepthNode.js';
-import {
-  DepthTexture,
-  RenderTarget,
-  Scene,
-  TextureDataType,
-  ToneMapping,
-  Vec2,
-} from '@modules/renderer/engine/engine.js';
-import { Texture } from 'three';
 import { ICamera } from '@modules/renderer/engine/entities/cameras/Camera.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
-import { ConstNode } from '@modules/renderer/engine/nodes/core/ConstNode.js';
+import { Texture } from '@modules/renderer/engine/entities/textures/Texture.js';
+import { RenderTarget } from '@modules/renderer/engine/hearth/core/RenderTarget.js';
+import { Scene } from '@modules/renderer/engine/entities/scenes/Scene.js';
+import { DepthTexture } from '@modules/renderer/engine/entities/textures/DepthTexture.js';
+import { TextureDataType, ToneMapping } from '@modules/renderer/engine/constants.js';
+import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
 
 export class PassTextureNode extends TextureNode {
   constructor(pass: PassNode, texture: Texture) {

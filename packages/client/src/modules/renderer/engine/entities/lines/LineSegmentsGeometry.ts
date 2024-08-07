@@ -1,17 +1,14 @@
-import {
-  Box3,
-  Buffer,
-  Attribute,
-  EdgesGeometry,
-  Geometry,
-  LineSegments,
-  Mat4,
-  Mesh,
-  Sphere,
-  Vec3,
-  WireframeGeometry,
-} from '../../engine.js';
 import { BufferStep } from '@modules/renderer/engine/hearth/constants.js';
+import { Box3 } from '@modules/renderer/engine/math/Box3.js';
+import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
+import { Geometry } from '@modules/renderer/engine/core/Geometry.js';
+import { Attribute } from '@modules/renderer/engine/core/Attribute.js';
+import { Mat4 } from '@modules/renderer/engine/math/Mat4.js';
+import { WireframeGeometry } from '@modules/renderer/engine/entities/geometries/WireframeGeometry.js';
+import { EdgesGeometry } from '@modules/renderer/engine/entities/geometries/EdgesGeometry.js';
+import { Mesh } from '@modules/renderer/engine/entities/Mesh.js';
+import { LineSegments } from '@modules/renderer/engine/entities/LineSegments.js';
+import { Sphere } from '@modules/renderer/engine/math/Sphere.js';
 
 const _box = Box3.new();
 const _vector = Vec3.new();

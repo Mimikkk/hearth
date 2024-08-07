@@ -6,10 +6,14 @@ import { ref } from '../accessors/ReferenceNode.js';
 import { texture, TextureNode } from '../accessors/TextureNode.js';
 import { positionWorld } from '../accessors/PositionNode.js';
 import { normalWorld } from '../accessors/NormalNode.js';
-import { Color, DepthComparison, DepthTexture, Filter, Light, RenderTarget } from '@modules/renderer/engine/engine.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { NodeFrame } from '@modules/renderer/engine/nodes/core/NodeFrame.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
+import { RenderTarget } from '@modules/renderer/engine/hearth/core/RenderTarget.js';
+import { Color } from '@modules/renderer/engine/math/Color.js';
+import { Light } from '@modules/renderer/engine/entities/lights/Light.js';
+import { DepthTexture } from '@modules/renderer/engine/entities/textures/DepthTexture.js';
+import { DepthComparison, Filter } from '@modules/renderer/engine/constants.js';
 
 let overrideMaterial: any = null;
 

@@ -1,6 +1,10 @@
-import { Color, DepthTexture, RenderTarget, Texture, Vec4 } from '@modules/renderer/engine/engine.js';
 import { ClippingContext } from '@modules/renderer/engine/hearth/core/ClippingContext.js';
 import { Const } from '@modules/renderer/engine/math/types.js';
+import { Color } from '@modules/renderer/engine/math/Color.js';
+import { Texture } from '@modules/renderer/engine/entities/textures/Texture.js';
+import { DepthTexture } from '@modules/renderer/engine/entities/textures/DepthTexture.js';
+import { RenderTarget } from '@modules/renderer/engine/hearth/core/RenderTarget.js';
+import { Vec4 } from '@modules/renderer/engine/math/Vec4.js';
 
 let id = 0;
 

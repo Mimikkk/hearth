@@ -9,7 +9,7 @@ import { DataUtils } from '@modules/renderer/engine/utils/DataUtils.js';
 import { DataTexture } from '@modules/renderer/engine/entities/textures/DataTexture.js';
 import { NumberArray } from '@modules/renderer/engine/math/MathUtils.js';
 
-export type SupportedType = TextureDataType.Float | TextureDataType.HalfFloat;
+export type SupportedRGBEType = TextureDataType.Float | TextureDataType.HalfFloat;
 
 const RGBEByteToRGBFloat = (
   sourceArray: NumberArray,
@@ -69,7 +69,7 @@ const createDataTexture = (result: ParseResult): DataTexture => {
   return texture;
 };
 
-export const parseRGBE = (buffer: ArrayBuffer, type: SupportedType): DataTexture => {
+export const parseRGBE = (buffer: ArrayBuffer, type: SupportedRGBEType): DataTexture => {
   const rgbe_read_error = 1;
   const rgbe_write_error = 2;
   const rgbe_format_error = 3;

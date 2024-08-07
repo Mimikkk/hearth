@@ -18,8 +18,7 @@ import { mix, smoothstep } from '@modules/renderer/engine/nodes/math/MathNode.js
 import { f32, hsl, NodeStack, vec2, vec3, vec4 } from '../shadernode/ShaderNodes.js';
 import { uv } from '../accessors/UVNode.js';
 import { viewport } from '../display/ViewportNode.js';
-
-import { LineDashedMaterial } from '@modules/renderer/engine/engine.js';
+import { LineDashedMaterial } from '@modules/renderer/engine/entities/materials/LineDashedMaterial.js';
 
 const defaultValues = new LineDashedMaterial();
 

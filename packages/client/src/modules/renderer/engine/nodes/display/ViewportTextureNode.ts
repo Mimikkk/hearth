@@ -2,9 +2,11 @@ import { TextureNode } from '../accessors/TextureNode.js';
 import { NodeUpdateStage } from '../core/constants.js';
 import { asCommand } from '../shadernode/ShaderNodes.js';
 import { viewportTopLeft } from './ViewportNode.js';
-import { FramebufferTexture, MinificationTextureFilter, Vec2 } from '@modules/renderer/engine/engine.js';
 import { NodeFrame } from '@modules/renderer/engine/nodes/core/NodeFrame.js';
 import { implCommand } from '@modules/renderer/engine/nodes/core/Node.commands.js';
+import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
+import { FramebufferTexture } from '@modules/renderer/engine/entities/textures/FramebufferTexture.js';
+import { MinificationTextureFilter } from '@modules/renderer/engine/constants.js';
 
 const _size = Vec2.new();
 

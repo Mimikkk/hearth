@@ -1,10 +1,10 @@
 import { TempNode } from '../core/TempNode.js';
 import { mix } from '../math/MathNode.js';
 import { hsl, asCommand, vec4 } from '../shadernode/ShaderNodes.js';
-import { ColorSpace } from '@modules/renderer/engine/engine.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { Node } from '../core/Node.js';
 import { implCommand } from '@modules/renderer/engine/nodes/core/Node.commands.js';
+import { ColorSpace } from '@modules/renderer/engine/constants.js';
 
 export class ColorSpaceNode extends TempNode {
   method: NodeVariant;

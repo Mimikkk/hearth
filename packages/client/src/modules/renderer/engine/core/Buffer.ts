@@ -60,7 +60,7 @@ export class Buffer<T extends TypedArray = any> {
   }
 }
 
-const as = <C extends TypedArrayConstructor>(array: TypedArray | number, Type: C): ArrayMap<C> =>
+const as = <C extends TypedArrayConstructor>(array: NumberArray | number, Type: C): ArrayMap<C> =>
   (array?.constructor === Type ? array : new Type(array as number)) as ArrayMap<C>;
 
 Buffer.prototype.isInterleavedBuffer = true;

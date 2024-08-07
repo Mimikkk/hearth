@@ -1,16 +1,14 @@
-import {
-  Mat4,
-  Mouse,
-  OrthographicCamera,
-  PerspectiveCamera,
-  Plane,
-  Quaternion,
-  Ray,
-  Spherical,
-  Vec2,
-  Vec3,
-} from '../../engine.js';
-import { DegreeToRadian } from '../../math/MathUtils.js';
+import { Ray } from '@modules/renderer/engine/math/Ray.js';
+import { Plane } from '@modules/renderer/engine/math/Plane.js';
+import { DegreeToRadian } from '@modules/renderer/engine/math/MathUtils.js';
+import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
+import { Mouse } from '@modules/renderer/engine/constants.js';
+import { OrthographicCamera } from '@modules/renderer/engine/entities/cameras/OrthographicCamera.js';
+import { PerspectiveCamera } from '@modules/renderer/engine/entities/cameras/PerspectiveCamera.js';
+import { Quaternion } from '@modules/renderer/engine/math/Quaternion.js';
+import { Spherical } from '@modules/renderer/engine/math/Spherical.js';
+import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
+import { Mat4 } from '@modules/renderer/engine/math/Mat4.js';
 
 const _ray = new Ray();
 const _plane = new Plane();

@@ -1,9 +1,9 @@
 import { AttributeNode } from '../core/AttributeNode.js';
 import { asCommand, asNode } from '../shadernode/ShaderNodes.js';
-import { Vec4 } from '@modules/renderer/engine/engine.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { ConstNode } from '@modules/renderer/engine/nodes/core/ConstNode.js';
+import { Vec4 } from '@modules/renderer/engine/math/Vec4.js';
 
 export class VertexColorNode extends AttributeNode {
   constructor(public index: ConstNode<number> = asNode(0)) {

@@ -8,27 +8,28 @@ import { cubeTexture } from '../nodes/accessors/CubeTextureNode.js';
 import { f32, vec3 } from '../nodes/shadernode/ShaderNodes.js';
 import { uv } from '../nodes/accessors/UVNode.js';
 import { attribute } from '../nodes/core/AttributeNode.js';
+
+import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
+import { OrthographicCamera } from '../entities/cameras/OrthographicCamera.ts';
+import { Color } from '../math/Color.ts';
 import {
   Blending,
-  BoxGeometry,
-  Attribute,
-  Color,
   ColorSpace,
   Filter,
-  Geometry,
   Mapping,
-  Mesh,
-  MeshBasicMaterial,
-  OrthographicCamera,
-  PerspectiveCamera,
-  RenderTarget,
   Side,
   TextureDataType,
   TextureFormat,
   ToneMapping,
-  Vec3,
-} from '@modules/renderer/engine/engine.js';
-import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
+} from '@modules/renderer/engine/constants.js';
+import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
+import { Mesh } from '@modules/renderer/engine/entities/Mesh.js';
+import { PerspectiveCamera } from '@modules/renderer/engine/entities/cameras/PerspectiveCamera.js';
+import { MeshBasicMaterial } from '@modules/renderer/engine/entities/materials/MeshBasicMaterial.js';
+import { BoxGeometry } from '@modules/renderer/engine/entities/geometries/BoxGeometry.js';
+import { Geometry } from '@modules/renderer/engine/core/Geometry.js';
+import { Attribute } from '@modules/renderer/engine/core/Attribute.js';
+import { RenderTarget } from '@modules/renderer/engine/hearth/core/RenderTarget.js';
 
 const LOD_MIN = 4;
 

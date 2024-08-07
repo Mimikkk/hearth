@@ -1,18 +1,4 @@
 import {
-  Color,
-  Entity,
-  Geometry,
-  Material,
-  RenderTarget,
-  Revision,
-  Scene,
-  Texture,
-  TextureDataType,
-  Vec2,
-  Vec3,
-  Vec4,
-} from '../../engine.js';
-import {
   NodeSampledCubeTexture,
   NodeSampledTexture,
   NodeSampler,
@@ -54,6 +40,17 @@ import { PolyfillMap, PolyfillName } from '@modules/renderer/engine/nodes/builde
 import { StructTypeNode } from '@modules/renderer/engine/nodes/core/StructTypeNode.js';
 import { WgslFn } from '@modules/renderer/engine/nodes/builder/WgslFn.js';
 import { BindingUniform } from '@modules/renderer/engine/hearth/bindings/BindingUniform.js';
+import { Material } from '@modules/renderer/engine/entities/materials/Material.js';
+import { Geometry } from '@modules/renderer/engine/core/Geometry.js';
+import { Entity } from '@modules/renderer/engine/core/Entity.js';
+import { Scene } from '@modules/renderer/engine/entities/scenes/Scene.js';
+import { RenderTarget } from '@modules/renderer/engine/hearth/core/RenderTarget.js';
+import { Texture } from '@modules/renderer/engine/entities/textures/Texture.js';
+import { Revision, TextureDataType } from '@modules/renderer/engine/constants.js';
+import { Color } from '@modules/renderer/engine/math/Color.js';
+import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
+import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
+import { Vec4 } from '@modules/renderer/engine/math/Vec4.js';
 
 type ParseFn = (source: string) => WgslFn;
 

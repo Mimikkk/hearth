@@ -3,12 +3,12 @@ import { asCommand, asNode, f32, hsl, mat3, vec3 } from '../shadernode/ShaderNod
 import { rendererRef } from '../accessors/RendererReferenceNode.js';
 import { clamp, log2, max, pow } from '../math/MathNode.js';
 import { mul } from '../math/OperatorNode.js';
-
-import { Color, ToneMapping } from '@modules/renderer/engine/engine.js';
 import { ConstNode } from '@modules/renderer/engine/nodes/core/ConstNode.js';
 import { implCommand } from '@modules/renderer/engine/nodes/core/Node.commands.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
+import { ToneMapping } from '@modules/renderer/engine/constants.js';
+import { Color } from '@modules/renderer/engine/math/Color.js';
 
 const LinearToneMappingNode = hsl(({ color, exposure }) => {
   return color.mul(exposure).clamp();

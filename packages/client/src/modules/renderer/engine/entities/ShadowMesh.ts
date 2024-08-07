@@ -1,8 +1,12 @@
-import { Mat4, Mesh, MeshBasicMaterial, Plane, StencilFunction, StencilOperation, Vec4 } from '../engine.js';
-
 /**
  * A shadow Mesh that follows a shadow-casting Mesh in the scene, but is confined to a single plane.
  */
+import { Mat4 } from '@modules/renderer/engine/math/Mat4.js';
+import { Mesh } from '@modules/renderer/engine/entities/Mesh.js';
+import { MeshBasicMaterial } from '@modules/renderer/engine/entities/materials/MeshBasicMaterial.js';
+import { StencilFunction, StencilOperation } from '@modules/renderer/engine/constants.js';
+import { Plane } from '@modules/renderer/engine/math/Plane.js';
+import { Vec4 } from '@modules/renderer/engine/math/Vec4.js';
 
 const _shadowMatrix = new Mat4();
 

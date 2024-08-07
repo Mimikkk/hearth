@@ -1,5 +1,6 @@
-import { Shape, ShapePath } from '@modules/renderer/engine/engine.js';
 import type { Font } from './font.js';
+import { Shape } from '@modules/renderer/engine/math/curves/Shape.js';
+import { ShapePath } from '@modules/renderer/engine/math/curves/ShapePath.js';
 
 const createOutlines = ({ glyphs }: Font) => {
   const outlines = new Map<string, string[]>();

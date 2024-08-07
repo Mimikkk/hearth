@@ -1,28 +1,25 @@
-import {
-  BoxGeometry,
-  Attribute,
-  Camera,
-  CylinderGeometry,
-  Entity,
-  Euler,
-  Geometry,
-  Line,
-  LineBasicMaterial,
-  Mat4,
-  Mesh,
-  MeshBasicMaterial,
-  OctahedronGeometry,
-  OrthographicCamera,
-  PerspectiveCamera,
-  PlaneGeometry,
-  Quaternion,
-  Raycaster,
-  Side,
-  SphereGeometry,
-  TorusGeometry,
-  Vec3,
-} from '../../engine.js';
-import { Intersection } from '@modules/renderer/engine/core/Raycaster.js';
+import { Intersection, Raycaster } from '@modules/renderer/engine/core/Raycaster.js';
+import { Quaternion } from '@modules/renderer/engine/math/Quaternion.js';
+import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
+import { Entity } from '@modules/renderer/engine/core/Entity.js';
+import { PerspectiveCamera } from '@modules/renderer/engine/entities/cameras/PerspectiveCamera.js';
+import { OrthographicCamera } from '@modules/renderer/engine/entities/cameras/OrthographicCamera.js';
+import { Euler } from '@modules/renderer/engine/math/Euler.js';
+import { Mat4 } from '@modules/renderer/engine/math/Mat4.js';
+import { MeshBasicMaterial } from '@modules/renderer/engine/entities/materials/MeshBasicMaterial.js';
+import { LineBasicMaterial } from '@modules/renderer/engine/entities/materials/LineBasicMaterial.js';
+import { CylinderGeometry } from '@modules/renderer/engine/entities/geometries/CylinderGeometry.js';
+import { BoxGeometry } from '@modules/renderer/engine/entities/geometries/BoxGeometry.js';
+import { Geometry } from '@modules/renderer/engine/core/Geometry.js';
+import { Attribute } from '@modules/renderer/engine/core/Attribute.js';
+import { TorusGeometry } from '@modules/renderer/engine/entities/geometries/TorusGeometry.js';
+import { Mesh } from '@modules/renderer/engine/entities/Mesh.js';
+import { OctahedronGeometry } from '@modules/renderer/engine/entities/geometries/OctahedronGeometry.js';
+import { Line } from '@modules/renderer/engine/entities/Line.js';
+import { SphereGeometry } from '@modules/renderer/engine/entities/geometries/SphereGeometry.js';
+import { Camera } from '@modules/renderer/engine/entities/cameras/Camera.js';
+import { PlaneGeometry } from '@modules/renderer/engine/entities/geometries/PlaneGeometry.js';
+import { Side } from '@modules/renderer/engine/constants.js';
 
 const _raycaster = Raycaster.new();
 

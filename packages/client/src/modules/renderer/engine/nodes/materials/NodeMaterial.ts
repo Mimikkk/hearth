@@ -1,4 +1,3 @@
-import { ColorSpace, ShaderMaterial } from '@modules/renderer/engine/engine.js';
 import { getNodeCacheKey } from '../core/NodeUtils.js';
 import { attribute } from '../core/AttributeNode.js';
 import { diffuseColor, output } from '../core/PropertyNode.js';
@@ -30,6 +29,8 @@ import { faceDirection } from '../display/FrontFacingNode.js';
 import { NodeMaterials } from '@modules/renderer/engine/nodes/materials/NodeMaterialMap.js';
 import { ShaderStage } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { Node } from '@modules/renderer/engine/nodes/core/Node.js';
+import { ShaderMaterial } from '@modules/renderer/engine/entities/materials/ShaderMaterial.js';
+import { ColorSpace } from '@modules/renderer/engine/constants.js';
 
 export class NodeMaterial extends ShaderMaterial {
   declare isNodeMaterial: true;

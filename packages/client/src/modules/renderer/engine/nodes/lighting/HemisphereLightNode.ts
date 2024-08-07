@@ -4,10 +4,11 @@ import { mix } from '@modules/renderer/engine/nodes/math/MathNode.js';
 import { normalView } from '../accessors/NormalNode.js';
 import { objectPosition } from '../accessors/EntityNode.js';
 
-import { Color, HemisphereLight } from '@modules/renderer/engine/engine.js';
 import { PositionNode } from '@modules/renderer/engine/nodes/accessors/PositionNode.js';
 import { NodeBuilder } from '../builder/NodeBuilder.js';
 import { NodeFrame } from '@modules/renderer/engine/nodes/core/NodeFrame.js';
+import { HemisphereLight } from '@modules/renderer/engine/entities/lights/HemisphereLight.js';
+import { Color } from '@modules/renderer/engine/math/Color.js';
 
 export class HemisphereLightNode extends AnalyticLightNode {
   declare isHemisphereLightNode: true;

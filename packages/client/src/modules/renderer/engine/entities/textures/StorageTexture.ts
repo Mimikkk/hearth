@@ -1,4 +1,5 @@
-import { MagnificationTextureFilter, MinificationTextureFilter, Texture } from '@modules/renderer/engine/engine.js';
+import { Texture } from '@modules/renderer/engine/entities/textures/Texture.js';
+import { MagnificationTextureFilter, MinificationTextureFilter } from '@modules/renderer/engine/constants.js';
 
 export class StorageTexture extends Texture {
   declare isStorageTexture: true;

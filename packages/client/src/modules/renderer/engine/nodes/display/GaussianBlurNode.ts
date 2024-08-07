@@ -5,10 +5,11 @@ import { mul } from '../math/OperatorNode.js';
 import { uv } from '../accessors/UVNode.js';
 import { texturePass } from './PassNode.js';
 import { uniform } from '../core/UniformNode.js';
-import { RenderTarget, Vec2 } from '@modules/renderer/engine/engine.js';
 import { QuadMesh } from '@modules/renderer/engine/entities/QuadMesh.js';
 import { ConstNode } from '@modules/renderer/engine/nodes/core/ConstNode.js';
 import { implCommand } from '@modules/renderer/engine/nodes/core/Node.commands.js';
+import { RenderTarget } from '@modules/renderer/engine/hearth/core/RenderTarget.js';
+import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
 
 const quadMesh1 = new QuadMesh();
 const quadMesh2 = new QuadMesh();

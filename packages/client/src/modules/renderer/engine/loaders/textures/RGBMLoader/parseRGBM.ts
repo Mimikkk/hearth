@@ -1,18 +1,18 @@
+import * as upng from 'upng-js';
 import {
-  CubeTexture,
-  DataTexture,
-  DataUtils,
   MagnificationTextureFilter,
   MinificationTextureFilter,
   TextureDataType,
   TextureFormat,
   Wrapping,
-} from '@modules/renderer/engine/engine.js';
-import * as upng from 'upng-js';
+} from '@modules/renderer/engine/constants.js';
+import { DataUtils } from '@modules/renderer/engine/utils/DataUtils.js';
+import { DataTexture } from '@modules/renderer/engine/entities/textures/DataTexture.js';
+import { CubeTexture } from '@modules/renderer/engine/entities/textures/CubeTexture.js';
 
-export type SupportedType = TextureDataType.HalfFloat | TextureDataType.Float;
+export type SupportedRGBMType = TextureDataType.HalfFloat | TextureDataType.Float;
 
-const parseBuffer = (buffer: ArrayBuffer, type: SupportedType, maxRange: number): ParseResult => {
+const parseBuffer = (buffer: ArrayBuffer, type: SupportedRGBMType, maxRange: number): ParseResult => {
   const img = upng.decode(buffer);
   const rgba = upng.toRGBA8(img)[0];
 
@@ -59,7 +59,7 @@ interface ParseResult {
   flipY: boolean;
 }
 
-const parseDataTexture = (buffer: ArrayBuffer, type: SupportedType, maxRange: number) => {
+const parseDataTexture = (buffer: ArrayBuffer, type: SupportedRGBMType, maxRange: number) => {
   //@ts-expect-error
   const texture = new DataTexture();
   texture.wrapS = Wrapping.ClampToEdge;
@@ -79,7 +79,7 @@ const parseDataTexture = (buffer: ArrayBuffer, type: SupportedType, maxRange: nu
 
   return texture;
 };
-export const parseRGBM = (buffers: ArrayBuffer[], type: SupportedType, maxRange: number): CubeTexture => {
+export const parseRGBM = (buffers: ArrayBuffer[], type: SupportedRGBMType, maxRange: number): CubeTexture => {
   //@ts-expect-error - improve texture handling
   const texture = new CubeTexture();
   texture.images = buffers.map(buffer => parseDataTexture(buffer, type, maxRange));

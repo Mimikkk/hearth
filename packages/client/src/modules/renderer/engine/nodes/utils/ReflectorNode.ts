@@ -2,17 +2,14 @@ import { TextureNode } from '../accessors/TextureNode.js';
 import { asCommand, vec2 } from '../shadernode/ShaderNodes.js';
 import { NodeUpdateStage } from '../core/constants.js';
 import { viewportTopLeft } from '../display/ViewportNode.js';
-import {
-  Entity,
-  Filter,
-  Mat4,
-  Plane,
-  RenderTarget,
-  TextureDataType,
-  Vec2,
-  Vec3,
-  Vec4,
-} from '@modules/renderer/engine/engine.js';
+import { Plane } from '@modules/renderer/engine/math/Plane.js';
+import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
+import { Mat4 } from '@modules/renderer/engine/math/Mat4.js';
+import { Vec4 } from '@modules/renderer/engine/math/Vec4.js';
+import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
+import { RenderTarget } from '@modules/renderer/engine/hearth/core/RenderTarget.js';
+import { Entity } from '@modules/renderer/engine/core/Entity.js';
+import { Filter, TextureDataType } from '@modules/renderer/engine/constants.js';
 
 const _reflectorPlane = new Plane();
 const _normal = Vec3.new();

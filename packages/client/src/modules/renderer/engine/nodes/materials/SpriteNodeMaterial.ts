@@ -5,8 +5,7 @@ import { materialRotation } from '../accessors/MaterialNode.js';
 import { modelViewMatrix, modelWorldMatrix } from '../accessors/ModelNode.js';
 import { positionLocal } from '../accessors/PositionNode.js';
 import { f32, vec2, vec3, vec4 } from '../shadernode/ShaderNodes.js';
-
-import { SpriteMaterial } from '@modules/renderer/engine/engine.js';
+import { SpriteMaterial } from '@modules/renderer/engine/entities/materials/SpriteMaterial.js';
 
 const defaultValues = new SpriteMaterial();
 

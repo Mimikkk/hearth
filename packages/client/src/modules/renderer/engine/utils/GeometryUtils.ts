@@ -1,5 +1,8 @@
-import { Attribute, DrawMode, Geometry, Vec3 } from '../engine.js';
 import { ArrayConstructorMap, TypedArray } from '@modules/renderer/engine/math/MathUtils.js';
+import { Geometry } from '@modules/renderer/engine/core/Geometry.js';
+import { Attribute } from '@modules/renderer/engine/core/Attribute.js';
+import { DrawMode } from '@modules/renderer/engine/constants.js';
+import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
 
 export function mergeAttributes<T extends TypedArray>(attributes: Attribute<T>[]): Attribute<T> {
   let itemSize: number = attributes[0].stride;

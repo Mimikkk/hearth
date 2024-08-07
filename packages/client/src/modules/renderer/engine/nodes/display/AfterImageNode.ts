@@ -5,7 +5,6 @@ import { uv } from '../accessors/UVNode.js';
 import { texture } from '../accessors/TextureNode.js';
 import { texturePass } from './PassNode.js';
 import { uniform } from '../core/UniformNode.js';
-import { RenderTarget } from '@modules/renderer/engine/engine.js';
 import { max, sign } from '../math/MathNode.js';
 import { QuadMesh } from '@modules/renderer/engine/entities/QuadMesh.js';
 import { ConstNode, TextureNode } from '@modules/renderer/engine/nodes/Nodes.js';
@@ -13,6 +12,7 @@ import { NodeMaterial } from '@modules/renderer/engine/nodes/materials/NodeMater
 import { NodeFrame } from '@modules/renderer/engine/nodes/core/NodeFrame.js';
 import type { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { implCommand } from '@modules/renderer/engine/nodes/core/Node.commands.js';
+import { RenderTarget } from '@modules/renderer/engine/hearth/core/RenderTarget.js';
 
 const quadMeshComp = new QuadMesh(null);
 

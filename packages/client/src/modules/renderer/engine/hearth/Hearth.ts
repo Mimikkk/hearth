@@ -11,20 +11,6 @@ import { ClippingContext } from '@modules/renderer/engine/hearth/core/ClippingCo
 import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
 import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
 import {
-  Attribute,
-  Color,
-  DepthTexture,
-  Entity,
-  Frustum,
-  Geometry,
-  Group,
-  Mat4,
-  Material,
-  Plane,
-  RenderTarget,
-  Texture,
-} from '@modules/renderer/engine/engine.js';
-import {
   GPUFeature,
   GPUIndexFormatType,
   GPULoadOpType,
@@ -56,6 +42,18 @@ import { HearthComputer } from '@modules/renderer/engine/hearth/Hearth.Computer.
 import { HearthTimestamp } from '@modules/renderer/engine/hearth/Hearth.Timestamp.js';
 import { HearthRenderer, RenderFn } from '@modules/renderer/engine/hearth/Hearth.Renderer.js';
 import { HearthOcclusion } from '@modules/renderer/engine/hearth/Hearth.Occlusion.js';
+import { RenderTarget } from '@modules/renderer/engine/hearth/core/RenderTarget.js';
+import { Color } from '@modules/renderer/engine/math/Color.js';
+import { Entity } from '@modules/renderer/engine/core/Entity.js';
+import { Geometry } from '@modules/renderer/engine/core/Geometry.js';
+import { Material } from '@modules/renderer/engine/entities/materials/Material.js';
+import { Group } from '@modules/renderer/engine/entities/Group.js';
+import { Texture } from '@modules/renderer/engine/entities/textures/Texture.js';
+import { DepthTexture } from '@modules/renderer/engine/entities/textures/DepthTexture.js';
+import { Attribute } from '@modules/renderer/engine/core/Attribute.js';
+import { Plane } from '@modules/renderer/engine/math/Plane.js';
+import { Frustum } from '@modules/renderer/engine/math/Frustum.js';
+import { Mat4 } from '@modules/renderer/engine/math/Mat4.js';
 
 export class Hearth {
   stats: HearthStatistics;

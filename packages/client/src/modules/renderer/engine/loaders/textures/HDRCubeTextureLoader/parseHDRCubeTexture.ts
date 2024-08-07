@@ -1,12 +1,12 @@
+import { parseRGBE } from '@modules/renderer/engine/loaders/textures/RGBELoader/parseRGBE.js';
+import { DataTexture } from '@modules/renderer/engine/entities/textures/DataTexture.js';
+import { CubeTexture } from '@modules/renderer/engine/entities/textures/CubeTexture.js';
 import {
   ColorSpace,
-  CubeTexture,
-  DataTexture,
   MagnificationTextureFilter,
   MinificationTextureFilter,
   TextureDataType,
-} from '@modules/renderer/engine/engine.js';
-import { parseRGBE } from '@modules/renderer/engine/loaders/textures/RGBELoader/parseRGBE.js';
+} from '@modules/renderer/engine/constants.js';
 
 const createDataTexture = ({ image: { data, width, height } }: DataTexture, cube: CubeTexture): DataTexture => {
   //@ts-expect-error - improve texture handling
@@ -21,8 +21,8 @@ const createDataTexture = ({ image: { data, width, height } }: DataTexture, cube
   return texture;
 };
 
-export type SupportedType = TextureDataType.Float | TextureDataType.HalfFloat;
-export const parseHDRCubeTexture = (buffers: ArrayBuffer[], type: SupportedType): CubeTexture => {
+export type SupportedHDRType = TextureDataType.Float | TextureDataType.HalfFloat;
+export const parseHDRCubeTexture = (buffers: ArrayBuffer[], type: SupportedHDRType): CubeTexture => {
   //@ts-expect-error - improve texture handling
   const texture = new CubeTexture();
   texture.type = type;

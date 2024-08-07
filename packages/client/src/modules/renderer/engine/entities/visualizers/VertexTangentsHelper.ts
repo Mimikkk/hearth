@@ -1,5 +1,10 @@
-import { Attribute, Entity, Geometry, LineBasicMaterial, LineSegments, Vec3 } from '../../engine.js';
 import { ColorRepresentation } from '@modules/renderer/engine/math/Color.js';
+import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
+import { LineSegments } from '@modules/renderer/engine/entities/LineSegments.js';
+import { Entity } from '@modules/renderer/engine/core/Entity.js';
+import { Geometry } from '@modules/renderer/engine/core/Geometry.js';
+import { Attribute } from '@modules/renderer/engine/core/Attribute.js';
+import { LineBasicMaterial } from '@modules/renderer/engine/entities/materials/LineBasicMaterial.js';
 
 const _v1 = Vec3.new();
 const _v2 = Vec3.new();

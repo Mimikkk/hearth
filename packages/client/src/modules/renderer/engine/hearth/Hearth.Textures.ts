@@ -1,28 +1,5 @@
 import DataMap from './memo/DataMap.js';
 
-import {
-  ColorSpace,
-  CompressedPixelFormat,
-  CompressedTexture,
-  CubeTexture,
-  Data3DTexture,
-  DataArrayTexture,
-  DataTexture,
-  DepthComparison,
-  DepthTexture,
-  Filter,
-  FramebufferTexture,
-  MagnificationTextureFilter,
-  Mapping,
-  MinificationTextureFilter,
-  RenderTarget,
-  Texture,
-  TextureDataType,
-  TextureFormat,
-  Vec3,
-  VideoTexture,
-  Wrapping,
-} from '@modules/renderer/engine/engine.js';
 import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 import { HearthTexturesTexturePass } from '@modules/renderer/engine/hearth/Hearth.Textures.TexturePass.js';
 import {
@@ -34,6 +11,29 @@ import {
 } from '@modules/renderer/engine/hearth/constants.js';
 import { TypedArrayConstructor } from '@modules/renderer/engine/math/MathUtils.js';
 import { StorageTexture } from '@modules/renderer/engine/entities/textures/StorageTexture.js';
+import { DepthTexture } from '@modules/renderer/engine/entities/textures/DepthTexture.js';
+import { RenderTarget } from '@modules/renderer/engine/hearth/core/RenderTarget.js';
+import {
+  ColorSpace,
+  CompressedPixelFormat,
+  DepthComparison,
+  Filter,
+  MagnificationTextureFilter,
+  Mapping,
+  MinificationTextureFilter,
+  TextureDataType,
+  TextureFormat,
+  Wrapping,
+} from '@modules/renderer/engine/constants.js';
+import { Texture } from '@modules/renderer/engine/entities/textures/Texture.js';
+import { CubeTexture } from '@modules/renderer/engine/entities/textures/CubeTexture.js';
+import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
+import { FramebufferTexture } from '@modules/renderer/engine/entities/textures/FramebufferTexture.js';
+import { DataTexture } from '@modules/renderer/engine/entities/textures/DataTexture.js';
+import { Data3DTexture } from '@modules/renderer/engine/entities/textures/Data3DTexture.js';
+import { DataArrayTexture } from '@modules/renderer/engine/entities/textures/DataArrayTexture.js';
+import { CompressedTexture } from '@modules/renderer/engine/entities/textures/CompressedTexture.js';
+import { VideoTexture } from '@modules/renderer/engine/entities/textures/VideoTexture.js';
 
 export class HearthTextures extends DataMap<any, any> {
   constructor(public hearth: Hearth) {

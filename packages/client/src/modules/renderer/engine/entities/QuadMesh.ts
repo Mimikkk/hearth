@@ -1,5 +1,9 @@
-import { Attribute, Geometry, Material, Mesh, OrthographicCamera } from '../engine.js';
-import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
+import type { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
+import { OrthographicCamera } from '@modules/renderer/engine/entities/cameras/OrthographicCamera.js';
+import { Geometry } from '@modules/renderer/engine/core/Geometry.js';
+import { Attribute } from '@modules/renderer/engine/core/Attribute.js';
+import { Mesh } from '@modules/renderer/engine/entities/Mesh.js';
+import { Material } from '@modules/renderer/engine/entities/materials/Material.js';
 
 const _camera = new OrthographicCamera(-1, 1, 1, -1, 0, 1);
 

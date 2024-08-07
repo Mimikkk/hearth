@@ -1,16 +1,3 @@
-import {
-  ColorSpace,
-  CompressedArrayTexture,
-  CompressedCubeTexture,
-  CompressedPixelFormat,
-  CompressedTexture,
-  Data3DTexture,
-  DataTexture,
-  MagnificationTextureFilter,
-  MinificationTextureFilter,
-  TextureDataType,
-  TextureFormat,
-} from '@modules/renderer/engine/engine.js';
 import { WorkerPool } from '../../WorkerPool.js';
 import {
   KHR_DF_FLAG_ALPHA_PREMULTIPLIED,
@@ -44,6 +31,19 @@ import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 import LoadWorker from './KTX2Loader.worker.ts?worker';
 import type { TranscoderResult, WorkerConfig } from './KTX2Loader.worker.js';
 import { classLoader } from '@modules/renderer/engine/loaders/types.js';
+import { CompressedCubeTexture } from '@modules/renderer/engine/entities/textures/CompressedCubeTexture.js';
+import { CompressedArrayTexture } from '@modules/renderer/engine/entities/textures/CompressedArrayTexture.js';
+import { CompressedTexture } from '@modules/renderer/engine/entities/textures/CompressedTexture.js';
+import { Data3DTexture } from '@modules/renderer/engine/entities/textures/Data3DTexture.js';
+import { DataTexture } from '@modules/renderer/engine/entities/textures/DataTexture.js';
+import {
+  ColorSpace,
+  CompressedPixelFormat,
+  MagnificationTextureFilter,
+  MinificationTextureFilter,
+  TextureDataType,
+  TextureFormat,
+} from '@modules/renderer/engine/constants.js';
 
 let _activeLoaders = 0;
 

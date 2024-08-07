@@ -1,5 +1,4 @@
 import DataMap from './memo/DataMap.js';
-import { Camera, Color, Mesh, Scene, Side, SphereGeometry } from '@modules/renderer/engine/engine.js';
 import {
   backgroundBlurriness,
   backgroundIntensity,
@@ -12,6 +11,12 @@ import {
 import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 import { RenderContext } from '@modules/renderer/engine/hearth/core/RenderContext.js';
 import { RenderQueue } from '@modules/renderer/engine/hearth/core/RenderQueue.js';
+import { Color } from '@modules/renderer/engine/math/Color.js';
+import { Scene } from '@modules/renderer/engine/entities/scenes/Scene.js';
+import { Side } from '@modules/renderer/engine/constants.js';
+import { Mesh } from '@modules/renderer/engine/entities/Mesh.js';
+import { SphereGeometry } from '@modules/renderer/engine/entities/geometries/SphereGeometry.js';
+import { Camera } from '@modules/renderer/engine/entities/cameras/Camera.js';
 
 const _clearColor = Color.new(0, 0, 0, 1);
 

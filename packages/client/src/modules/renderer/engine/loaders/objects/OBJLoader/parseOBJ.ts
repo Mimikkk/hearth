@@ -1,18 +1,16 @@
-import {
-  Attribute,
-  Color,
-  Geometry,
-  Group,
-  LineBasicMaterial,
-  LineSegments,
-  Material,
-  Mesh,
-  MeshPhongMaterial,
-  Points,
-  PointsMaterial,
-  Vec3,
-} from '@modules/renderer/engine/engine.js';
 import { MTLMaterialCreator } from '@modules/renderer/engine/loaders/objects/OBJLoader/MTLLoader/MTLMaterialCreator.js';
+import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
+import { Color } from '@modules/renderer/engine/math/Color.js';
+import { Group } from '@modules/renderer/engine/entities/Group.js';
+import { Geometry } from '@modules/renderer/engine/core/Geometry.js';
+import { Attribute } from '@modules/renderer/engine/core/Attribute.js';
+import { LineBasicMaterial } from '@modules/renderer/engine/entities/materials/LineBasicMaterial.js';
+import { Material } from '@modules/renderer/engine/entities/materials/Material.js';
+import { PointsMaterial } from '@modules/renderer/engine/entities/materials/PointsMaterial.js';
+import { MeshPhongMaterial } from '@modules/renderer/engine/entities/materials/MeshPhongMaterial.js';
+import { LineSegments } from '@modules/renderer/engine/entities/LineSegments.js';
+import { Points } from '@modules/renderer/engine/entities/Points.js';
+import { Mesh } from '@modules/renderer/engine/entities/Mesh.js';
 
 const ObjectRe = /^[og]\s*(.+)?/;
 

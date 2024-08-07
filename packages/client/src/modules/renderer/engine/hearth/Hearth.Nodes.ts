@@ -2,19 +2,6 @@ import DataMap from './memo/DataMap.js';
 import ChainMap from './memo/ChainMap.js';
 import { NodeBuilderState } from '../nodes/builder/NodeBuilderState.js';
 import {
-  Camera,
-  Color,
-  CubeTexture,
-  Entity,
-  Fog,
-  FogExp2,
-  Mapping,
-  Material,
-  Scene,
-  Texture,
-  ToneMapping,
-} from '@modules/renderer/engine/engine.js';
-import {
   ComputeNode,
   cubeTexture,
   densityFog,
@@ -34,6 +21,16 @@ import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 import { RenderObject } from '@modules/renderer/engine/hearth/core/RenderObject.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { NodeUniformsGroup } from '@modules/renderer/engine/nodes/builder/NodeStorageBuffer.js';
+import { Scene } from '@modules/renderer/engine/entities/scenes/Scene.js';
+import { Mapping, ToneMapping } from '@modules/renderer/engine/constants.js';
+import { FogExp2 } from '@modules/renderer/engine/entities/scenes/FogExp2.js';
+import { Fog } from '@modules/renderer/engine/entities/scenes/Fog.js';
+import { Entity } from '@modules/renderer/engine/core/Entity.js';
+import { Camera } from '@modules/renderer/engine/entities/cameras/Camera.js';
+import { Material } from '@modules/renderer/engine/entities/materials/Material.js';
+import { Texture } from '@modules/renderer/engine/entities/textures/Texture.js';
+import { CubeTexture } from '@modules/renderer/engine/entities/textures/CubeTexture.js';
+import { Color } from '@modules/renderer/engine/math/Color.js';
 
 export class HearthNodes extends DataMap<any, any> {
   nodeFrame: NodeFrame;

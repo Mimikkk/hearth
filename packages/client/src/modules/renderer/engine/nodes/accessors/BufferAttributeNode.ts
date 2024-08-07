@@ -1,11 +1,12 @@
 import { InputNode } from '../core/InputNode.js';
 import { varying } from '../core/VaryingNode.js';
-import { Attribute, Buffer, BufferUse } from '@modules/renderer/engine/engine.js';
 import { ShaderStage, TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { BufferStep } from '@modules/renderer/engine/hearth/constants.js';
 import { BufferNode } from '@modules/renderer/engine/nodes/accessors/BufferNode.js';
 import { implCommand } from '@modules/renderer/engine/nodes/core/Node.commands.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
+import { BufferUse } from '@modules/renderer/engine/constants.js';
+import { Attribute } from '@modules/renderer/engine/core/Attribute.js';
 
 export class BufferAttributeNode<T> extends InputNode<T> {
   isBufferNode: true;

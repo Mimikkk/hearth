@@ -10,8 +10,7 @@ import { smoothstep } from '@modules/renderer/engine/nodes/math/MathNode.js';
 import { hsl, vec2, vec4 } from '../shadernode/ShaderNodes.js';
 import { uv } from '../accessors/UVNode.js';
 import { viewport } from '../display/ViewportNode.js';
-
-import { PointsMaterial } from '@modules/renderer/engine/engine.js';
+import { PointsMaterial } from '@modules/renderer/engine/entities/materials/PointsMaterial.js';
 
 const defaultValues = new PointsMaterial();
 

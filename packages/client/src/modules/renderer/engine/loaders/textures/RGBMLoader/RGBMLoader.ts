@@ -1,7 +1,8 @@
-import { CubeTexture, TextureDataType } from '@modules/renderer/engine/engine.js';
 import { classLoader } from '../../types.js';
 import { FileLoader, ResponseType } from '@modules/renderer/engine/loaders/files/FileLoader/FileLoader.js';
 import { parseRGBM } from '@modules/renderer/engine/loaders/textures/RGBMLoader/parseRGBM.js';
+import { CubeTexture } from '@modules/renderer/engine/entities/textures/CubeTexture.js';
+import { TextureDataType } from '@modules/renderer/engine/constants.js';
 
 type Urls<T extends string> = [posx: T, negx: T, posy: T, negy: T, posz: T, negz: T];
 

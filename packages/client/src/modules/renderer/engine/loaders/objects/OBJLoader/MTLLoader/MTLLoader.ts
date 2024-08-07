@@ -1,8 +1,8 @@
-import { LoaderUtils } from '../../../../engine.js';
 import { FileLoader, ResponseType } from '@modules/renderer/engine/loaders/files/FileLoader/FileLoader.js';
 import { classLoader } from '@modules/renderer/engine/loaders/types.js';
 import { parseMTL } from '@modules/renderer/engine/loaders/objects/OBJLoader/MTLLoader/parseMTL.js';
 import { MTLMaterialCreator } from '@modules/renderer/engine/loaders/objects/OBJLoader/MTLLoader/MTLMaterialCreator.js';
+import { LoaderUtils } from '@modules/renderer/engine/loaders/LoaderUtils.js';
 
 export class MTLLoader extends classLoader<{
   This: MTLLoader;

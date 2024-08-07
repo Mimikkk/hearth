@@ -1,23 +1,19 @@
-import {
-  Box3,
-  Buffer,
-  Attribute,
-  Camera,
-  Line3,
-  LineSegments,
-  Mat4,
-  MathUtils,
-  Mesh,
-  Ray,
-  Raycaster,
-  Sphere,
-  Vec3,
-  Vec4,
-} from '../../engine.js';
 import { LineSegmentsGeometry } from './LineSegmentsGeometry.js';
 import { LineMaterial } from './LineMaterial.js';
-import { Intersection } from '@modules/renderer/engine/core/Raycaster.js';
+import { Intersection, Raycaster } from '@modules/renderer/engine/core/Raycaster.js';
 import { BufferStep } from '@modules/renderer/engine/hearth/constants.js';
+import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
+import { Vec4 } from '@modules/renderer/engine/math/Vec4.js';
+import { Mat4 } from '@modules/renderer/engine/math/Mat4.js';
+import { Line3 } from '@modules/renderer/engine/math/Line3.js';
+import { Box3 } from '@modules/renderer/engine/math/Box3.js';
+import { Sphere } from '@modules/renderer/engine/math/Sphere.js';
+import { Ray } from '@modules/renderer/engine/math/Ray.js';
+import { Camera } from '@modules/renderer/engine/entities/cameras/Camera.js';
+import { LineSegments } from '@modules/renderer/engine/entities/LineSegments.js';
+import { Mesh } from '@modules/renderer/engine/entities/Mesh.js';
+import { lerp } from '@modules/renderer/engine/math/MathUtils.js';
+import { Attribute } from '@modules/renderer/engine/core/Attribute.js';
 
 const _start = Vec3.new();
 const _end = Vec3.new();
@@ -158,7 +154,7 @@ function raycastScreenSpace(lineSegments: LineSegments, camera: Camera, intersec
     const param = _line.closestAt(_ssOrigin3);
     _line.at(param, _closestPoint);
 
-    const zPos = MathUtils.lerp(_start4.z, _end4.z, param);
+    const zPos = lerp(_start4.z, _end4.z, param);
     const isInClipSpace = zPos >= -1 && zPos <= 1;
 
     const isInside = _ssOrigin3.distanceTo(_closestPoint) < _lineWidth * 0.5;

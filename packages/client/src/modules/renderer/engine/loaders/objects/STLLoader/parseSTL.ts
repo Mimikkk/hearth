@@ -1,4 +1,7 @@
-import { Attribute, Color, Geometry, Vec3 } from '@modules/renderer/engine/engine.js';
+import { Geometry } from '@modules/renderer/engine/core/Geometry.js';
+import { Color } from '@modules/renderer/engine/math/Color.js';
+import { Attribute } from '@modules/renderer/engine/core/Attribute.js';
+import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
 
 function isBinary(data: ArrayBuffer) {
   const reader = new DataView(data);

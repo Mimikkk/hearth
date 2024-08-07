@@ -9,8 +9,8 @@ import { uv } from '../accessors/UVNode.js';
 import { faceDirection } from './FrontFacingNode.js';
 import { hsl, asCommand, vec3 } from '../shadernode/ShaderNodes.js';
 
-import { NormalMapType } from '@modules/renderer/engine/engine.js';
 import { implCommand } from '@modules/renderer/engine/nodes/core/Node.commands.js';
+import { NormalMapType } from '@modules/renderer/engine/constants.js';
 
 const perturbNormal2Arb = hsl(inputs => {
   const { eye_pos, surf_norm, mapN, uv } = inputs;

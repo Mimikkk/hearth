@@ -1,5 +1,3 @@
-import { BufferAttribute, Euler, Geometry, Mat4, Mesh, Vec3 } from '../engine.js';
-
 /**
  * You can use this geometry to create a decal mesh, that serves different kinds of purposes.
  * e.g. adding unique details to models, performing dynamic visual environmental changes or covering seams.
@@ -14,6 +12,11 @@ import { BufferAttribute, Euler, Geometry, Mat4, Mesh, Vec3 } from '../engine.js
  * reference: http://blog.wolfire.com/2009/06/how-to-project-decals/
  *
  */
+import { Geometry } from '@modules/renderer/engine/core/Geometry.js';
+import { Mesh } from '@modules/renderer/engine/entities/Mesh.js';
+import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
+import { Euler } from '@modules/renderer/engine/math/Euler.js';
+import { Mat4 } from '@modules/renderer/engine/math/Mat4.js';
 
 export class DecalGeometry extends Geometry {
   constructor(mesh: Mesh, position: Vec3, orientation: Euler, size: Vec3) {

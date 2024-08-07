@@ -3,9 +3,8 @@ import { DataTexture } from '@modules/renderer/engine/entities/textures/DataText
 import { FileLoader, ResponseType } from '@modules/renderer/engine/loaders/files/FileLoader/FileLoader.js';
 import { classLoader } from '@modules/renderer/engine/loaders/types.js';
 import { parseRGBE } from '@modules/renderer/engine/loaders/textures/RGBELoader/parseRGBE.js';
-import { SupportedType } from './parseRGBE.js';
-
-export type { SupportedType } from './parseRGBE.js';
+import { SupportedRGBEType } from './parseRGBE.js';
+export type { SupportedRGBEType } from './parseRGBE.js';
 
 export class RGBELoader extends classLoader<{
   This: RGBELoader;
@@ -28,12 +27,12 @@ export class RGBELoader extends classLoader<{
 export namespace RGBELoader {
   export interface Options {
     fileLoader?: Omit<FileLoader.Options, 'responseType'>;
-    type?: SupportedType;
+    type?: SupportedRGBEType;
   }
 
   export interface Configuration {
     fileLoader: FileLoader.Configuration<ResponseType.Buffer>;
-    type: SupportedType;
+    type: SupportedRGBEType;
   }
 }
 type Options = RGBELoader.Options;

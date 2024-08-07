@@ -2,11 +2,11 @@ import { Node } from '../core/Node.js';
 import { buffer } from '../accessors/BufferNode.js';
 import { instanceIndex } from '../core/IndexNode.js';
 import { f32, asCommand } from '../shadernode/ShaderNodes.js';
-
-import { InstancedMesh, Vec4 } from '@modules/renderer/engine/engine.js';
 import { lerp } from '../../math/MathUtils.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
+import { Vec4 } from '@modules/renderer/engine/math/Vec4.js';
+import { InstancedMesh } from '@modules/renderer/engine/entities/InstancedMesh.js';
 
 let min = null;
 let max = null;

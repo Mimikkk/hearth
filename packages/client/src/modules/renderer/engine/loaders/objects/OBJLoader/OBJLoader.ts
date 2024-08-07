@@ -1,8 +1,8 @@
-import { Group } from '@modules/renderer/engine/engine.js';
 import { FileLoader, ResponseType } from '@modules/renderer/engine/loaders/files/FileLoader/FileLoader.js';
 import { classLoader } from '@modules/renderer/engine/loaders/types.js';
 import { parseOBJ } from '@modules/renderer/engine/loaders/objects/OBJLoader/parseOBJ.js';
 import { MTLMaterialCreator } from '@modules/renderer/engine/loaders/objects/OBJLoader/MTLLoader/MTLMaterialCreator.js';
+import { Group } from '@modules/renderer/engine/entities/Group.js';
 
 export class OBJLoader extends classLoader<{
   This: OBJLoader;

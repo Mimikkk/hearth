@@ -1,6 +1,9 @@
-import { Attribute, Geometry, LineBasicMaterial, LineSegments } from '../../engine.js';
 import { Octree } from '@modules/renderer/engine/math/Octree.js';
 import { ColorRepresentation } from '@modules/renderer/engine/math/Color.js';
+import { LineSegments } from '@modules/renderer/engine/entities/LineSegments.js';
+import { Geometry } from '@modules/renderer/engine/core/Geometry.js';
+import { LineBasicMaterial } from '@modules/renderer/engine/entities/materials/LineBasicMaterial.js';
+import { Attribute } from '@modules/renderer/engine/core/Attribute.js';
 
 export class OctreeHelper extends LineSegments {
   declare type: string | 'OctreeHelper';

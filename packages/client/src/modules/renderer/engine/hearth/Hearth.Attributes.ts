@@ -1,9 +1,10 @@
 import DataMap from './memo/DataMap.js';
 import { AttributeLocation } from './constants.js';
-import { Attribute, BufferUse } from '@modules/renderer/engine/engine.js';
 import type { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 import { RenderObject } from '@modules/renderer/engine/hearth/core/RenderObject.js';
 import { Memo } from '@modules/renderer/engine/hearth/memo/Memo.js';
+import { Attribute } from '@modules/renderer/engine/core/Attribute.js';
+import { BufferUse } from '@modules/renderer/engine/constants.js';
 
 export class HearthAttributes extends DataMap<Attribute, any> {
   constructor(public hearth: Hearth) {

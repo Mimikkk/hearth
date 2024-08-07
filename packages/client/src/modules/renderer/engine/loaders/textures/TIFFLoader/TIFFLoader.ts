@@ -1,7 +1,7 @@
-import type { DataTexture } from '@modules/renderer/engine/engine.js';
 import { classLoader } from '@modules/renderer/engine/loaders/types.js';
 import { FileLoader, ResponseType } from '@modules/renderer/engine/loaders/files/FileLoader/FileLoader.js';
 import { parseTiff } from '@modules/renderer/engine/loaders/textures/TIFFLoader/parseTiff.js';
+import { DataTexture } from '@modules/renderer/engine/entities/textures/DataTexture.js';
 
 export class TiffLoader extends classLoader<{
   This: TiffLoader;

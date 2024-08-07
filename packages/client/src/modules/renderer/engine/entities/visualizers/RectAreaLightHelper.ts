@@ -1,17 +1,14 @@
-import {
-  Attribute,
-  Geometry,
-  Line,
-  LineBasicMaterial,
-  Mesh,
-  MeshBasicMaterial,
-  RectAreaLight,
-  Side,
-} from '../../engine.js';
-
 /**
  *  This helper must be added as a child of the light
  */
+import { Line } from '@modules/renderer/engine/entities/Line.js';
+import { RectAreaLight } from '@modules/renderer/engine/entities/lights/RectAreaLight.js';
+import { Geometry } from '@modules/renderer/engine/core/Geometry.js';
+import { Attribute } from '@modules/renderer/engine/core/Attribute.js';
+import { LineBasicMaterial } from '@modules/renderer/engine/entities/materials/LineBasicMaterial.js';
+import { Mesh } from '@modules/renderer/engine/entities/Mesh.js';
+import { MeshBasicMaterial } from '@modules/renderer/engine/entities/materials/MeshBasicMaterial.js';
+import { Side } from '@modules/renderer/engine/constants.js';
 
 export class RectAreaLightHelper extends Line {
   declare type: string | 'RectAreaLightHelper';

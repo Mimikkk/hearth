@@ -1,8 +1,10 @@
 import { Geometry } from '@modules/renderer/engine/core/Geometry.js';
 import { Attribute } from '@modules/renderer/engine/core/Attribute.js';
 import { Mat4 } from '@modules/renderer/engine/math/Mat4.js';
-import { Box3, Sphere, Vec3 } from '@modules/renderer/engine/engine.js';
 import { BufferStep } from '@modules/renderer/engine/hearth/constants.js';
+import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
+import { Box3 } from '@modules/renderer/engine/math/Box3.js';
+import { Sphere } from '@modules/renderer/engine/math/Sphere.js';
 
 export class InstancedPointsGeometry extends Geometry {
   declare isInstancedPointsGeometry: true;

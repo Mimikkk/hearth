@@ -1,22 +1,20 @@
-import {
-  BoxGeometry,
-  Camera,
-  CanvasTexture,
-  Color,
-  Entity,
-  Euler,
-  Mesh,
-  MeshBasicMaterial,
-  OrthographicCamera,
-  Quaternion,
-  Raycaster,
-  Sprite,
-  SpriteMaterial,
-  Vec2,
-  Vec3,
-  Vec4,
-} from '../../engine.js';
 import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
+import { Color } from '@modules/renderer/engine/math/Color.js';
+import { MeshBasicMaterial } from '@modules/renderer/engine/entities/materials/MeshBasicMaterial.js';
+import { SpriteMaterial } from '@modules/renderer/engine/entities/materials/SpriteMaterial.js';
+import { CanvasTexture } from '@modules/renderer/engine/entities/textures/CanvasTexture.js';
+import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
+import { Quaternion } from '@modules/renderer/engine/math/Quaternion.js';
+import { Entity } from '@modules/renderer/engine/core/Entity.js';
+import { BoxGeometry } from '@modules/renderer/engine/entities/geometries/BoxGeometry.js';
+import { Sprite } from '@modules/renderer/engine/entities/Sprite.js';
+import { Mesh } from '@modules/renderer/engine/entities/Mesh.js';
+import { Raycaster } from '@modules/renderer/engine/core/Raycaster.js';
+import { OrthographicCamera } from '@modules/renderer/engine/entities/cameras/OrthographicCamera.js';
+import { Vec4 } from '@modules/renderer/engine/math/Vec4.js';
+import { Camera } from '@modules/renderer/engine/entities/cameras/Camera.js';
+import { Euler } from '@modules/renderer/engine/math/Euler.js';
+import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
 
 const turnRate = 2 * Math.PI;
 const dim = 128;

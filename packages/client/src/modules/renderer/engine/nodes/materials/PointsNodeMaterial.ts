@@ -1,6 +1,5 @@
 import { NodeMaterial } from './NodeMaterial.js';
-
-import { PointsMaterial } from '@modules/renderer/engine/engine.js';
+import { PointsMaterial } from '@modules/renderer/engine/entities/materials/PointsMaterial.js';
 
 const defaultValues = new PointsMaterial();
 

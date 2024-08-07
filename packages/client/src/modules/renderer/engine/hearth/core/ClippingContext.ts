@@ -1,5 +1,10 @@
-import { Camera, Mat3, Mat4, Material, Plane, Vec4 } from '@modules/renderer/engine/engine.js';
 import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
+import { Plane } from '@modules/renderer/engine/math/Plane.js';
+import { Mat3 } from '@modules/renderer/engine/math/Mat3.js';
+import { Vec4 } from '@modules/renderer/engine/math/Vec4.js';
+import { Mat4 } from '@modules/renderer/engine/math/Mat4.js';
+import { Camera } from '@modules/renderer/engine/entities/cameras/Camera.js';
+import { Material } from '@modules/renderer/engine/entities/materials/Material.js';
 
 const _plane = new Plane();
 const _viewNormalMatrix = new Mat3();

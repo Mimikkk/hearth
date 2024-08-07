@@ -1,7 +1,7 @@
-import { Geometry } from '@modules/renderer/engine/engine.js';
 import { FileLoader, ResponseType } from '@modules/renderer/engine/loaders/files/FileLoader/FileLoader.js';
 import { classLoader } from '@modules/renderer/engine/loaders/types.js';
 import { parseSTL } from '@modules/renderer/engine/loaders/objects/STLLoader/parseSTL.js';
+import { Geometry } from '@modules/renderer/engine/core/Geometry.js';
 
 export class STLLoader extends classLoader<{
   This: STLLoader;

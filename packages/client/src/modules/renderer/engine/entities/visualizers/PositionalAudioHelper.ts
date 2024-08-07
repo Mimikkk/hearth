@@ -1,5 +1,9 @@
-import { Attribute, Geometry, Line, LineBasicMaterial, PositionalAudio } from '../../engine.js';
 import { degreeToRadian } from '../../math/MathUtils.js';
+import { Line } from '@modules/renderer/engine/entities/Line.js';
+import { PositionalAudio } from '@modules/renderer/engine/audio/PositionalAudio.js';
+import { Geometry } from '@modules/renderer/engine/core/Geometry.js';
+import { Attribute } from '@modules/renderer/engine/core/Attribute.js';
+import { LineBasicMaterial } from '@modules/renderer/engine/entities/materials/LineBasicMaterial.js';
 
 export class PositionalAudioHelper extends Line {
   declare type: string | 'PositionalAudioHelper';
