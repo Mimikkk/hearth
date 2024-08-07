@@ -5,12 +5,12 @@ import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { Node } from '../core/Node.js';
 import { implCommand } from '@modules/renderer/engine/nodes/core/Node.commands.js';
-import { ConstNode } from '@modules/renderer/engine/nodes/core/ConstNode.js';
+import { ConstNode, NodeVal } from '@modules/renderer/engine/nodes/core/ConstNode.js';
 
 export class UnaryNode extends TempNode {
   declare method: UnaryVariant | BinaryVariant | TernaryVariant;
 
-  constructor(public value: Node) {
+  constructor(public value: ConstNode<number>) {
     super();
   }
 
@@ -31,7 +31,7 @@ export class UnaryNode extends TempNode {
     }
   }
 
-  generate(builder: NodeBuilder, output: TypeName): string | null {
+  generate(builder: NodeBuilder, output: TypeName): string {
     const { method, value: a } = this;
 
     switch (this.method) {
@@ -95,8 +95,8 @@ export class BinaryNode extends TempNode {
   declare method: UnaryVariant | BinaryVariant | TernaryVariant;
 
   constructor(
-    public aNode: Node,
-    public bNode: Node,
+    public aNode: ConstNode<number>,
+    public bNode: ConstNode<number>,
   ) {
     super();
   }
@@ -127,7 +127,7 @@ export class BinaryNode extends TempNode {
     }
   }
 
-  generate(builder: NodeBuilder, output: TypeName): string | null {
+  generate(builder: NodeBuilder, output: TypeName): string {
     const { method, aNode: a, bNode: b } = this;
 
     const type = this.getNodeType(builder);
@@ -191,9 +191,9 @@ export class TernaryNode extends TempNode {
   declare method: UnaryVariant | BinaryVariant | TernaryVariant;
 
   constructor(
-    public aNode: Node,
-    public bNode: Node,
-    public cNode: Node,
+    public aNode: ConstNode<number>,
+    public bNode: ConstNode<number>,
+    public cNode: ConstNode<number>,
   ) {
     super();
   }
@@ -224,7 +224,7 @@ export class TernaryNode extends TempNode {
     return this.getInputType(builder);
   }
 
-  generate(builder: NodeBuilder, output: TypeName): string | null {
+  generate(builder: NodeBuilder, output: TypeName): string {
     const method = this.method;
 
     const type = this.getNodeType(builder);
@@ -452,7 +452,7 @@ export class TransformDirectionNode extends BinaryNode {
 export class Pow2Node extends BinaryNode {
   method = BinaryVariant.Pow;
 
-  constructor(aNode: Node) {
+  constructor(aNode: ConstNode<number>) {
     super(aNode, f32(2));
   }
 }
@@ -460,7 +460,7 @@ export class Pow2Node extends BinaryNode {
 export class Pow3Node extends BinaryNode {
   method = BinaryVariant.Pow;
 
-  constructor(aNode: Node) {
+  constructor(aNode: ConstNode<number>) {
     super(aNode, f32(3));
   }
 }
@@ -468,13 +468,13 @@ export class Pow3Node extends BinaryNode {
 export class Pow4Node extends BinaryNode {
   method = BinaryVariant.Pow;
 
-  constructor(aNode: Node) {
+  constructor(aNode: ConstNode<number>) {
     super(aNode, f32(4));
   }
 }
 
 export class LengthSqNode extends DotNode {
-  constructor(a: Node) {
+  constructor(a: ConstNode<number>) {
     super(a, a);
   }
 }
@@ -496,13 +496,13 @@ export class FaceForwardNode extends TernaryNode {
 }
 
 export class MixElementNode extends MixNode {
-  constructor(t: Node, e1: Node, e2: Node) {
+  constructor(t: ConstNode<number>, e1: ConstNode<number>, e2: ConstNode<number>) {
     super(e1, e2, t);
   }
 }
 
 export class SmoothstepElementNode extends SmoothstepNode {
-  constructor(x: Node, low: Node, high: Node) {
+  constructor(x: ConstNode<number>, low: ConstNode<number>, high: ConstNode<number>) {
     super(low, high, x);
   }
 }

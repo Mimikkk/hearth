@@ -5,8 +5,7 @@ import { ArrayElementNode } from '@modules/renderer/engine/nodes/utils/ArrayElem
 import { asCommand, asNode, asNodes } from './ShaderNode.as.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { implCommand, implPrimitive } from '@modules/renderer/engine/nodes/core/Node.commands.js';
-import type { Node } from '@modules/renderer/engine/nodes/core/Node.js';
-import { ConstNode } from '@modules/renderer/engine/nodes/core/ConstNode.js';
+import { ConstNode, NodeVal } from '@modules/renderer/engine/nodes/core/ConstNode.js';
 
 const safeType = (node: ConstNode) => {
   try {
@@ -19,7 +18,7 @@ const safeType = (node: ConstNode) => {
 const primitive = (type: TypeName) => {
   const isComponent = TypeName.isComponent(type);
 
-  return (...params: Node[]) => {
+  return (...params: NodeVal[]) => {
     if (params.length === 0 || (!isComponent && params.every(param => typeof param !== 'object')))
       params = [TypeName.asValue(type, ...params)];
 

@@ -18,4 +18,4 @@ export class ConstNode<T = any> extends InputNode {
   }
 }
 
-export type NodeVal<T> = ConstNode<T> | T;
+export type NodeVal<T = any> = ConstNode<T> | T;

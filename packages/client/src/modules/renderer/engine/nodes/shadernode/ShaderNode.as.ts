@@ -61,5 +61,3 @@ export const asCommand =
   <T extends new (...params: any) => any>(NodeClass: T) =>
   (...params: ReverseCoerce<ConstructorParameters<T>>): InstanceType<T> =>
     new NodeClass(...asNodes(params));
-
-Node.as = asNode;
