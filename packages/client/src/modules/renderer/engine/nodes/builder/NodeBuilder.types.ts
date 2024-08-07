@@ -1,5 +1,11 @@
 import { TypedArray } from '@modules/renderer/engine/math/MathUtils.js';
 import { Attribute } from '@modules/renderer/engine/core/Attribute.js';
+import { Color } from '@modules/renderer/engine/math/Color.js';
+import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
+import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
+import { Vec4 } from '@modules/renderer/engine/math/Vec4.js';
+import { Mat3 } from '@modules/renderer/engine/math/Mat3.js';
+import { Mat4 } from '@modules/renderer/engine/math/Mat4.js';
 
 export enum ShaderStage {
   Vertex = 'vertex',
@@ -366,7 +372,7 @@ export namespace TypeName {
       case TypeName.texture:
       case TypeName.cubeTexture:
       case TypeName.storageTexture:
-
+      // to handle
       case TypeName.void:
       case TypeName.node:
       case TypeName.string:
@@ -377,6 +383,109 @@ export namespace TypeName {
     }
   };
 
-  export const ofValue = () => {};
-  export const asValue = () => {};
+  export function asValue(type: TypeName.color, a?: number, b?: number, c?: number, d?: number): Color;
+  export function asValue(
+    type: TypeName.vec2 | TypeName.uvec2 | TypeName.bvec2 | TypeName.ivec2,
+    a?: number,
+    b?: number,
+  ): Vec2;
+  export function asValue(
+    type: TypeName.vec3 | TypeName.uvec3 | TypeName.bvec3 | TypeName.ivec3,
+    a?: number,
+    b?: number,
+    c?: number,
+  ): Vec3;
+  export function asValue(
+    type: TypeName.vec4 | TypeName.uvec4 | TypeName.bvec4 | TypeName.ivec4,
+    a?: number,
+    b?: number,
+    c?: number,
+    d?: number,
+  ): Vec4;
+  export function asValue(
+    type: TypeName.mat3 | TypeName.imat3 | TypeName.umat3 | TypeName.bmat3,
+    ...params: number[]
+  ): Mat3;
+  export function asValue(
+    type: TypeName.mat4 | TypeName.imat4 | TypeName.umat4 | TypeName.bmat4,
+    ...params: number[]
+  ): Mat4;
+  export function asValue(type: TypeName.bool, a?: boolean): boolean;
+  export function asValue(type: TypeName.f32 | TypeName.i32 | TypeName.u32, a?: number): number;
+  export function asValue(type: TypeName, ...params: any): any {
+    switch (type) {
+      case TypeName.f32:
+      case TypeName.i32:
+      case TypeName.u32:
+        return params[0] || 0;
+      case TypeName.bool:
+        return params[0] || false;
+      case TypeName.color:
+        return Color.new(...(params as [number, number, number, number]));
+      case TypeName.vec2:
+      case TypeName.uvec2:
+      case TypeName.bvec2:
+      case TypeName.ivec2:
+        if (params.length === 1) return Vec2.new(params[0], params[0]);
+        return Vec2.new(...params);
+      case TypeName.vec3:
+      case TypeName.uvec3:
+      case TypeName.bvec3:
+      case TypeName.ivec3:
+        if (params.length === 1) return Vec3.new(params[0], params[0], params[0]);
+        return Vec3.new(...params);
+      case TypeName.vec4:
+      case TypeName.uvec4:
+      case TypeName.bvec4:
+      case TypeName.ivec4:
+        if (params.length === 1) return Vec4.new(params[0], params[0], params[0], params[0]);
+        return Vec4.new(...params);
+      case TypeName.mat3:
+      case TypeName.imat3:
+      case TypeName.umat3:
+      case TypeName.bmat3:
+        //@ts-expect-error
+        return Mat3.fromColumnOrder(...params);
+      case TypeName.mat4:
+      case TypeName.imat4:
+      case TypeName.umat4:
+      case TypeName.bmat4:
+        //@ts-expect-error
+        return Mat4.fromColumnOrder(...params);
+      default:
+        throw new Error(`Unknown type: ${type}`);
+    }
+  }
+
+  export function ofValue(value: undefined | null): undefined;
+  export function ofValue(value: Vec2): TypeName.vec2;
+  export function ofValue(value: Vec3): TypeName.vec3;
+  export function ofValue(value: Vec4): TypeName.vec4;
+  export function ofValue(value: Mat3): TypeName.mat3;
+  export function ofValue(value: Mat4): TypeName.mat4;
+  export function ofValue(value: Color): TypeName.color;
+  export function ofValue(value: number): TypeName.f32;
+  export function ofValue(value: boolean): TypeName.bool;
+  export function ofValue(value: string): TypeName.string;
+  export function ofValue(value: Function): TypeName.shader;
+  export function ofValue(value: Node): TypeName.node;
+  export function ofValue(value: any): undefined;
+  export function ofValue(value: any): any {
+    if (value === undefined || value === null) return;
+
+    if (value.isNode) return TypeName.node;
+    const typeOf = typeof value;
+    if (typeOf === 'number') return TypeName.f32;
+    if (typeOf === 'string') return TypeName.string;
+    if (typeOf === 'boolean') return TypeName.bool;
+    if (typeOf === 'function') return TypeName.shader;
+    if (Vec2.is(value)) return TypeName.vec2;
+    if (Vec3.is(value)) return TypeName.vec3;
+    if (Vec4.is(value)) return TypeName.vec4;
+    if (Mat3.is(value)) return TypeName.mat3;
+    if (Mat4.is(value)) return TypeName.mat4;
+    if (Color.is(value)) return TypeName.color;
+
+    return;
+  }
 }
