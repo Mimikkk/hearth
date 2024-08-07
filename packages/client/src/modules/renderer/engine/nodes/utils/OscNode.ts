@@ -7,7 +7,7 @@ import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.typ
 export class OscNode extends Node {
   method: NodeVariant;
 
-  constructor(public timeNode: Node = timerLocal()) {
+  constructor(public timeNode: Node = timerLocal(1)) {
     super();
   }
 

@@ -4,6 +4,7 @@ import {
   f32,
   MeshStandardNodeMaterial,
   NodeMaterial,
+  Node,
   oscSine,
   output,
   timerLocal,
