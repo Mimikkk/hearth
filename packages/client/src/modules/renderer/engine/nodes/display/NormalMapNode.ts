@@ -7,10 +7,11 @@ import { positionView } from '../accessors/PositionNode.js';
 import { TBNViewMatrix } from '../accessors/AccessorsUtils.js';
 import { uv } from '../accessors/UVNode.js';
 import { faceDirection } from './FrontFacingNode.js';
-import { hsl, asCommand, vec3 } from '../shadernode/ShaderNodes.js';
+import { asCommand, vec3 } from '../shadernode/ShaderNode.primitves.ts';
 
 import { implCommand } from '@modules/renderer/engine/nodes/core/Node.commands.js';
 import { NormalMapType } from '@modules/renderer/engine/constants.js';
+import { hsl } from '@modules/renderer/engine/nodes/shadernode/hsl.js';
 
 const perturbNormal2Arb = hsl(inputs => {
   const { eye_pos, surf_norm, mapN, uv } = inputs;

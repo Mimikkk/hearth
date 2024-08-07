@@ -1,4 +1,4 @@
-import { NodeMaterial, vec4 } from '@modules/renderer/engine/nodes/Nodes.js';
+import { NodeMaterial, vec4 } from '@modules/renderer/engine/nodes/nodes.js';
 import { GUI } from 'lil-gui';
 import initialCode from './hsl_editor.code.ts?raw';
 import monaco from './utilities/monaco-vite.js';

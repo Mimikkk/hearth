@@ -1,6 +1,6 @@
 import { Node } from '../core/Node.js';
 import { NodeUpdateStage } from '../core/constants.js';
-import { i32, ivec2, asCommand, hsl } from '../shadernode/ShaderNodes.js';
+import { i32, ivec2, asCommand } from '../shadernode/ShaderNode.primitves.ts';
 import { uniform } from '../core/UniformNode.js';
 import { ref } from './ReferenceNode.js';
 import { positionLocal } from './PositionNode.js';
@@ -12,6 +12,7 @@ import { Vec4 } from '@modules/renderer/engine/math/Vec4.js';
 import { DataArrayTexture } from '@modules/renderer/engine/entities/textures/DataArrayTexture.js';
 import { TextureDataType } from '@modules/renderer/engine/constants.js';
 import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
+import { hsl } from '@modules/renderer/engine/nodes/shadernode/hsl.js';
 
 const morphTextures = new WeakMap();
 const morphVec4 = Vec4.new();

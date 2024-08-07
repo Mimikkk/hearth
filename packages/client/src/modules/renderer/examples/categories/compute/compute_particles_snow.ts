@@ -17,7 +17,7 @@ import {
   vec2,
   vec3,
   viewportTopLeft,
-} from '@modules/renderer/engine/nodes/Nodes.js';
+} from '@modules/renderer/engine/nodes/nodes.js';
 
 import { TeapotGeometry } from '@modules/renderer/engine/entities/geometries/TeapotGeometry.js';
 

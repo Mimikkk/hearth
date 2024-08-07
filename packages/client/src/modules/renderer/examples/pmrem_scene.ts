@@ -1,6 +1,6 @@
 import * as Engine from '@modules/renderer/engine/engine.js';
 
-import { MeshBasicNodeMaterial, normalWorld, pmremTexture, uniform } from '@modules/renderer/engine/nodes/Nodes.js';
+import { MeshBasicNodeMaterial, normalWorld, pmremTexture, uniform } from '@modules/renderer/engine/nodes/nodes.js';
 
 import { PMREMGenerator } from '@modules/renderer/engine/hearth/PMREMGenerator.js';
 

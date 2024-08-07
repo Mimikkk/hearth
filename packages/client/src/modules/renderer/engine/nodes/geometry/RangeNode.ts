@@ -1,7 +1,7 @@
 import { Node } from '../core/Node.js';
 import { buffer } from '../accessors/BufferNode.js';
 import { instanceIndex } from '../core/IndexNode.js';
-import { f32, asCommand } from '../shadernode/ShaderNodes.js';
+import { f32, asCommand } from '../shadernode/ShaderNode.primitves.ts';
 import { lerp } from '../../math/MathUtils.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';

@@ -1,4 +1,4 @@
-import { hsl } from '../shadernode/ShaderNodes.js';
+import { hsl } from '@modules/renderer/engine/nodes/shadernode/hsl.js';
 
 export const getDistanceAttenuation = hsl(inputs => {
   const { lightDistance, cutoffDistance, decayExponent } = inputs;

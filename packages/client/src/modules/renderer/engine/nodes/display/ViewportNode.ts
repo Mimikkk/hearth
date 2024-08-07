@@ -1,7 +1,7 @@
 import { Node } from '../core/Node.js';
 import { NodeUpdateStage } from '../core/constants.js';
 import { uniform } from '../core/UniformNode.js';
-import { vec2 } from '../shadernode/ShaderNodes.js';
+import { vec2 } from '../shadernode/ShaderNode.primitves.ts';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import NodeFrame from '@modules/renderer/engine/nodes/core/NodeFrame.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';

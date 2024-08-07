@@ -1,6 +1,6 @@
 import { TextureNode } from '../accessors/TextureNode.js';
 import { NodeUpdateStage } from '../core/constants.js';
-import { asCommand } from '../shadernode/ShaderNodes.js';
+import { asCommand } from '../shadernode/ShaderNode.primitves.ts';
 import { viewportTopLeft } from './ViewportNode.js';
 import { NodeFrame } from '@modules/renderer/engine/nodes/core/NodeFrame.js';
 import { implCommand } from '@modules/renderer/engine/nodes/core/Node.commands.js';

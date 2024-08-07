@@ -1,5 +1,5 @@
 import { TextureNode } from './TextureNode.js';
-import { asCommand } from '../shadernode/ShaderNodes.js';
+import { asCommand } from '../shadernode/ShaderNode.primitves.ts';
 
 export class TextureStoreNode extends TextureNode {
   constructor(value, uvNode, storeNode = null) {

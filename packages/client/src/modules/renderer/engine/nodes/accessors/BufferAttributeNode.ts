@@ -2,9 +2,9 @@ import { InputNode } from '../core/InputNode.js';
 import { varying } from '../core/VaryingNode.js';
 import { ShaderStage, TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { BufferStep } from '@modules/renderer/engine/hearth/constants.js';
-import { BufferNode } from '@modules/renderer/engine/nodes/accessors/BufferNode.js';
+import type { BufferNode } from '@modules/renderer/engine/nodes/accessors/BufferNode.js';
 import { implCommand } from '@modules/renderer/engine/nodes/core/Node.commands.js';
-import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
+import type { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { BufferUse } from '@modules/renderer/engine/constants.js';
 import { Attribute } from '@modules/renderer/engine/core/Attribute.js';
 

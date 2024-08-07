@@ -1,8 +1,9 @@
 import { transformedNormalView } from '../../accessors/NormalNode.js';
 import { positionViewDirection } from '../../accessors/PositionNode.js';
 import { sheen, sheenRoughness } from '../../core/PropertyNode.js';
-import { f32, hsl } from '../../shadernode/ShaderNodes.js';
+import { f32 } from '../../shadernode/ShaderNode.primitves.ts';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
+import { hsl } from '@modules/renderer/engine/nodes/shadernode/hsl.js';
 
 const D_Charlie = hsl(
   ({ roughness, dotNH }) => {

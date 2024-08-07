@@ -5,7 +5,7 @@ import { uniform } from '../nodes/core/UniformNode.js';
 import { uniforms } from '../nodes/accessors/UniformsNode.js';
 import { texture } from '../nodes/accessors/TextureNode.js';
 import { cubeTexture } from '../nodes/accessors/CubeTextureNode.js';
-import { f32, vec3 } from '../nodes/shadernode/ShaderNodes.js';
+import { f32, vec3 } from '../nodes/shadernode/ShaderNode.primitves.js';
 import { uv } from '../nodes/accessors/UVNode.js';
 import { attribute } from '../nodes/core/AttributeNode.js';
 

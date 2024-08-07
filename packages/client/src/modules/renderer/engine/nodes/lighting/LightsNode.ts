@@ -1,6 +1,6 @@
 import { Node } from '../core/Node.js';
 import { AnalyticLightNode } from './AnalyticLightNode.js';
-import { asCommand, asNode, vec3 } from '../shadernode/ShaderNodes.js';
+import { asCommand, asNode, vec3 } from '../shadernode/ShaderNode.primitves.ts';
 import { LightNodeMap } from '@modules/renderer/engine/nodes/lighting/LightsNodeMap.js';
 import { Light } from '@modules/renderer/engine/entities/lights/Light.js';
 import { LightNode } from '@modules/renderer/engine/nodes/lighting/LightNode.js';

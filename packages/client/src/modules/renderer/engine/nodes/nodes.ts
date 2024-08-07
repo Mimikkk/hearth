@@ -1,4 +1,11 @@
-import './shadernode/ShaderNode.primitves.js';
+// /shadernode
+export * from './shadernode/ShaderNode.as.js';
+export * from './shadernode/ShaderNode.primitves.js';
+export * from './shadernode/ShaderNode.stack.js';
+export * from './shadernode/ShaderNode.js';
+export * from './shadernode/hsl.js';
+// /core
+export * from './core/Node.js';
 export * from './core/constants.js';
 export * from './core/AssignNode.js';
 export * from './core/AttributeNode.js';
@@ -26,11 +33,7 @@ export * from './core/VaryingNode.js';
 export * from './core/OutputStructNode.js';
 export * as NodeUtils from './core/NodeUtils.js';
 import './lighting/LightsNodeMap.initialize.js';
-
-export * from './math/MathNode.js';
-export * from './math/OperatorNode.js';
-export * from './math/CondNode.js';
-export * from './math/HashNode.js';
+// /utils
 export * from './utils/ArrayElementNode.js';
 export * from './utils/ConvertNode.js';
 export * from './utils/DiscardNode.js';
@@ -52,7 +55,33 @@ export * from './utils/StorageArrayElementNode.js';
 export * from './utils/TimerNode.js';
 export * from './utils/TriplanarTexturesNode.js';
 export * from './utils/ReflectorNode.js';
-export * from './shadernode/ShaderNodes.js';
+// math
+export * from './math/MathNode.js';
+export * from './math/OperatorNode.js';
+export * from './math/CondNode.js';
+export * from './math/HashNode.js';
+// TODO - Potentially merge
+// /code
+export * from './code/ExpressionNode.js';
+export * from './code/CodeNode.js';
+export * from './code/FunctionCallNode.js';
+export * from './code/FunctionNode.js';
+export * from './code/ScriptableNode.js';
+export * from './code/ScriptableValueNode.js';
+// /functions
+export * from './functions/LightModel.js';
+export * from './functions/BSDF/BRDF_GGX.js';
+export * from './functions/BSDF/BRDF_Lambert.js';
+export * from './functions/BSDF/D_GGX.js';
+export * from './functions/BSDF/DFGApprox.js';
+export * from './functions/BSDF/F_Schlick.js';
+export * from './functions/BSDF/Schlick_to_F0.js';
+export * from './functions/BSDF/V_GGX_SmithCorrelated.js';
+export * from './functions/material/getGeometryRoughness.js';
+export * from './functions/material/getRoughness.js';
+export * from './functions/PhongLightModel.js';
+export * from './functions/PhysicalLightModel.js';
+// /accessors
 export * from './accessors/AccessorsUtils.js';
 export * from './accessors/UniformsNode.js';
 export * from './accessors/BitangentNode.js';
@@ -82,6 +111,43 @@ export * from './accessors/TextureNode.js';
 export * from './accessors/TextureStoreNode.js';
 export * from './accessors/UVNode.js';
 export * from './accessors/UserDataNode.js';
+// /materials
+import './materials/NodeMaterial.map.initialize.js';
+export * from './materials/NodeMaterial.js';
+export * from './materials/InstancedPointsNodeMaterial.js';
+export * from './materials/LineBasicNodeMaterial.js';
+export * from './materials/LineDashedNodeMaterial.js';
+export * from './materials/Line2NodeMaterial.js';
+export * from './materials/MeshNormalNodeMaterial.js';
+export * from './materials/MeshBasicNodeMaterial.js';
+export * from './materials/MeshLambertNodeMaterial.js';
+export * from './materials/MeshPhongNodeMaterial.js';
+export * from './materials/MeshStandardNodeMaterial.js';
+export * from './materials/MeshPhysicalNodeMaterial.js';
+export * from './materials/MeshSSSNodeMaterial.js';
+export * from './materials/PointsNodeMaterial.js';
+export * from './materials/SpriteNodeMaterial.js';
+// /lighting
+export * from './lighting/LightNode.js';
+export * from './lighting/PointLightNode.js';
+export * from './lighting/DirectionalLightNode.js';
+export * from './lighting/SpotLightNode.js';
+export * from './lighting/IESSpotLightNode.js';
+export * from './lighting/AmbientLightNode.js';
+export * from './lighting/LightsNode.js';
+export * from './lighting/LightingNode.js';
+export * from './lighting/LightingContextNode.js';
+export * from './lighting/HemisphereLightNode.js';
+export * from './lighting/EnvironmentNode.js';
+export * from './lighting/AONode.js';
+export * from './lighting/AnalyticLightNode.js';
+import './lighting/LightsNodeMap.initialize.js';
+export * from './lighting/LightUtils.js';
+// /fog
+export * from './fog/FogNode.js';
+export * from './fog/FogRangeNode.js';
+export * from './fog/FogExp2Node.js';
+// /display
 export * from './display/BlendModeNode.js';
 export * from './display/BumpMapNode.js';
 export * from './display/ColorAdjustmentNode.js';
@@ -99,45 +165,15 @@ export * from './display/GaussianBlurNode.js';
 export * from './display/AfterImageNode.js';
 export * from './display/AnamorphicNode.js';
 export * from './display/PassNode.js';
-export * from './code/ExpressionNode.js';
-export * from './code/CodeNode.js';
-export * from './code/FunctionCallNode.js';
-export * from './code/FunctionNode.js';
-export * from './code/ScriptableNode.js';
-export * from './code/ScriptableValueNode.js';
-
-export * from './fog/FogNode.js';
-export * from './fog/FogRangeNode.js';
-export * from './fog/FogExp2Node.js';
-export * from './geometry/RangeNode.js';
-export * from './gpgpu/ComputeNode.js';
-export * from './lighting/LightNode.js';
-export * from './lighting/PointLightNode.js';
-export * from './lighting/DirectionalLightNode.js';
-export * from './lighting/SpotLightNode.js';
-export * from './lighting/IESSpotLightNode.js';
-export * from './lighting/AmbientLightNode.js';
-export * from './lighting/LightsNode.js';
-export * from './lighting/LightingNode.js';
-export * from './lighting/LightingContextNode.js';
-export * from './lighting/HemisphereLightNode.js';
-export * from './lighting/EnvironmentNode.js';
-export * from './lighting/AONode.js';
-export * from './lighting/AnalyticLightNode.js';
-export * from './pmrem/PMREMNode.js';
-export * from './pmrem/PMREMUtils.js';
+// /procedural
 export * from './procedural/CheckerNode.js';
-export * from './materials/Materials.js';
+// /pmrem
+export * from './pmrem/PMREMNode.js';
+// /noise
 export * from './noise/nodes.js';
-export * from './functions/BSDF/BRDF_GGX.js';
-export * from './functions/BSDF/BRDF_Lambert.js';
-export * from './functions/BSDF/D_GGX.js';
-export * from './functions/BSDF/DFGApprox.js';
-export * from './functions/BSDF/F_Schlick.js';
-export * from './functions/BSDF/Schlick_to_F0.js';
-export * from './functions/BSDF/V_GGX_SmithCorrelated.js';
-export * from './lighting/LightUtils.js';
-export * from './functions/material/getGeometryRoughness.js';
-export * from './functions/material/getRoughness.js';
-export * from './functions/PhongLightModel.js';
-export * from './functions/PhysicalLightModel.js';
+// /geometry
+export * from './geometry/RangeNode.js';
+// /gpgpu
+export * from './gpgpu/ComputeNode.js';
+// builder
+export * from './builder/NodeBuilder.js';

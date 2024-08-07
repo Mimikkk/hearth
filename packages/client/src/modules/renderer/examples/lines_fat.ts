@@ -9,7 +9,7 @@ import {
   Line2NodeMaterial,
   LineBasicNodeMaterial,
   LineDashedNodeMaterial,
-} from '@modules/renderer/engine/nodes/Nodes.js';
+} from '@modules/renderer/engine/nodes/nodes.js';
 import { Line2 } from '@modules/renderer/engine/entities/lines/Line2.js';
 import { LineGeometry } from '@modules/renderer/engine/entities/lines/LineGeometry.js';
 import * as GeometryUtils from '@modules/renderer/engine/utils/GeometryUtils.js';

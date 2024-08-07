@@ -1,7 +1,7 @@
 import { TempNode } from '../core/TempNode.js';
 import { add, div, mul } from '../math/OperatorNode.js';
 import { ceil, floor, fract, pow } from '../math/MathNode.js';
-import { f32, i32, vec2, vec4 } from '../shadernode/ShaderNodes.js';
+import { f32, i32, vec2, vec4 } from '../shadernode/ShaderNode.primitves.ts';
 import { implCommand } from '@modules/renderer/engine/nodes/core/Node.commands.js';
 
 const bC = 1.0 / 6.0;

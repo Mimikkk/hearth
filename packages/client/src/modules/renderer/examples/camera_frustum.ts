@@ -1,4 +1,4 @@
-import { color, f32, MeshStandardNodeMaterial, normalWorld } from '@modules/renderer/engine/nodes/Nodes.js';
+import { color, f32, MeshStandardNodeMaterial, normalWorld } from '@modules/renderer/engine/nodes/nodes.js';
 import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 import {
   Camera,

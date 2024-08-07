@@ -15,10 +15,12 @@ import {
 import { modelViewMatrix } from '../accessors/ModelNode.js';
 import { positionGeometry } from '../accessors/PositionNode.js';
 import { mix, smoothstep } from '@modules/renderer/engine/nodes/math/MathNode.js';
-import { f32, hsl, NodeStack, vec2, vec3, vec4 } from '../shadernode/ShaderNodes.js';
+import { f32, vec2, vec3, vec4 } from '../shadernode/ShaderNode.primitves.ts';
 import { uv } from '../accessors/UVNode.js';
 import { viewport } from '../display/ViewportNode.js';
 import { LineDashedMaterial } from '@modules/renderer/engine/entities/materials/LineDashedMaterial.js';
+import { NodeStack } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.stack.js';
+import { hsl } from '@modules/renderer/engine/nodes/shadernode/hsl.js';
 
 const defaultValues = new LineDashedMaterial();
 

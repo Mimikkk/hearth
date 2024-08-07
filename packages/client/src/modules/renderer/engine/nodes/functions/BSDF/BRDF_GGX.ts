@@ -4,7 +4,7 @@ import { D_GGX } from './D_GGX.js';
 import { transformedNormalView } from '../../accessors/NormalNode.js';
 import { positionViewDirection } from '../../accessors/PositionNode.js';
 import { iridescence } from '../../core/PropertyNode.js';
-import { hsl } from '../../shadernode/ShaderNodes.js';
+import { hsl } from '../../shadernode/hsl.ts';
 
 export const BRDF_GGX = hsl(inputs => {
   const { lightDirection, f0, f90, roughness, iridescenceFresnel } = inputs;

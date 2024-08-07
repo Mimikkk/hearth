@@ -7,10 +7,11 @@ import { materialColor, materialPointWidth } from '../accessors/MaterialNode.js'
 import { modelViewMatrix } from '../accessors/ModelNode.js';
 import { positionGeometry } from '../accessors/PositionNode.js';
 import { smoothstep } from '@modules/renderer/engine/nodes/math/MathNode.js';
-import { hsl, vec2, vec4 } from '../shadernode/ShaderNodes.js';
+import { vec2, vec4 } from '../shadernode/ShaderNode.primitves.ts';
 import { uv } from '../accessors/UVNode.js';
 import { viewport } from '../display/ViewportNode.js';
 import { PointsMaterial } from '@modules/renderer/engine/entities/materials/PointsMaterial.js';
+import { hsl } from '@modules/renderer/engine/nodes/shadernode/hsl.js';
 
 const defaultValues = new PointsMaterial();
 

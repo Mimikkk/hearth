@@ -14,7 +14,7 @@ import {
   timerLocal,
   uv,
   vec2,
-} from '@modules/renderer/engine/nodes/Nodes.js';
+} from '@modules/renderer/engine/nodes/nodes.js';
 
 import { KTX2Loader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/KTX2Loader.js';
 

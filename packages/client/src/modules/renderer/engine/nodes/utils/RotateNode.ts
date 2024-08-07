@@ -1,5 +1,5 @@
 import { TempNode } from '../core/TempNode.js';
-import { mat2, mat4, vec4 } from '../shadernode/ShaderNodes.js';
+import { mat2, mat4, vec4 } from '../shadernode/ShaderNode.primitves.ts';
 import { cos, sin } from '../math/MathNode.js';
 import { implCommand } from '@modules/renderer/engine/nodes/core/Node.commands.js';
 

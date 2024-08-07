@@ -13,7 +13,7 @@ import {
   vec3,
   viewportSharedTexture,
   viewportTopLeft,
-} from '@modules/renderer/engine/nodes/Nodes.js';
+} from '@modules/renderer/engine/nodes/nodes.js';
 import { GLTFLoader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/GLTFLoader.js';
 import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitControls.js';

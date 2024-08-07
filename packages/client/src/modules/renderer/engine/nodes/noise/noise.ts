@@ -1,10 +1,12 @@
-import { bool, f32, hsl, i32, NodeStack, u32, uvec3, vec2, vec3, vec4 } from '../shadernode/ShaderNodes.js';
+import { bool, f32, i32, u32, uvec3, vec2, vec3, vec4 } from '../shadernode/ShaderNode.primitves.ts';
 import { cond } from '@modules/renderer/engine/nodes/math/CondNode.js';
 import { mul, sub } from '@modules/renderer/engine/nodes/math/OperatorNode.js';
 import { abs, dot, floor, max, min, sqrt } from '@modules/renderer/engine/nodes/math/MathNode.js';
 import { overloadHsl } from '../utils/OverloadShaderNode.js';
 import { loop } from '../utils/LoopNode.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
+import { NodeStack } from '../shadernode/ShaderNode.stack.ts';
+import { hsl } from '@modules/renderer/engine/nodes/shadernode/hsl.js';
 
 export const select = hsl(
   ([b_i, t_i, f_i]) => {

@@ -32,5 +32,3 @@ export class Uniform<T> {
 }
 
 Uniform.prototype.isNodeUniform = true;
-
-export default Uniform;

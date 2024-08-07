@@ -1,7 +1,7 @@
 import { Node } from '../core/Node.js';
 import { expression } from '../code/ExpressionNode.js';
 import { context } from '../core/ContextNode.js';
-import { asCommand } from '../shadernode/ShaderNodes.js';
+import { asCommand } from '../shadernode/ShaderNode.primitves.ts';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { StackNode } from '@modules/renderer/engine/nodes/core/StackNode.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';

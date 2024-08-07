@@ -1,4 +1,4 @@
-import { StackNode } from '@modules/renderer/engine/nodes/core/StackNode.js';
+import type { StackNode } from '@modules/renderer/engine/nodes/core/StackNode.js';
 
 let _stack: StackNode | null = null;
 

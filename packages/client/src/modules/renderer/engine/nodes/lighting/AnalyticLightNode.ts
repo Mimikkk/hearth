@@ -1,7 +1,7 @@
 import { LightingNode } from './LightingNode.js';
 import { NodeUpdateStage } from '../core/constants.js';
 import { uniform, UniformNode } from '../core/UniformNode.js';
-import { vec3, vec4 } from '../shadernode/ShaderNodes.js';
+import { vec3, vec4 } from '../shadernode/ShaderNode.primitves.ts';
 import { ref } from '../accessors/ReferenceNode.js';
 import { texture, TextureNode } from '../accessors/TextureNode.js';
 import { positionWorld } from '../accessors/PositionNode.js';

@@ -1,4 +1,4 @@
-import { asCommand } from '../shadernode/ShaderNodes.js';
+import { asCommand } from '../shadernode/ShaderNode.primitves.ts';
 import { ArrayElementNode } from './ArrayElementNode.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';

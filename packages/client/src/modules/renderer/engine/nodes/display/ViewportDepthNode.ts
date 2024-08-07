@@ -1,5 +1,5 @@
 import { Node } from '../core/Node.js';
-import { f32, asCommand } from '../shadernode/ShaderNodes.js';
+import { f32, asCommand } from '../shadernode/ShaderNode.primitves.ts';
 import { cameraFar, cameraNear } from '../accessors/CameraNode.js';
 import { positionView } from '../accessors/PositionNode.js';
 import { viewportDepthTexture } from './ViewportDepthTextureNode.js';

@@ -1,5 +1,5 @@
 import { TempNode } from '../core/TempNode.js';
-import { asCommand, f32, hsl, vec2, vec3, vec4 } from '../shadernode/ShaderNodes.js';
+import { asCommand, f32, vec2, vec3, vec4 } from '../shadernode/ShaderNode.primitves.ts';
 import { loop } from '../utils/LoopNode.js';
 import { uniform } from '../core/UniformNode.js';
 import { NodeUpdateStage } from '../core/constants.js';
@@ -11,6 +11,7 @@ import { ConstNode } from '@modules/renderer/engine/nodes/core/ConstNode.js';
 import { implCommand } from '@modules/renderer/engine/nodes/core/Node.commands.js';
 import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
 import { RenderTarget } from '@modules/renderer/engine/hearth/core/RenderTarget.js';
+import { hsl } from '@modules/renderer/engine/nodes/shadernode/hsl.js';
 
 const quadMesh = new QuadMesh();
 

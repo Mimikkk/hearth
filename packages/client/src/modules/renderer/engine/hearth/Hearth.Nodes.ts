@@ -16,7 +16,7 @@ import {
   texture,
   toneMapping,
   viewportBottomLeft,
-} from '../nodes/Nodes.js';
+} from '../nodes/nodes.js';
 import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 import { RenderObject } from '@modules/renderer/engine/hearth/core/RenderObject.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';

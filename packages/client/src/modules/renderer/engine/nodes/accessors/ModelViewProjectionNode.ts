@@ -2,7 +2,7 @@ import { TempNode } from '../core/TempNode.js';
 import { cameraProjectionMatrix } from './CameraNode.js';
 import { modelViewMatrix } from './ModelNode.js';
 import { positionLocal } from './PositionNode.js';
-import { asCommand } from '../shadernode/ShaderNodes.js';
+import { asCommand } from '../shadernode/ShaderNode.primitves.ts';
 import { varying } from '../core/VaryingNode.js';
 import { ShaderStage } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 

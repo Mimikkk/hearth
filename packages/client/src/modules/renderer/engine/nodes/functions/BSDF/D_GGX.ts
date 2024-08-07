@@ -1,4 +1,4 @@
-import { hsl } from '../../shadernode/ShaderNodes.js';
+import { hsl } from '../../shadernode/hsl.ts';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
 export const D_GGX = hsl(

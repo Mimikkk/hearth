@@ -1,5 +1,5 @@
 import { Node } from '../core/Node.js';
-import { f32 } from '../shadernode/ShaderNodes.js';
+import { f32 } from '../shadernode/ShaderNode.primitves.ts';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 

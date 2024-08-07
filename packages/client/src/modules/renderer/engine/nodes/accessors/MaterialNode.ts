@@ -2,7 +2,7 @@ import { Node } from '../core/Node.js';
 import { ref } from './ReferenceNode.js';
 import { materialRef } from './MaterialReferenceNode.js';
 import { normalView } from './NormalNode.js';
-import { f32 } from '../shadernode/ShaderNodes.js';
+import { f32 } from '../shadernode/ShaderNode.primitves.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { Texture } from '@modules/renderer/engine/entities/textures/Texture.js';

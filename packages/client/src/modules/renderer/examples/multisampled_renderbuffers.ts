@@ -1,5 +1,5 @@
 import * as Engine from '@modules/renderer/engine/engine.js';
-import { texture, MeshBasicNodeMaterial, MeshPhongNodeMaterial } from '@modules/renderer/engine/nodes/Nodes.js';
+import { texture, MeshBasicNodeMaterial, MeshPhongNodeMaterial } from '@modules/renderer/engine/nodes/nodes.js';
 
 import { GUI } from 'lil-gui';
 

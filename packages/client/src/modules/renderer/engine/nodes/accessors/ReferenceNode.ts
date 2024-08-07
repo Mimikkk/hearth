@@ -3,7 +3,7 @@ import { NodeUpdateStage } from '../core/constants.js';
 import { uniform } from '../core/UniformNode.js';
 import { texture } from './TextureNode.js';
 import { buffer } from './BufferNode.js';
-import { asCommand, asNode } from '../shadernode/ShaderNodes.js';
+import { asCommand, asNode } from '../shadernode/ShaderNode.primitves.ts';
 import { uniforms } from './UniformsNode.js';
 import { ArrayElementNode } from '../utils/ArrayElementNode.js';
 import { ConstNode } from '@modules/renderer/engine/nodes/core/ConstNode.js';

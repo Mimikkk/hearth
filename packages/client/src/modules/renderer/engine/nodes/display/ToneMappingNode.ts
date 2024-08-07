@@ -1,5 +1,5 @@
 import { TempNode } from '../core/TempNode.js';
-import { asCommand, asNode, f32, hsl, mat3, vec3 } from '../shadernode/ShaderNodes.js';
+import { asCommand, f32, mat3, vec3 } from '../shadernode/ShaderNode.primitves.ts';
 import { rendererRef } from '../accessors/RendererReferenceNode.js';
 import { clamp, log2, max, pow } from '../math/MathNode.js';
 import { mul } from '../math/OperatorNode.js';
@@ -9,6 +9,7 @@ import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.typ
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { ToneMapping } from '@modules/renderer/engine/constants.js';
 import { Color } from '@modules/renderer/engine/math/Color.js';
+import { hsl } from '@modules/renderer/engine/nodes/shadernode/hsl.js';
 
 const LinearToneMappingNode = hsl(({ color, exposure }) => {
   return color.mul(exposure).clamp();

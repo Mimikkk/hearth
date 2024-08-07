@@ -1,7 +1,9 @@
 import { Node } from '../core/Node.js';
-import { Hsl, asCommand, ShaderCallNode } from '../shadernode/ShaderNodes.js';
+import { asCommand } from '../shadernode/ShaderNode.primitves.ts';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
+import type { ShaderCallNode } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.js';
+import type { Hsl } from '@modules/renderer/engine/nodes/shadernode/hsl.js';
 
 export class OverloadShaderNode extends Node {
   call: ShaderCallNode;

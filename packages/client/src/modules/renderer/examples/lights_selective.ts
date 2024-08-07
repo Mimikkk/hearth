@@ -6,7 +6,7 @@ import {
   normalMap,
   rangeFog,
   texture,
-} from '@modules/renderer/engine/nodes/Nodes.js';
+} from '@modules/renderer/engine/nodes/nodes.js';
 
 import { GUI } from 'lil-gui';
 

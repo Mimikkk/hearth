@@ -11,5 +11,3 @@ export class NodeVarying extends NodeVar {
     this.isNodeVarying = true;
   }
 }
-
-export default NodeVarying;

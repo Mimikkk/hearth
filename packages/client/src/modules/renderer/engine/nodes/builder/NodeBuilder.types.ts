@@ -1,5 +1,5 @@
-import { TypedArray } from '@modules/renderer/engine/math/MathUtils.js';
-import { Attribute } from '@modules/renderer/engine/core/Attribute.js';
+import type { TypedArray } from '@modules/renderer/engine/math/MathUtils.js';
+import type { Attribute } from '@modules/renderer/engine/core/Attribute.js';
 import { Color } from '@modules/renderer/engine/math/Color.js';
 import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
 import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';

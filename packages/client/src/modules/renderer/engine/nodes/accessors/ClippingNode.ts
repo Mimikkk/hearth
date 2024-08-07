@@ -1,5 +1,5 @@
 import { Node } from '../core/Node.js';
-import { hsl } from '../shadernode/ShaderNodes.js';
+import { hsl } from '../shadernode/hsl.js';
 import { positionView } from './PositionNode.js';
 import { diffuseColor, property } from '../core/PropertyNode.js';
 import { loop } from '../utils/LoopNode.js';

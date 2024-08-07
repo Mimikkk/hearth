@@ -1,25 +1,24 @@
 import { NodeUpdateStage } from './constants.js';
 import { getNodeCacheKey, getNodeChildren } from './NodeUtils.js';
-import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
-import { NodeFrame } from '@modules/renderer/engine/nodes/core/NodeFrame.js';
+import type { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
+import type { NodeFrame } from '@modules/renderer/engine/nodes/core/NodeFrame.js';
 import { BuildStage, TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { v4 } from 'uuid';
 import type { SetNode } from '@modules/renderer/engine/nodes/utils/SetNode.js';
 import type { SplitNode } from '@modules/renderer/engine/nodes/utils/SplitNode.js';
 import type { ArrayElementNode } from '@modules/renderer/engine/nodes/utils/ArrayElementNode.js';
-import { NodeVal } from '@modules/renderer/engine/nodes/core/ConstNode.js';
+import type { NodeVal } from '@modules/renderer/engine/nodes/core/ConstNode.js';
 import { implIndexAccess, implSwizzle } from '@modules/renderer/engine/nodes/core/Node.swizzle.js';
 import { NodeStack } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.stack.js';
-import { StackNode } from '@modules/renderer/engine/nodes/core/StackNode.js';
+import type { StackNode } from '@modules/renderer/engine/nodes/core/StackNode.js';
 import type { AssignNode } from '@modules/renderer/engine/nodes/core/AssignNode.js';
 import type { CondNode } from '@modules/renderer/engine/nodes/math/CondNode.js';
-import { UnaryNode } from '@modules/renderer/engine/nodes/math/MathNode.js';
-import { TextureNode } from '@modules/renderer/engine/nodes/accessors/TextureNode.js';
+import type { UnaryNode } from '@modules/renderer/engine/nodes/math/MathNode.js';
+import type { TextureNode } from '@modules/renderer/engine/nodes/accessors/TextureNode.js';
 import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
-import { Vec4 } from '@modules/renderer/engine/math/Vec4.js';
-import { UVNode } from '@modules/renderer/engine/nodes/accessors/UVNode.js';
-import { LightModel } from '@modules/renderer/engine/nodes/functions/LightModel.js';
-import { ColorSpace, ToneMapping } from '@modules/renderer/engine/constants.js';
+import type { UVNode } from '@modules/renderer/engine/nodes/accessors/UVNode.js';
+import type { LightModel } from '@modules/renderer/engine/nodes/functions/LightModel.js';
+import type { ColorSpace, ToneMapping } from '@modules/renderer/engine/constants.js';
 
 let _nodeId = 0;
 

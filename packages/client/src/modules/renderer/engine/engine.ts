@@ -273,7 +273,7 @@ export * as ImageUtils from './utils/ImageUtils.js';
 export * as Earcut from './utils/ShapeUtils.earcut.js';
 export * as ShapeUtils from './utils/ShapeUtils.js';
 // nodes
-export * as nodes from './nodes/Nodes.js';
+export * as nodes from './nodes/nodes.js';
 
 // TODO - merge as one
 export * from './constants.js';

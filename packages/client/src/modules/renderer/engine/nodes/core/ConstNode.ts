@@ -1,5 +1,5 @@
 import { InputNode } from './InputNode.js';
-import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
+import type { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { Node } from '@modules/renderer/engine/nodes/core/Node.js';
 

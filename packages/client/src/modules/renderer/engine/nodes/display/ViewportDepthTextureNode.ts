@@ -1,5 +1,5 @@
 import { ViewportTextureNode } from './ViewportTextureNode.js';
-import { asCommand } from '../shadernode/ShaderNodes.js';
+import { asCommand } from '../shadernode/ShaderNode.primitves.ts';
 import { viewportTopLeft } from './ViewportNode.js';
 import { implCommand } from '@modules/renderer/engine/nodes/core/Node.commands.js';
 import { DepthTexture } from '@modules/renderer/engine/entities/textures/DepthTexture.js';

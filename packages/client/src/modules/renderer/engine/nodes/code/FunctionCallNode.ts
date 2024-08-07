@@ -1,5 +1,5 @@
 import { TempNode } from '../core/TempNode.js';
-import { asNode, asCommand } from '../shadernode/ShaderNodes.js';
+import { asNode, asCommand } from '../shadernode/ShaderNode.primitves.ts';
 import { FunctionNode } from './FunctionNode.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';

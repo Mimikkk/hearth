@@ -1,5 +1,6 @@
-import { hsl, vec3 } from '../../shadernode/ShaderNodes.js';
+import { vec3 } from '../../shadernode/ShaderNode.primitves.ts';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
+import { hsl } from '@modules/renderer/engine/nodes/shadernode/hsl.js';
 
 export const Schlick_to_F0 = hsl(
   ({ f, f90, dotVH }) => {

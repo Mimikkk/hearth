@@ -4,7 +4,7 @@ import { GUI } from 'lil-gui';
 
 import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 import { HearthPostprocess } from '@modules/renderer/engine/hearth/Hearth.Postprocess.js';
-import { pass } from '@modules/renderer/engine/nodes/Nodes.js';
+import { pass } from '@modules/renderer/engine/nodes/nodes.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let camera, scene, hearth;

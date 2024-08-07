@@ -1,4 +1,4 @@
-import { asCommand, asNode } from '../shadernode/ShaderNodes.js';
+import { asCommand, asNode } from '../shadernode/ShaderNode.primitves.ts';
 import { NodeUpdateStage } from '../core/constants.js';
 import { ArrayElementNode } from '../utils/ArrayElementNode.js';
 import { BufferNode } from './BufferNode.js';

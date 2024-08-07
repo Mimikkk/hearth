@@ -1,7 +1,7 @@
 import { bitangentView } from './BitangentNode.js';
 import { normalView } from './NormalNode.js';
 import { tangentView } from './TangentNode.js';
-import { mat3 } from '../shadernode/ShaderNodes.js';
+import { mat3 } from '../shadernode/ShaderNode.primitves.js';
 import { positionViewDirection } from './PositionNode.js';
 import { UVNode } from '@modules/renderer/engine/nodes/accessors/UVNode.js';
 import { ConstNode } from '@modules/renderer/engine/nodes/core/ConstNode.js';

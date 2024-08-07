@@ -1,5 +1,5 @@
 import { TempNode } from '../core/TempNode.js';
-import { asCommand, vec2 } from '../shadernode/ShaderNodes.js';
+import { asCommand, vec2 } from '../shadernode/ShaderNode.primitves.ts';
 import { implCommand } from '@modules/renderer/engine/nodes/core/Node.commands.js';
 
 export class RotateUVNode extends TempNode {

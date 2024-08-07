@@ -3,7 +3,7 @@ import { add } from '../math/OperatorNode.js';
 import { normalLocal } from '../accessors/NormalNode.js';
 import { positionLocal } from '../accessors/PositionNode.js';
 import { texture } from '../accessors/TextureNode.js';
-import { f32, asCommand, vec3 } from '../shadernode/ShaderNodes.js';
+import { f32, asCommand, vec3 } from '../shadernode/ShaderNode.primitves.ts';
 import { implCommand } from '@modules/renderer/engine/nodes/core/Node.commands.js';
 
 export class TriplanarTexturesNode extends Node {

@@ -1,6 +1,6 @@
 import { Node } from './Node.js';
 import { StructTypeNode } from './StructTypeNode.js';
-import { asCommand } from '../shadernode/ShaderNodes.js';
+import { asCommand } from '../shadernode/ShaderNode.primitves.ts';
 
 export class OutputStructNode extends Node {
   constructor(...members) {

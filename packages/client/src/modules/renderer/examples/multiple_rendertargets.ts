@@ -17,7 +17,7 @@ import {
   varying,
   vec2,
   vec4,
-} from '@modules/renderer/engine/nodes/Nodes.js';
+} from '@modules/renderer/engine/nodes/nodes.js';
 import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 
 import { QuadMesh } from '@modules/renderer/engine/entities/QuadMesh.js';

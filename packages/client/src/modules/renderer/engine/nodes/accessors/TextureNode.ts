@@ -4,7 +4,7 @@ import { textureSize } from './TextureSizeNode.js';
 import { colorSpaceToLinear } from '../display/ColorSpaceNode.js';
 import { expression } from '../code/ExpressionNode.js';
 import { maxMipLevel } from '../utils/MaxMipLevelNode.js';
-import { asNode, asCommand, vec3 } from '../shadernode/ShaderNodes.js';
+import { asNode, asCommand, vec3 } from '../shadernode/ShaderNode.primitves.ts';
 import { NodeUpdateStage } from '../core/constants.js';
 import { implCommand } from '@modules/renderer/engine/nodes/core/Node.commands.js';
 

@@ -6,16 +6,6 @@ import {
   NodeUniformBuffer,
   NodeUniformsGroup,
 } from './NodeStorageBuffer.js';
-import {
-  LightsNode,
-  NodeMaterial,
-  NodeStack,
-  NodeUpdateStage,
-  ShaderNode,
-  stack,
-  UniformNode,
-  VaryingNode,
-} from '@modules/renderer/engine/nodes/Nodes.js';
 import { getFormat } from '@modules/renderer/engine/hearth/Hearth.Textures.js';
 import ChainMap from '@modules/renderer/engine/hearth/memo/ChainMap.js';
 import { NodeAttribute } from '@modules/renderer/engine/nodes/core/NodeAttribute.js';
@@ -29,7 +19,7 @@ import { ParameterNode } from '@modules/renderer/engine/nodes/core/ParameterNode
 import { NodeMaterials } from '@modules/renderer/engine/nodes/materials/NodeMaterialMap.js';
 import { FeatureMap, FeatureName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.features.js';
 import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
-import { StackNode } from '@modules/renderer/engine/nodes/core/StackNode.js';
+import { stack, StackNode } from '@modules/renderer/engine/nodes/core/StackNode.js';
 import { EnvironmentNode } from '@modules/renderer/engine/nodes/lighting/EnvironmentNode.js';
 import { FogNode } from '@modules/renderer/engine/nodes/fog/FogNode.js';
 import { ToneMappingNode } from '@modules/renderer/engine/nodes/display/ToneMappingNode.js';
@@ -51,6 +41,13 @@ import { Color } from '@modules/renderer/engine/math/Color.js';
 import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
 import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
 import { Vec4 } from '@modules/renderer/engine/math/Vec4.js';
+import type { LightsNode } from '@modules/renderer/engine/nodes/lighting/LightsNode.js';
+import { NodeStack } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.stack.js';
+import type { VaryingNode } from '@modules/renderer/engine/nodes/core/VaryingNode.js';
+import type { ShaderNode } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.js';
+import { NodeMaterial } from '@modules/renderer/engine/nodes/materials/NodeMaterial.js';
+import type { UniformNode } from '@modules/renderer/engine/nodes/core/UniformNode.js';
+import { NodeUpdateStage } from '@modules/renderer/engine/nodes/core/constants.js';
 
 type ParseFn = (source: string) => WgslFn;
 

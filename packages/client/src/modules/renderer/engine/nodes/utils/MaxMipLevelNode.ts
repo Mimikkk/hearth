@@ -1,6 +1,6 @@
 import { UniformNode } from '../core/UniformNode.js';
 import { NodeUpdateStage } from '../core/constants.js';
-import { asCommand } from '../shadernode/ShaderNodes.js';
+import { asCommand } from '../shadernode/ShaderNode.primitves.ts';
 import { TextureNode } from '@modules/renderer/engine/nodes/accessors/TextureNode.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 

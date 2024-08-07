@@ -1,7 +1,7 @@
 import { TempNode } from '../core/TempNode.js';
 import { transformedNormalView } from '../accessors/NormalNode.js';
 import { positionViewDirection } from '../accessors/PositionNode.js';
-import { asNode, vec2, vec3 } from '../shadernode/ShaderNodes.js';
+import { asNode, vec2, vec3 } from '../shadernode/ShaderNode.primitves.ts';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
 export class MatcapUVNode extends TempNode {

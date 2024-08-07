@@ -1,18 +1,19 @@
 import { TempNode } from '../core/TempNode.js';
-import { f32, hsl, vec4 } from '../shadernode/ShaderNodes.js';
+import { f32, vec4 } from '../shadernode/ShaderNode.primitves.ts';
 import { NodeUpdateStage } from '../core/constants.js';
 import { uv } from '../accessors/UVNode.js';
-import { texture } from '../accessors/TextureNode.js';
+import { texture, TextureNode } from '../accessors/TextureNode.js';
 import { texturePass } from './PassNode.js';
 import { uniform } from '../core/UniformNode.js';
 import { max, sign } from '../math/MathNode.js';
 import { QuadMesh } from '@modules/renderer/engine/entities/QuadMesh.js';
-import { ConstNode, TextureNode } from '@modules/renderer/engine/nodes/Nodes.js';
 import { NodeMaterial } from '@modules/renderer/engine/nodes/materials/NodeMaterial.js';
 import { NodeFrame } from '@modules/renderer/engine/nodes/core/NodeFrame.js';
 import type { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { implCommand } from '@modules/renderer/engine/nodes/core/Node.commands.js';
 import { RenderTarget } from '@modules/renderer/engine/hearth/core/RenderTarget.js';
+import { ConstNode } from '@modules/renderer/engine/nodes/core/ConstNode.js';
+import { hsl } from '@modules/renderer/engine/nodes/shadernode/hsl.js';
 
 const quadMeshComp = new QuadMesh(null);
 

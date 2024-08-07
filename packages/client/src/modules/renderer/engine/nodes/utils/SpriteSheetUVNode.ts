@@ -1,6 +1,6 @@
 import { Node } from '../core/Node.js';
 import { uv } from '../accessors/UVNode.js';
-import { f32, asCommand, vec2 } from '../shadernode/ShaderNodes.js';
+import { f32, asCommand, vec2 } from '../shadernode/ShaderNode.primitves.ts';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
 export class SpriteSheetUVNode extends Node {

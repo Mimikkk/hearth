@@ -1,6 +1,6 @@
 import { Node } from '../core/Node.js';
 import { NodeUpdateStage } from '../core/constants.js';
-import { attribute } from '../core/AttributeNode.js';
+import { attribute, AttributeNode } from '../core/AttributeNode.js';
 import { ref } from './ReferenceNode.js';
 import { add } from '../math/OperatorNode.js';
 import { normalLocal } from './NormalNode.js';
@@ -12,7 +12,6 @@ import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.typ
 import { SkinnedMesh } from '@modules/renderer/engine/entities/SkinnedMesh.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { NodeFrame } from '@modules/renderer/engine/nodes/core/NodeFrame.js';
-import { AttributeNode } from '@modules/renderer/engine/nodes/Nodes.js';
 
 export class SkinningNode extends Node {
   skinIndexNode: AttributeNode;

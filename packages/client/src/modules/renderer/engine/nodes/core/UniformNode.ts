@@ -1,10 +1,9 @@
 import { InputNode } from './InputNode.js';
 import { Node } from '../core/Node.js';
-import { objectGroup } from './UniformGroupNode.js';
+import { objectGroup, UniformGroupNode } from './UniformGroupNode.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
-import { UniformGroupNode } from '@modules/renderer/engine/nodes/Nodes.js';
-import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
-import Uniform from '@modules/renderer/engine/nodes/core/Uniform.js';
+import type { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
+import type { Uniform } from '@modules/renderer/engine/nodes/core/Uniform.js';
 
 export const getConstNodeType = (value?: any | null) =>
   value !== undefined && value !== null

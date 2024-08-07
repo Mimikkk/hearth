@@ -5,7 +5,7 @@ import { ArrayElementNode } from '@modules/renderer/engine/nodes/utils/ArrayElem
 import { asCommand, asNode, asNodes } from './ShaderNode.as.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { implCommand, implPrimitive } from '@modules/renderer/engine/nodes/core/Node.commands.js';
-import { ConstNode, NodeVal } from '@modules/renderer/engine/nodes/core/ConstNode.js';
+import type { ConstNode, NodeVal } from '@modules/renderer/engine/nodes/core/ConstNode.js';
 
 const safeType = (node: ConstNode) => {
   try {

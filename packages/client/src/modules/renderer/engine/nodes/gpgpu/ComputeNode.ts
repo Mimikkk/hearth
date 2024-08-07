@@ -1,6 +1,6 @@
 import { Node } from '../core/Node.js';
 import { NodeUpdateStage } from '../core/constants.js';
-import { ShaderCallNode } from '../shadernode/ShaderNodes.js';
+import { ShaderCallNode } from '../shadernode/ShaderNode.primitves.ts';
 import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { ShaderStage, TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';

@@ -1,5 +1,5 @@
 import { TextureNode } from '../accessors/TextureNode.js';
-import { asCommand, vec2 } from '../shadernode/ShaderNodes.js';
+import { asCommand, vec2 } from '../shadernode/ShaderNode.primitves.ts';
 import { NodeUpdateStage } from '../core/constants.js';
 import { viewportTopLeft } from '../display/ViewportNode.js';
 import { Plane } from '@modules/renderer/engine/math/Plane.js';

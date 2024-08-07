@@ -1,6 +1,6 @@
 import * as Engine from '@modules/renderer/engine/engine.js';
 import { Camera, Scene } from '@modules/renderer/engine/engine.js';
-import { MeshPhongNodeMaterial, Node, NodeUpdateStage, uniform } from '@modules/renderer/engine/nodes/Nodes.js';
+import { MeshPhongNodeMaterial, Node, NodeUpdateStage, uniform } from '@modules/renderer/engine/nodes/nodes.js';
 
 import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitControls.js';
 

@@ -2,7 +2,7 @@ import { Node } from '../core/Node.js';
 import { instancedBufferAttribute, instancedDynamicBufferAttribute } from './BufferAttributeNode.js';
 import { normalLocal } from './NormalNode.js';
 import { positionLocal } from './PositionNode.js';
-import { mat3, mat4, asCommand, vec3 } from '../shadernode/ShaderNodes.js';
+import { mat3, mat4, asCommand, vec3 } from '../shadernode/ShaderNode.primitves.js';
 import { BufferStep } from '@modules/renderer/engine/hearth/constants.js';
 import { BufferUse } from '@modules/renderer/engine/constants.js';
 import { Buffer } from '@modules/renderer/engine/core/Buffer.js';

@@ -4,7 +4,7 @@ import { mix } from '@modules/renderer/engine/nodes/math/MathNode.js';
 import { materialMetalness, materialRoughness } from '../accessors/MaterialNode.js';
 import { getRoughness } from '../functions/material/getRoughness.js';
 import { PhysicalLightModel } from '../functions/PhysicalLightModel.js';
-import { f32, vec3, vec4 } from '../shadernode/ShaderNodes.js';
+import { f32, vec3, vec4 } from '../shadernode/ShaderNode.primitves.ts';
 import { Node } from '../core/Node.js';
 import { MeshStandardMaterial } from '@modules/renderer/engine/entities/materials/MeshStandardMaterial.js';
 

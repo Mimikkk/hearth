@@ -20,10 +20,11 @@ import {
 } from '../core/PropertyNode.js';
 import { transformedClearcoatNormalView, transformedNormalView } from '../accessors/NormalNode.js';
 import { positionViewDirection } from '../accessors/PositionNode.js';
-import { f32, hsl, mat3, vec3 } from '../shadernode/ShaderNodes.js';
+import { f32, mat3, vec3 } from '../shadernode/ShaderNode.primitves.ts';
 import { cond } from '@modules/renderer/engine/nodes/math/CondNode.js';
 import { mix, smoothstep } from '@modules/renderer/engine/nodes/math/MathNode.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
+import { hsl } from '@modules/renderer/engine/nodes/shadernode/hsl.js';
 
 const XYZ_TO_REC709 = mat3(
   3.2404542,

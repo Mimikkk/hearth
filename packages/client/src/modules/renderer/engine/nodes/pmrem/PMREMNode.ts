@@ -3,7 +3,7 @@ import { texture } from '../accessors/TextureNode.js';
 import { textureCubeUV } from './PMREMUtils.js';
 import { uniform } from '../core/UniformNode.js';
 import { NodeUpdateStage } from '../core/constants.js';
-import { asCommand } from '../shadernode/ShaderNodes.js';
+import { asCommand } from '../shadernode/ShaderNode.primitves.ts';
 import { PMREMGenerator } from '@modules/renderer/engine/hearth/PMREMGenerator.js';
 
 let _generator = null;

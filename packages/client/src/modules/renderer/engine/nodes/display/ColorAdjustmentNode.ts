@@ -1,9 +1,10 @@
 import { TempNode } from '../core/TempNode.js';
 import { dot, mix, MixNode } from '../math/MathNode.js';
 import { add } from '../math/OperatorNode.js';
-import { asNode, f32, hsl, asCommand, vec3 } from '../shadernode/ShaderNodes.js';
+import { asNode, f32, asCommand, vec3 } from '../shadernode/ShaderNode.primitves.ts';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { implCommand } from '@modules/renderer/engine/nodes/core/Node.commands.js';
+import { hsl } from '@modules/renderer/engine/nodes/shadernode/hsl.js';
 
 export class ColorAdjustmentNode extends TempNode {
   method: NodeVariant;

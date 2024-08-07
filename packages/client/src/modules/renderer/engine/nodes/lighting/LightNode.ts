@@ -1,5 +1,5 @@
 import { Node } from '../core/Node.js';
-import { asCommand } from '../shadernode/ShaderNodes.js';
+import { asCommand } from '../shadernode/ShaderNode.primitves.ts';
 import { objectPosition } from '../accessors/EntityNode.js';
 import { cameraViewMatrix } from '../accessors/CameraNode.js';
 import type { Light } from '@modules/renderer/engine/entities/lights/Light.js';

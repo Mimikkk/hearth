@@ -3,8 +3,9 @@ import { uv } from '../accessors/UVNode.js';
 import { normalView } from '../accessors/NormalNode.js';
 import { positionView } from '../accessors/PositionNode.js';
 import { faceDirection } from './FrontFacingNode.js';
-import { f32, hsl, asCommand, vec2 } from '../shadernode/ShaderNodes.js';
+import { f32, asCommand, vec2 } from '../shadernode/ShaderNode.primitves.ts';
 import { implCommand } from '@modules/renderer/engine/nodes/core/Node.commands.js';
+import { hsl } from '@modules/renderer/engine/nodes/shadernode/hsl.js';
 
 const dHdxy_fwd = hsl(({ textureNode, bumpScale }) => {
   let texNode = textureNode;

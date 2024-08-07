@@ -13,7 +13,7 @@ import {
   worleyVec3,
 } from './noise.js';
 import { uv } from '../accessors/UVNode.js';
-import { i32 } from '../shadernode/ShaderNodes.js';
+import { i32 } from '../shadernode/ShaderNode.primitves.ts';
 
 export const Noise = {
   fractal: {

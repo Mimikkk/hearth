@@ -1,5 +1,5 @@
 import { Node } from '../core/Node.js';
-import { f32, asCommand } from '../shadernode/ShaderNodes.js';
+import { f32, asCommand } from '../shadernode/ShaderNode.primitves.ts';
 import { implCommand } from '@modules/renderer/engine/nodes/core/Node.commands.js';
 
 export class RemapNode extends Node {

@@ -10,7 +10,7 @@ import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitC
 import { InstancedPoints } from '@modules/renderer/engine/entities/InstancedPoints.js';
 import { InstancedPointsGeometry } from '@modules/renderer/engine/entities/geometries/InstancedPointsGeometry.js';
 
-import { color, InstancedPointsNodeMaterial } from '@modules/renderer/engine/nodes/Nodes.js';
+import { color, InstancedPointsNodeMaterial } from '@modules/renderer/engine/nodes/nodes.js';
 
 import * as GeometryUtils from '@modules/renderer/engine/utils/GeometryUtils.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';

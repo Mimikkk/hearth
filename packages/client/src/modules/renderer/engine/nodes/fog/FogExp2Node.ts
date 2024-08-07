@@ -1,6 +1,6 @@
 import { FogNode } from './FogNode.js';
 import { Node } from '../core/Node.js';
-import { asCommand } from '../shadernode/ShaderNodes.js';
+import { asCommand } from '../shadernode/ShaderNode.primitves.ts';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 
 export class FogExp2Node extends FogNode {

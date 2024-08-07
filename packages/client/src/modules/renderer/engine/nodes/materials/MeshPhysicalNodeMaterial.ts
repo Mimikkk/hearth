@@ -18,7 +18,7 @@ import {
   materialSheen,
   materialSheenRoughness,
 } from '../accessors/MaterialNode.js';
-import { f32, vec3 } from '../shadernode/ShaderNodes.js';
+import { f32, vec3 } from '../shadernode/ShaderNode.primitves.ts';
 import { PhysicalLightModel } from '../functions/PhysicalLightModel.js';
 import { MeshStandardNodeMaterial } from './MeshStandardNodeMaterial.js';
 import { MeshPhysicalMaterial } from '@modules/renderer/engine/entities/materials/MeshPhysicalMaterial.js';

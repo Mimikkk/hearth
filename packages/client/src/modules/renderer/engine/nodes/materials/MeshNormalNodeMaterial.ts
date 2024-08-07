@@ -3,7 +3,7 @@ import { diffuseColor } from '../core/PropertyNode.js';
 import { directionToColor } from '../utils/PackingNode.js';
 import { materialOpacity } from '../accessors/MaterialNode.js';
 import { transformedNormalView } from '../accessors/NormalNode.js';
-import { f32, vec4 } from '../shadernode/ShaderNodes.js';
+import { f32, vec4 } from '../shadernode/ShaderNode.primitves.ts';
 import { MeshNormalMaterial } from '@modules/renderer/engine/entities/materials/MeshNormalMaterial.js';
 
 const defaultValues = new MeshNormalMaterial();

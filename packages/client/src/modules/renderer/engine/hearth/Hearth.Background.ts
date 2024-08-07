@@ -7,7 +7,7 @@ import {
   NodeMaterial,
   normalWorld,
   vec4,
-} from '../nodes/Nodes.js';
+} from '../nodes/nodes.js';
 import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 import { RenderContext } from '@modules/renderer/engine/hearth/core/RenderContext.js';
 import { RenderQueue } from '@modules/renderer/engine/hearth/core/RenderQueue.js';

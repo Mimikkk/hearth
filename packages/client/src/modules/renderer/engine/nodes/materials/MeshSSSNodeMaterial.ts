@@ -1,5 +1,5 @@
 import { MeshPhysicalNodeMaterial } from './MeshPhysicalNodeMaterial.js';
-import { f32 } from '../shadernode/ShaderNodes.js';
+import { f32 } from '../shadernode/ShaderNode.primitves.ts';
 import { SSSLightingModel } from '@modules/renderer/engine/nodes/functions/SSSLightModel.js';
 
 export class MeshSSSNodeMaterial extends MeshPhysicalNodeMaterial {

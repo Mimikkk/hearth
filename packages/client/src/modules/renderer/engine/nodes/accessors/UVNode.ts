@@ -1,5 +1,5 @@
 import { AttributeNode } from '../core/AttributeNode.js';
-import { asCommand, asNode } from '../shadernode/ShaderNodes.js';
+import { asCommand, asNode } from '../shadernode/ShaderNode.primitves.ts';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { ConstNode } from '@modules/renderer/engine/nodes/core/ConstNode.js';
 

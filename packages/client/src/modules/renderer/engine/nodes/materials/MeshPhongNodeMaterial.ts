@@ -1,7 +1,7 @@
 import { NodeMaterial } from './NodeMaterial.js';
 import { shininess, specularColor } from '../core/PropertyNode.js';
 import { materialShininess, materialSpecularColor } from '../accessors/MaterialNode.js';
-import { f32 } from '../shadernode/ShaderNodes.js';
+import { f32 } from '../shadernode/ShaderNode.primitves.ts';
 import { PhongLightModel } from '../functions/PhongLightModel.js';
 import { MeshPhongMaterial } from '@modules/renderer/engine/entities/materials/MeshPhongMaterial.js';
 

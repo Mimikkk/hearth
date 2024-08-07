@@ -5,7 +5,8 @@ import { diffuseColor, shininess, specularColor } from '../core/PropertyNode.js'
 import { transformedNormalView } from '../accessors/NormalNode.js';
 import { materialSpecularStrength } from '../accessors/MaterialNode.js';
 import { positionViewDirection } from '../accessors/PositionNode.js';
-import { f32, hsl } from '../shadernode/ShaderNodes.js';
+import { f32 } from '../shadernode/ShaderNode.primitves.ts';
+import { hsl } from '@modules/renderer/engine/nodes/shadernode/hsl.js';
 
 const G_BlinnPhong_Implicit = () => f32(0.25);
 

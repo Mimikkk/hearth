@@ -10,7 +10,7 @@ import {
   reflectVector,
   toneMapping,
   uniform,
-} from '@modules/renderer/engine/nodes/Nodes.js';
+} from '@modules/renderer/engine/nodes/nodes.js';
 
 import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 

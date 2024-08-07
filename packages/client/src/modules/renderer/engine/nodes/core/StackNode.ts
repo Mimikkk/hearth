@@ -1,9 +1,11 @@
 import { Node } from './Node.js';
-import { NodeStack, asCommand, ShaderNode } from '../shadernode/ShaderNodes.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { OperatorNode } from '@modules/renderer/engine/nodes/math/OperatorNode.js';
 import type { CondNode } from '@modules/renderer/engine/nodes/math/CondNode.js';
+import { asCommand } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.as.js';
+import { ShaderNode } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.js';
+import { NodeStack } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.stack.js';
 
 export class StackNode extends Node {
   outputNode: Node | null;

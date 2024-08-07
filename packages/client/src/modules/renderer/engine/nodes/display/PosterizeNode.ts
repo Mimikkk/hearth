@@ -1,5 +1,5 @@
 import { TempNode } from '../core/TempNode.js';
-import { asCommand } from '../shadernode/ShaderNodes.js';
+import { asCommand } from '../shadernode/ShaderNode.primitves.ts';
 import { implCommand } from '@modules/renderer/engine/nodes/core/Node.commands.js';
 
 export class PosterizeNode extends TempNode {

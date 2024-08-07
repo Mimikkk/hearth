@@ -1,5 +1,6 @@
-import { hsl, vec2, vec4 } from '../../shadernode/ShaderNodes.js';
+import { vec2, vec4 } from '../../shadernode/ShaderNode.primitves.ts';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
+import { hsl } from '@modules/renderer/engine/nodes/shadernode/hsl.js';
 
 export const DFGApprox = hsl(
   ({ roughness, dotNV }) => {

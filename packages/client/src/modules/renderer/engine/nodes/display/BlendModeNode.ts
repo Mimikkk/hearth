@@ -1,8 +1,9 @@
 import { TempNode } from '../core/TempNode.js';
 import { EPSILON } from '../math/MathNode.js';
-import { hsl, asCommand, vec3 } from '../shadernode/ShaderNodes.js';
+import { asCommand, vec3 } from '../shadernode/ShaderNode.primitves.ts';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { implCommand } from '@modules/renderer/engine/nodes/core/Node.commands.js';
+import { hsl } from '@modules/renderer/engine/nodes/shadernode/hsl.js';
 
 export class BlendModeNode extends TempNode {
   mode: NodeVariant;

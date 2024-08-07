@@ -8,7 +8,7 @@ import {
   hsl,
   uvec2,
   vec4,
-} from '@modules/renderer/engine/nodes/Nodes.js';
+} from '@modules/renderer/engine/nodes/nodes.js';
 
 import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 import { StorageTexture } from '@modules/renderer/engine/entities/textures/StorageTexture.js';

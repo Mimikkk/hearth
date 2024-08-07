@@ -3,7 +3,7 @@ import * as Engine from '@modules/renderer/engine/engine.js';
 import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 import { HearthPostprocess } from '@modules/renderer/engine/hearth/Hearth.Postprocess.js';
 
-import { color, pass, rangeFog } from '@modules/renderer/engine/nodes/Nodes.js';
+import { color, pass, rangeFog } from '@modules/renderer/engine/nodes/nodes.js';
 
 import { RGBELoader } from '@modules/renderer/engine/loaders/textures/RGBELoader/RGBELoader.js';
 

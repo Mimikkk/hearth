@@ -9,7 +9,7 @@ import {
   rangeFog,
   texture,
   uv,
-} from '@modules/renderer/engine/nodes/Nodes.js';
+} from '@modules/renderer/engine/nodes/nodes.js';
 
 import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitControls.js';
 import { TeapotGeometry } from '@modules/renderer/engine/entities/geometries/TeapotGeometry.js';

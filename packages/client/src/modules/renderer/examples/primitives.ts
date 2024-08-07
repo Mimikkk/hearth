@@ -3,14 +3,13 @@ import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 import { PerspectiveCamera } from '@modules/renderer/engine/entities/cameras/PerspectiveCamera.js';
 import { Scene } from '@modules/renderer/engine/entities/scenes/Scene.js';
 import { normalWorld } from '@modules/renderer/engine/nodes/accessors/NormalNode.js';
-import { color } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.js';
+import { color } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.primitves.js';
 import {
-  BoundingBoxVisualizer,
-  Geometry,
+  Entity,
   Fog,
+  Geometry,
   Mesh,
   MeshLambertMaterial,
-  Entity,
   SphereGeometry,
   SpotLight,
 } from '@modules/renderer/engine/engine.js';
@@ -48,11 +47,7 @@ const createSphere = (geometry: Geometry, x: number, y: number, z: number) => {
   return mesh;
 };
 
-const useVisualizer = (scene: Scene, of: Entity) => {
-  const visualizer = new BoundingBoxVisualizer(of, 'red');
-
-  scene.add(visualizer);
-};
+const useVisualizer = (scene: Scene, of: Entity) => {};
 const useOrbitControls = () => {
   const controls = new OrbitControls(camera, hearth.parameters.canvas);
   controls.minDistance = 1;

@@ -1,7 +1,7 @@
 import { TempNode } from '../core/TempNode.js';
 import { TextureNode } from '../accessors/TextureNode.js';
 import { NodeUpdateStage } from '../core/constants.js';
-import { asCommand } from '../shadernode/ShaderNodes.js';
+import { asCommand } from '../shadernode/ShaderNode.primitves.ts';
 import { uniform, UniformNode } from '../core/UniformNode.js';
 import { perspectiveDepthToViewZ, viewZToOrthographicDepth } from './ViewportDepthNode.js';
 import { ICamera } from '@modules/renderer/engine/entities/cameras/Camera.js';

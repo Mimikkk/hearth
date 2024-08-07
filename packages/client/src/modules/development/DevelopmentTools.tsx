@@ -2,7 +2,6 @@ import s from './DevelopmentTools.module.scss';
 import { AvailableIconsTab } from '@modules/development/Tabs/AvailableIcons.tab.js';
 import { Devtools } from '@modules/development/devtools.js';
 import { Tabulator } from '@components/control/Tabulator/Tabulator.js';
-import '@modules/renderer/engine/nodes/Nodes.js';
 
 export const DevelopmentTools = () => {
   Devtools.createKeyboardShortcut();

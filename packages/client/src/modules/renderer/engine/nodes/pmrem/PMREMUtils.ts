@@ -1,8 +1,10 @@
-import { f32, hsl, i32, NodeStack, vec2, vec3, vec4 } from '../shadernode/ShaderNodes.js';
+import { f32, i32, vec2, vec3, vec4 } from '../shadernode/ShaderNode.primitves.ts';
 import { abs, all, clamp, cos, cross, exp2, floor, fract, log2, max, mix, normalize, sin } from '../math/MathNode.js';
 import { mul } from '../math/OperatorNode.js';
 import { cond } from '../math/CondNode.js';
 import { Break, loop } from '../utils/LoopNode.js';
+import { NodeStack } from '../shadernode/ShaderNode.stack.ts';
+import { hsl } from '@modules/renderer/engine/nodes/shadernode/hsl.js';
 
 const cubeUV_r0 = f32(1.0);
 const cubeUV_m0 = f32(-2.0);
