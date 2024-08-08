@@ -586,10 +586,8 @@ export class Node {
   declare screen: (value: NodeVal<number>) => this;
   declare anamorphic: (threshold: NodeVal<number>, scale: NodeVal<number>, samples: NodeVal<number>) => this;
   declare afterImage: (value: NodeVal<number>) => this;
-
   declare toVar: (name: string) => this;
   declare temp: (name: string) => this;
-
   declare label: (name: string) => this;
   declare context: (context: object) => this;
   declare cache: (value: WeakMap<any, any>) => this;
@@ -599,6 +597,190 @@ export class Node {
   declare scriptableValue: () => this;
   declare call: (parameters: Record<string, any>) => this;
   declare element: (index: NodeVal<number>) => this;
+
+  // assign variant
+
+  // math nodes
+  declare allAssign: () => this;
+  declare anyAssign: () => this;
+  declare equalsAssign: () => this;
+  declare radiansAssign: () => this;
+  declare degreesAssign: () => this;
+  declare expAssign: () => this;
+  declare exp2Assign: () => this;
+  declare logAssign: () => this;
+  declare log2Assign: () => this;
+  declare sqrtAssign: () => this;
+  declare inverseSqrtAssign: () => this;
+  declare floorAssign: () => this;
+  declare ceilAssign: () => this;
+  declare normalizeAssign: () => this;
+  declare fractAssign: () => this;
+  declare sinAssign: () => this;
+  declare cosAssign: () => this;
+  declare tanAssign: () => this;
+  declare asinAssign: () => this;
+  declare acosAssign: () => this;
+  declare atanAssign: () => this;
+  declare absAssign: () => this;
+  declare signAssign: () => this;
+  declare lengthAssign: () => this;
+  declare lengthSqAssign: () => this;
+  declare negateAssign: () => this;
+  declare oneMinusAssign: () => this;
+  declare dpdxAssign: () => this;
+  declare dpdyAssign: () => this;
+  declare roundAssign: () => this;
+  declare reciprocalAssign: () => this;
+  declare truncAssign: () => this;
+  declare fwidthAssign: () => this;
+  declare bitcastAssign: () => this;
+  declare atan2Assign: (y: NodeVal<number>) => this;
+  declare minAssign: (b: NodeVal<number>) => this;
+  declare maxAssign: (b: NodeVal<number>) => this;
+  declare modAssign: (b: NodeVal<number>) => this;
+  declare stepAssign: (b: NodeVal<number>) => this;
+  declare reflectAssign: (b: NodeVal<number>) => this;
+  declare distanceAssign: (b: NodeVal<number>) => this;
+  declare differenceAssign: (b: NodeVal<number>) => this;
+  declare dotAssign: (b: NodeVal<number>) => this;
+  declare crossAssign: (b: NodeVal<number>) => this;
+  declare powAssign: (b: NodeVal<number>) => this;
+  declare pow2Assign: () => this;
+  declare pow3Assign: () => this;
+  declare transformDirectionAssign: (b: NodeVal<number>) => this;
+  declare mixAssign: (a: NodeVal<number>, b: NodeVal<number>) => this;
+  declare clampAssign: (min: NodeVal<number>, max: NodeVal<number>) => this;
+  declare refractAssign: (normal: NodeVal<number>, eta: NodeVal<number>) => this;
+  declare smoothstepAssign: (min: NodeVal<number>, max: NodeVal<number>) => this;
+  declare faceforwardAssign: (normal: NodeVal<number>, incident: NodeVal<number>) => this;
+  declare saturateAssign: () => this;
+  declare cbrtAssign: () => this;
+  // operators
+  declare addAssign: (b: NodeVal<number>) => this;
+  declare subAssign: (b: NodeVal<number>) => this;
+  declare mulAssign: (b: NodeVal<number>) => this;
+  declare divAssign: (b: NodeVal<number>) => this;
+  declare remainderAssign: (b: NodeVal<number>) => this;
+  declare equalAssign: (b: NodeVal<number>) => this;
+  declare notEqualAssign: (b: NodeVal<number>) => this;
+  declare lessThanAssign: (b: NodeVal<number>) => this;
+  declare greaterThanAssign: (b: NodeVal<number>) => this;
+  declare lessThanEqualAssign: (b: NodeVal<number>) => this;
+  declare greaterThanEqualAssign: (b: NodeVal<number>) => this;
+  declare andAssign: (b: NodeVal<number>) => this;
+  declare orAssign: (b: NodeVal<number>) => this;
+  declare notAssign: () => UnaryNode;
+  declare bitAndAssign: (b: NodeVal<number>) => this;
+  declare bitNotAssign: () => UnaryNode;
+  declare bitOrAssign: (b: NodeVal<number>) => this;
+  declare bitXorAssign: (b: NodeVal<number>) => this;
+  declare shiftLeftAssign: (b: NodeVal<number>) => this;
+  declare shiftRightAssign: (b: NodeVal<number>) => this;
+  // primitive nodes
+  declare colorAssign: (r?: NodeVal<number>, g?: NodeVal<number>, b?: NodeVal<number>, a?: NodeVal<number>) => this;
+  declare f32Assign: (value?: NodeVal<number>) => this;
+  declare i32Assign: (value?: NodeVal<number>) => this;
+  declare u32Assign: (value?: NodeVal<number>) => this;
+  declare boolAssign: (value?: NodeVal<number>) => this;
+  declare vec2Assign: (x?: NodeVal<number>, y?: NodeVal<number>) => this;
+  declare ivec2Assign: (x?: NodeVal<number>, y?: NodeVal<number>) => this;
+  declare uvec2Assign: (x?: NodeVal<number>, y?: NodeVal<number>) => this;
+  declare bvec2Assign: (x?: NodeVal<number>, y?: NodeVal<number>) => this;
+  declare vec3Assign: (x?: NodeVal<number>, y?: NodeVal<number>, z?: NodeVal<number>) => this;
+  declare ivec3Assign: (x?: NodeVal<number>, y?: NodeVal<number>, z?: NodeVal<number>) => this;
+  declare uvec3Assign: (x?: NodeVal<number>, y?: NodeVal<number>, z?: NodeVal<number>) => this;
+  declare bvec3Assign: (x?: NodeVal<number>, y?: NodeVal<number>, z?: NodeVal<number>) => this;
+  declare vec4Assign: (x?: NodeVal<number>, y?: NodeVal<number>, z?: NodeVal<number>, w?: NodeVal<number>) => this;
+  declare ivec4Assign: (x?: NodeVal<number>, y?: NodeVal<number>, z?: NodeVal<number>, w?: NodeVal<number>) => this;
+  declare uvec4Assign: (x?: NodeVal<number>, y?: NodeVal<number>, z?: NodeVal<number>, w?: NodeVal<number>) => this;
+  declare bvec4Assign: (x?: NodeVal<number>, y?: NodeVal<number>, z?: NodeVal<number>, w?: NodeVal<number>) => this;
+  declare mat2Assign: (a?: NodeVal<number>, b?: NodeVal<number>, c?: NodeVal<number>, d?: NodeVal<number>) => this;
+  declare imat2Assign: (a?: NodeVal<number>, b?: NodeVal<number>, c?: NodeVal<number>, d?: NodeVal<number>) => this;
+  declare umat2Assign: (a?: NodeVal<number>, b?: NodeVal<number>, c?: NodeVal<number>, d?: NodeVal<number>) => this;
+  declare bmat2Assign: (a?: NodeVal<number>, b?: NodeVal<number>, c?: NodeVal<number>, d?: NodeVal<number>) => this;
+  declare mat3Assign: (...values: NodeVal<number>[]) => this;
+  declare imat3Assign: (...values: NodeVal<number>[]) => this;
+  declare umat3Assign: (...values: NodeVal<number>[]) => this;
+  declare bmat3Assign: (...values: NodeVal<number>[]) => this;
+  declare mat4Assign: (...values: NodeVal<number>[]) => this;
+  declare imat4Assign: (...values: NodeVal<number>[]) => this;
+  declare umat4Assign: (...values: NodeVal<number>[]) => this;
+  declare bmat4Assign: (...values: NodeVal<number>[]) => this;
+  declare convertAssign: (type: TypeName) => this;
+  // up to 1...16
+  declare toAttributeAssign: (type?: TypeName, stride?: number, offset?: number) => this;
+
+  // shader nodes
+  declare checkerAssign: () => this;
+  declare discardAssign: () => this;
+  declare directionToColorAssign: () => this;
+  declare colorToDirectionAssign: () => this;
+  declare remapAssign: (
+    fromMin: NodeVal<number>,
+    fromMax: NodeVal<number>,
+    toMin: NodeVal<number>,
+    toMax: NodeVal<number>,
+  ) => this;
+  declare remapClampAssign: (
+    fromMin: NodeVal<number>,
+    fromMax: NodeVal<number>,
+    toMin: NodeVal<number>,
+    toMax: NodeVal<number>,
+  ) => this;
+  declare rotateAssign: (angle: NodeVal<number>) => this;
+  declare rotateUVAssign: (angle: NodeVal<number>, center: NodeVal<number>) => this;
+  declare storageElementAssign: (index: NodeVal<number>) => this;
+  // functions
+  declare gaussianBlurAssign: (sigma?: NodeVal<number>) => this;
+  declare bumpMapAssign: (scale: NodeVal<number>) => this;
+  declare normalMapAssign: (scale: NodeVal<number>) => this;
+  declare cubeTextureAssign: (uv: UVNode, levelNode: NodeVal<number>) => this;
+  declare triplanarTextureAssign: (
+    textureY: TextureNode,
+    textureZ: TextureNode,
+    scale: NodeVal<number>,
+    position: NodeVal<Vec3>,
+    normal: NodeVal<Vec3>,
+  ) => this;
+  declare bicubicAssign: (uv: UVNode, levelNode: NodeVal<number>) => this;
+  declare textureAssign: (uv: UVNode, levelNode: NodeVal<number>) => this;
+  declare textureSizeAssign: (levelNode: NodeVal<number>) => this;
+  declare hashAssign: () => this;
+  declare condAssign: (then: Node, or: Node) => this;
+  declare lightingContextAssign: (lightingModel: LightModel, backdrop: Node, alpha: NodeVal<number>) => this;
+  declare computeAssign: (count: NodeVal<number>, size?: number[]) => this;
+  declare viewportTextureAssign: (uv: UVNode, levelNode: NodeVal<number>) => this;
+  declare viewportMipTextureAssign: (uv: UVNode, levelNode: NodeVal<number>) => this;
+  declare viewportDepthTextureAssign: (uv: UVNode, levelNode: NodeVal<number>) => this;
+  declare viewportSharedTextureAssign: (uv: UVNode, levelNode: NodeVal<number>) => this;
+  declare toneMappingAssign: (mapping: ToneMapping, exposure: NodeVal<number>) => this;
+  declare posterizeAssign: (steps: NodeVal<number>) => this;
+  declare linearTosRGBAssign: () => this;
+  declare sRGBToLinearAssign: () => this;
+  declare linearToColorSpaceAssign: (space: ColorSpace) => this;
+  declare colorSpaceToLinearAssign: (space: ColorSpace) => this;
+  declare saturationAssign: (value: NodeVal<number>) => this;
+  declare vibranceAssign: (value: NodeVal<number>) => this;
+  declare hueAssign: (value: NodeVal<number>) => this;
+  declare thresholdAssign: (value: NodeVal<number>) => this;
+  declare burnAssign: (value: NodeVal<number>) => this;
+  declare dodgeAssign: (value: NodeVal<number>) => this;
+  declare overlayAssign: (value: NodeVal<number>) => this;
+  declare screenAssign: (value: NodeVal<number>) => this;
+  declare anamorphicAssign: (threshold: NodeVal<number>, scale: NodeVal<number>, samples: NodeVal<number>) => this;
+  declare afterImageAssign: (value: NodeVal<number>) => this;
+  declare toVarAssign: (name: string) => this;
+  declare tempAssign: (name: string) => this;
+  declare labelAssign: (name: string) => this;
+  declare contextAssign: (context: object) => this;
+  declare cacheAssign: (value: WeakMap<any, any>) => this;
+  declare globalCacheAssign: () => this;
+  declare bypassAssign: (call: Node) => this;
+  declare scriptableAssign: (parameters: Record<string, any>) => this;
+  declare scriptableValueAssign: () => this;
+  declare callAssign: (parameters: Record<string, any>) => this;
+  declare elementAssign: (index: NodeVal<number>) => this;
 }
 
 implSwizzle();

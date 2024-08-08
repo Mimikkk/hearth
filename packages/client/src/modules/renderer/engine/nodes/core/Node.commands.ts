@@ -10,7 +10,7 @@ const asNodes = (array: any[]): Node[] => {
 
 export const implCommand = (name: string, command: any) => {
   Node.prototype[name] = function (...value: any): Node {
-    return new command(this, ...asNodes(value));
+    return new command(asNode(this), ...asNodes(value));
   };
 
   StackNode.prototype[name] = function (...value: any): Node {
@@ -18,7 +18,7 @@ export const implCommand = (name: string, command: any) => {
   };
 
   Node.prototype[`${name}Assign`] = function (...value: any): Node {
-    return this.assign(new command(this, ...asNodes(value)));
+    return this.assign(new command(asNode(this), ...asNodes(value)));
   };
 
   StackNode.prototype[`${name}Assign`] = function (...value: any): Node {
@@ -28,7 +28,7 @@ export const implCommand = (name: string, command: any) => {
 
 export const implPrimitive = (name: string, primitive: any) => {
   Node.prototype[name] = function (...value: any): Node {
-    return primitive(this, ...asNodes(value));
+    return primitive(asNode(this), ...asNodes(value));
   };
 
   StackNode.prototype[name] = function (...value: any): Node {
@@ -36,7 +36,7 @@ export const implPrimitive = (name: string, primitive: any) => {
   };
 
   Node.prototype[`${name}Assign`] = function (...value: any): Node {
-    return this.assign(primitive(this, ...asNodes(value)));
+    return this.assign(primitive(asNode(this), ...asNodes(value)));
   };
 
   StackNode.prototype[`${name}Assign`] = function (...value: any): Node {
