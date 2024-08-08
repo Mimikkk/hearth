@@ -1,7 +1,7 @@
 import { Mesh } from '@modules/renderer/engine/entities/Mesh.js';
 import { Entity } from '../core/Entity.js';
 import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
-import * as Ammo from 'ammojs3';
+import Ammo from 'ammo.js';
 import { Geometry } from '@modules/renderer/engine/core/Geometry.js';
 import { Scene } from '@modules/renderer/engine/entities/scenes/Scene.js';
 import { InstancedMesh } from '@modules/renderer/engine/entities/InstancedMesh.js';
