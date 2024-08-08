@@ -11,25 +11,25 @@
     "vite-plugin-arraybuffer": "^0.0.7",
     "vite-plugin-dts": "^3.9.1"
   },
-  "homepage": "https://github.com/Mimikkk/webpgu-engine/tree/master/packages/ui",
+  "homepage": "https://github.com/Mimikkk/webpgu-engine/tree/master/packages/mini-ui",
   "keywords": [
     "UI"
   ],
   "license": "MIT",
-  "name": "@mimi/ui",
+  "name": "@mimi/mini-ui",
   "scripts": {
     "build": "vite build"
   },
   "type": "module",
   "version": "0.0.0",
-  "main": "./build/ui.js",
-  "module": "./build/ui.js",
-  "types": "./build/ui.d.ts",
+  "main": "./build/mini-ui.js",
+  "module": "./build/mini-ui.js",
+  "types": "./build/mini-ui.d.ts",
   "exports": {
     ".": {
-      "types": "./build/ui.d.ts",
-      "import": "./build/ui.js",
-      "require": "./build/ui.cjs"
+      "types": "./build/mini-ui.d.ts",
+      "import": "./build/mini-ui.js",
+      "require": "./build/mini-ui.cjs"
     }
   }
 }

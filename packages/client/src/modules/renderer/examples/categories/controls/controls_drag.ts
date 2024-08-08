@@ -12,7 +12,7 @@ import {
   SpotLight,
 } from '@modules/renderer/engine/engine.js';
 import { DragControls } from '@modules/renderer/engine/entities/controls/DragControls.js';
-import { UI } from '@mimi/ui';
+import { UI } from '../../../../../../../mini-ui';
 import { ColorMap } from '@modules/renderer/engine/math/Color.js';
 import { Random } from '@modules/renderer/engine/math/random.js';
 import { normalWorld } from '@modules/renderer/engine/nodes/accessors/NormalNode.js';

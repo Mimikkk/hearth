@@ -1,4 +1,4 @@
-# @mimi/ui - lil-gui wrapper
+# @mimi/mini-ui - lil-gui wrapper
 
 This package is a wrapper around the [lil-gui](https://https://github.com/georgealways/lil-gui).
 It provides a builder pattern to build around all the components provided by lil-gui.
@@ -6,7 +6,7 @@ It provides a builder pattern to build around all the components provided by lil
 ## Usage
 
 ```ts
-import { UI } from '@mimi/ui';
+import { UI } from '@mimi/mini-ui';
 
 const initialState = {
   path: {

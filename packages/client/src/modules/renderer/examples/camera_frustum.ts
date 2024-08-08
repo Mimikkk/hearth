@@ -15,7 +15,7 @@ import {
   Sprite,
 } from '@modules/renderer/engine/engine.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
-import { UI } from '@mimi/ui';
+import { UI } from '../../../../../mini-ui';
 import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitControls.js';
 import { SpriteMaterialBuilder } from '@modules/renderer/engine/entities/materials/SpriteMaterialBuilder.js';
 

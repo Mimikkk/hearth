@@ -19,7 +19,7 @@
     "potpack": "^2.0.0",
     "ammojs3": "^0.0.11",
     "@mimi/basis": "workspace:*",
-    "@mimi/ui": "workspace:*",
+    "@mimi/mini-ui": "workspace:*",
     "upng-js": "^2.1.0",
     "uuid": "^10.0.0"
   },

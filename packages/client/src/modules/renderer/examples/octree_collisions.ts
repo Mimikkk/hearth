@@ -17,7 +17,7 @@ import { OctreeHelper } from '@modules/renderer/engine/entities/visualizers/Octr
 import { ToneMapping } from '@modules/renderer/engine/constants.js';
 import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 import { Euler } from '@modules/renderer/engine/math/Euler.js';
-import { UI } from '@mimi/ui';
+import { UI } from '../../../../../mini-ui';
 
 const clock = new Clock();
 const scene = new Scene();

@@ -18,7 +18,7 @@ import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitC
 import { Blending } from '@modules/renderer/engine/engine.js';
 import { TextureLoader } from '@modules/renderer/engine/loaders/textures/TextureLoader/TextureLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
-import { UI } from '@mimi/ui';
+import { UI } from '../../../../../mini-ui';
 
 let camera, scene, hearth;
 let controls;

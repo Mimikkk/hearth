@@ -9,8 +9,8 @@ type Handler<S, K extends Path<S>> = {
   onChange?: (value: Path.At<S, K>, state: S) => void;
 } & (Path.At<S, K> extends number ? { min: number; max: number; step: number } : {});
 
-export class UI<S extends {} = {}> {
-  shortcutsFolder: UI<S> | null = null;
+export class MiniUi<S extends {} = {}> {
+  shortcutsFolder: MiniUi<S> | null = null;
   shortcutsShown: Set<() => void>;
   shortcuts: Shortcut[];
   controllers: Controller[];
@@ -99,8 +99,8 @@ export class UI<S extends {} = {}> {
     return this;
   }
 
-  folder(title: string, update: boolean = true): UI<S> {
-    const ui = new UI(title, this.state, this.ui.addFolder(title));
+  folder(title: string, update: boolean = true): MiniUi<S> {
+    const ui = new MiniUi(title, this.state, this.ui.addFolder(title));
     if (update) this.update();
     return ui;
   }

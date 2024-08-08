@@ -59,7 +59,7 @@ importers:
       '@mimi/basis':
         specifier: workspace:*
         version: link:../basis
-      '@mimi/ui':
+      '@mimi/mini-ui':
         specifier: workspace:*
         version: link:../ui
       ammojs3:

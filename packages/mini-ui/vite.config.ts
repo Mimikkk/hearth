@@ -7,9 +7,9 @@ export default defineConfig({
   build: {
     outDir: './build',
     lib: {
-      entry: 'src/ui.ts',
-      name: 'ui',
-      fileName: 'ui',
+      entry: 'src/mini-ui.ts',
+      name: 'mini-ui',
+      fileName: 'mini-ui',
       formats: ['es', 'cjs'],
     },
   },

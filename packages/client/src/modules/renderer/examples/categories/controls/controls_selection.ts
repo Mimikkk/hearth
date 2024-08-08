@@ -15,7 +15,7 @@ import { Fog } from '@modules/renderer/engine/entities/scenes/Fog.js';
 import { normalWorld } from '@modules/renderer/engine/nodes/accessors/NormalNode.js';
 import { color } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.primitves.js';
 import { Group } from '@modules/renderer/engine/entities/Group.js';
-import { UI } from '@mimi/ui';
+import { UI } from '../../../../../../../mini-ui';
 import { Random } from '@modules/renderer/engine/math/random.js';
 import { Stats } from '@modules/renderer/examples/ui/stats.js';
 
