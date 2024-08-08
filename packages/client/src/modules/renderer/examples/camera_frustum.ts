@@ -15,7 +15,7 @@ import {
   Sprite,
 } from '@modules/renderer/engine/engine.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
-import { UI } from '../../../../../mini-ui';
+import { MiniUi } from '@mimi/mini-ui';
 import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitControls.js';
 import { SpriteMaterialBuilder } from '@modules/renderer/engine/entities/materials/SpriteMaterialBuilder.js';
 
@@ -113,7 +113,7 @@ const controls = useOrbitControls(hearth.parameters.canvas);
 useWindowResizer.updateSize(hearth, state.camera);
 useWindowResizer(hearth, state.camera);
 
-UI.create<{ camera: Camera }>('Controls', state)
+MiniUi.create<{ camera: Camera }>('Controls', state)
   .action('Switch camera', s => {
     s.camera = s.camera === perspectiveCamera ? frustumCamera : perspectiveCamera;
     controls.enabled = s.camera === perspectiveCamera;

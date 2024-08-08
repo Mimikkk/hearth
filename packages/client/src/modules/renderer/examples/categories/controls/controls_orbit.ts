@@ -14,9 +14,9 @@ import {
   SpotLight,
 } from '@modules/renderer/engine/engine.js';
 import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitControls.js';
-import { UI } from '../../../../../../../mini-ui';
 import { ColorMap } from '@modules/renderer/engine/math/Color.js';
 import { Random } from '@modules/renderer/engine/math/random.js';
+import { MiniUi } from '@mimi/mini-ui';
 
 const createCamera = () => {
   const camera = new PerspectiveCamera();
@@ -71,7 +71,7 @@ useWindowResizer(hearth, camera);
 
 const controls = useOrbitControls(camera, hearth.parameters.canvas);
 
-UI.create('Orbit controls')
+MiniUi.create('Orbit controls')
   .text('Move:', 'Right Click  + Drag')
   .text('Zoom:', 'Scroll')
   .text('Rotate:', 'Left Click + Drag');

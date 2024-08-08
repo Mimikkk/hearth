@@ -15,7 +15,7 @@ import { Fog } from '@modules/renderer/engine/entities/scenes/Fog.js';
 import { normalWorld } from '@modules/renderer/engine/nodes/accessors/NormalNode.js';
 import { color } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.primitves.js';
 import { Group } from '@modules/renderer/engine/entities/Group.js';
-import { UI } from '../../../../../../../mini-ui';
+import { MiniUi } from '@mimi/mini-ui';
 import { Random } from '@modules/renderer/engine/math/random.js';
 import { Stats } from '@modules/renderer/examples/ui/stats.js';
 
@@ -113,7 +113,7 @@ hearth.parameters.canvas.addEventListener('pointerup', event => {
 
 const formatVec = ({ x, y }: { x: number; y: number }) => x.toFixed(2) + ', ' + y.toFixed(2);
 
-const ui = UI.create('Selection')
+const ui = MiniUi.create('Selection')
   .text('Selected count:', () => selection.collection.length)
   .text('Mouse start (x, y):', () => formatVec(selection.start))
   .text('Mouse end (x, y):', () => formatVec(selection.end))

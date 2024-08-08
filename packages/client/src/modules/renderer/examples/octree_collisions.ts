@@ -17,7 +17,7 @@ import { OctreeHelper } from '@modules/renderer/engine/entities/visualizers/Octr
 import { ToneMapping } from '@modules/renderer/engine/constants.js';
 import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 import { Euler } from '@modules/renderer/engine/math/Euler.js';
-import { UI } from '../../../../../mini-ui';
+import { MiniUi } from '@mimi/mini-ui';
 
 const clock = new Clock();
 const scene = new Scene();
@@ -334,7 +334,7 @@ const helper = new OctreeHelper(worldOctree);
 helper.visible = false;
 scene.add(helper);
 
-UI.create('Controls', { debug: false }).boolean('debug', 'Debug', value => {
+MiniUi.create('Controls', { debug: false }).boolean('debug', 'Debug', value => {
   helper.visible = value;
 });
 

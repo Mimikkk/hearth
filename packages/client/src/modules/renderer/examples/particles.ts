@@ -18,7 +18,7 @@ import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitC
 import { Blending } from '@modules/renderer/engine/engine.js';
 import { TextureLoader } from '@modules/renderer/engine/loaders/textures/TextureLoader/TextureLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
-import { UI } from '../../../../../mini-ui';
+import { MiniUi } from '@mimi/mini-ui';
 
 let camera, scene, hearth;
 let controls;
@@ -104,7 +104,7 @@ async function init() {
 
   useWindowResizer(hearth, camera);
 
-  UI.create('Controls', timer).number('scale', 'Animation speed', 0.2, 1, 0.01);
+  MiniUi.create('Controls', timer).number('scale', 'Animation speed', 0.2, 1, 0.01);
 }
 
 function render() {
