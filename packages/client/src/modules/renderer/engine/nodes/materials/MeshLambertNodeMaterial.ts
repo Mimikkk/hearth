@@ -1,25 +1,24 @@
 import { NodeMaterial } from './NodeMaterial.js';
 import { PhongLightModel } from '../functions/PhongLightModel.js';
-import { MeshLambertMaterial } from '@modules/renderer/engine/entities/materials/MeshLambertMaterial.js';
-
-const defaultValues = new MeshLambertMaterial();
+import {
+  MeshLambertMaterial,
+  MeshLambertMaterialParameters,
+} from '@modules/renderer/engine/entities/materials/MeshLambertMaterial.js';
+import { LightModel } from '@modules/renderer/engine/nodes/functions/LightModel.js';
 
 export class MeshLambertNodeMaterial extends NodeMaterial {
-  static type = 'MeshLambertNodeMaterial';
-
-  constructor(parameters) {
+  constructor(parameters?: MeshLambertMaterialParameters) {
     super();
-
-    this.isMeshLambertNodeMaterial = true;
 
     this.lights = true;
 
-    this.setDefaultValues(defaultValues);
-
+    this.setDefaultValues(_parameters);
     this.setValues(parameters);
   }
 
-  setupLightingModel() {
+  setupLightingModel(): LightModel {
     return new PhongLightModel(false);
   }
 }
+
+const _parameters = new MeshLambertMaterial();

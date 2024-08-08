@@ -3,16 +3,15 @@ import { Color, type ColorRepresentation } from '../../math/Color.js';
 import type { Texture } from '@modules/renderer/engine/entities/textures/Texture.js';
 
 export interface LineBasicMaterialParameters extends MaterialParameters {
-  color?: ColorRepresentation | undefined;
-  fog?: boolean | undefined;
-  linewidth?: number | undefined;
-  linecap?: string | undefined;
-  linejoin?: string | undefined;
+  color?: ColorRepresentation;
+  fog?: boolean;
+  linewidth?: number;
+  linecap?: string;
+  linejoin?: string;
 }
 
 export class LineBasicMaterial extends Material {
   declare isLineBasicMaterial: true;
-  declare type: string;
   color: Color;
   fog: boolean;
   linewidth: number;
@@ -20,7 +19,7 @@ export class LineBasicMaterial extends Material {
   linejoin: 'round' | 'bevel' | 'miter';
   map: Texture | null;
 
-  constructor(parameters: LineBasicMaterialParameters) {
+  constructor(parameters?: LineBasicMaterialParameters) {
     super(parameters);
 
     this.color = Color.new(0xffffff);
@@ -35,7 +34,7 @@ export class LineBasicMaterial extends Material {
     this.setValues(parameters);
   }
 
-  setValues(values: LineBasicMaterialParameters): void {
+  setValues(values?: LineBasicMaterialParameters): void {
     super.setValues(values);
   }
 
@@ -52,4 +51,3 @@ export class LineBasicMaterial extends Material {
 }
 
 LineBasicMaterial.prototype.isLineBasicMaterial = true;
-LineBasicMaterial.prototype.type = 'LineBasicMaterial';

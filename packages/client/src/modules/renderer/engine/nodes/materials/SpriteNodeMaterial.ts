@@ -5,17 +5,17 @@ import { materialRotation } from '../accessors/MaterialNode.js';
 import { modelViewMatrix, modelWorldMatrix } from '../accessors/ModelNode.js';
 import { positionLocal } from '../accessors/PositionNode.js';
 import { f32, vec2, vec3, vec4 } from '../shadernode/ShaderNode.primitves.ts';
-import { SpriteMaterial } from '@modules/renderer/engine/entities/materials/SpriteMaterial.js';
-
-const defaultValues = new SpriteMaterial();
+import {
+  SpriteMaterial,
+  SpriteMaterialParameters,
+} from '@modules/renderer/engine/entities/materials/SpriteMaterial.js';
 
 export class SpriteNodeMaterial extends NodeMaterial {
-  static type = 'SpriteNodeMaterial';
+  rotationNode: Node | null;
+  scaleNode: Node | null;
 
-  constructor(parameters) {
+  constructor(parameters?: SpriteMaterialParameters) {
     super();
-
-    this.isSpriteNodeMaterial = true;
 
     this.lights = false;
     this.normals = false;
@@ -24,8 +24,7 @@ export class SpriteNodeMaterial extends NodeMaterial {
     this.rotationNode = null;
     this.scaleNode = null;
 
-    this.setDefaultValues(defaultValues);
-
+    this.setDefaultValues(_parameters);
     this.setValues(parameters);
   }
 
@@ -62,12 +61,6 @@ export class SpriteNodeMaterial extends NodeMaterial {
 
     return modelViewProjection;
   }
-
-  copy(source) {
-    this.positionNode = source.positionNode;
-    this.rotationNode = source.rotationNode;
-    this.scaleNode = source.scaleNode;
-
-    return super.copy(source);
-  }
 }
+
+const _parameters = new SpriteMaterial();

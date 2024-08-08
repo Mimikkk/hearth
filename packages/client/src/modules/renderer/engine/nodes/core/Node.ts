@@ -1,5 +1,5 @@
 import { NodeUpdateStage } from './constants.js';
-import { getNodeCacheKey, getNodeChildren } from './NodeUtils.js';
+import { cacheKey, getNodeChildren } from './NodeUtils.js';
 import type { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import type { NodeFrame } from '@modules/renderer/engine/nodes/core/NodeFrame.js';
 import { BuildStage, TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
@@ -108,7 +108,7 @@ export class Node {
     force = force || this.version !== this._cacheKeyVersion;
 
     if (force === true || this._cacheKey === null) {
-      this._cacheKey = getNodeCacheKey(this, force);
+      this._cacheKey = cacheKey(this, force);
       this._cacheKeyVersion = this.version;
     }
 
@@ -268,7 +268,7 @@ export class Node {
     return this;
   }
 
-  assign(value: Node): this {
+  assign(value: NodeVal): this {
     const assign = Node.Map.assign;
     NodeStack.get()!.push(new assign(this, value));
 
@@ -598,6 +598,7 @@ export class Node {
   declare scriptable: (parameters: Record<string, any>) => this;
   declare scriptableValue: () => this;
   declare call: (parameters: Record<string, any>) => this;
+  declare element: (index: NodeVal<number>) => this;
 }
 
 implSwizzle();

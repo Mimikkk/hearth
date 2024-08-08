@@ -16,7 +16,7 @@ import { NodeCode } from '@modules/renderer/engine/nodes/core/NodeCode.js';
 import { FunctionNode } from '@modules/renderer/engine/nodes/code/FunctionNode.js';
 import { ParameterNode } from '@modules/renderer/engine/nodes/core/ParameterNode.js';
 
-import { NodeMaterials } from '@modules/renderer/engine/nodes/materials/NodeMaterialMap.js';
+import { NodeMaterialMap } from '@modules/renderer/engine/nodes/materials/NodeMaterial.map.js';
 import { FeatureMap, FeatureName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.features.js';
 import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 import { stack, StackNode } from '@modules/renderer/engine/nodes/core/StackNode.js';
@@ -548,8 +548,8 @@ export class NodeBuilder {
     throw new Error(`Uniform "${uniform.type}" not declared.`);
   }
 
-  createNodeMaterial(type: string = 'NodeMaterial'): NodeMaterial {
-    return new (NodeMaterials.get(type))();
+  createNodeMaterial(type: keyof typeof NodeMaterialMap = 'NodeMaterial'): NodeMaterial {
+    return new NodeMaterialMap[type]();
   }
 
   format(snippet: string, from: TypeName, to: TypeName): string {

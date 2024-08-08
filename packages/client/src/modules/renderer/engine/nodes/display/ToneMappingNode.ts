@@ -124,7 +124,6 @@ export class ToneMappingNode extends TempNode {
     public exposureNode: ConstNode<number> = toneMappingExposure,
     public colorNode: ConstNode<Color> | null = null,
   ) {
-    console.log({ toneMapping, exposureNode, colorNode, toneMappingLib });
     super(TypeName.vec3);
   }
 

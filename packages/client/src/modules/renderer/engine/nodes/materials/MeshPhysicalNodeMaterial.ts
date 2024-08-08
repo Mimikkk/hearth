@@ -21,17 +21,34 @@ import {
 import { f32, vec3 } from '../shadernode/ShaderNode.primitves.ts';
 import { PhysicalLightModel } from '../functions/PhysicalLightModel.js';
 import { MeshStandardNodeMaterial } from './MeshStandardNodeMaterial.js';
-import { MeshPhysicalMaterial } from '@modules/renderer/engine/entities/materials/MeshPhysicalMaterial.js';
-
-const defaultValues = new MeshPhysicalMaterial();
+import {
+  MeshPhysicalMaterial,
+  MeshPhysicalMaterialParameters,
+} from '@modules/renderer/engine/entities/materials/MeshPhysicalMaterial.js';
+import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 
 export class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
-  static type = 'MeshPhysicalNodeMaterial';
+  clearcoatNode: Node | null;
+  clearcoatRoughnessNode: Node | null;
+  clearcoatNormalNode: Node | null;
+  sheenNode: Node | null;
+  sheenRoughnessNode: Node | null;
+  iridescenceNode: Node | null;
+  iridescenceIORNode: Node | null;
+  iridescenceThicknessNode: Node | null;
+  specularIntensityNode: Node | null;
+  specularColorNode: Node | null;
+  transmissionNode: Node | null;
+  thicknessNode: Node | null;
+  attenuationDistanceNode: Node | null;
+  attenuationColorNode: Node | null;
 
-  constructor(parameters) {
+  clearcoat: number;
+  sheen: number;
+  iridescence: number;
+
+  constructor(parameters?: MeshPhysicalMaterialParameters) {
     super();
-
-    this.isMeshPhysicalNodeMaterial = true;
 
     this.clearcoatNode = null;
     this.clearcoatRoughnessNode = null;
@@ -52,8 +69,7 @@ export class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
     this.attenuationDistanceNode = null;
     this.attenuationColorNode = null;
 
-    this.setDefaultValues(defaultValues);
-
+    this.setDefaultValues(_parameters);
     this.setValues(parameters);
   }
 
@@ -73,7 +89,7 @@ export class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
     return new PhysicalLightModel(this.useClearcoat, this.useSheen, this.useIridescence);
   }
 
-  setupVariants(builder) {
+  setupVariants(builder: NodeBuilder) {
     super.setupVariants(builder);
 
     if (this.useClearcoat) {
@@ -85,7 +101,6 @@ export class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
       clearcoat.assign(clearcoatNode);
       clearcoatRoughness.assign(clearcoatRoughnessNode);
     }
-
     if (this.useSheen) {
       const sheenNode = this.sheenNode ? vec3(this.sheenNode) : materialSheen;
       const sheenRoughnessNode = this.sheenRoughnessNode ? f32(this.sheenRoughnessNode) : materialSheenRoughness;
@@ -93,7 +108,6 @@ export class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
       sheen.assign(sheenNode);
       sheenRoughness.assign(sheenRoughnessNode);
     }
-
     if (this.useIridescence) {
       const iridescenceNode = this.iridescenceNode ? f32(this.iridescenceNode) : materialIridescence;
       const iridescenceIORNode = this.iridescenceIORNode ? f32(this.iridescenceIORNode) : materialIridescenceIOR;
@@ -107,34 +121,13 @@ export class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
     }
   }
 
-  setupNormal(builder) {
+  setupNormal(builder: NodeBuilder): void {
     super.setupNormal(builder);
 
     const clearcoatNormalNode = this.clearcoatNormalNode ? vec3(this.clearcoatNormalNode) : materialClearcoatNormal;
 
     transformedClearcoatNormalView.assign(clearcoatNormalNode);
   }
-
-  copy(source) {
-    this.clearcoatNode = source.clearcoatNode;
-    this.clearcoatRoughnessNode = source.clearcoatRoughnessNode;
-    this.clearcoatNormalNode = source.clearcoatNormalNode;
-
-    this.sheenNode = source.sheenNode;
-    this.sheenRoughnessNode = source.sheenRoughnessNode;
-
-    this.iridescenceNode = source.iridescenceNode;
-    this.iridescenceIORNode = source.iridescenceIORNode;
-    this.iridescenceThicknessNode = source.iridescenceThicknessNode;
-
-    this.specularIntensityNode = source.specularIntensityNode;
-    this.specularColorNode = source.specularColorNode;
-
-    this.transmissionNode = source.transmissionNode;
-    this.thicknessNode = source.thicknessNode;
-    this.attenuationDistanceNode = source.attenuationDistanceNode;
-    this.attenuationColorNode = source.attenuationColorNode;
-
-    return super.copy(source);
-  }
 }
+
+const _parameters = new MeshPhysicalMaterial();

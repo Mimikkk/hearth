@@ -4,23 +4,22 @@ import { Vec2 } from '../../math/Vec2.js';
 import { Texture } from '@modules/renderer/engine/entities/textures/Texture.js';
 
 export interface MeshNormalMaterialParameters extends MaterialParameters {
-  bumpMap?: Texture | null | undefined;
-  bumpScale?: number | undefined;
-  normalMap?: Texture | null | undefined;
-  normalMapType?: NormalMapType | undefined;
-  normalScale?: Vec2 | undefined;
-  displacementMap?: Texture | null | undefined;
-  displacementScale?: number | undefined;
-  displacementBias?: number | undefined;
-  wireframe?: boolean | undefined;
-  wireframeLinewidth?: number | undefined;
+  bumpMap?: Texture | null;
+  bumpScale?: number;
+  normalMap?: Texture | null;
+  normalMapType?: NormalMapType;
+  normalScale?: Vec2;
+  displacementMap?: Texture | null;
+  displacementScale?: number;
+  displacementBias?: number;
+  wireframe?: boolean;
+  wireframeLinewidth?: number;
 
-  flatShading?: boolean | undefined;
+  flatShading?: boolean;
 }
 
 export class MeshNormalMaterial extends Material {
   declare isMeshNormalMaterial: true;
-  declare type: 'MeshNormalMaterial';
 
   bumpMap: Texture | null;
   bumpScale: number;
@@ -34,7 +33,7 @@ export class MeshNormalMaterial extends Material {
   wireframeLinewidth: number;
   flatShading: boolean;
 
-  constructor(parameters: MeshNormalMaterialParameters) {
+  constructor(parameters?: MeshNormalMaterialParameters) {
     super(parameters);
 
     this.bumpMap = null;
@@ -55,7 +54,7 @@ export class MeshNormalMaterial extends Material {
     this.setValues(parameters);
   }
 
-  setValues(values: MeshNormalMaterialParameters): void {
+  setValues(values?: MeshNormalMaterialParameters): void {
     super.setValues(values);
   }
 
@@ -83,4 +82,3 @@ export class MeshNormalMaterial extends Material {
 }
 
 MeshNormalMaterial.prototype.isMeshNormalMaterial = true;
-MeshNormalMaterial.prototype.type = 'MeshNormalMaterial';

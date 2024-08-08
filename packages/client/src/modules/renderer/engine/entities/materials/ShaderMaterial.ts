@@ -5,23 +5,21 @@ export interface IUniform<TValue = any> {
 }
 
 export interface ShaderMaterialParameters extends MaterialParameters {
-  uniforms?: { [uniform: string]: IUniform } | undefined;
-  vertexShader?: string | undefined;
-  fragmentShader?: string | undefined;
-  linewidth?: number | undefined;
-  wireframe?: boolean | undefined;
-  wireframeLinewidth?: number | undefined;
-  lights?: boolean | undefined;
-  clipping?: boolean | undefined;
-  fog?: boolean | undefined;
-  extensions?:
-    | {
-        derivatives?: boolean | undefined;
-        fragDepth?: boolean | undefined;
-        drawBuffers?: boolean | undefined;
-        shaderTextureLOD?: boolean | undefined;
-      }
-    | undefined;
+  uniforms?: { [uniform: string]: IUniform };
+  vertexShader?: string;
+  fragmentShader?: string;
+  linewidth?: number;
+  wireframe?: boolean;
+  wireframeLinewidth?: number;
+  lights?: boolean;
+  clipping?: boolean;
+  fog?: boolean;
+  extensions?: {
+    derivatives?: boolean;
+    fragDepth?: boolean;
+    drawBuffers?: boolean;
+    shaderTextureLOD?: boolean;
+  };
 }
 
 export class ShaderMaterial extends Material {
@@ -32,7 +30,7 @@ export class ShaderMaterial extends Material {
   lights: boolean;
   clipping: boolean;
 
-  constructor(parameters: ShaderMaterialParameters) {
+  constructor(parameters?: ShaderMaterialParameters) {
     super(parameters);
 
     this.defines = {};
@@ -45,7 +43,7 @@ export class ShaderMaterial extends Material {
     this.setValues(parameters);
   }
 
-  setValues(parameters: ShaderMaterialParameters): void {
+  setValues(parameters?: ShaderMaterialParameters): void {
     super.setValues(parameters);
   }
 

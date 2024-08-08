@@ -1,20 +1,19 @@
 import { LineBasicMaterial, LineBasicMaterialParameters } from './LineBasicMaterial.js';
 
 export interface LineDashedMaterialParameters extends LineBasicMaterialParameters {
-  scale?: number | undefined;
-  dashSize?: number | undefined;
-  gapSize?: number | undefined;
+  scale?: number;
+  dashSize?: number;
+  gapSize?: number;
 }
 
 export class LineDashedMaterial extends LineBasicMaterial {
   declare isLineDashedMaterial: true;
-  declare type: string;
 
   scale: number;
   dashSize: number;
   gapSize: number;
 
-  constructor(parameters: LineDashedMaterialParameters) {
+  constructor(parameters?: LineDashedMaterialParameters) {
     super(parameters);
 
     this.isLineDashedMaterial = true;
@@ -27,7 +26,7 @@ export class LineDashedMaterial extends LineBasicMaterial {
     this.setValues(parameters);
   }
 
-  setValues(values: LineDashedMaterialParameters): void {
+  setValues(values?: LineDashedMaterialParameters): void {
     super.setValues(values);
   }
 
@@ -41,4 +40,3 @@ export class LineDashedMaterial extends LineBasicMaterial {
 }
 
 LineDashedMaterial.prototype.isLineDashedMaterial = true;
-LineDashedMaterial.prototype.type = 'LineDashedMaterial';

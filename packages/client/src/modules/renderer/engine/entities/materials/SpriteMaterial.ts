@@ -3,17 +3,16 @@ import { Color, ColorRepresentation } from '../../math/Color.js';
 import { Texture } from '@modules/renderer/engine/entities/textures/Texture.js';
 
 export interface SpriteMaterialParameters extends MaterialParameters {
-  color?: ColorRepresentation | undefined;
-  map?: Texture | null | undefined;
-  alphaMap?: Texture | null | undefined;
-  rotation?: number | undefined;
-  sizeAttenuation?: boolean | undefined;
-  fog?: boolean | undefined;
+  color?: ColorRepresentation;
+  map?: Texture | null;
+  alphaMap?: Texture | null;
+  rotation?: number;
+  sizeAttenuation?: boolean;
+  fog?: boolean;
 }
 
 export class SpriteMaterial extends Material {
   declare isSpriteMaterial: true;
-  declare type: string | 'SpriteMaterial';
 
   color: Color;
   map: Texture | null;
@@ -23,7 +22,7 @@ export class SpriteMaterial extends Material {
   transparent: boolean;
   fog: boolean;
 
-  constructor(parameters: SpriteMaterialParameters) {
+  constructor(parameters?: SpriteMaterialParameters) {
     super(parameters);
 
     this.color = Color.new(0xffffff);
@@ -43,7 +42,7 @@ export class SpriteMaterial extends Material {
     this.setValues(parameters);
   }
 
-  setValues(parameters: SpriteMaterialParameters): void {
+  setValues(parameters?: SpriteMaterialParameters): void {
     super.setValues(parameters);
   }
 
@@ -67,4 +66,3 @@ export class SpriteMaterial extends Material {
 }
 
 SpriteMaterial.prototype.isSpriteMaterial = true;
-SpriteMaterial.prototype.type = 'SpriteMaterial';

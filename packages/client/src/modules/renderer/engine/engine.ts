@@ -173,7 +173,7 @@ export * from './entities/materials/PointsMaterial.js';
 export * from './entities/materials/ShaderMaterial.js';
 export * from './entities/materials/ShadowMaterial.js';
 export * from './entities/materials/SpriteMaterial.js';
-export * from './entities/materials/SpriteMaterialBuilder.js';
+export * from './entities/materials/SpriteMaterial.builder.js';
 // /scenes
 export * from './entities/scenes/Scene.js';
 // TODO - consider removing/merging

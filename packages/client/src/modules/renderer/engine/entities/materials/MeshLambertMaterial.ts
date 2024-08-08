@@ -6,39 +6,38 @@ import { Euler } from '../../math/Euler.js';
 import { Texture } from '@modules/renderer/engine/entities/textures/Texture.js';
 
 export interface MeshLambertMaterialParameters extends MaterialParameters {
-  bumpMap?: Texture | undefined;
-  bumpScale?: number | undefined;
-  color?: ColorRepresentation | undefined;
-  displacementMap?: Texture | undefined;
-  displacementScale?: number | undefined;
-  displacementBias?: number | undefined;
-  emissive?: ColorRepresentation | undefined;
-  emissiveIntensity?: number | undefined;
-  emissiveMap?: Texture | null | undefined;
-  flatShading?: boolean | undefined;
-  map?: Texture | null | undefined;
-  lightMap?: Texture | null | undefined;
-  lightMapIntensity?: number | undefined;
-  normalMap?: Texture | undefined;
-  normalScale?: Vec2 | undefined;
-  aoMap?: Texture | null | undefined;
-  aoMapIntensity?: number | undefined;
-  specularMap?: Texture | null | undefined;
-  alphaMap?: Texture | null | undefined;
-  envMap?: Texture | null | undefined;
-  combine?: Operation | undefined;
-  reflectivity?: number | undefined;
-  refractionRatio?: number | undefined;
-  wireframe?: boolean | undefined;
-  wireframeLinewidth?: number | undefined;
-  wireframeLinecap?: string | undefined;
-  wireframeLinejoin?: string | undefined;
-  fog?: boolean | undefined;
+  bumpMap?: Texture;
+  bumpScale?: number;
+  color?: ColorRepresentation;
+  displacementMap?: Texture;
+  displacementScale?: number;
+  displacementBias?: number;
+  emissive?: ColorRepresentation;
+  emissiveIntensity?: number;
+  emissiveMap?: Texture | null;
+  flatShading?: boolean;
+  map?: Texture | null;
+  lightMap?: Texture | null;
+  lightMapIntensity?: number;
+  normalMap?: Texture;
+  normalScale?: Vec2;
+  aoMap?: Texture | null;
+  aoMapIntensity?: number;
+  specularMap?: Texture | null;
+  alphaMap?: Texture | null;
+  envMap?: Texture | null;
+  combine?: Operation;
+  reflectivity?: number;
+  refractionRatio?: number;
+  wireframe?: boolean;
+  wireframeLinewidth?: number;
+  wireframeLinecap?: string;
+  wireframeLinejoin?: string;
+  fog?: boolean;
 }
 
 export class MeshLambertMaterial extends Material {
   declare isMeshLambertMaterial: true;
-  declare type: 'MeshLambertMaterial';
 
   color: Color;
   map: Texture | null;
@@ -71,7 +70,7 @@ export class MeshLambertMaterial extends Material {
   flatShading: boolean;
   fog: boolean;
 
-  constructor(parameters: MeshLambertMaterialParameters) {
+  constructor(parameters?: MeshLambertMaterialParameters) {
     super(parameters);
 
     this.color = Color.new(0xffffff);
@@ -120,7 +119,7 @@ export class MeshLambertMaterial extends Material {
     this.setValues(parameters);
   }
 
-  setValues(values: MeshLambertMaterialParameters): void {
+  setValues(values?: MeshLambertMaterialParameters): void {
     super.setValues(values);
   }
 
@@ -176,4 +175,3 @@ export class MeshLambertMaterial extends Material {
 }
 
 MeshLambertMaterial.prototype.isMeshLambertMaterial = true;
-MeshLambertMaterial.prototype.type = 'MeshLambertMaterial';

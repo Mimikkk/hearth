@@ -112,7 +112,6 @@ export * from './accessors/TextureStoreNode.js';
 export * from './accessors/UVNode.js';
 export * from './accessors/UserDataNode.js';
 // /materials
-import './materials/NodeMaterial.map.initialize.js';
 export * from './materials/NodeMaterial.js';
 export * from './materials/InstancedPointsNodeMaterial.js';
 export * from './materials/LineBasicNodeMaterial.js';
@@ -127,6 +126,8 @@ export * from './materials/MeshPhysicalNodeMaterial.js';
 export * from './materials/MeshSSSNodeMaterial.js';
 export * from './materials/PointsNodeMaterial.js';
 export * from './materials/SpriteNodeMaterial.js';
+export * from './materials/NodeMaterial.map.js';
+export * from './materials/NodeMaterial.mapping.js';
 // /lighting
 export * from './lighting/LightNode.js';
 export * from './lighting/PointLightNode.js';

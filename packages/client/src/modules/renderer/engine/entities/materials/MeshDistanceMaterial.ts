@@ -3,19 +3,18 @@ import { Texture } from '@modules/renderer/engine/entities/textures/Texture.js';
 import { Vec3 } from '../../math/Vec3.js';
 
 export interface MeshDistanceMaterialParameters extends MaterialParameters {
-  map?: Texture | null | undefined;
-  alphaMap?: Texture | null | undefined;
-  displacementMap?: Texture | null | undefined;
-  displacementScale?: number | undefined;
-  displacementBias?: number | undefined;
-  farDistance?: number | undefined;
-  nearDistance?: number | undefined;
-  referencePosition?: Vec3 | undefined;
+  map?: Texture | null;
+  alphaMap?: Texture | null;
+  displacementMap?: Texture | null;
+  displacementScale?: number;
+  displacementBias?: number;
+  farDistance?: number;
+  nearDistance?: number;
+  referencePosition?: Vec3;
 }
 
 export class MeshDistanceMaterial extends Material {
   declare isMeshDistanceMaterial: true;
-  declare type: 'MeshDistanceMaterial';
 
   map: Texture | null;
   alphaMap: Texture | null;
@@ -23,7 +22,7 @@ export class MeshDistanceMaterial extends Material {
   displacementScale: number;
   displacementBias: number;
 
-  constructor(parameters: MeshDistanceMaterialParameters) {
+  constructor(parameters?: MeshDistanceMaterialParameters) {
     super(parameters);
 
     this.map = null;
@@ -35,7 +34,7 @@ export class MeshDistanceMaterial extends Material {
     this.setValues(parameters);
   }
 
-  setValues(values: MeshDistanceMaterialParameters): void {
+  setValues(values?: MeshDistanceMaterialParameters): void {
     super.setValues(values);
   }
 
@@ -55,4 +54,3 @@ export class MeshDistanceMaterial extends Material {
 }
 
 MeshDistanceMaterial.prototype.isMeshDistanceMaterial = true;
-MeshDistanceMaterial.prototype.type = 'MeshDistanceMaterial';

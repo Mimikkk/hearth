@@ -6,43 +6,42 @@ import { Euler } from '../../math/Euler.js';
 import { Texture } from '@modules/renderer/engine/entities/textures/Texture.js';
 
 export interface MeshPhongMaterialParameters extends MaterialParameters {
-  color?: ColorRepresentation | undefined;
-  specular?: ColorRepresentation | undefined;
-  shininess?: number | undefined;
-  opacity?: number | undefined;
-  map?: Texture | null | undefined;
-  lightMap?: Texture | null | undefined;
-  lightMapIntensity?: number | undefined;
-  aoMap?: Texture | null | undefined;
-  aoMapIntensity?: number | undefined;
-  emissive?: ColorRepresentation | undefined;
-  emissiveIntensity?: number | undefined;
-  emissiveMap?: Texture | null | undefined;
-  bumpMap?: Texture | null | undefined;
-  bumpScale?: number | undefined;
-  normalMap?: Texture | null | undefined;
-  normalMapType?: NormalMapType | undefined;
-  normalScale?: Vec2 | undefined;
-  displacementMap?: Texture | null | undefined;
-  displacementScale?: number | undefined;
-  displacementBias?: number | undefined;
-  specularMap?: Texture | null | undefined;
-  alphaMap?: Texture | null | undefined;
-  envMap?: Texture | null | undefined;
-  combine?: Operation | undefined;
-  reflectivity?: number | undefined;
-  refractionRatio?: number | undefined;
-  wireframe?: boolean | undefined;
-  wireframeLinewidth?: number | undefined;
-  wireframeLinecap?: string | undefined;
-  wireframeLinejoin?: string | undefined;
-  fog?: boolean | undefined;
-  flatShading?: boolean | undefined;
+  color?: ColorRepresentation;
+  specular?: ColorRepresentation;
+  shininess?: number;
+  opacity?: number;
+  map?: Texture | null;
+  lightMap?: Texture | null;
+  lightMapIntensity?: number;
+  aoMap?: Texture | null;
+  aoMapIntensity?: number;
+  emissive?: ColorRepresentation;
+  emissiveIntensity?: number;
+  emissiveMap?: Texture | null;
+  bumpMap?: Texture | null;
+  bumpScale?: number;
+  normalMap?: Texture | null;
+  normalMapType?: NormalMapType;
+  normalScale?: Vec2;
+  displacementMap?: Texture | null;
+  displacementScale?: number;
+  displacementBias?: number;
+  specularMap?: Texture | null;
+  alphaMap?: Texture | null;
+  envMap?: Texture | null;
+  combine?: Operation;
+  reflectivity?: number;
+  refractionRatio?: number;
+  wireframe?: boolean;
+  wireframeLinewidth?: number;
+  wireframeLinecap?: string;
+  wireframeLinejoin?: string;
+  fog?: boolean;
+  flatShading?: boolean;
 }
 
 export class MeshPhongMaterial extends Material {
   declare isMeshPhongMaterial: true;
-  declare type: 'MeshPhongMaterial';
 
   color: Color;
   specular: Color;
@@ -77,7 +76,7 @@ export class MeshPhongMaterial extends Material {
   flatShading: boolean;
   fog: boolean;
 
-  constructor(parameters: MeshPhongMaterialParameters) {
+  constructor(parameters?: MeshPhongMaterialParameters) {
     super(parameters);
 
     this.color = Color.new(0xffffff);
@@ -128,7 +127,7 @@ export class MeshPhongMaterial extends Material {
     this.setValues(parameters);
   }
 
-  setValues(values: MeshPhongMaterialParameters) {
+  setValues(values?: MeshPhongMaterialParameters) {
     super.setValues(values);
   }
 
@@ -186,4 +185,3 @@ export class MeshPhongMaterial extends Material {
 }
 
 MeshPhongMaterial.prototype.isMeshPhongMaterial = true;
-MeshPhongMaterial.prototype.type = 'MeshPhongMaterial';

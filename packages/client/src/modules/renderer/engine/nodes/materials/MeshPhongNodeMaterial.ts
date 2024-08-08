@@ -3,29 +3,29 @@ import { shininess, specularColor } from '../core/PropertyNode.js';
 import { materialShininess, materialSpecularColor } from '../accessors/MaterialNode.js';
 import { f32 } from '../shadernode/ShaderNode.primitves.ts';
 import { PhongLightModel } from '../functions/PhongLightModel.js';
-import { MeshPhongMaterial } from '@modules/renderer/engine/entities/materials/MeshPhongMaterial.js';
-
-const defaultValues = new MeshPhongMaterial();
+import {
+  MeshPhongMaterial,
+  MeshPhongMaterialParameters,
+} from '@modules/renderer/engine/entities/materials/MeshPhongMaterial.js';
+import { LightModel } from '@modules/renderer/engine/nodes/functions/LightModel.js';
 
 export class MeshPhongNodeMaterial extends NodeMaterial {
-  static type = 'MeshPhongNodeMaterial';
+  shininessNode: Node | null;
+  specularNode: Node | null;
 
-  constructor(parameters) {
+  constructor(parameters?: MeshPhongMaterialParameters) {
     super();
 
-    this.isMeshPhongNodeMaterial = true;
-
     this.lights = true;
-
     this.shininessNode = null;
     this.specularNode = null;
 
-    this.setDefaultValues(defaultValues);
+    this.setDefaultValues(_parameters);
 
     this.setValues(parameters);
   }
 
-  setupLightingModel() {
+  setupLightingModel(): LightModel {
     return new PhongLightModel();
   }
 
@@ -38,11 +38,6 @@ export class MeshPhongNodeMaterial extends NodeMaterial {
 
     specularColor.assign(specularNode);
   }
-
-  copy(source) {
-    this.shininessNode = source.shininessNode;
-    this.specularNode = source.specularNode;
-
-    return super.copy(source);
-  }
 }
+
+const _parameters = new MeshPhongMaterial();

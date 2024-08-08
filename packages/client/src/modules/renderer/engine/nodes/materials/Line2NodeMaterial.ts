@@ -21,23 +21,35 @@ import { viewport } from '../display/ViewportNode.js';
 import { LineDashedMaterial } from '@modules/renderer/engine/entities/materials/LineDashedMaterial.js';
 import { NodeStack } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.stack.js';
 import { hsl } from '@modules/renderer/engine/nodes/shadernode/hsl.js';
+import { LineMaterialParameters } from '@modules/renderer/engine/entities/lines/LineMaterial.js';
+import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
-const defaultValues = new LineDashedMaterial();
+const _parameters = new LineDashedMaterial();
 
 export class Line2NodeMaterial extends NodeMaterial {
-  static type = 'Line2NodeMaterial';
+  useAlphaToCoverage: boolean;
+  useColor: boolean;
+  useDash: boolean;
+  useWorldUnits: boolean;
+  dashOffset: number;
+  lineWidth: number;
+  lineColorNode: Node | null;
+  offsetNode: Node | null;
+  dashScaleNode: Node | null;
+  dashSizeNode: Node | null;
+  gapSizeNode: Node | null;
 
-  constructor(params = {}) {
+  constructor(parameters?: LineMaterialParameters) {
     super();
 
     this.normals = false;
     this.lights = false;
 
-    this.setDefaultValues(defaultValues);
+    this.setDefaultValues(_parameters);
 
     this.useAlphaToCoverage = true;
-    this.useColor = params.vertexColors;
-    this.useDash = params.dashed;
+    this.useColor = parameters?.vertexColors ?? false;
+    this.useDash = parameters?.dashed ?? false;
     this.useWorldUnits = false;
 
     this.dashOffset = 0;
@@ -52,7 +64,7 @@ export class Line2NodeMaterial extends NodeMaterial {
 
     this.setupShaders();
 
-    this.setValues(params);
+    this.setValues(parameters);
   }
 
   setupShaders() {
@@ -72,20 +84,20 @@ export class Line2NodeMaterial extends NodeMaterial {
     });
 
     this.vertexNode = hsl(() => {
-      varyingProperty('vec2', 'vUv').assign(uv());
+      varyingProperty(TypeName.vec2, 'vUv').assign(uv());
 
       const instanceStart = attribute('instanceStart');
       const instanceEnd = attribute('instanceEnd');
 
-      const start = property('vec4', 'start');
-      const end = property('vec4', 'end');
+      const start = property(TypeName.vec4, 'start');
+      const end = property(TypeName.vec4, 'end');
 
       start.assign(modelViewMatrix.mul(vec4(instanceStart, 1.0)));
       end.assign(modelViewMatrix.mul(vec4(instanceEnd, 1.0)));
 
       if (useWorldUnits) {
-        varyingProperty('vec3', 'worldStart').assign(start.xyz);
-        varyingProperty('vec3', 'worldEnd').assign(end.xyz);
+        varyingProperty(TypeName.vec3, 'worldStart').assign(start.xyz);
+        varyingProperty(TypeName.vec3, 'worldEnd').assign(end.xyz);
       }
 
       const aspect = viewport.z.div(viewport.w);
@@ -119,7 +131,7 @@ export class Line2NodeMaterial extends NodeMaterial {
         const worldUp = worldDir.cross(tmpFwd).normalize();
         const worldFwd = worldDir.cross(worldUp);
 
-        const worldPos = varyingProperty('vec4', 'worldPos');
+        const worldPos = varyingProperty(TypeName.vec4, 'worldPos');
 
         worldPos.assign(positionGeometry.y.lessThan(0.5).cond(start, end));
 
@@ -145,7 +157,7 @@ export class Line2NodeMaterial extends NodeMaterial {
         clipPose.assign(positionGeometry.y.lessThan(0.5).cond(ndcStart, ndcEnd));
         clip.z.assign(clipPose.z.mul(clip.w));
       } else {
-        const offset = property('vec2', 'offset');
+        const offset = property(TypeName.vec2, 'offset');
 
         offset.assign(vec2(dir.y, dir.x.negate()));
 
@@ -196,13 +208,13 @@ export class Line2NodeMaterial extends NodeMaterial {
     });
 
     this.fragmentNode = hsl(() => {
-      const vUv = varyingProperty('vec2', 'vUv');
+      const vUv = varyingProperty(TypeName.vec2, 'vUv');
 
       if (useDash) {
-        const offsetNode = this.offsetNode ? f32(this.offsetNodeNode) : materialLineDashOffset;
+        const offsetNode = this.offsetNode ? f32(this.offsetNode) : materialLineDashOffset;
         const dashScaleNode = this.dashScaleNode ? f32(this.dashScaleNode) : materialLineScale;
         const dashSizeNode = this.dashSizeNode ? f32(this.dashSizeNode) : materialLineDashSize;
-        const gapSizeNode = this.dashSizeNode ? f32(this.dashGapNode) : materialLineGapSize;
+        const gapSizeNode = this.dashSizeNode ? f32(this.gapSizeNode) : materialLineGapSize;
 
         dashSize.assign(dashSizeNode);
         gapSize.assign(gapSizeNode);
@@ -221,14 +233,14 @@ export class Line2NodeMaterial extends NodeMaterial {
         vLineDistanceOffset.mod(dashSize.add(gapSize)).greaterThan(dashSize).discard();
       }
 
-      const alpha = property('f32', 'alpha');
+      const alpha = property(TypeName.f32, 'alpha');
       alpha.assign(1);
 
       if (useWorldUnits) {
-        const worldStart = varyingProperty('vec3', 'worldStart');
-        const worldEnd = varyingProperty('vec3', 'worldEnd');
+        const worldStart = varyingProperty(TypeName.vec3, 'worldStart');
+        const worldEnd = varyingProperty(TypeName.vec3, 'worldEnd');
 
-        const rayEnd = varyingProperty('vec4', 'worldPos').xyz.normalize().mul(1e5);
+        const rayEnd = varyingProperty(TypeName.vec4, 'worldPos').xyz.normalize().mul(1e5);
         const lineDir = worldEnd.sub(worldStart);
         const params = closestLineToLine({ p1: worldStart, p2: worldEnd, p3: vec3(0.0, 0.0, 0.0), p4: rayEnd });
 
@@ -253,7 +265,7 @@ export class Line2NodeMaterial extends NodeMaterial {
 
           const len2 = a.mul(a).add(b.mul(b));
 
-          const dlen = property('f32', 'dlen');
+          const dlen = property(TypeName.f32, 'dlen');
           dlen.assign(len2.fwidth());
 
           NodeStack.if(vUv.y.abs().greaterThan(1.0), () => {

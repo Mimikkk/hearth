@@ -1,21 +1,17 @@
 import { NodeMaterial } from './NodeMaterial.js';
 import { LineBasicMaterial } from '@modules/renderer/engine/entities/materials/LineBasicMaterial.js';
-
-const defaultValues = new LineBasicMaterial();
+import { LineMaterialParameters } from '@modules/renderer/engine/entities/lines/LineMaterial.js';
 
 export class LineBasicNodeMaterial extends NodeMaterial {
-  static type = 'LineBasicNodeMaterial';
-
-  constructor(parameters) {
+  constructor(parameters?: LineMaterialParameters) {
     super();
-
-    this.isLineBasicNodeMaterial = true;
 
     this.lights = false;
     this.normals = false;
 
-    this.setDefaultValues(defaultValues);
-
+    this.setDefaultValues(_parameters);
     this.setValues(parameters);
   }
 }
+
+const _parameters = new LineBasicMaterial();

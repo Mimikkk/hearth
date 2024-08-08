@@ -1,11 +1,18 @@
 import { MeshPhysicalNodeMaterial } from './MeshPhysicalNodeMaterial.js';
 import { f32 } from '../shadernode/ShaderNode.primitves.ts';
 import { SSSLightingModel } from '@modules/renderer/engine/nodes/functions/SSSLightModel.js';
+import { Node } from '../core/Node.js';
+import { MeshPhysicalMaterialParameters } from '@modules/renderer/engine/entities/materials/MeshPhysicalMaterial.js';
 
 export class MeshSSSNodeMaterial extends MeshPhysicalNodeMaterial {
-  static type = 'MeshSSSNodeMaterial';
+  thicknessColorNode: Node | null;
+  thicknessDistortionNode: Node;
+  thicknessAmbientNode: Node;
+  thicknessAttenuationNode: Node;
+  thicknessPowerNode: Node;
+  thicknessScaleNode: Node;
 
-  constructor(parameters) {
+  constructor(parameters?: MeshPhysicalMaterialParameters) {
     super(parameters);
 
     this.thicknessColorNode = null;
@@ -22,16 +29,5 @@ export class MeshSSSNodeMaterial extends MeshPhysicalNodeMaterial {
 
   setupLightingModel() {
     return new SSSLightingModel(this.useClearcoat, this.useSheen, this.useIridescence, this.useSSS);
-  }
-
-  copy(source) {
-    this.thicknessColorNode = source.thicknessColorNode;
-    this.thicknessDistortionNode = source.thicknessDistortionNode;
-    this.thicknessAmbientNode = source.thicknessAmbientNode;
-    this.thicknessAttenuationNode = source.thicknessAttenuationNode;
-    this.thicknessPowerNode = source.thicknessPowerNode;
-    this.thicknessScaleNode = source.thicknessScaleNode;
-
-    return super.copy(source);
   }
 }

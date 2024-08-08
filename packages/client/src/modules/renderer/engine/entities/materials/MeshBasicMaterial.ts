@@ -5,29 +5,28 @@ import { Euler } from '../../math/Euler.js';
 import { Texture } from '@modules/renderer/engine/entities/textures/Texture.js';
 
 export interface MeshBasicMaterialParameters extends MaterialParameters {
-  color?: ColorRepresentation | undefined;
-  opacity?: number | undefined;
-  map?: Texture | null | undefined;
+  color?: ColorRepresentation;
+  opacity?: number;
+  map?: Texture | null;
   lightMap?: Texture | null;
-  lightMapIntensity?: number | undefined;
-  aoMap?: Texture | null | undefined;
-  aoMapIntensity?: number | undefined;
-  specularMap?: Texture | null | undefined;
-  alphaMap?: Texture | null | undefined;
-  fog?: boolean | undefined;
-  envMap?: Texture | null | undefined;
-  combine?: Operation | undefined;
-  reflectivity?: number | undefined;
-  refractionRatio?: number | undefined;
-  wireframe?: boolean | undefined;
-  wireframeLinewidth?: number | undefined;
-  wireframeLinecap?: string | undefined;
-  wireframeLinejoin?: string | undefined;
+  lightMapIntensity?: number;
+  aoMap?: Texture | null;
+  aoMapIntensity?: number;
+  specularMap?: Texture | null;
+  alphaMap?: Texture | null;
+  fog?: boolean;
+  envMap?: Texture | null;
+  combine?: Operation;
+  reflectivity?: number;
+  refractionRatio?: number;
+  wireframe?: boolean;
+  wireframeLinewidth?: number;
+  wireframeLinecap?: string;
+  wireframeLinejoin?: string;
 }
 
 export class MeshBasicMaterial extends Material {
   declare isMeshBasicMaterial: true;
-  declare type: 'MeshBasicMaterial';
 
   color: Color;
   map: Texture | null;
@@ -48,7 +47,7 @@ export class MeshBasicMaterial extends Material {
   wireframeLinejoin: 'round' | 'bevel' | 'miter';
   fog: boolean;
 
-  constructor(parameters: MeshBasicMaterialParameters) {
+  constructor(parameters?: MeshBasicMaterialParameters) {
     super(parameters);
 
     this.color = Color.new(0xffffff);
@@ -80,7 +79,7 @@ export class MeshBasicMaterial extends Material {
     this.setValues(parameters);
   }
 
-  setValues(values: MeshBasicMaterialParameters) {
+  setValues(values?: MeshBasicMaterialParameters) {
     super.setValues(values);
   }
 
@@ -119,4 +118,3 @@ export class MeshBasicMaterial extends Material {
 }
 
 MeshBasicMaterial.prototype.isMeshBasicMaterial = true;
-MeshBasicMaterial.prototype.type = 'MeshBasicMaterial';

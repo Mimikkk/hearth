@@ -6,39 +6,38 @@ import { Euler } from '../../math/Euler.js';
 import { Texture } from '@modules/renderer/engine/entities/textures/Texture.js';
 
 export interface MeshStandardMaterialParameters extends MaterialParameters {
-  color?: ColorRepresentation | undefined;
-  roughness?: number | undefined;
-  metalness?: number | undefined;
-  map?: Texture | null | undefined;
-  lightMap?: Texture | null | undefined;
-  lightMapIntensity?: number | undefined;
-  aoMap?: Texture | null | undefined;
-  aoMapIntensity?: number | undefined;
-  emissive?: ColorRepresentation | undefined;
-  emissiveIntensity?: number | undefined;
-  emissiveMap?: Texture | null | undefined;
-  bumpMap?: Texture | null | undefined;
-  bumpScale?: number | undefined;
-  normalMap?: Texture | null | undefined;
-  normalMapType?: NormalMapType | undefined;
-  normalScale?: Vec2 | undefined;
-  displacementMap?: Texture | null | undefined;
-  displacementScale?: number | undefined;
-  displacementBias?: number | undefined;
-  roughnessMap?: Texture | null | undefined;
-  metalnessMap?: Texture | null | undefined;
-  alphaMap?: Texture | null | undefined;
-  envMap?: Texture | null | undefined;
-  envMapIntensity?: number | undefined;
-  wireframe?: boolean | undefined;
-  wireframeLinewidth?: number | undefined;
-  fog?: boolean | undefined;
-  flatShading?: boolean | undefined;
+  color?: ColorRepresentation;
+  roughness?: number;
+  metalness?: number;
+  map?: Texture | null;
+  lightMap?: Texture | null;
+  lightMapIntensity?: number;
+  aoMap?: Texture | null;
+  aoMapIntensity?: number;
+  emissive?: ColorRepresentation;
+  emissiveIntensity?: number;
+  emissiveMap?: Texture | null;
+  bumpMap?: Texture | null;
+  bumpScale?: number;
+  normalMap?: Texture | null;
+  normalMapType?: NormalMapType;
+  normalScale?: Vec2;
+  displacementMap?: Texture | null;
+  displacementScale?: number;
+  displacementBias?: number;
+  roughnessMap?: Texture | null;
+  metalnessMap?: Texture | null;
+  alphaMap?: Texture | null;
+  envMap?: Texture | null;
+  envMapIntensity?: number;
+  wireframe?: boolean;
+  wireframeLinewidth?: number;
+  fog?: boolean;
+  flatShading?: boolean;
 }
 
 export class MeshStandardMaterial extends Material {
   declare isMeshStandardMaterial: true;
-  declare type: string | 'MeshStandardMaterial';
 
   color: Color;
   roughness: number;
@@ -73,7 +72,7 @@ export class MeshStandardMaterial extends Material {
   fog: boolean;
   defines: Record<string, any>;
 
-  constructor(parameters: MeshStandardMaterialParameters) {
+  constructor(parameters?: MeshStandardMaterialParameters) {
     super(parameters);
 
     this.isMeshStandardMaterial = true;
@@ -131,7 +130,7 @@ export class MeshStandardMaterial extends Material {
     this.setValues(parameters);
   }
 
-  setValues(values: MeshStandardMaterialParameters): void {
+  setValues(values?: MeshStandardMaterialParameters): void {
     super.setValues(values);
   }
 
@@ -191,4 +190,3 @@ export class MeshStandardMaterial extends Material {
 }
 
 MeshStandardMaterial.prototype.isMeshStandardMaterial = true;
-MeshStandardMaterial.prototype.type = 'MeshStandardMaterial';

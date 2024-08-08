@@ -5,25 +5,24 @@ import { Color, ColorRepresentation } from '../../math/Color.js';
 import { Texture } from '@modules/renderer/engine/entities/textures/Texture.js';
 
 export interface MeshMatcapMaterialParameters extends MaterialParameters {
-  color?: ColorRepresentation | undefined;
-  matcap?: Texture | null | undefined;
-  map?: Texture | null | undefined;
-  bumpMap?: Texture | null | undefined;
-  bumpScale?: number | undefined;
-  normalMap?: Texture | null | undefined;
-  normalMapType?: NormalMapType | undefined;
-  normalScale?: Vec2 | undefined;
-  displacementMap?: Texture | null | undefined;
-  displacementScale?: number | undefined;
-  displacementBias?: number | undefined;
-  alphaMap?: Texture | null | undefined;
-  fog?: boolean | undefined;
-  flatShading?: boolean | undefined;
+  color?: ColorRepresentation;
+  matcap?: Texture | null;
+  map?: Texture | null;
+  bumpMap?: Texture | null;
+  bumpScale?: number;
+  normalMap?: Texture | null;
+  normalMapType?: NormalMapType;
+  normalScale?: Vec2;
+  displacementMap?: Texture | null;
+  displacementScale?: number;
+  displacementBias?: number;
+  alphaMap?: Texture | null;
+  fog?: boolean;
+  flatShading?: boolean;
 }
 
 export class MeshMatcapMaterial extends Material {
   declare isMeshMatcapMaterial: true;
-  declare type: 'MeshMatcapMaterial';
   defines: Record<string, any>;
   color: Color;
   matcap: Texture | null;
@@ -40,12 +39,10 @@ export class MeshMatcapMaterial extends Material {
   flatShading: boolean;
   fog: boolean;
 
-  constructor(parameters: MeshMatcapMaterialParameters) {
+  constructor(parameters?: MeshMatcapMaterialParameters) {
     super(parameters);
 
     this.defines = { MATCAP: '' };
-
-    this.type = 'MeshMatcapMaterial';
 
     this.color = Color.new(0xffffff);
 
@@ -72,7 +69,7 @@ export class MeshMatcapMaterial extends Material {
     this.setValues(parameters);
   }
 
-  setValues(values: MeshMatcapMaterialParameters): void {
+  setValues(values?: MeshMatcapMaterialParameters): void {
     super.setValues(values);
   }
 
@@ -109,4 +106,3 @@ export class MeshMatcapMaterial extends Material {
 }
 
 MeshMatcapMaterial.prototype.isMeshMatcapMaterial = true;
-MeshMatcapMaterial.prototype.type = 'MeshMatcapMaterial';

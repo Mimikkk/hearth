@@ -3,17 +3,16 @@ import { Color, ColorRepresentation } from '../../math/Color.js';
 import { Texture } from '@modules/renderer/engine/entities/textures/Texture.js';
 
 export interface PointsMaterialParameters extends MaterialParameters {
-  color?: ColorRepresentation | undefined;
-  map?: Texture | null | undefined;
-  alphaMap?: Texture | null | undefined;
-  size?: number | undefined;
-  sizeAttenuation?: boolean | undefined;
-  fog?: boolean | undefined;
+  color?: ColorRepresentation;
+  map?: Texture | null;
+  alphaMap?: Texture | null;
+  size?: number;
+  sizeAttenuation?: boolean;
+  fog?: boolean;
 }
 
 export class PointsMaterial extends Material {
   declare isPointsMaterial: true;
-  declare type: string | 'PointsMaterial';
 
   color: Color;
   map: Texture | null;
@@ -22,7 +21,7 @@ export class PointsMaterial extends Material {
   sizeAttenuation: boolean;
   fog: boolean;
 
-  constructor(parameters: PointsMaterialParameters) {
+  constructor(parameters?: PointsMaterialParameters) {
     super(parameters);
 
     this.color = Color.new(0xffffff);
@@ -34,7 +33,7 @@ export class PointsMaterial extends Material {
     this.setValues(parameters);
   }
 
-  setValues(values: PointsMaterialParameters): void {
+  setValues(values?: PointsMaterialParameters): void {
     super.setValues(values);
   }
 
@@ -53,4 +52,3 @@ export class PointsMaterial extends Material {
 }
 
 PointsMaterial.prototype.isPointsMaterial = true;
-PointsMaterial.prototype.type = 'PointsMaterial';

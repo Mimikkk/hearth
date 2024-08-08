@@ -1,6 +1,6 @@
 import type { Node } from '@modules/renderer/engine/nodes/core/Node.js';
 
-export function getNodeCacheKey(object: Node, force = false) {
+export function cacheKey(object: any, force = false) {
   let cacheKey = '{';
 
   if (object.isNode) cacheKey += object.id;

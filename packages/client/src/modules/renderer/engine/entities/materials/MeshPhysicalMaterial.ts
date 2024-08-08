@@ -5,51 +5,50 @@ import * as MathUtils from '../../math/MathUtils.js';
 import { Texture } from '@modules/renderer/engine/entities/textures/Texture.js';
 
 export interface MeshPhysicalMaterialParameters extends MeshStandardMaterialParameters {
-  clearcoat?: number | undefined;
-  clearcoatMap?: Texture | null | undefined;
-  clearcoatRoughness?: number | undefined;
-  clearcoatRoughnessMap?: Texture | null | undefined;
-  clearcoatNormalScale?: Vec2 | undefined;
-  clearcoatNormalMap?: Texture | null | undefined;
+  clearcoat?: number;
+  clearcoatMap?: Texture | null;
+  clearcoatRoughness?: number;
+  clearcoatRoughnessMap?: Texture | null;
+  clearcoatNormalScale?: Vec2;
+  clearcoatNormalMap?: Texture | null;
 
-  reflectivity?: number | undefined;
-  ior?: number | undefined;
+  reflectivity?: number;
+  ior?: number;
 
-  sheen?: number | undefined;
-  sheenColor?: ColorRepresentation | undefined;
-  sheenColorMap?: Texture | null | undefined;
-  sheenRoughness?: number | undefined;
-  sheenRoughnessMap?: Texture | null | undefined;
+  sheen?: number;
+  sheenColor?: ColorRepresentation;
+  sheenColorMap?: Texture | null;
+  sheenRoughness?: number;
+  sheenRoughnessMap?: Texture | null;
 
-  transmission?: number | undefined;
-  transmissionMap?: Texture | null | undefined;
+  transmission?: number;
+  transmissionMap?: Texture | null;
 
-  thickness?: number | undefined;
-  thicknessMap?: Texture | null | undefined;
+  thickness?: number;
+  thicknessMap?: Texture | null;
 
-  attenuationDistance?: number | undefined;
-  attenuationColor?: ColorRepresentation | undefined;
+  attenuationDistance?: number;
+  attenuationColor?: ColorRepresentation;
 
-  specularIntensity?: number | undefined;
-  specularColor?: ColorRepresentation | undefined;
-  specularIntensityMap?: Texture | null | undefined;
-  specularColorMap?: Texture | null | undefined;
+  specularIntensity?: number;
+  specularColor?: ColorRepresentation;
+  specularIntensityMap?: Texture | null;
+  specularColorMap?: Texture | null;
 
-  iridescenceMap?: Texture | null | undefined;
-  iridescenceIOR?: number | undefined;
-  iridescence?: number | undefined;
-  iridescenceThicknessRange?: [number, number] | undefined;
-  iridescenceThicknessMap?: Texture | null | undefined;
+  iridescenceMap?: Texture | null;
+  iridescenceIOR?: number;
+  iridescence?: number;
+  iridescenceThicknessRange?: [number, number];
+  iridescenceThicknessMap?: Texture | null;
 
-  anisotropy?: number | undefined;
-  anisotropyRotation?: number | undefined;
-  anisotropyMap?: Texture | null | undefined;
+  anisotropy?: number;
+  anisotropyRotation?: number;
+  anisotropyMap?: Texture | null;
 }
 
 export class MeshPhysicalMaterial extends MeshStandardMaterial {
   defines: Record<string, any>;
   declare isMeshPhysicalMaterial: true;
-  declare type: 'MeshPhysicalMaterial';
 
   anisotropyRotation: number;
   anisotropyMap: Texture | null;
@@ -90,7 +89,7 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
     return MathUtils.clamp((2.5 * (this.ior - 1)) / (this.ior + 1), 0, 1);
   }
 
-  constructor(parameters: MeshPhysicalMaterialParameters) {
+  constructor(parameters?: MeshPhysicalMaterialParameters) {
     super(parameters);
 
     this.isMeshPhysicalMaterial = true;
@@ -99,8 +98,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
       STANDARD: '',
       PHYSICAL: '',
     };
-
-    this.type = 'MeshPhysicalMaterial';
 
     this.anisotropyRotation = 0;
     this.anisotropyMap = null;
@@ -203,7 +200,7 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
     this._transmission = value;
   }
 
-  setValues(values: MeshPhysicalMaterialParameters): void {
+  setValues(values?: MeshPhysicalMaterialParameters): void {
     super.setValues(values);
   }
 

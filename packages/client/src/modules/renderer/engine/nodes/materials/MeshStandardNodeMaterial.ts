@@ -6,33 +6,34 @@ import { getRoughness } from '../functions/material/getRoughness.js';
 import { PhysicalLightModel } from '../functions/PhysicalLightModel.js';
 import { f32, vec3, vec4 } from '../shadernode/ShaderNode.primitves.ts';
 import { Node } from '../core/Node.js';
-import { MeshStandardMaterial } from '@modules/renderer/engine/entities/materials/MeshStandardMaterial.js';
-
-const _defaults = new MeshStandardMaterial();
+import {
+  MeshStandardMaterial,
+  MeshStandardMaterialParameters,
+} from '@modules/renderer/engine/entities/materials/MeshStandardMaterial.js';
+import { LightModel } from '@modules/renderer/engine/nodes/functions/LightModel.js';
+import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 
 export class MeshStandardNodeMaterial extends NodeMaterial {
-  static type = 'MeshStandardNodeMaterial';
   emissiveNode: Node | null;
   metalnessNode: Node | null;
   roughnessNode: Node | null;
 
-  constructor(parameters) {
+  constructor(parameters?: MeshStandardMaterialParameters) {
     super();
 
     this.emissiveNode = null;
     this.metalnessNode = null;
     this.roughnessNode = null;
 
-    this.setDefaultValues(_defaults);
-
+    this.setDefaultValues(_parameters);
     this.setValues(parameters);
   }
 
-  setupLightingModel() {
+  setupLightingModel(): LightModel {
     return new PhysicalLightModel();
   }
 
-  setupVariants() {
+  setupVariants(builder: NodeBuilder): void {
     const metalnessNode = this.metalnessNode ? f32(this.metalnessNode) : materialMetalness;
     metalness.assign(metalnessNode);
 
@@ -46,13 +47,6 @@ export class MeshStandardNodeMaterial extends NodeMaterial {
 
     diffuseColor.assign(vec4(diffuseColor.rgb.mul(metalnessNode.oneMinus()), diffuseColor.a));
   }
-
-  copy(source) {
-    this.emissiveNode = source.emissiveNode;
-
-    this.metalnessNode = source.metalnessNode;
-    this.roughnessNode = source.roughnessNode;
-
-    return super.copy(source);
-  }
 }
+
+const _parameters = new MeshStandardMaterial();

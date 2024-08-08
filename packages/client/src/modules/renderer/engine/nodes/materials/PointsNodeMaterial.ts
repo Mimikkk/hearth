@@ -1,30 +1,23 @@
 import { NodeMaterial } from './NodeMaterial.js';
-import { PointsMaterial } from '@modules/renderer/engine/entities/materials/PointsMaterial.js';
-
-const defaultValues = new PointsMaterial();
+import {
+  PointsMaterial,
+  PointsMaterialParameters,
+} from '@modules/renderer/engine/entities/materials/PointsMaterial.js';
 
 export class PointsNodeMaterial extends NodeMaterial {
-  static type = 'PointsNodeMaterial';
+  sizeNode: Node | null;
 
-  constructor(parameters) {
+  constructor(parameters?: PointsMaterialParameters) {
     super();
-
-    this.isPointsNodeMaterial = true;
 
     this.lights = false;
     this.normals = false;
     this.transparent = true;
-
     this.sizeNode = null;
 
-    this.setDefaultValues(defaultValues);
-
+    this.setDefaultValues(_parameters);
     this.setValues(parameters);
   }
-
-  copy(source) {
-    this.sizeNode = source.sizeNode;
-
-    return super.copy(source);
-  }
 }
+
+const _parameters = new PointsMaterial();

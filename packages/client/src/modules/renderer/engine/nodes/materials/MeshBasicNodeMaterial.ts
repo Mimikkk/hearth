@@ -1,21 +1,19 @@
 import { NodeMaterial } from './NodeMaterial.js';
-import { MeshBasicMaterial } from '@modules/renderer/engine/entities/materials/MeshBasicMaterial.js';
-
-const defaultValues = new MeshBasicMaterial();
+import {
+  MeshBasicMaterial,
+  MeshBasicMaterialParameters,
+} from '@modules/renderer/engine/entities/materials/MeshBasicMaterial.js';
 
 export class MeshBasicNodeMaterial extends NodeMaterial {
-  static type = 'MeshBasicNodeMaterial';
-
-  constructor(parameters) {
+  constructor(parameters?: MeshBasicMaterialParameters) {
     super();
 
-    this.isMeshBasicNodeMaterial = true;
-
     this.lights = false;
-    //this.normals = false; @TODO: normals usage by context
+    this.normals = false;
 
-    this.setDefaultValues(defaultValues);
-
+    this.setDefaultValues(_parameters);
     this.setValues(parameters);
   }
 }
+
+const _parameters = new MeshBasicMaterial();

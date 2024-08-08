@@ -5,36 +5,35 @@ import { Color, ColorRepresentation } from '../../math/Color.js';
 import { Texture } from '@modules/renderer/engine/entities/textures/Texture.js';
 
 export interface MeshToonMaterialParameters extends MaterialParameters {
-  color?: ColorRepresentation | undefined;
-  opacity?: number | undefined;
-  gradientMap?: Texture | null | undefined;
-  map?: Texture | null | undefined;
-  lightMap?: Texture | null | undefined;
-  lightMapIntensity?: number | undefined;
-  aoMap?: Texture | null | undefined;
-  aoMapIntensity?: number | undefined;
-  emissive?: ColorRepresentation | undefined;
-  emissiveIntensity?: number | undefined;
-  emissiveMap?: Texture | null | undefined;
-  bumpMap?: Texture | null | undefined;
-  bumpScale?: number | undefined;
-  normalMap?: Texture | null | undefined;
-  normalMapType?: NormalMapType | undefined;
-  normalScale?: Vec2 | undefined;
-  displacementMap?: Texture | null | undefined;
-  displacementScale?: number | undefined;
-  displacementBias?: number | undefined;
-  alphaMap?: Texture | null | undefined;
-  wireframe?: boolean | undefined;
-  wireframeLinewidth?: number | undefined;
-  wireframeLinecap?: string | undefined;
-  wireframeLinejoin?: string | undefined;
-  fog?: boolean | undefined;
+  color?: ColorRepresentation;
+  opacity?: number;
+  gradientMap?: Texture | null;
+  map?: Texture | null;
+  lightMap?: Texture | null;
+  lightMapIntensity?: number;
+  aoMap?: Texture | null;
+  aoMapIntensity?: number;
+  emissive?: ColorRepresentation;
+  emissiveIntensity?: number;
+  emissiveMap?: Texture | null;
+  bumpMap?: Texture | null;
+  bumpScale?: number;
+  normalMap?: Texture | null;
+  normalMapType?: NormalMapType;
+  normalScale?: Vec2;
+  displacementMap?: Texture | null;
+  displacementScale?: number;
+  displacementBias?: number;
+  alphaMap?: Texture | null;
+  wireframe?: boolean;
+  wireframeLinewidth?: number;
+  wireframeLinecap?: string;
+  wireframeLinejoin?: string;
+  fog?: boolean;
 }
 
 export class MeshToonMaterial extends Material {
   declare isMeshToonMaterial: true;
-  declare type: string | 'MeshToonMaterial';
 
   color: Color;
   gradientMap: Texture | null;
@@ -62,7 +61,7 @@ export class MeshToonMaterial extends Material {
   fog: boolean;
   defines: Record<string, any>;
 
-  constructor(parameters: MeshToonMaterialParameters) {
+  constructor(parameters?: MeshToonMaterialParameters) {
     super(parameters);
     this.defines = { TOON: '' };
 
@@ -103,7 +102,7 @@ export class MeshToonMaterial extends Material {
     this.setValues(parameters);
   }
 
-  setValues(parameters: MeshToonMaterialParameters): void {
+  setValues(parameters?: MeshToonMaterialParameters): void {
     super.setValues(parameters);
   }
 
@@ -150,4 +149,3 @@ export class MeshToonMaterial extends Material {
 }
 
 MeshToonMaterial.prototype.isMeshToonMaterial = true;
-MeshToonMaterial.prototype.type = 'MeshToonMaterial';

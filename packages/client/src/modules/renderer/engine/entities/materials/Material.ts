@@ -23,54 +23,53 @@ import { v4 } from 'uuid';
 let _materialId = 0;
 
 export interface MaterialParameters {
-  alphaHash?: boolean | undefined;
-  alphaTest?: number | undefined;
-  alphaToCoverage?: boolean | undefined;
-  blendAlpha?: number | undefined;
-  blendColor?: ColorRepresentation | undefined;
-  blendDst?: BlendingFactor | undefined;
-  blendDstAlpha?: number | undefined;
-  blendEquation?: BlendingEquation | undefined;
-  blendEquationAlpha?: number | undefined;
-  blending?: Blending | undefined;
-  blendSrc?: BlendingFactor | undefined;
-  blendSrcAlpha?: number | undefined;
-  clipIntersection?: boolean | undefined;
-  clippingPlanes?: Plane[] | undefined;
-  clipShadows?: boolean | undefined;
-  colorWrite?: boolean | undefined;
+  alphaHash?: boolean;
+  alphaTest?: number;
+  alphaToCoverage?: boolean;
+  blendAlpha?: number;
+  blendColor?: ColorRepresentation;
+  blendDst?: BlendingFactor;
+  blendDstAlpha?: number;
+  blendEquation?: BlendingEquation;
+  blendEquationAlpha?: number;
+  blending?: Blending;
+  blendSrc?: BlendingFactor;
+  blendSrcAlpha?: number;
+  clipIntersection?: boolean;
+  clippingPlanes?: Plane[];
+  clipShadows?: boolean;
+  colorWrite?: boolean;
   defines?: any;
-  depthFunc?: Depth | undefined;
-  depthTest?: boolean | undefined;
-  depthWrite?: boolean | undefined;
-  name?: string | undefined;
-  opacity?: number | undefined;
-  polygonOffset?: boolean | undefined;
-  polygonOffsetFactor?: number | undefined;
-  polygonOffsetUnits?: number | undefined;
-  premultipliedAlpha?: boolean | undefined;
-  dithering?: boolean | undefined;
-  side?: Side | undefined;
-  shadowSide?: Side | undefined;
-  toneMapped?: boolean | undefined;
-  transparent?: boolean | undefined;
-  vertexColors?: boolean | undefined;
-  visible?: boolean | undefined;
-  format?: PixelFormat | undefined;
-  stencilWrite?: boolean | undefined;
-  stencilFunc?: StencilFunction | undefined;
-  stencilRef?: number | undefined;
-  stencilWriteMask?: number | undefined;
-  stencilFuncMask?: number | undefined;
-  stencilFail?: StencilOperation | undefined;
-  stencilZFail?: StencilOperation | undefined;
-  stencilZPass?: StencilOperation | undefined;
-  userData?: Record<string, any> | undefined;
+  depthFunc?: Depth;
+  depthTest?: boolean;
+  depthWrite?: boolean;
+  name?: string;
+  opacity?: number;
+  polygonOffset?: boolean;
+  polygonOffsetFactor?: number;
+  polygonOffsetUnits?: number;
+  premultipliedAlpha?: boolean;
+  dithering?: boolean;
+  side?: Side;
+  shadowSide?: Side;
+  toneMapped?: boolean;
+  transparent?: boolean;
+  vertexColors?: boolean;
+  visible?: boolean;
+  format?: PixelFormat;
+  stencilWrite?: boolean;
+  stencilFunc?: StencilFunction;
+  stencilRef?: number;
+  stencilWriteMask?: number;
+  stencilFuncMask?: number;
+  stencilFail?: StencilOperation;
+  stencilZFail?: StencilOperation;
+  stencilZPass?: StencilOperation;
+  userData?: Record<string, any>;
 }
 
 export class Material {
   declare isMaterial: true;
-  declare type: string | 'Material';
 
   id: number;
   uuid: string;
@@ -117,7 +116,7 @@ export class Material {
   version: number;
   _alphaTest: number;
 
-  constructor(parameters: MaterialParameters) {
+  constructor(parameters?: MaterialParameters) {
     this.id = _materialId++;
     this.uuid = v4();
     this.name = '';
@@ -201,7 +200,7 @@ export class Material {
     return this.onBeforeCompile.toString();
   }
 
-  setValues(values: MaterialParameters): void {
+  setValues(values?: MaterialParameters): void {
     if (values === undefined) return;
 
     const isVec3 = (v: any): v is Vec3 => v instanceof Vec3;
@@ -304,4 +303,3 @@ export class Material {
 }
 
 Material.prototype.isMaterial = true;
-Material.prototype.type = 'Material';

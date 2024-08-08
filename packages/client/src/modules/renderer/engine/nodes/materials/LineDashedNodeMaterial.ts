@@ -4,22 +4,24 @@ import { varying } from '../core/VaryingNode.js';
 import { materialLineDashSize, materialLineGapSize, materialLineScale } from '../accessors/MaterialNode.js';
 import { dashSize, gapSize } from '../core/PropertyNode.js';
 import { f32 } from '../shadernode/ShaderNode.primitves.ts';
-import { LineDashedMaterial } from '@modules/renderer/engine/entities/materials/LineDashedMaterial.js';
-
-const defaultValues = new LineDashedMaterial();
+import {
+  LineDashedMaterial,
+  LineDashedMaterialParameters,
+} from '@modules/renderer/engine/entities/materials/LineDashedMaterial.js';
 
 export class LineDashedNodeMaterial extends NodeMaterial {
-  static type = 'LineDashedNodeMaterial';
+  offsetNode: Node | null;
+  dashScaleNode: Node | null;
+  dashSizeNode: Node | null;
+  gapSizeNode: Node | null;
 
-  constructor(parameters) {
+  constructor(parameters?: LineDashedMaterialParameters) {
     super();
-
-    this.isLineDashedNodeMaterial = true;
 
     this.lights = false;
     this.normals = false;
 
-    this.setDefaultValues(defaultValues);
+    this.setDefaultValues(_parameters);
 
     this.offsetNode = null;
     this.dashScaleNode = null;
@@ -33,7 +35,7 @@ export class LineDashedNodeMaterial extends NodeMaterial {
     const offsetNode = this.offsetNode;
     const dashScaleNode = this.dashScaleNode ? f32(this.dashScaleNode) : materialLineScale;
     const dashSizeNode = this.dashSizeNode ? f32(this.dashSizeNode) : materialLineDashSize;
-    const gapSizeNode = this.dashSizeNode ? f32(this.dashGapNode) : materialLineGapSize;
+    const gapSizeNode = this.dashSizeNode ? f32(this.gapSizeNode) : materialLineGapSize;
 
     dashSize.assign(dashSizeNode);
     gapSize.assign(gapSizeNode);
@@ -44,3 +46,5 @@ export class LineDashedNodeMaterial extends NodeMaterial {
     vLineDistanceOffset.mod(dashSize.add(gapSize)).greaterThan(dashSize).discard();
   }
 }
+
+const _parameters = new LineDashedMaterial();

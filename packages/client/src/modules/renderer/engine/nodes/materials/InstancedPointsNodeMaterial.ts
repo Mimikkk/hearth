@@ -10,15 +10,20 @@ import { smoothstep } from '@modules/renderer/engine/nodes/math/MathNode.js';
 import { vec2, vec4 } from '../shadernode/ShaderNode.primitves.ts';
 import { uv } from '../accessors/UVNode.js';
 import { viewport } from '../display/ViewportNode.js';
-import { PointsMaterial } from '@modules/renderer/engine/entities/materials/PointsMaterial.js';
+import {
+  PointsMaterial,
+  PointsMaterialParameters,
+} from '@modules/renderer/engine/entities/materials/PointsMaterial.js';
 import { hsl } from '@modules/renderer/engine/nodes/shadernode/hsl.js';
-
-const defaultValues = new PointsMaterial();
+import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
 export class InstancedPointsNodeMaterial extends NodeMaterial {
-  static type = 'InstancedPointsNodeMaterial';
+  useAlphaToCoverage: boolean;
+  useColor: boolean;
+  pointWidth: number;
+  pointColorNode: Node | null;
 
-  constructor(params = {}) {
+  constructor(params?: PointsMaterialParameters) {
     super();
 
     this.normals = false;
@@ -26,14 +31,11 @@ export class InstancedPointsNodeMaterial extends NodeMaterial {
     this.lights = false;
 
     this.useAlphaToCoverage = true;
-
-    this.useColor = params.vertexColors;
-
+    this.useColor = params?.vertexColors ?? false;
     this.pointWidth = 1;
-
     this.pointColorNode = null;
 
-    this.setDefaultValues(defaultValues);
+    this.setDefaultValues(_parameters);
 
     this.setupShaders();
 
@@ -65,18 +67,14 @@ export class InstancedPointsNodeMaterial extends NodeMaterial {
 
       offset.assign(offset.mul(clipPos.w));
 
-      //clipPos.xy += offset;
       clipPos.assign(clipPos.add(vec4(offset, 0, 0)));
 
       return clipPos;
-
-      //vec4 mvPosition = mvPos;
     })();
-
     this.fragmentNode = hsl(() => {
       const vUv = varying(vec2(), 'vUv');
 
-      const alpha = property('f32', 'alpha');
+      const alpha = property(TypeName.f32, 'alpha');
       alpha.assign(1);
 
       const a = vUv.x;
@@ -85,7 +83,7 @@ export class InstancedPointsNodeMaterial extends NodeMaterial {
       const len2 = a.mul(a).add(b.mul(b));
 
       if (useAlphaToCoverage) {
-        const dlen = property('f32', 'dlen');
+        const dlen = property(TypeName.f32, 'dlen');
         dlen.assign(len2.fwidth());
 
         alpha.assign(smoothstep(dlen.oneMinus(), dlen.add(1), len2).oneMinus());
@@ -124,3 +122,5 @@ export class InstancedPointsNodeMaterial extends NodeMaterial {
     }
   }
 }
+
+const _parameters = new PointsMaterial();

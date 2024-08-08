@@ -1,4 +1,4 @@
-import { getNodeCacheKey } from '../core/NodeUtils.js';
+import { cacheKey } from '../core/NodeUtils.js';
 import { attribute } from '../core/AttributeNode.js';
 import { diffuseColor, output } from '../core/PropertyNode.js';
 import {
@@ -16,7 +16,7 @@ import { skinningReference } from '../accessors/SkinningNode.js';
 import { morphRef } from '../accessors/MorphNode.js';
 import { texture } from '../accessors/TextureNode.js';
 import { cubeTexture } from '../accessors/CubeTextureNode.js';
-import { lightsNode } from '../lighting/LightsNode.js';
+import { LightsNode, lightsNode } from '../lighting/LightsNode.js';
 import { mix } from '@modules/renderer/engine/nodes/math/MathNode.js';
 import { f32, vec3, vec4 } from '../shadernode/ShaderNode.primitves.ts';
 import { AONode } from '../lighting/AONode.js';
@@ -26,42 +26,50 @@ import { depthPixel } from '../display/ViewportDepthNode.js';
 import { cameraLogDepth } from '../accessors/CameraNode.js';
 import { clipping, clippingAlpha } from '../accessors/ClippingNode.js';
 import { faceDirection } from '../display/FrontFacingNode.js';
-import { NodeMaterials } from '@modules/renderer/engine/nodes/materials/NodeMaterialMap.js';
 import { ShaderStage } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { Node } from '@modules/renderer/engine/nodes/core/Node.js';
 import { ShaderMaterial } from '@modules/renderer/engine/entities/materials/ShaderMaterial.js';
 import { ColorSpace } from '@modules/renderer/engine/constants.js';
+import { Material } from '@modules/renderer/engine/entities/materials/Material.js';
+import { LightModel } from '@modules/renderer/engine/nodes/functions/LightModel.js';
+import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
+import { Texture } from '@modules/renderer/engine/entities/textures/Texture.js';
+import { CubeTexture } from '@modules/renderer/engine/entities/textures/CubeTexture.js';
 
 export class NodeMaterial extends ShaderMaterial {
   declare isNodeMaterial: true;
-  static type = 'NodeMaterial';
-  colorNode?: Node | null;
-  normalNode?: Node | null;
-  opacityNode?: Node | null;
-  backdropNode?: Node | null;
-  backdropAlphaNode?: Node | null;
-  alphaTestNode?: Node | null;
-  positionNode?: Node | null;
-  depthNode?: Node | null;
-  shadowNode?: Node | null;
-  outputNode?: Node | null;
-  fragmentNode?: Node | null;
-  vertexNode?: Node | null;
-  lightsNode?: Node | null;
-  envNode?: Node | null;
+  static Mapping = new Map<typeof Material, typeof NodeMaterial>();
+
+  colorNode: Node | null;
+  normalNode: Node | null;
+  opacityNode: Node | null;
+  backdropNode: Node | null;
+  backdropAlphaNode: Node | null;
+  alphaTestNode: Node | null;
+  positionNode: Node | null;
+  depthNode: Node | null;
+  shadowNode: Node | null;
+  outputNode: Node | null;
+  fragmentNode: Node | null;
+  vertexNode: Node | null;
+  lightsNode: Node | null;
+  envNode: Node | null;
+  emissiveNode: Node | null;
+
   fog: boolean;
   lights: boolean;
   normals: boolean;
   colorSpaced: boolean;
+  flatShading: boolean;
+  envMap: Texture | CubeTexture | null;
 
   constructor() {
     super();
 
-    this.type = this.constructor.type;
-
     this.fog = true;
     this.lights = true;
     this.normals = true;
+    this.flatShading = false;
 
     this.colorSpaced = true;
 
@@ -84,17 +92,22 @@ export class NodeMaterial extends ShaderMaterial {
 
     this.fragmentNode = null;
     this.vertexNode = null;
+    this.envMap = null;
+  }
+
+  static is(item?: any): item is NodeMaterial {
+    return item?.isNodeMaterial === true;
   }
 
   customProgramCacheKey() {
-    return this.type + getNodeCacheKey(this);
+    return cacheKey(this);
   }
 
-  build(builder) {
+  build(builder: NodeBuilder): Node | void {
     this.setup(builder);
   }
 
-  setup(builder) {
+  setup(builder: NodeBuilder): Node | void {
     builder.addStack();
 
     builder.stack.outputNode = this.vertexNode || this.setupPosition(builder);
@@ -135,7 +148,7 @@ export class NodeMaterial extends ShaderMaterial {
     builder.addFlow(ShaderStage.Fragment, builder.removeStack());
   }
 
-  setupClipping(builder) {
+  setupClipping(builder: NodeBuilder): Node | void {
     if (builder.clippingContext === null) return null;
     const { globalClippingCount, localClippingCount } = builder.clippingContext;
 
@@ -152,7 +165,7 @@ export class NodeMaterial extends ShaderMaterial {
     return result;
   }
 
-  setupDepth(builder) {
+  setupDepth(builder: NodeBuilder): Node | void {
     const { hearth } = builder;
 
     let depthNode = this.depthNode;
@@ -168,7 +181,7 @@ export class NodeMaterial extends ShaderMaterial {
     }
   }
 
-  setupPosition(builder) {
+  setupPosition(builder: NodeBuilder): Node | void {
     const { object } = builder;
     const geometry = object.geometry;
 
@@ -198,7 +211,7 @@ export class NodeMaterial extends ShaderMaterial {
     return mvp;
   }
 
-  setupDiffuseColor({ geometry }) {
+  setupDiffuseColor({ geometry }: NodeBuilder): Node | void {
     let colorNode = this.colorNode ? vec4(this.colorNode) : materialColor;
 
     if (this.vertexColors === true && geometry.hasAttribute('color')) {
@@ -217,10 +230,10 @@ export class NodeMaterial extends ShaderMaterial {
     }
   }
 
-  setupVariants() {}
+  setupVariants(builder: NodeBuilder): Node | void {}
 
-  setupNormal() {
-    if (this.flatShading === true) {
+  setupNormal(builder: NodeBuilder): Node | void {
+    if (this.flatShading) {
       const normalNode = positionView.dpdx().cross(positionView.dpdy().negate()).normalize();
 
       transformedNormalView.assign(normalNode.mul(faceDirection));
@@ -231,13 +244,13 @@ export class NodeMaterial extends ShaderMaterial {
     }
   }
 
-  getEnvNode(builder) {
-    let node = null;
+  getEnvNode(builder: NodeBuilder): EnvironmentNode | void {
+    let node: Node | null = null;
 
     if (this.envNode) {
       node = this.envNode;
     } else if (this.envMap) {
-      node = this.envMap.isCubeTexture ? cubeTexture(this.envMap) : texture(this.envMap);
+      node = CubeTexture.is(this.envMap) ? cubeTexture(this.envMap) : texture(this.envMap);
     } else if (builder.environmentNode) {
       node = builder.environmentNode;
     }
@@ -245,7 +258,7 @@ export class NodeMaterial extends ShaderMaterial {
     return node;
   }
 
-  setupLights(builder) {
+  setupLights(builder: NodeBuilder): LightsNode | null {
     const envNode = this.getEnvNode(builder);
 
     const materialLightsNode = [];
@@ -267,9 +280,11 @@ export class NodeMaterial extends ShaderMaterial {
     return lightsN;
   }
 
-  setupLightingModel() {}
+  setupLightingModel(builder: NodeBuilder): LightModel {
+    throw new Error('NodeMaterial: LightModel not defined.');
+  }
 
-  setupLighting(builder) {
+  setupLighting(builder: NodeBuilder): Node | void {
     const { material } = builder;
     const { backdropNode, backdropAlphaNode, emissiveNode } = this;
 
@@ -277,9 +292,9 @@ export class NodeMaterial extends ShaderMaterial {
 
     const lightsNode = lights ? this.setupLights(builder) : null;
 
-    let outgoingLightNode = diffuseColor.rgb;
+    let outgoingLightNode: Node = diffuseColor.rgb;
 
-    if (lightsNode && lightsNode.hasLight !== false) {
+    if (lightsNode && lightsNode.hasLight) {
       const lightingModel = this.setupLightingModel(builder);
 
       outgoingLightNode = lightingContext(lightsNode, lightingModel, backdropNode, backdropAlphaNode);
@@ -296,7 +311,7 @@ export class NodeMaterial extends ShaderMaterial {
     return outgoingLightNode;
   }
 
-  setupOutput(builder, outputNode) {
+  setupOutput(builder: NodeBuilder, outputNode: Node): Node {
     const hearth = builder.hearth;
 
     if (this.fog === true) {
@@ -322,7 +337,7 @@ export class NodeMaterial extends ShaderMaterial {
     return outputNode;
   }
 
-  setDefaultValues(material) {
+  setDefaultValues(material: object) {
     for (const property in material) {
       const value = material[property];
 
@@ -347,46 +362,16 @@ export class NodeMaterial extends ShaderMaterial {
     }
   }
 
-  copy(source) {
-    this.lightsNode = source.lightsNode;
-    this.envNode = source.envNode;
+  static fromMaterial(material: Material | NodeMaterial): NodeMaterial {
+    if (NodeMaterial.is(material)) return material;
 
-    this.colorNode = source.colorNode;
-    this.normalNode = source.normalNode;
-    this.opacityNode = source.opacityNode;
-    this.backdropNode = source.backdropNode;
-    this.backdropAlphaNode = source.backdropAlphaNode;
-    this.alphaTestNode = source.alphaTestNode;
-
-    this.positionNode = source.positionNode;
-
-    this.depthNode = source.depthNode;
-    this.shadowNode = source.shadowNode;
-
-    this.outputNode = source.outputNode;
-
-    this.fragmentNode = source.fragmentNode;
-    this.vertexNode = source.vertexNode;
-
-    return super.copy(source);
-  }
-
-  static fromMaterial(material) {
-    if (material.isNodeMaterial === true) {
-      return material;
-    }
-
-    const type = material.type.replace('Material', 'NodeMaterial');
-
-    const nodeMaterial = new (NodeMaterials.get(type))();
-
-    if (nodeMaterial === undefined) {
+    const MaterialClass = NodeMaterial.Mapping.get(material.constructor);
+    if (MaterialClass === undefined) {
       throw new Error(`NodeMaterial: Material "${material.type}" is not compatible.`);
     }
 
-    for (const key in material) {
-      nodeMaterial[key] = material[key];
-    }
+    const nodeMaterial = new MaterialClass();
+    for (const key in material) nodeMaterial[key] = material[key];
 
     return nodeMaterial;
   }

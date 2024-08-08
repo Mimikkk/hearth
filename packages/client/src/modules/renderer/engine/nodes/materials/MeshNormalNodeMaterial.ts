@@ -4,22 +4,18 @@ import { directionToColor } from '../utils/PackingNode.js';
 import { materialOpacity } from '../accessors/MaterialNode.js';
 import { transformedNormalView } from '../accessors/NormalNode.js';
 import { f32, vec4 } from '../shadernode/ShaderNode.primitves.ts';
-import { MeshNormalMaterial } from '@modules/renderer/engine/entities/materials/MeshNormalMaterial.js';
-
-const defaultValues = new MeshNormalMaterial();
+import {
+  MeshNormalMaterial,
+  MeshNormalMaterialParameters,
+} from '@modules/renderer/engine/entities/materials/MeshNormalMaterial.js';
 
 export class MeshNormalNodeMaterial extends NodeMaterial {
-  static type = 'MeshNormalNodeMaterial';
-
-  constructor(parameters) {
+  constructor(parameters?: MeshNormalMaterialParameters) {
     super();
-
-    this.isMeshNormalNodeMaterial = true;
 
     this.colorSpaced = false;
 
-    this.setDefaultValues(defaultValues);
-
+    this.setDefaultValues(_parameters);
     this.setValues(parameters);
   }
 
@@ -29,3 +25,5 @@ export class MeshNormalNodeMaterial extends NodeMaterial {
     diffuseColor.assign(vec4(directionToColor(transformedNormalView), opacityNode));
   }
 }
+
+const _parameters = new MeshNormalMaterial();

@@ -3,19 +3,18 @@ import { DepthPackingStrategy } from '../../constants.js';
 import { Texture } from '@modules/renderer/engine/entities/textures/Texture.js';
 
 export interface MeshDepthMaterialParameters extends MaterialParameters {
-  map?: Texture | null | undefined;
-  alphaMap?: Texture | null | undefined;
-  depthPacking?: DepthPackingStrategy | undefined;
-  displacementMap?: Texture | null | undefined;
-  displacementScale?: number | undefined;
-  displacementBias?: number | undefined;
-  wireframe?: boolean | undefined;
-  wireframeLinewidth?: number | undefined;
+  map?: Texture | null;
+  alphaMap?: Texture | null;
+  depthPacking?: DepthPackingStrategy;
+  displacementMap?: Texture | null;
+  displacementScale?: number;
+  displacementBias?: number;
+  wireframe?: boolean;
+  wireframeLinewidth?: number;
 }
 
 export class MeshDepthMaterial extends Material {
   declare isMeshDepthMaterial: true;
-  declare type: 'MeshDepthMaterial';
 
   depthPacking: DepthPackingStrategy;
   map: Texture | null;
@@ -26,7 +25,7 @@ export class MeshDepthMaterial extends Material {
   wireframe: boolean;
   wireframeLinewidth: number;
 
-  constructor(parameters: MeshDepthMaterialParameters) {
+  constructor(parameters?: MeshDepthMaterialParameters) {
     super(parameters);
 
     this.depthPacking = DepthPackingStrategy.Basic;
@@ -44,7 +43,7 @@ export class MeshDepthMaterial extends Material {
     this.setValues(parameters);
   }
 
-  setValues(values: MeshDepthMaterialParameters): void {
+  setValues(values?: MeshDepthMaterialParameters): void {
     super.setValues(values);
   }
 
@@ -69,4 +68,3 @@ export class MeshDepthMaterial extends Material {
 }
 
 MeshDepthMaterial.prototype.isMeshDepthMaterial = true;
-MeshDepthMaterial.prototype.type = 'MeshDepthMaterial';

@@ -2,18 +2,17 @@ import { Material, MaterialParameters } from './Material.js';
 import { Color, ColorRepresentation } from '../../math/Color.js';
 
 export interface ShadowMaterialParameters extends MaterialParameters {
-  color?: ColorRepresentation | undefined;
-  fog?: boolean | undefined;
+  color?: ColorRepresentation;
+  fog?: boolean;
 }
 
 export class ShadowMaterial extends Material {
   declare isShadowMaterial: true;
-  declare type: string | 'ShadowMaterial';
 
   color: Color;
   fog: boolean;
 
-  constructor(parameters: ShadowMaterialParameters) {
+  constructor(parameters?: ShadowMaterialParameters) {
     super(parameters);
 
     this.color = Color.new(0x000000);
@@ -23,7 +22,7 @@ export class ShadowMaterial extends Material {
     this.setValues(parameters);
   }
 
-  setValues(values: MaterialParameters) {
+  setValues(values?: MaterialParameters) {
     super.setValues(values);
   }
 
@@ -38,4 +37,3 @@ export class ShadowMaterial extends Material {
 }
 
 ShadowMaterial.prototype.isShadowMaterial = true;
-ShadowMaterial.prototype.type = 'ShadowMaterial';
