@@ -5,7 +5,6 @@ import { ShapeUtils } from '../../utils/ShapeUtils.js';
 import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
 
 export class ShapePath {
-  declare type: string | 'ShapePath';
   color: Color = Color.new(0, 0, 0);
   subPaths: Path[] = [];
   currentPath: Path | null = null;
@@ -63,10 +62,6 @@ export class ShapePath {
     function isPointInsidePolygon(inPt: Vec2, inPolygon: Vec2[]): boolean {
       const polyLen = inPolygon.length;
 
-
-
-
-
       let inside = false;
       for (let p = polyLen - 1, q = 0; q < polyLen; p = q++) {
         let edgeLowPt = inPolygon[p];
@@ -76,7 +71,6 @@ export class ShapePath {
         let edgeDy = edgeHighPt.y - edgeLowPt.y;
 
         if (Math.abs(edgeDy) > Number.EPSILON) {
-
           if (edgeDy < 0) {
             edgeLowPt = inPolygon[q];
             edgeDx = -edgeDx;
@@ -88,7 +82,6 @@ export class ShapePath {
 
           if (inPt.y === edgeLowPt.y) {
             if (inPt.x === edgeLowPt.x) return true;
-
           } else {
             const perpEdge = edgeDy * (inPt.x - edgeLowPt.x) - edgeDx * (inPt.y - edgeLowPt.y);
             if (perpEdge === 0) return true;
@@ -96,12 +89,10 @@ export class ShapePath {
             inside = !inside;
           }
         } else {
-
           if (inPt.y !== edgeLowPt.y) continue;
 
           if ((edgeHighPt.x <= inPt.x && inPt.x <= edgeLowPt.x) || (edgeLowPt.x <= inPt.x && inPt.x <= edgeHighPt.x))
             return true;
-
         }
       }
 
@@ -217,5 +208,3 @@ export class ShapePath {
     return shapes;
   }
 }
-
-ShapePath.prototype.type = 'ShapePath';

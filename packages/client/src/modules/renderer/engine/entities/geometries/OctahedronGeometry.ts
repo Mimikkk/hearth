@@ -1,7 +1,6 @@
 import { PolyhedronGeometry } from './PolyhedronGeometry.js';
 
 export class OctahedronGeometry extends PolyhedronGeometry {
-  declare type: string | 'OctahedronGeometry';
   declare parameters: {
     radius: number;
     detail: number;
@@ -20,5 +19,3 @@ export class OctahedronGeometry extends PolyhedronGeometry {
     };
   }
 }
-
-OctahedronGeometry.prototype.type = 'OctahedronGeometry';

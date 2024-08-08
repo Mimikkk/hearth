@@ -9,7 +9,6 @@ const _maxTarget = Vec2.new();
 
 export class PerspectiveCamera extends Camera {
   declare isPerspectiveCamera: true;
-  declare type: string | 'PerspectiveCamera';
 
   zoom: number;
   focus: number;
@@ -179,4 +178,3 @@ export class PerspectiveCamera extends Camera {
 }
 
 PerspectiveCamera.prototype.isPerspectiveCamera = true;
-PerspectiveCamera.prototype.type = 'PerspectiveCamera';

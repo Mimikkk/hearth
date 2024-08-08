@@ -5,7 +5,6 @@ import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
 import { clamp } from '@modules/renderer/engine/math/MathUtils.js';
 
 export class LatheGeometry extends Geometry {
-  declare type: string | 'LatheGeometry';
   declare parameters: {
     points: Vec2[];
     segments: number;
@@ -30,19 +29,13 @@ export class LatheGeometry extends Geometry {
 
     segments = Math.floor(segments);
 
-    
-
     phiLength = clamp(phiLength, 0, Math.PI * 2);
-
-    
 
     const indices = [];
     const vertices = [];
     const uvs = [];
     const initNormals = [];
     const normals = [];
-
-    
 
     const inverseSegments = 1.0 / segments;
     const vertex = Vec3.new();
@@ -53,11 +46,9 @@ export class LatheGeometry extends Geometry {
     let dx = 0;
     let dy = 0;
 
-    
-
     for (let j = 0; j <= points.length - 1; j++) {
       switch (j) {
-        case 0: 
+        case 0:
           dx = points[j + 1].x - points[j].x;
           dy = points[j + 1].y - points[j].y;
 
@@ -73,12 +64,12 @@ export class LatheGeometry extends Geometry {
 
           break;
 
-        case points.length - 1: 
+        case points.length - 1:
           initNormals.push(prevNormal.x, prevNormal.y, prevNormal.z);
 
           break;
 
-        default: 
+        default:
           dx = points[j + 1].x - points[j].x;
           dy = points[j + 1].y - points[j].y;
 
@@ -100,8 +91,6 @@ export class LatheGeometry extends Geometry {
       }
     }
 
-    
-
     for (let i = 0; i <= segments; i++) {
       const phi = phiStart + i * inverseSegments * phiLength;
 
@@ -109,22 +98,16 @@ export class LatheGeometry extends Geometry {
       const cos = Math.cos(phi);
 
       for (let j = 0; j <= points.length - 1; j++) {
-        
-
         vertex.x = points[j].x * sin;
         vertex.y = points[j].y;
         vertex.z = points[j].x * cos;
 
         vertices.push(vertex.x, vertex.y, vertex.z);
 
-        
-
         uv.x = i / segments;
         uv.y = j / (points.length - 1);
 
         uvs.push(uv.x, uv.y);
-
-        
 
         const x = initNormals[3 * j + 0] * sin;
         const y = initNormals[3 * j + 1];
@@ -133,8 +116,6 @@ export class LatheGeometry extends Geometry {
         normals.push(x, y, z);
       }
     }
-
-    
 
     for (let i = 0; i < segments; i++) {
       for (let j = 0; j < points.length - 1; j++) {
@@ -145,14 +126,10 @@ export class LatheGeometry extends Geometry {
         const c = base + points.length + 1;
         const d = base + 1;
 
-        
-
         indices.push(a, b, d);
         indices.push(c, d, b);
       }
     }
-
-    
 
     this.setIndex(indices);
     this.setAttribute('position', new Attribute(new Float32Array(vertices), 3));
@@ -168,5 +145,3 @@ export class LatheGeometry extends Geometry {
     return this;
   }
 }
-
-LatheGeometry.prototype.type = 'LatheGeometry';

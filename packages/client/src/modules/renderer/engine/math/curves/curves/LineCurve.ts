@@ -3,7 +3,6 @@ import { Curve } from '../Curve.js';
 
 export class LineCurve extends Curve<Vec2> {
   declare isLineCurve: true;
-  declare type: 'LineCurve';
 
   constructor(
     public v1: Vec2 = Vec2.new(),
@@ -48,4 +47,3 @@ export class LineCurve extends Curve<Vec2> {
 }
 
 LineCurve.prototype.isLineCurve = true;
-LineCurve.prototype.type = 'LineCurve';

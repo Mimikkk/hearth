@@ -4,7 +4,6 @@ import { Vec3 } from '../../Vec3.js';
 
 export class CubicBezierCurve3 extends Curve<Vec3> {
   declare isCubicBezierCurve3: true;
-  declare type: 'CubicBezierCurve3';
 
   constructor(
     public v0: Vec3 = Vec3.new(),
@@ -42,4 +41,3 @@ export class CubicBezierCurve3 extends Curve<Vec3> {
 }
 
 CubicBezierCurve3.prototype.isCubicBezierCurve3 = true;
-CubicBezierCurve3.prototype.type = 'CubicBezierCurve3';

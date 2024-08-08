@@ -14,7 +14,6 @@ let _lineGeometry!: Geometry;
 let _coneGeometry!: CylinderGeometry;
 
 export class ArrowHelper extends Entity {
-  declare type: string | 'ArrowHelper';
   line: Line;
   cone: Mesh;
 
@@ -27,8 +26,6 @@ export class ArrowHelper extends Entity {
     headWidth = headLength * 0.2,
   ) {
     super();
-
-    this.type = 'ArrowHelper';
 
     if (_lineGeometry === undefined) {
       _lineGeometry = new Geometry();
@@ -53,8 +50,6 @@ export class ArrowHelper extends Entity {
   }
 
   setDirection(dir: Vec3) {
-    
-
     if (dir.y > 0.99999) {
       this.quaternion.set(0, 0, 0, 1);
     } else if (dir.y < -0.99999) {
@@ -91,5 +86,3 @@ export class ArrowHelper extends Entity {
     return this;
   }
 }
-
-ArrowHelper.prototype.type = 'ArrowHelper';

@@ -11,27 +11,8 @@ import { PerspectiveCamera } from '@modules/renderer/engine/entities/cameras/Per
 import { BufferStep } from '@modules/renderer/engine/hearth/constants.js';
 import { Attribute } from '@modules/renderer/engine/core/Attribute.js';
 
-const _intersectPoint = Vec3.new();
-const _worldScale = Vec3.new();
-const _mvPosition = Vec3.new();
-
-const _alignedPosition = Vec2.new();
-const _rotatedPosition = Vec2.new();
-const _viewWorldMatrix = new Mat4();
-
-const _vA = Vec3.new();
-const _vB = Vec3.new();
-const _vC = Vec3.new();
-
-const _uvA = Vec2.new();
-const _uvB = Vec2.new();
-const _uvC = Vec2.new();
-
-let _geometry: Geometry;
-
 export class Sprite extends Entity {
   declare isSprite: true;
-  declare type: string | 'Sprite';
 
   center: Vec2;
   geometry: Geometry;
@@ -41,8 +22,6 @@ export class Sprite extends Entity {
     super();
 
     this.isSprite = true;
-
-    this.type = 'Sprite';
 
     if (_geometry === undefined) {
       _geometry = new Geometry();
@@ -74,10 +53,10 @@ export class Sprite extends Entity {
     _viewWorldMatrix.from(raycaster.camera.matrixWorld);
     this.modelViewMatrix.asMul(raycaster.camera.matrixWorldInverse, this.matrixWorld);
 
-    _mvPosition.fromMat4Position(this.modelViewMatrix);
+    _mv.fromMat4Position(this.modelViewMatrix);
 
     if (raycaster.camera instanceof PerspectiveCamera && this.material.sizeAttenuation === false) {
-      _worldScale.scale(-_mvPosition.z);
+      _worldScale.scale(-_mv.z);
     }
 
     const rotation = this.material.rotation;
@@ -91,39 +70,39 @@ export class Sprite extends Entity {
 
     const center = this.center;
 
-    transformVertex(_vA.set(-0.5, -0.5, 0), _mvPosition, center, _worldScale, sin, cos);
-    transformVertex(_vB.set(0.5, -0.5, 0), _mvPosition, center, _worldScale, sin, cos);
-    transformVertex(_vC.set(0.5, 0.5, 0), _mvPosition, center, _worldScale, sin, cos);
+    transformVertex(_v0.set(-0.5, -0.5, 0), _mv, center, _worldScale, sin, cos);
+    transformVertex(_v1.set(0.5, -0.5, 0), _mv, center, _worldScale, sin, cos);
+    transformVertex(_v2.set(0.5, 0.5, 0), _mv, center, _worldScale, sin, cos);
 
-    _uvA.set(0, 0);
-    _uvB.set(1, 0);
-    _uvC.set(1, 1);
+    _uv0.set(0, 0);
+    _uv1.set(1, 0);
+    _uv2.set(1, 1);
 
-    _triangle.set(_vA, _vB, _vC);
-    let intersect = raycaster.ray.intersectTriangle(_triangle, false, _intersectPoint);
+    _triangle.set(_v0, _v1, _v2);
+    let intersect = raycaster.ray.intersectTriangle(_triangle, false, _intersect);
 
     if (intersect === null) {
-      transformVertex(_vB.set(-0.5, 0.5, 0), _mvPosition, center, _worldScale, sin, cos);
-      _uvB.set(0, 1);
+      transformVertex(_v1.set(-0.5, 0.5, 0), _mv, center, _worldScale, sin, cos);
+      _uv1.set(0, 1);
 
-      _triangle.set(_vA, _vC, _vB);
-      intersect = raycaster.ray.intersectTriangle(_triangle, false, _intersectPoint);
+      _triangle.set(_v0, _v2, _v1);
+      intersect = raycaster.ray.intersectTriangle(_triangle, false, _intersect);
       if (intersect === null) {
         return;
       }
     }
 
-    const distance = raycaster.ray.origin.distanceTo(_intersectPoint);
+    const distance = raycaster.ray.origin.distanceTo(_intersect);
 
     if (distance < raycaster.near || distance > raycaster.far) return;
 
-    _triangle1.set(_vA, _vB, _vC);
-    _triangle2.set(_uvA, _uvB, _uvC);
+    _triangle1.set(_v0, _v1, _v2);
+    _triangle2.set(_uv0, _uv1, _uv2);
 
-    const { x, y } = Triangle.interpolate(_triangle1, _triangle2, _intersectPoint);
+    const { x, y } = Triangle.interpolate(_triangle1, _triangle2, _intersect);
     intersects.push({
       distance: distance,
-      point: _intersectPoint.clone(),
+      point: _intersect.clone(),
       uv: Vec2.new(x, y),
       face: null,
       object: this,
@@ -134,40 +113,47 @@ export class Sprite extends Entity {
     super.copy(source, recursive);
 
     if (source.center !== undefined) this.center.from(source.center);
-
     this.material = source.material;
 
     return this;
   }
 }
 
+const _intersect = Vec3.new();
+const _worldScale = Vec3.new();
+
+const _mv = Vec3.new();
+const _alignment = Vec2.new();
+const _rotation = Vec2.new();
+
+const _viewWorldMatrix = new Mat4();
+const _v0 = Vec3.new();
+const _v1 = Vec3.new();
+const _v2 = Vec3.new();
+const _uv0 = Vec2.new();
+const _uv1 = Vec2.new();
+const _uv2 = Vec2.new();
+
+let _geometry: Geometry;
 Sprite.prototype.isSprite = true;
-Sprite.prototype.type = 'Sprite';
 
 const _triangle = new Triangle();
 const _triangle1 = new Triangle();
 const _triangle2 = new Triangle();
 
-function transformVertex(
-  vertexPosition: Vec3,
-  mvPosition: Vec3,
-  center: Vec2,
-  scale: Vec3,
-  sin?: number,
-  cos?: number,
-) {
-  _alignedPosition.asSub(vertexPosition, center).addScalar(0.5).mul(scale);
+function transformVertex(vertex: Vec3, mv: Vec3, center: Vec2, scale: Vec3, sin?: number, cos?: number) {
+  _alignment.asSub(vertex, center).addScalar(0.5).mul(scale);
 
   if (sin !== undefined && cos !== undefined) {
-    _rotatedPosition.x = cos * _alignedPosition.x - sin * _alignedPosition.y;
-    _rotatedPosition.y = sin * _alignedPosition.x + cos * _alignedPosition.y;
+    _rotation.x = cos * _alignment.x - sin * _alignment.y;
+    _rotation.y = sin * _alignment.x + cos * _alignment.y;
   } else {
-    _rotatedPosition.from(_alignedPosition);
+    _rotation.from(_alignment);
   }
 
-  vertexPosition.from(mvPosition);
-  vertexPosition.x += _rotatedPosition.x;
-  vertexPosition.y += _rotatedPosition.y;
+  vertex.from(mv);
+  vertex.x += _rotation.x;
+  vertex.y += _rotation.y;
 
-  vertexPosition.applyMat4(_viewWorldMatrix);
+  vertex.applyMat4(_viewWorldMatrix);
 }

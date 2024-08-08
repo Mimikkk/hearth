@@ -7,13 +7,10 @@ import { QuadraticBezierCurve } from '@modules/renderer/engine/math/curves/curve
 import { LineCurve } from '@modules/renderer/engine/math/curves/curves/LineCurve.js';
 
 export class Path extends CurvePath<Vec2> {
-  declare type: string | 'Path';
   currentPoint: Vec2;
 
   constructor(points?: Vec2[]) {
     super();
-
-    this.type = 'Path';
 
     this.currentPoint = Vec2.new();
     if (points) this.setFromPoints(points);
@@ -123,7 +120,6 @@ export class Path extends CurvePath<Vec2> {
     const curve = new EllipseCurve(aX, aY, xRadius, yRadius, aStartAngle, aEndAngle, aClockwise, aRotation);
 
     if (this.curves.length > 0) {
-
       const firstPoint = curve.getPoint(0, Vec2.new());
 
       if (!firstPoint.equals(this.currentPoint)) {

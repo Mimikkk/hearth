@@ -4,7 +4,6 @@ import type { Vec2 } from '../Vec2.js';
 import type { Vec3 } from '../Vec3.js';
 
 export class CurvePath<T extends Vec2 | Vec3> extends Curve<T> {
-  declare type: string | 'CurvePath';
   autoClose: boolean = false;
   curves: Curve<T>[] = [];
 
@@ -15,7 +14,6 @@ export class CurvePath<T extends Vec2 | Vec3> extends Curve<T> {
   }
 
   closePath(): this {
-
     const startPoint = this.curves[0].getPoint(0);
     const endPoint = this.curves[this.curves.length - 1].getPoint(1);
 
@@ -33,8 +31,6 @@ export class CurvePath<T extends Vec2 | Vec3> extends Curve<T> {
     const d = t * this.getLength();
     const curveLengths = this.getCurveLengths();
     let i = 0;
-
-
 
     while (i < curveLengths.length) {
       if (curveLengths[i] >= d) {
@@ -57,7 +53,6 @@ export class CurvePath<T extends Vec2 | Vec3> extends Curve<T> {
     const lens = this.getCurveLengths();
     return lens[lens.length - 1];
   }
-
 
   updateArcLengths(): number[] {
     return this.getCurveLengths();
@@ -150,5 +145,3 @@ export class CurvePath<T extends Vec2 | Vec3> extends Curve<T> {
     return this;
   }
 }
-
-CurvePath.prototype.type = 'CurvePath';

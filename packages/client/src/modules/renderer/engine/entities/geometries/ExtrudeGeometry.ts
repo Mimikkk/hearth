@@ -55,7 +55,6 @@ export interface ExtrudeGeometryOptions {
 }
 
 export class ExtrudeGeometry extends Geometry {
-  declare type: string | 'ExtrudeGeometry';
   declare parameters: {
     shapes: Shape | Shape[];
     options: ExtrudeGeometryOptions;
@@ -71,8 +70,6 @@ export class ExtrudeGeometry extends Geometry {
     options: ExtrudeGeometryOptions = {},
   ) {
     super();
-
-    this.type = 'ExtrudeGeometry';
 
     this.parameters = {
       shapes: shapes,
@@ -539,4 +536,3 @@ const WorldUVGenerator: UVGenerator = {
     }
   },
 };
-ExtrudeGeometry.prototype.type = 'ExtrudeGeometry';

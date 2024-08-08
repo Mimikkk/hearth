@@ -6,7 +6,6 @@ import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
 import { Curve } from '@modules/renderer/engine/math/curves/Curve.js';
 
 export class TubeGeometry extends Geometry {
-  declare type: string | 'TubeGeometry';
   declare parameters: {
     path: Curve<Vec3>;
     tubularSegments: number;
@@ -27,8 +26,6 @@ export class TubeGeometry extends Geometry {
     closed: boolean = false,
   ) {
     super();
-
-    this.type = 'TubeGeometry';
 
     this.parameters = {
       path: path,
@@ -134,5 +131,3 @@ export class TubeGeometry extends Geometry {
     return this;
   }
 }
-
-TubeGeometry.prototype.type = 'TubeGeometry';

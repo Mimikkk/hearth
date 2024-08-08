@@ -1,7 +1,6 @@
 import { CylinderGeometry } from './CylinderGeometry.js';
 
 export class ConeGeometry extends CylinderGeometry {
-  declare type: string | 'ConeGeometry';
   declare parameters: {
     radius: number;
     height: number;
@@ -26,5 +25,3 @@ export class ConeGeometry extends CylinderGeometry {
     this.parameters = { radius, height, radialSegments, heightSegments, openEnded, thetaStart, thetaLength };
   }
 }
-
-ConeGeometry.prototype.type = 'ConeGeometry';

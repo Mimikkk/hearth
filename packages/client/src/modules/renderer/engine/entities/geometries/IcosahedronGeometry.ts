@@ -1,7 +1,6 @@
 import { PolyhedronGeometry } from './PolyhedronGeometry.js';
 
 export class IcosahedronGeometry extends PolyhedronGeometry {
-  declare type: string | 'IcosahedronGeometry';
   declare parameters: {
     radius: number;
     detail: number;
@@ -62,5 +61,3 @@ export class IcosahedronGeometry extends PolyhedronGeometry {
     };
   }
 }
-
-IcosahedronGeometry.prototype.type = 'IcosahedronGeometry';

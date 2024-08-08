@@ -13,7 +13,6 @@ export class Scene extends Entity {
   declare environmentNode: EnvironmentNode | null;
   declare backgroundNode: Node | null;
   declare fogNode: FogNode | null;
-  type: string | 'Scene';
   fog: Fog | null;
   background: Color | Texture | CubeTexture | null;
   environment: any;
@@ -25,8 +24,6 @@ export class Scene extends Entity {
 
   constructor() {
     super();
-
-    this.type = 'Scene';
 
     this.background = null;
     this.environment = null;

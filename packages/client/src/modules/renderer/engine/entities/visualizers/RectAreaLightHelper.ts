@@ -11,7 +11,6 @@ import { MeshBasicMaterial } from '@modules/renderer/engine/entities/materials/M
 import { Side } from '@modules/renderer/engine/constants.js';
 
 export class RectAreaLightHelper extends Line {
-  declare type: string | 'RectAreaLightHelper';
   light: RectAreaLight;
   color: number | undefined;
 
@@ -64,5 +63,3 @@ export class RectAreaLightHelper extends Line {
     return this;
   }
 }
-
-RectAreaLightHelper.prototype.type = 'RectAreaLightHelper';

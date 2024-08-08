@@ -44,7 +44,6 @@ const _mouseUpEvent = { type: 'mouseUp' as const, mode: null } as unknown as {
 const _objectChangeEvent = { type: 'objectChange' } as const;
 
 export class TransformControls extends Entity {
-  declare type: 'TransformControls';
   declare isTransformControls: true;
   _gizmo: TransformControlsGizmo;
   _plane: TransformControlsPlane;
@@ -644,7 +643,6 @@ const _v2 = Vec3.new();
 const _v3 = Vec3.new();
 
 export class TransformControlsGizmo extends Entity {
-  declare type: 'TransformControlsGizmo';
   declare isTransformControlsGizmo: true;
 
   gizmo: {
@@ -667,8 +665,6 @@ export class TransformControlsGizmo extends Entity {
     super();
 
     this.isTransformControlsGizmo = true;
-
-    this.type = 'TransformControlsGizmo';
 
     const gizmoMaterial = new MeshBasicMaterial({
       depthTest: false,
@@ -1180,10 +1176,8 @@ export class TransformControlsGizmo extends Entity {
 }
 
 TransformControlsGizmo.prototype.isTransformControlsGizmo = true;
-TransformControlsGizmo.prototype.type = 'TransformControlsGizmo';
 
 export class TransformControlsPlane extends Mesh {
-  declare type: 'TransformControlsPlane';
   declare isTransformControlsPlane: true;
   mode: 'translate' | 'scale' | 'rotate';
   axis: 'X' | 'Y' | 'Z' | 'XY' | 'YZ' | 'XZ' | 'XYZ' | 'E';
@@ -1271,4 +1265,3 @@ export class TransformControlsPlane extends Mesh {
 }
 
 TransformControlsPlane.prototype.isTransformControlsPlane = true;
-TransformControlsPlane.prototype.type = 'TransformControlsPlane';

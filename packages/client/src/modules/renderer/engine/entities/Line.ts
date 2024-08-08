@@ -19,7 +19,6 @@ const _sphere = new Sphere();
 
 export class Line extends Entity {
   declare isLine: true;
-  declare type: string | 'Line';
 
   material: Material;
   geometry: LineGeometry;
@@ -185,6 +184,5 @@ export class Line extends Entity {
 }
 
 Line.prototype.isLine = true;
-Line.prototype.type = 'Line';
 
 const _line = Line3.new();

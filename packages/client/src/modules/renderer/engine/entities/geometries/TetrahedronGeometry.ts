@@ -1,7 +1,6 @@
 import { PolyhedronGeometry } from './PolyhedronGeometry.js';
 
 export class TetrahedronGeometry extends PolyhedronGeometry {
-  declare type: string | 'TetrahedronGeometry';
   declare parameters: {
     radius: number;
     detail: number;
@@ -19,5 +18,3 @@ export class TetrahedronGeometry extends PolyhedronGeometry {
     };
   }
 }
-
-TetrahedronGeometry.prototype.type = 'TetrahedronGeometry';

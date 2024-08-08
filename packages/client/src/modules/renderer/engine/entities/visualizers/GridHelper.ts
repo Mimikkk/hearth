@@ -5,8 +5,6 @@ import { Geometry } from '@modules/renderer/engine/core/Geometry.js';
 import { Color, ColorRepresentation } from '../../math/Color.js';
 
 export class GridHelper extends LineSegments {
-  declare type: string | 'GridHelper';
-
   constructor(
     size: number = 10,
     divisions: number = 10,
@@ -48,5 +46,3 @@ export class GridHelper extends LineSegments {
     super(geometry, material);
   }
 }
-
-GridHelper.prototype.type = 'GridHelper';

@@ -6,6 +6,9 @@ import { Quaternion } from '@modules/renderer/engine/math/Quaternion.js';
 import { Mat4 } from '@modules/renderer/engine/math/Mat4.js';
 import { Clock } from '@modules/renderer/engine/core/Clock.js';
 import { Scene } from '@modules/renderer/engine/entities/scenes/Scene.js';
+import { BoxGeometry } from '@modules/renderer/engine/entities/geometries/BoxGeometry.js';
+import { SphereGeometry } from '@modules/renderer/engine/entities/geometries/SphereGeometry.js';
+import { IcosahedronGeometry } from '@modules/renderer/engine/entities/geometries/IcosahedronGeometry.js';
 
 type Vector = { x: number; y: number; z: number };
 
@@ -29,14 +32,14 @@ let RAPIER = null;
 function getCollider(geometry: Geometry) {
   const parameters = geometry.parameters!;
 
-  if (geometry.type === 'BoxGeometry') {
+  if (BoxGeometry.is(geometry)) {
     const sx = parameters.width !== undefined ? parameters.width / 2 : 0.5;
     const sy = parameters.height !== undefined ? parameters.height / 2 : 0.5;
     const sz = parameters.depth !== undefined ? parameters.depth / 2 : 0.5;
 
     //@ts-expect-error
     return RAPIER.ColliderDesc.cuboid(sx, sy, sz);
-  } else if (geometry.type === 'SphereGeometry' || geometry.type === 'IcosahedronGeometry') {
+  } else if (SphereGeometry.is(geometry) || IcosahedronGeometry.is(geometry)) {
     const radius = parameters.radius !== undefined ? parameters.radius : 1;
     //@ts-expect-error
     return RAPIER.ColliderDesc.ball(radius);
@@ -102,7 +105,6 @@ export async function RapierPhysics(): Promise<RapierPhysicsObject> {
 
     const bodies = [];
 
-    //@ts-expect-error
     for (let i = 0; i < mesh.count; i++) {
       const position = _vector.fromArray(array, i * 16 + 12);
       bodies.push(createBody(position, null, mass, shape));
@@ -174,7 +176,6 @@ export async function RapierPhysics(): Promise<RapierPhysicsObject> {
 
         //@ts-expect-error
         mesh.instanceMatrix.needsUpdate = true;
-        //@ts-expect-error
         mesh.computeBoundingSphere();
       } else {
         const body = meshMap.get(mesh);

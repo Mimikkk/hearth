@@ -3,7 +3,6 @@ import { Attribute } from '@modules/renderer/engine/core/Attribute.js';
 import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
 
 export class SphereGeometry extends Geometry {
-  declare type: string | 'SphereGeometry';
   declare parameters: {
     radius: number;
     widthSegments: number;
@@ -24,8 +23,6 @@ export class SphereGeometry extends Geometry {
     thetaLength: number = Math.PI,
   ) {
     super();
-
-    this.type = 'SphereGeometry';
 
     this.parameters = {
       radius: radius,
@@ -48,21 +45,15 @@ export class SphereGeometry extends Geometry {
     const vertex = Vec3.new();
     const normal = Vec3.new();
 
-
-
     const indices = [];
     const vertices = [];
     const normals = [];
     const uvs = [];
 
-
-
     for (let iy = 0; iy <= heightSegments; iy++) {
       const verticesRow = [];
 
       const v = iy / heightSegments;
-
-
 
       let uOffset = 0;
 
@@ -75,20 +66,14 @@ export class SphereGeometry extends Geometry {
       for (let ix = 0; ix <= widthSegments; ix++) {
         const u = ix / widthSegments;
 
-
-
         vertex.x = -radius * Math.cos(phiStart + u * phiLength) * Math.sin(thetaStart + v * thetaLength);
         vertex.y = radius * Math.cos(thetaStart + v * thetaLength);
         vertex.z = radius * Math.sin(phiStart + u * phiLength) * Math.sin(thetaStart + v * thetaLength);
 
         vertices.push(vertex.x, vertex.y, vertex.z);
 
-
-
         normal.from(vertex).normalize();
         normals.push(normal.x, normal.y, normal.z);
-
-
 
         uvs.push(u + uOffset, 1 - v);
 
@@ -97,8 +82,6 @@ export class SphereGeometry extends Geometry {
 
       grid.push(verticesRow);
     }
-
-
 
     for (let iy = 0; iy < heightSegments; iy++) {
       for (let ix = 0; ix < widthSegments; ix++) {
@@ -111,8 +94,6 @@ export class SphereGeometry extends Geometry {
         if (iy !== heightSegments - 1 || thetaEnd < Math.PI) indices.push(b, c, d);
       }
     }
-
-
 
     this.setIndex(indices);
     this.setAttribute('position', new Attribute(new Float32Array(vertices), 3));
@@ -128,5 +109,3 @@ export class SphereGeometry extends Geometry {
     return this;
   }
 }
-
-SphereGeometry.prototype.type = 'SphereGeometry';

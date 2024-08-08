@@ -4,7 +4,6 @@ import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
 import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
 
 export class PolyhedronGeometry extends Geometry {
-  declare type: string | 'PolyhedronGeometry';
   declare parameters: {
     vertices: number[];
     indices: number[];
@@ -25,19 +24,11 @@ export class PolyhedronGeometry extends Geometry {
     const vertexBuffer: number[] = [];
     const uvBuffer: number[] = [];
 
-
-
     subdivide(detail);
-
-
 
     applyRadius(radius);
 
-
-
     generateUVs();
-
-
 
     this.setAttribute('position', new Attribute(new Float32Array(vertexBuffer), 3));
     this.setAttribute('normal', new Attribute(new Float32Array(vertexBuffer.slice()), 3));
@@ -49,23 +40,15 @@ export class PolyhedronGeometry extends Geometry {
       this.normalizeNormals();
     }
 
-
-
     function subdivide(detail: number) {
       const a = Vec3.new();
       const b = Vec3.new();
       const c = Vec3.new();
 
-
-
       for (let i = 0; i < indices.length; i += 3) {
-
-
         getVertexByIndex(indices[i + 0], a);
         getVertexByIndex(indices[i + 1], b);
         getVertexByIndex(indices[i + 2], c);
-
-
 
         subdivideFace(a, b, c, detail);
       }
@@ -74,11 +57,7 @@ export class PolyhedronGeometry extends Geometry {
     function subdivideFace(a: Vec3, b: Vec3, c: Vec3, detail: number) {
       const cols = detail + 1;
 
-
-
       const v: Vec3[][] = [];
-
-
 
       for (let i = 0; i <= cols; i++) {
         v[i] = [];
@@ -96,8 +75,6 @@ export class PolyhedronGeometry extends Geometry {
           }
         }
       }
-
-
 
       for (let i = 0; i < cols; i++) {
         for (let j = 0; j < 2 * (cols - i) - 1; j++) {
@@ -118,8 +95,6 @@ export class PolyhedronGeometry extends Geometry {
 
     function applyRadius(radius: number) {
       const vertex = Vec3.new();
-
-
 
       for (let i = 0; i < vertexBuffer.length; i += 3) {
         vertex.x = vertexBuffer[i + 0];
@@ -153,19 +128,13 @@ export class PolyhedronGeometry extends Geometry {
     }
 
     function correctSeam() {
-
-
       for (let i = 0; i < uvBuffer.length; i += 6) {
-
-
         const x0 = uvBuffer[i + 0];
         const x1 = uvBuffer[i + 2];
         const x2 = uvBuffer[i + 4];
 
         const max = Math.max(x0, x1, x2);
         const min = Math.min(x0, x1, x2);
-
-
 
         if (max > 0.9 && min < 0.1) {
           if (x0 < 0.2) uvBuffer[i + 0] += 1;
@@ -227,18 +196,12 @@ export class PolyhedronGeometry extends Geometry {
       }
     }
 
-
-
     function azimuth(vector: Vec3) {
       return Math.atan2(vector.z, -vector.x);
     }
-
-
 
     function inclination(vector: Vec3) {
       return Math.atan2(-vector.y, Math.sqrt(vector.x * vector.x + vector.z * vector.z));
     }
   }
 }
-
-PolyhedronGeometry.prototype.type = 'PolyhedronGeometry';

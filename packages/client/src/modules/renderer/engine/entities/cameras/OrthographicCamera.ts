@@ -2,7 +2,6 @@ import { Camera } from './Camera.js';
 
 export class OrthographicCamera extends Camera {
   declare isOrthographicCamera: true;
-  declare type: string | 'OrthographicCamera';
   zoom: number;
   view: {
     enabled: boolean;
@@ -121,4 +120,3 @@ export class OrthographicCamera extends Camera {
 }
 
 OrthographicCamera.prototype.isOrthographicCamera = true;
-OrthographicCamera.prototype.type = 'OrthographicCamera';

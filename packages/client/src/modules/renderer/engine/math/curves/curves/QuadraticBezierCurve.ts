@@ -4,7 +4,6 @@ import { Vec2 } from '../../Vec2.js';
 
 export class QuadraticBezierCurve extends Curve<Vec2> {
   declare isQuadraticBezierCurve: true;
-  declare type: 'QuadraticBezierCurve';
 
   constructor(
     public v0: Vec2 = Vec2.new(),
@@ -38,4 +37,3 @@ export class QuadraticBezierCurve extends Curve<Vec2> {
 }
 
 QuadraticBezierCurve.prototype.isQuadraticBezierCurve = true;
-QuadraticBezierCurve.prototype.type = 'QuadraticBezierCurve';

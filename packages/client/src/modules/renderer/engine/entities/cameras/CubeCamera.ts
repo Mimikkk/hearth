@@ -9,7 +9,6 @@ const fov = -90;
 const aspect = 1;
 
 export class CubeCamera extends Entity {
-  declare type: string | 'CubeCamera';
   renderTarget: CubeRenderTarget;
   activeMipmapLevel: number;
 
@@ -104,5 +103,3 @@ export class CubeCamera extends Entity {
     renderTarget.texture.needsPMREMUpdate = true;
   }
 }
-
-CubeCamera.prototype.type = 'CubeCamera';

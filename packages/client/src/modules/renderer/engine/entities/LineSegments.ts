@@ -7,7 +7,6 @@ const _end = Vec3.new();
 
 export class LineSegments extends Line {
   declare isLineSegments: true;
-  declare type: string | 'LineSegments';
 
   computeLineDistances() {
     const geometry = this.geometry;
@@ -34,4 +33,3 @@ export class LineSegments extends Line {
 }
 
 LineSegments.prototype.isLineSegments = true;
-LineSegments.prototype.type = 'LineSegments';

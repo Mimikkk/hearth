@@ -4,7 +4,6 @@ import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
 import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
 
 export class RingGeometry extends Geometry {
-  declare type: string | 'RingGeometry';
   declare parameters: {
     innerRadius: number;
     outerRadius: number;
@@ -36,40 +35,26 @@ export class RingGeometry extends Geometry {
     thetaSegments = Math.max(3, thetaSegments);
     phiSegments = Math.max(1, phiSegments);
 
-
-
     const indices = [];
     const vertices = [];
     const normals = [];
     const uvs = [];
-
-
 
     let radius = innerRadius;
     const radiusStep = (outerRadius - innerRadius) / phiSegments;
     const vertex = Vec3.new();
     const uv = Vec2.new();
 
-
-
     for (let j = 0; j <= phiSegments; j++) {
       for (let i = 0; i <= thetaSegments; i++) {
-
-
         const segment = thetaStart + (i / thetaSegments) * thetaLength;
-
-
 
         vertex.x = radius * Math.cos(segment);
         vertex.y = radius * Math.sin(segment);
 
         vertices.push(vertex.x, vertex.y, vertex.z);
 
-
-
         normals.push(0, 0, 1);
-
-
 
         uv.x = (vertex.x / outerRadius + 1) / 2;
         uv.y = (vertex.y / outerRadius + 1) / 2;
@@ -77,12 +62,8 @@ export class RingGeometry extends Geometry {
         uvs.push(uv.x, uv.y);
       }
 
-
-
       radius += radiusStep;
     }
-
-
 
     for (let j = 0; j < phiSegments; j++) {
       const thetaSegmentLevel = j * (thetaSegments + 1);
@@ -95,14 +76,10 @@ export class RingGeometry extends Geometry {
         const c = segment + thetaSegments + 2;
         const d = segment + 1;
 
-
-
         indices.push(a, b, d);
         indices.push(b, c, d);
       }
     }
-
-
 
     this.setIndex(indices);
     this.setAttribute('position', new Attribute(new Float32Array(vertices), 3));
@@ -118,5 +95,3 @@ export class RingGeometry extends Geometry {
     return this;
   }
 }
-
-RingGeometry.prototype.type = 'RingGeometry';

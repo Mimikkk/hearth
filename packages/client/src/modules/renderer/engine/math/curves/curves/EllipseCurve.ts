@@ -3,7 +3,6 @@ import { Vec2 } from '../../Vec2.js';
 
 export class EllipseCurve extends Curve<Vec2> {
   declare isEllipseCurve: true;
-  declare type: string | 'EllipseCurve';
 
   constructor(
     public aX: number = 0,
@@ -55,7 +54,6 @@ export class EllipseCurve extends Curve<Vec2> {
       const tx = x - this.aX;
       const ty = y - this.aY;
 
-
       x = tx * cos - ty * sin + this.aX;
       y = tx * sin + ty * cos + this.aY;
     }
@@ -84,4 +82,3 @@ export class EllipseCurve extends Curve<Vec2> {
 }
 
 EllipseCurve.prototype.isEllipseCurve = true;
-EllipseCurve.prototype.type = 'EllipseCurve';

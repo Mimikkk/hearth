@@ -5,7 +5,6 @@ import { PointLight } from '@modules/renderer/engine/entities/lights/PointLight.
 import { Color } from '@modules/renderer/engine/math/Color.js';
 
 export class PointLightHelper extends Mesh {
-  declare type: string | 'PointLightHelper';
   light: PointLight;
   color: Color;
 
@@ -35,5 +34,3 @@ export class PointLightHelper extends Mesh {
     }
   }
 }
-
-PointLightHelper.prototype.type = 'PointLightHelper';

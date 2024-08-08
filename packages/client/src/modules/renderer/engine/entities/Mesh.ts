@@ -13,7 +13,6 @@ import { Attribute } from '@modules/renderer/engine/core/Attribute.js';
 
 export class Mesh extends Entity {
   declare isMesh: true;
-  declare type: string | 'Mesh';
 
   geometry: Geometry;
   material: Material;
@@ -115,14 +114,10 @@ export class Mesh extends Entity {
 
     if (material === undefined) return;
 
-
-
     if (geometry.boundingSphere === null) geometry.computeBoundingSphere();
 
     _sphere.from(geometry.boundingSphere!);
     _sphere.applyMat4(matrixWorld);
-
-
 
     _ray.from(raycaster.ray).recast(raycaster.near);
 
@@ -132,18 +127,12 @@ export class Mesh extends Entity {
       if (_ray.origin.distanceSqTo(_sphereHitAt) > (raycaster.far - raycaster.near) ** 2) return;
     }
 
-
-
     _inverseMatrix.from(matrixWorld).invert();
     _ray.from(raycaster.ray).applyMat4(_inverseMatrix);
-
-
 
     if (geometry.boundingBox !== null) {
       if (_ray.intersectsBox(geometry.boundingBox) === false) return;
     }
-
-
 
     this._computeIntersections(raycaster, intersects, _ray);
   }
@@ -163,8 +152,6 @@ export class Mesh extends Entity {
     const drawRange = geometry.drawRange;
 
     if (index !== null) {
-
-
       if (Array.isArray(material)) {
         for (let i = 0, il = groups.length; i < il; i++) {
           const group = groups[i];
@@ -216,8 +203,6 @@ export class Mesh extends Entity {
         }
       }
     } else if (position !== undefined) {
-
-
       if (Array.isArray(material)) {
         for (let i = 0, il = groups.length; i < il; i++) {
           const group = groups[i];
@@ -273,7 +258,6 @@ export class Mesh extends Entity {
 }
 
 Mesh.prototype.isMesh = true;
-Mesh.prototype.type = 'Mesh';
 
 const _inverseMatrix = new Mat4();
 const _ray = new Ray();

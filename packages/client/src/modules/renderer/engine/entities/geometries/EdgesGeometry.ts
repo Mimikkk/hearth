@@ -13,8 +13,6 @@ export class EdgesGeometry extends Geometry {
   constructor(geometry: Geometry | null = null, thresholdAngle: number = 1) {
     super();
 
-    this.type = 'EdgesGeometry';
-
     this.parameters = {
       geometry: geometry,
       thresholdAngle: thresholdAngle,
@@ -52,19 +50,15 @@ export class EdgesGeometry extends Geometry {
         c.fromAttribute(positionAttr, indexArr[2]);
         _triangle.normal(_normal);
 
-
         hashes[0] = `${Math.round(a.x * precision)},${Math.round(a.y * precision)},${Math.round(a.z * precision)}`;
         hashes[1] = `${Math.round(b.x * precision)},${Math.round(b.y * precision)},${Math.round(b.z * precision)}`;
         hashes[2] = `${Math.round(c.x * precision)},${Math.round(c.y * precision)},${Math.round(c.z * precision)}`;
-
 
         if (hashes[0] === hashes[1] || hashes[1] === hashes[2] || hashes[2] === hashes[0]) {
           continue;
         }
 
-
         for (let j = 0; j < 3; j++) {
-
           const jNext = (j + 1) % 3;
           const vecHash0 = hashes[j];
           const vecHash1 = hashes[jNext];
@@ -77,8 +71,6 @@ export class EdgesGeometry extends Geometry {
           const reverseHash = `${vecHash1}_${vecHash0}`;
 
           if (reverseHash in edgeData && edgeData[reverseHash]) {
-
-
             //@ts-expect-error
             if (_normal.dot(edgeData[reverseHash].normal) <= thresholdDot) {
               vertices.push(v0.x, v0.y, v0.z);
@@ -88,7 +80,6 @@ export class EdgesGeometry extends Geometry {
             //@ts-expect-error
             edgeData[reverseHash] = null;
           } else if (!(hash in edgeData)) {
-
             edgeData[hash] = {
               index0: indexArr[j],
               index1: indexArr[jNext],
@@ -97,7 +88,6 @@ export class EdgesGeometry extends Geometry {
           }
         }
       }
-
 
       for (const key in edgeData) {
         if (edgeData[key]) {

@@ -14,7 +14,6 @@ const _matrixWorldInv = new Mat4();
 
 export class SkeletonHelper extends LineSegments {
   declare isSkeletonHelper: true;
-  declare type: string | 'SkeletonHelper';
   root: Entity;
   bones: Bone[];
 
@@ -55,8 +54,6 @@ export class SkeletonHelper extends LineSegments {
 
     this.isSkeletonHelper = true;
 
-    this.type = 'SkeletonHelper';
-
     this.root = object;
     this.bones = bones;
 
@@ -94,7 +91,6 @@ export class SkeletonHelper extends LineSegments {
 }
 
 SkeletonHelper.prototype.isSkeletonHelper = true;
-SkeletonHelper.prototype.type = 'SkeletonHelper';
 
 function getBoneList(object: Entity) {
   const boneList = [];

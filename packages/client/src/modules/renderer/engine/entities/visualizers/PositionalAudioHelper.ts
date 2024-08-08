@@ -6,7 +6,6 @@ import { Attribute } from '@modules/renderer/engine/core/Attribute.js';
 import { LineBasicMaterial } from '@modules/renderer/engine/entities/materials/LineBasicMaterial.js';
 
 export class PositionalAudioHelper extends Line {
-  declare type: string | 'PositionalAudioHelper';
   audio: PositionalAudio;
   range: number;
   divisionsInnerAngle: number;
@@ -94,5 +93,3 @@ export class PositionalAudioHelper extends Line {
     if (coneInnerAngle === coneOuterAngle) (this.material as never as LineBasicMaterial[])[0].visible = false;
   }
 }
-
-PositionalAudioHelper.prototype.type = 'PositionalAudioHelper';

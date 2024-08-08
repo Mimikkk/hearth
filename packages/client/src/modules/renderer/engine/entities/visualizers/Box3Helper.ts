@@ -6,7 +6,6 @@ import { Box3 } from '@modules/renderer/engine/math/Box3.js';
 import { ColorRepresentation } from '@modules/renderer/engine/math/Color.js';
 
 export class Box3Helper extends LineSegments {
-  declare type: string | 'Box3Helper';
   box: Box3;
 
   constructor(box: Box3, color: ColorRepresentation = 0xffff00) {
@@ -24,8 +23,6 @@ export class Box3Helper extends LineSegments {
 
     this.box = box;
 
-    this.type = 'Box3Helper';
-
     this.geometry.computeBoundingSphere();
   }
 
@@ -41,5 +38,3 @@ export class Box3Helper extends LineSegments {
     return super.updateMatrixWorld(force);
   }
 }
-
-Box3Helper.prototype.type = 'Box3Helper';

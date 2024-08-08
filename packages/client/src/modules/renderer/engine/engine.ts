@@ -93,7 +93,6 @@ export * from './entities/ShadowMesh.js';
 export * from './entities/Mesh.js';
 export * from './entities/QuadMesh.js';
 export * from './entities/SkinnedMesh.js';
-export * from './entities/BatchedMesh.js';
 export * from './entities/GroundedSkybox.js';
 export * from './entities/Skeleton.js';
 export * from './entities/Bone.js';

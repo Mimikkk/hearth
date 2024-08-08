@@ -5,8 +5,6 @@ import { Geometry } from '@modules/renderer/engine/core/Geometry.js';
 import { Color, ColorRepresentation } from '../../math/Color.js';
 
 export class PolarGridHelper extends LineSegments {
-  declare type: string | 'PolarGridHelper';
-
   constructor(
     radius: number = 10,
     sectors: number = 16,
@@ -20,8 +18,6 @@ export class PolarGridHelper extends LineSegments {
 
     const vertices = [];
     const colors = [];
-
-
 
     if (sectors > 1) {
       for (let i = 0; i < sectors; i++) {
@@ -40,16 +36,12 @@ export class PolarGridHelper extends LineSegments {
       }
     }
 
-
-
     for (let i = 0; i < rings; i++) {
       const color = i & 1 ? color1 : color2;
 
       const r = radius - (radius / rings) * i;
 
       for (let j = 0; j < divisions; j++) {
-
-
         let v = (j / divisions) * (Math.PI * 2);
 
         let x = Math.sin(v) * r;
@@ -57,8 +49,6 @@ export class PolarGridHelper extends LineSegments {
 
         vertices.push(x, 0, z);
         colors.push(color.r, color.g, color.b);
-
-
 
         v = ((j + 1) / divisions) * (Math.PI * 2);
 
@@ -79,5 +69,3 @@ export class PolarGridHelper extends LineSegments {
     super(geometry, material);
   }
 }
-
-PolarGridHelper.prototype.type = 'PolarGridHelper';

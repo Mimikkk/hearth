@@ -4,7 +4,6 @@ import { Vec2 } from '../../Vec2.js';
 
 export class SplineCurve extends Curve<Vec2> {
   declare isSplineCurve: true;
-  declare type: 'SplineCurve';
 
   constructor(public points: Vec2[] = []) {
     super();
@@ -45,4 +44,3 @@ export class SplineCurve extends Curve<Vec2> {
 }
 
 SplineCurve.prototype.isSplineCurve = true;
-SplineCurve.prototype.type = 'SplineCurve';

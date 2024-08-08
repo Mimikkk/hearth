@@ -14,7 +14,6 @@ const _position = Vec3.new();
 
 export class Points extends Entity {
   declare isPoints: true;
-  declare type: string | 'Points';
   declare geometry: Geometry;
   declare material: PointsMaterial;
   morphTargetInfluences: number[];
@@ -110,7 +109,6 @@ export class Points extends Entity {
 }
 
 Points.prototype.isPoints = true;
-Points.prototype.type = 'Points';
 
 function testPoint(
   point: Vec3,

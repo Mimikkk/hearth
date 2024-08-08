@@ -1,7 +1,6 @@
 import { PolyhedronGeometry } from './PolyhedronGeometry.js';
 
 export class DodecahedronGeometry extends PolyhedronGeometry {
-  declare type: string | 'DodecahedronGeometry';
   declare parameters: {
     radius: number;
     detail: number;
@@ -12,7 +11,6 @@ export class DodecahedronGeometry extends PolyhedronGeometry {
     const r = 1 / t;
 
     const vertices: number[] = [
-
       -1,
       -1,
       -1,
@@ -37,7 +35,6 @@ export class DodecahedronGeometry extends PolyhedronGeometry {
       1,
       1,
       1,
-
 
       0,
       -r,
@@ -52,7 +49,6 @@ export class DodecahedronGeometry extends PolyhedronGeometry {
       r,
       t,
 
-
       -r,
       -t,
       0,
@@ -65,7 +61,6 @@ export class DodecahedronGeometry extends PolyhedronGeometry {
       r,
       t,
       0,
-
 
       -t,
       0,
@@ -90,10 +85,6 @@ export class DodecahedronGeometry extends PolyhedronGeometry {
 
     super(vertices, indices, radius, detail);
 
-    this.type = 'DodecahedronGeometry';
-
     this.parameters = { radius, detail };
   }
 }
-
-DodecahedronGeometry.prototype.type = 'DodecahedronGeometry';

@@ -10,7 +10,6 @@ import { Color } from '@modules/renderer/engine/math/Color.js';
 const _vector = Vec3.new();
 
 export class SpotLightHelper extends Entity {
-  declare type: string | 'SpotLightHelper';
   light: SpotLight;
   color: Color;
   cone: LineSegments;
@@ -49,7 +48,6 @@ export class SpotLightHelper extends Entity {
     this.light.updateWorldMatrix(true, false);
     this.light.target.updateWorldMatrix(true, false);
 
-
     if (this.parent) {
       this.parent.updateWorldMatrix(true, false);
 
@@ -76,5 +74,3 @@ export class SpotLightHelper extends Entity {
     }
   }
 }
-
-SpotLightHelper.prototype.type = 'SpotLightHelper';

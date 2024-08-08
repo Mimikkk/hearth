@@ -4,7 +4,6 @@ import { LightShadow } from './LightShadow.js';
 
 export class Light<S extends LightShadow | undefined = any> extends Entity {
   declare isLight: true;
-  declare type: string | 'Light';
 
   color: Color;
   intensity: number;
@@ -28,4 +27,3 @@ export class Light<S extends LightShadow | undefined = any> extends Entity {
 }
 
 Light.prototype.isLight = true;
-Light.prototype.type = 'Light';

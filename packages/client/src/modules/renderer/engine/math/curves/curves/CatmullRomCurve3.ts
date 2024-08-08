@@ -27,10 +27,8 @@ const CubicPoly = () => {
       dt1: number,
       dt2: number,
     ): void {
-
       let t1 = (x1 - x0) / dt0 - (x2 - x0) / (dt0 + dt1) + (x2 - x1) / dt1;
       let t2 = (x2 - x1) / dt1 - (x3 - x1) / (dt1 + dt2) + (x3 - x2) / dt2;
-
 
       t1 *= dt1;
       t2 *= dt1;
@@ -53,7 +51,6 @@ const pz = CubicPoly();
 
 class CatmullRomCurve3 extends Curve<Vec3> {
   declare isCatmullRomCurve3: true;
-  declare type: 'CatmullRomCurve3';
 
   constructor(
     public points: Vec3[] = [],
@@ -86,7 +83,6 @@ class CatmullRomCurve3 extends Curve<Vec3> {
     if (this.closed || intPoint > 0) {
       p0 = points[(intPoint - 1) % l];
     } else {
-
       tmp.asSub(points[0], points[1]).add(points[0]);
       p0 = tmp;
     }
@@ -97,18 +93,15 @@ class CatmullRomCurve3 extends Curve<Vec3> {
     if (this.closed || intPoint + 2 < l) {
       p3 = points[(intPoint + 2) % l];
     } else {
-
       tmp.asSub(points[l - 1], points[l - 2]).add(points[l - 1]);
       p3 = tmp;
     }
 
     if (this.curveType === 'centripetal' || this.curveType === 'chordal') {
-
       const pow = this.curveType === 'chordal' ? 0.5 : 0.25;
       let dt0 = Math.pow(p0.distanceSqTo(p1), pow);
       let dt1 = Math.pow(p1.distanceSqTo(p2), pow);
       let dt2 = Math.pow(p2.distanceSqTo(p3), pow);
-
 
       if (dt1 < 1e-4) dt1 = 1.0;
       if (dt0 < 1e-4) dt0 = dt1;
@@ -149,4 +142,3 @@ class CatmullRomCurve3 extends Curve<Vec3> {
 
 export { CatmullRomCurve3 };
 CatmullRomCurve3.prototype.isCatmullRomCurve3 = true;
-CatmullRomCurve3.prototype.type = 'CatmullRomCurve3';

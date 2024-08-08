@@ -4,12 +4,10 @@ import { Vec3 } from '../Vec3.js';
 import { Mat4 } from '../Mat4.js';
 
 export abstract class Curve<T extends Vec2 | Vec3> {
-  declare type: 'Curve';
   arcLengthDivisions: number;
   needsUpdate: boolean;
 
   constructor() {
-    this.type = 'Curve';
     this.arcLengthDivisions = 200;
   }
 
@@ -75,8 +73,6 @@ export abstract class Curve<T extends Vec2 | Vec3> {
       targetArcLength = u * arcLengths[il - 1];
     }
 
-
-
     let low = 0,
       high = il - 1,
       comparison;
@@ -93,8 +89,6 @@ export abstract class Curve<T extends Vec2 | Vec3> {
       } else {
         high = i;
         break;
-
-
       }
     }
 
@@ -104,18 +98,12 @@ export abstract class Curve<T extends Vec2 | Vec3> {
       return i / (il - 1);
     }
 
-
-
     const lengthBefore = arcLengths[i];
     const lengthAfter = arcLengths[i + 1];
 
     const segmentLength = lengthAfter - lengthBefore;
 
-
-
     const segmentFraction = (targetArcLength - lengthBefore) / segmentLength;
-
-
 
     const t = (i + segmentFraction) / (il - 1);
 
@@ -236,5 +224,3 @@ export abstract class Curve<T extends Vec2 | Vec3> {
     return this;
   }
 }
-
-Curve.prototype.type = 'Curve';

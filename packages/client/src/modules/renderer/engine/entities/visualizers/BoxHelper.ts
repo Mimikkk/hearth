@@ -8,7 +8,6 @@ import { Entity } from '@modules/renderer/engine/core/Entity.js';
 const _box = Box3.new();
 
 export class BoxHelper extends LineSegments {
-  declare type: string | 'BoxHelper';
   object: Entity;
 
   constructor(object: Entity, color = 0xffff00) {
@@ -98,5 +97,3 @@ export class BoxHelper extends LineSegments {
     return this;
   }
 }
-
-BoxHelper.prototype.type = 'BoxHelper';

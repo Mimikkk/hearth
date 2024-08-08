@@ -8,7 +8,6 @@ export type ICamera = PerspectiveCamera | OrthographicCamera;
 
 export class Camera extends Entity {
   declare isCamera: true;
-  declare type: string | 'Camera';
   matrixWorldInverse: Mat4;
   projectionMatrix: Mat4;
   projectionMatrixInverse: Mat4;
@@ -58,4 +57,3 @@ export class Camera extends Entity {
 }
 
 Camera.prototype.isCamera = true;
-Camera.prototype.type = 'Camera';

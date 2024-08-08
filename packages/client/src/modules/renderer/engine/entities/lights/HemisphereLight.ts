@@ -4,7 +4,6 @@ import { Entity } from '../../core/Entity.js';
 
 export class HemisphereLight extends Light<undefined> {
   declare isHemisphereLight: true;
-  declare type: string | 'HemisphereLight';
   groundColor: Color;
 
   constructor(skyColor: ColorRepresentation, groundColor: ColorRepresentation, intensity: number) {
@@ -26,4 +25,3 @@ export class HemisphereLight extends Light<undefined> {
 }
 
 HemisphereLight.prototype.isHemisphereLight = true;
-HemisphereLight.prototype.type = 'HemisphereLight';

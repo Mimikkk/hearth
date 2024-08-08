@@ -4,7 +4,6 @@ import { Mesh } from '@modules/renderer/engine/entities/Mesh.js';
 
 export class InstancedPoints extends Mesh {
   declare isInstancedPoints: true;
-  declare type: string | 'InstancedPoints';
 
   constructor(geometry: InstancedPointsGeometry, material: InstancedPointsNodeMaterial) {
     super(geometry, material);
@@ -12,4 +11,3 @@ export class InstancedPoints extends Mesh {
 }
 
 InstancedPoints.prototype.isInstancedPoints = true;
-InstancedPoints.prototype.type = 'InstancedPoints';

@@ -6,7 +6,6 @@ import { LineBasicMaterial } from '@modules/renderer/engine/entities/materials/L
 import { Attribute } from '@modules/renderer/engine/core/Attribute.js';
 
 export class OctreeHelper extends LineSegments {
-  declare type: string | 'OctreeHelper';
   octree: Octree;
   color: ColorRepresentation;
 
@@ -64,5 +63,3 @@ export class OctreeHelper extends LineSegments {
     this.geometry.setAttribute('position', new Attribute(new Float32Array(vertices), 3));
   }
 }
-
-OctreeHelper.prototype.type = 'OctreeHelper';

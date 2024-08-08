@@ -77,5 +77,3 @@ export class PlaneGeometry extends Geometry {
     return this;
   }
 }
-
-PlaneGeometry.prototype.type = 'PlaneGeometry';

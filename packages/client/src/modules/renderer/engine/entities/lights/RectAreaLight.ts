@@ -3,7 +3,6 @@ import { ColorRepresentation } from '@modules/renderer/engine/math/Color.js';
 
 export class RectAreaLight extends Light<undefined> {
   declare isRectAreaLight: true;
-  declare type: string | 'RectAreaLight';
 
   constructor(
     color: ColorRepresentation,
@@ -15,12 +14,10 @@ export class RectAreaLight extends Light<undefined> {
   }
 
   get power() {
-
     return this.intensity * this.width * this.height * Math.PI;
   }
 
   set power(power) {
-
     this.intensity = power / (this.width * this.height * Math.PI);
   }
 
@@ -35,4 +32,3 @@ export class RectAreaLight extends Light<undefined> {
 }
 
 RectAreaLight.prototype.isRectAreaLight = true;
-RectAreaLight.prototype.type = 'RectAreaLight';

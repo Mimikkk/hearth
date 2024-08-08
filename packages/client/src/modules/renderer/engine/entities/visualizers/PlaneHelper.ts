@@ -8,7 +8,6 @@ import { Plane } from '@modules/renderer/engine/math/Plane.js';
 import { ColorRepresentation } from '@modules/renderer/engine/math/Color.js';
 
 export class PlaneHelper extends Line {
-  declare type: string | 'PlaneHelper';
   plane: Plane;
   size: number;
 
@@ -22,8 +21,6 @@ export class PlaneHelper extends Line {
     geometry.computeBoundingSphere();
 
     super(geometry, new LineBasicMaterial({ color: color, toneMapped: false }));
-
-    this.type = 'PlaneHelper';
 
     this.plane = plane;
 
@@ -61,5 +58,3 @@ export class PlaneHelper extends Line {
     return super.updateMatrixWorld(force);
   }
 }
-
-PlaneHelper.prototype.type = 'PlaneHelper';

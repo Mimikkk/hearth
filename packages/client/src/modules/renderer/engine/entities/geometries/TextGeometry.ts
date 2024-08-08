@@ -17,8 +17,6 @@ export interface TextGeometryParameters extends ExtrudeGeometryOptions {
 }
 
 export class TextGeometry extends ExtrudeGeometry {
-  declare type: string | 'TextGeometry';
-
   constructor(text: string, parameters: TextGeometryParameters) {
     parameters.size ??= 100;
     parameters.depth ??= 50;
@@ -30,5 +28,3 @@ export class TextGeometry extends ExtrudeGeometry {
     super(shapes, parameters);
   }
 }
-
-TextGeometry.prototype.type = 'TextGeometry';

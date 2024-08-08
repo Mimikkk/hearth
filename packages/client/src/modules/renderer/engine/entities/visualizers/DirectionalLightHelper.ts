@@ -12,7 +12,6 @@ const _v2 = Vec3.new();
 const _v3 = Vec3.new();
 
 export class DirectionalLightHelper extends Entity {
-  declare type: string | 'DirectionalLightHelper';
   light: DirectionalLight;
   lightPlane: Line;
   targetLine: Line;
@@ -73,5 +72,3 @@ export class DirectionalLightHelper extends Entity {
     this.targetLine.scale.z = _v3.length();
   }
 }
-
-DirectionalLightHelper.prototype.type = 'DirectionalLightHelper';

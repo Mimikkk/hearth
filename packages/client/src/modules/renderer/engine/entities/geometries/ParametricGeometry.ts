@@ -3,7 +3,6 @@ import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
 import { Attribute } from '@modules/renderer/engine/core/Attribute.js';
 
 export class ParametricGeometry extends Geometry {
-  declare type: string | 'ParametricGeometry';
   declare parameters: {
     func: (u: number, v: number, target: Vec3) => void;
     slices: number;
@@ -19,15 +18,11 @@ export class ParametricGeometry extends Geometry {
   ) {
     super();
 
-    this.type = 'ParametricGeometry';
-
     this.parameters = {
       func: func,
       slices: slices,
       stacks: stacks,
     };
-
-    
 
     const indices = [];
     const vertices = [];
@@ -43,8 +38,6 @@ export class ParametricGeometry extends Geometry {
     const pu = Vec3.new(),
       pv = Vec3.new();
 
-    
-
     const sliceCount = slices + 1;
 
     for (let i = 0; i <= stacks; i++) {
@@ -53,14 +46,8 @@ export class ParametricGeometry extends Geometry {
       for (let j = 0; j <= slices; j++) {
         const u = j / slices;
 
-        
-
         func(u, v, p0);
         vertices.push(p0.x, p0.y, p0.z);
-
-        
-
-        
 
         if (u - EPS >= 0) {
           func(u - EPS, v, p1);
@@ -78,18 +65,12 @@ export class ParametricGeometry extends Geometry {
           pv.asSub(p1, p0);
         }
 
-        
-
         normal.asCross(pu, pv).normalize();
         normals.push(normal.x, normal.y, normal.z);
-
-        
 
         uvs.push(u, v);
       }
     }
-
-    
 
     for (let i = 0; i < stacks; i++) {
       for (let j = 0; j < slices; j++) {
@@ -98,14 +79,10 @@ export class ParametricGeometry extends Geometry {
         const c = (i + 1) * sliceCount + j + 1;
         const d = (i + 1) * sliceCount + j;
 
-        
-
         indices.push(a, b, d);
         indices.push(b, c, d);
       }
     }
-
-    
 
     this.setIndex(indices);
     this.setAttribute('position', new Attribute(new Float32Array(vertices), 3));

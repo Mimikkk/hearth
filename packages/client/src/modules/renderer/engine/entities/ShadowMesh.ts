@@ -12,7 +12,6 @@ const _shadowMatrix = new Mat4();
 
 export class ShadowMesh extends Mesh {
   declare isShadowMesh: true;
-  declare type: string | 'ShadowMesh';
 
   meshMatrix: Mat4;
 
@@ -70,4 +69,3 @@ export class ShadowMesh extends Mesh {
 }
 
 ShadowMesh.prototype.isShadowMesh = true;
-ShadowMesh.prototype.type = 'ShadowMesh';

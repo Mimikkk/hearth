@@ -5,7 +5,6 @@ import { ColorRepresentation } from '@modules/renderer/engine/math/Color.js';
 
 export class DirectionalLight extends Light<DirectionalLightShadow> {
   declare isDirectionalLight: true;
-  declare type: string | 'DirectionalLight';
   target: Entity;
   shadow: DirectionalLightShadow;
 
@@ -30,4 +29,3 @@ export class DirectionalLight extends Light<DirectionalLightShadow> {
 }
 
 DirectionalLight.prototype.isDirectionalLight = true;
-DirectionalLight.prototype.type = 'DirectionalLight';

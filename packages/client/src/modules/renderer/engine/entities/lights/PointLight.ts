@@ -4,7 +4,6 @@ import { ColorRepresentation } from '../../math/Color.js';
 
 export class PointLight extends Light<PointLightShadow> {
   declare isPointLight: true;
-  declare type: string | 'PointLight';
   shadow: PointLightShadow;
 
   constructor(
@@ -18,13 +17,10 @@ export class PointLight extends Light<PointLightShadow> {
   }
 
   get power(): number {
-
-
     return this.intensity * 4 * Math.PI;
   }
 
   set power(power: number) {
-
     this.intensity = power / (4 * Math.PI);
   }
 
@@ -41,4 +37,3 @@ export class PointLight extends Light<PointLightShadow> {
 }
 
 PointLight.prototype.isPointLight = true;
-PointLight.prototype.type = 'PointLight';

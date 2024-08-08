@@ -13,7 +13,6 @@ import { Intersection, Raycaster } from '@modules/renderer/engine/core/Raycaster
 
 export class SkinnedMesh extends Mesh {
   declare isSkinnedMesh: true;
-  declare type: string | 'SkinnedMesh';
 
   bindMode: BindMode;
   bindMatrix: Mat4;
@@ -211,7 +210,6 @@ export class SkinnedMesh extends Mesh {
 }
 
 SkinnedMesh.prototype.isSkinnedMesh = true;
-SkinnedMesh.prototype.type = 'SkinnedMesh';
 
 const _vector3 = Vec3.new();
 const _matrix4 = new Mat4();

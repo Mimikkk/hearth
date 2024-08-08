@@ -10,7 +10,6 @@ const _v1 = Vec3.new();
 const _v2 = Vec3.new();
 
 export class VertexTangentsHelper extends LineSegments {
-  declare type: string | 'VertexTangentsHelper';
   object: Entity;
   size: number;
 
@@ -66,5 +65,3 @@ export class VertexTangentsHelper extends LineSegments {
     position.needsUpdate = true;
   }
 }
-
-VertexTangentsHelper.prototype.type = 'VertexTangentsHelper';

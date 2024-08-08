@@ -8,7 +8,6 @@ import { Sphere } from '@modules/renderer/engine/math/Sphere.js';
 
 export class InstancedPointsGeometry extends Geometry {
   declare isInstancedPointsGeometry: true;
-  declare type: string | 'InstancedPointsGeometry';
 
   constructor() {
     super();
@@ -94,6 +93,5 @@ export class InstancedPointsGeometry extends Geometry {
 }
 
 InstancedPointsGeometry.prototype.isInstancedPointsGeometry = true;
-InstancedPointsGeometry.prototype.type = 'InstancedPointsGeometry';
 
 const _vector = Vec3.new();

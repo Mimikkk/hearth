@@ -9,7 +9,6 @@ const _v2 = Vec3.new();
 
 export class LOD extends Entity {
   declare isLOD: true;
-  declare type: string | 'LOD';
 
   _currentLevel: number;
   autoUpdate: boolean;
@@ -19,8 +18,6 @@ export class LOD extends Entity {
     super();
 
     this._currentLevel = 0;
-
-    this.type = 'LOD';
 
     Object.defineProperties(this, {
       levels: {
@@ -145,4 +142,3 @@ export class LOD extends Entity {
 }
 
 LOD.prototype.isLOD = true;
-LOD.prototype.type = 'LOD';

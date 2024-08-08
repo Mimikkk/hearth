@@ -12,7 +12,6 @@ const _color1 = Color.new();
 const _color2 = Color.new();
 
 export class HemisphereLightHelper extends Entity {
-  declare type: string | 'HemisphereLightHelper';
   light: HemisphereLight;
   color: Color;
   material: MeshBasicMaterial;
@@ -66,5 +65,3 @@ export class HemisphereLightHelper extends Entity {
     mesh.lookAt(_vector.fromMat4Position(this.light.matrixWorld).negate());
   }
 }
-
-HemisphereLightHelper.prototype.type = 'HemisphereLightHelper';

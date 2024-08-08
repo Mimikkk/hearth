@@ -2,7 +2,6 @@ import { LatheGeometry } from './LatheGeometry.js';
 import { Path } from '@modules/renderer/engine/math/curves/Path.js';
 
 export class CapsuleGeometry extends LatheGeometry {
-  declare type: string | 'CapsuleGeometry';
   declare parameters: {
     radius: number;
     length: number;
@@ -16,8 +15,6 @@ export class CapsuleGeometry extends LatheGeometry {
     path.absarc(0, length / 2, radius, 0, Math.PI * 0.5, false);
 
     super(path.getPoints(capSegments), radialSegments);
-
-    this.type = 'CapsuleGeometry';
 
     this.parameters = { radius, length, capSegments, radialSegments };
   }

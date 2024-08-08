@@ -4,7 +4,6 @@ import { Vec3 } from '../../Vec3.js';
 
 export class QuadraticBezierCurve3 extends Curve<Vec3> {
   declare isQuadraticBezierCurve3: true;
-  declare type: 'QuadraticBezierCurve3';
 
   constructor(
     public v0: Vec3 = Vec3.new(),
@@ -14,8 +13,6 @@ export class QuadraticBezierCurve3 extends Curve<Vec3> {
     super();
 
     this.isQuadraticBezierCurve3 = true;
-
-    this.type = 'QuadraticBezierCurve3';
   }
 
   getPoint(t: number, optionalTarget: Vec3 = Vec3.new()): Vec3 {
@@ -43,4 +40,3 @@ export class QuadraticBezierCurve3 extends Curve<Vec3> {
 }
 
 QuadraticBezierCurve3.prototype.isQuadraticBezierCurve3 = true;
-QuadraticBezierCurve3.prototype.type = 'QuadraticBezierCurve3';

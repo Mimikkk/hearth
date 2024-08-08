@@ -6,7 +6,6 @@ import { Texture } from '@modules/renderer/engine/entities/textures/Texture.js';
 
 export class SpotLight extends Light<SpotLightShadow> {
   declare isSpotLight: true;
-  declare type: string | 'SpotLight';
   target: Entity;
   map: null | Texture;
   shadow: SpotLightShadow;
@@ -35,13 +34,10 @@ export class SpotLight extends Light<SpotLightShadow> {
   }
 
   get power() {
-    
-    
     return this.intensity * Math.PI;
   }
 
   set power(power) {
-    
     this.intensity = power / Math.PI;
   }
 
@@ -62,4 +58,3 @@ export class SpotLight extends Light<SpotLightShadow> {
 }
 
 SpotLight.prototype.isSpotLight = true;
-SpotLight.prototype.type = 'SpotLight';

@@ -5,7 +5,6 @@ import { ShapeUtils } from '@modules/renderer/engine/utils/ShapeUtils.js';
 import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
 
 export class ShapeGeometry extends Geometry {
-  declare type: string | 'ShapeGeometry';
   declare parameters: {
     shapes: Shape | Shape[];
     curveSegments: number;
@@ -17,26 +16,18 @@ export class ShapeGeometry extends Geometry {
   ) {
     super();
 
-    this.type = 'ShapeGeometry';
-
     this.parameters = {
       shapes: shapes,
       curveSegments: curveSegments,
     };
-
-
 
     const indices: number[] = [];
     const vertices: number[] = [];
     const normals: number[] = [];
     const uvs: number[] = [];
 
-
-
     let groupStart = 0;
     let groupCount = 0;
-
-
 
     if (Array.isArray(shapes) === false) {
       addShape(shapes);
@@ -51,14 +42,10 @@ export class ShapeGeometry extends Geometry {
       }
     }
 
-
-
     this.setIndex(indices);
     this.setAttribute('position', new Attribute(new Float32Array(vertices), 3));
     this.setAttribute('normal', new Attribute(new Float32Array(normals), 3));
     this.setAttribute('uv', new Attribute(new Float32Array(uvs), 2));
-
-
 
     function addShape(shape: Shape) {
       const indexOffset = vertices.length / 3;
@@ -66,8 +53,6 @@ export class ShapeGeometry extends Geometry {
 
       let shapeVertices = points.shape;
       const shapeHoles = points.holes;
-
-
 
       if (ShapeUtils.isClockWise(shapeVertices) === false) {
         shapeVertices = shapeVertices.reverse();
@@ -83,14 +68,10 @@ export class ShapeGeometry extends Geometry {
 
       const faces = ShapeUtils.triangulateShape(shapeVertices, shapeHoles);
 
-
-
       for (let i = 0, l = shapeHoles.length; i < l; i++) {
         const shapeHole = shapeHoles[i];
         shapeVertices = shapeVertices.concat(shapeHole);
       }
-
-
 
       for (let i = 0, l = shapeVertices.length; i < l; i++) {
         const vertex = shapeVertices[i];
@@ -99,8 +80,6 @@ export class ShapeGeometry extends Geometry {
         normals.push(0, 0, 1);
         uvs.push(vertex.x, vertex.y);
       }
-
-
 
       for (let i = 0, l = faces.length; i < l; i++) {
         const face = faces[i];
@@ -123,5 +102,3 @@ export class ShapeGeometry extends Geometry {
     return this;
   }
 }
-
-ShapeGeometry.prototype.type = 'ShapeGeometry';

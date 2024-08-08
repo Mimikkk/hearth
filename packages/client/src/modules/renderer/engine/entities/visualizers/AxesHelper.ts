@@ -17,8 +17,6 @@ class AxesHelper extends LineSegments {
     const material = new LineBasicMaterial({ vertexColors: true, toneMapped: false });
 
     super(geometry, material);
-
-    this.type = 'AxesHelper';
   }
 
   setColors(xAxisColor, yAxisColor, zAxisColor) {

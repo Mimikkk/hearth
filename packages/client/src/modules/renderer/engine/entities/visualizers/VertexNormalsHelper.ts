@@ -12,7 +12,6 @@ const _v2 = Vec3.new();
 const _normalMatrix = new Mat3();
 
 export class VertexNormalsHelper extends LineSegments {
-  declare type: string | 'VertexNormalsHelper';
   object: Entity;
   size: number;
 
@@ -72,5 +71,3 @@ export class VertexNormalsHelper extends LineSegments {
     position.needsUpdate = true;
   }
 }
-
-VertexNormalsHelper.prototype.type = 'VertexNormalsHelper';
