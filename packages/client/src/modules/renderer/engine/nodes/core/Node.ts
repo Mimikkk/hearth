@@ -1014,140 +1014,509 @@ export class Node {
   }
 
   // swizzle set
-  declare setX: (x: NodeVal<number>) => SetNode;
-  declare setY: (y: NodeVal<number>) => SetNode;
-  declare setZ: (z: NodeVal<number>) => SetNode;
-  declare setW: (w: NodeVal<number>) => SetNode;
-  declare setXY: (x: NodeVal<number>, y: NodeVal<number>) => SetNode;
-  declare setXYZ: (x: NodeVal<number>, y: NodeVal<number>, z: NodeVal<number>) => SetNode;
-  declare setXYZW: (x: NodeVal<number>, y: NodeVal<number>, z: NodeVal<number>, w: NodeVal<number>) => SetNode;
-  declare setR: (r: NodeVal<number>) => SetNode;
-  declare setG: (g: NodeVal<number>) => SetNode;
-  declare setB: (b: NodeVal<number>) => SetNode;
-  declare setA: (a: NodeVal<number>) => SetNode;
-  declare setRG: (r: NodeVal<number>, g: NodeVal<number>) => SetNode;
-  declare setRGB: (r: NodeVal<number>, g: NodeVal<number>, b: NodeVal<number>) => SetNode;
-  declare setRGBA: (r: NodeVal<number>, g: NodeVal<number>, b: NodeVal<number>, a: NodeVal<number>) => SetNode;
+  setX(x: NodeVal<number>): SetNode {
+    throw Error('panic!');
+  }
+
+  setY(y: NodeVal<number>): SetNode {
+    throw Error('panic!');
+  }
+
+  setZ(z: NodeVal<number>): SetNode {
+    throw Error('panic!');
+  }
+
+  setW(w: NodeVal<number>): SetNode {
+    throw Error('panic!');
+  }
+
+  setXY(x: NodeVal<number>, y: NodeVal<number>): SetNode {
+    throw Error('panic!');
+  }
+
+  setXYZ(x: NodeVal<number>, y: NodeVal<number>, z: NodeVal<number>): SetNode {
+    throw Error('panic!');
+  }
+
+  setXYZW(x: NodeVal<number>, y: NodeVal<number>, z: NodeVal<number>, w: NodeVal<number>): SetNode {
+    throw Error('panic!');
+  }
+
+  setR(r: NodeVal<number>): SetNode {
+    throw Error('panic!');
+  }
+
+  setG(g: NodeVal<number>): SetNode {
+    throw Error('panic!');
+  }
+
+  setB(b: NodeVal<number>): SetNode {
+    throw Error('panic!');
+  }
+
+  setA(a: NodeVal<number>): SetNode {
+    throw Error('panic!');
+  }
+
+  setRG(r: NodeVal<number>, g: NodeVal<number>): SetNode {
+    throw Error('panic!');
+  }
+
+  setRGB(r: NodeVal<number>, g: NodeVal<number>, b: NodeVal<number>): SetNode {
+    throw Error('panic!');
+  }
+
+  setRGBA(r: NodeVal<number>, g: NodeVal<number>, b: NodeVal<number>, a: NodeVal<number>): SetNode {
+    throw Error('panic!');
+  }
 
   // math nodes
-  declare all: () => Node;
-  declare any: () => Node;
-  declare equals: () => Node;
-  declare radians: () => Node;
-  declare degrees: () => Node;
-  declare exp: () => Node;
-  declare exp2: () => Node;
-  declare log: () => Node;
-  declare log2: () => Node;
-  declare sqrt: () => Node;
-  declare inverseSqrt: () => Node;
-  declare floor: () => Node;
-  declare ceil: () => Node;
-  declare normalize: () => Node;
-  declare fract: () => Node;
-  declare sin: () => Node;
-  declare cos: () => Node;
-  declare tan: () => Node;
-  declare asin: () => Node;
-  declare acos: () => Node;
-  declare atan: () => Node;
-  declare abs: () => Node;
-  declare sign: () => Node;
-  declare length: () => Node;
-  declare lengthSq: () => Node;
-  declare negate: () => Node;
-  declare oneMinus: () => Node;
-  declare dpdx: () => Node;
-  declare dpdy: () => Node;
-  declare round: () => Node;
-  declare reciprocal: () => Node;
-  declare trunc: () => Node;
-  declare fwidth: () => Node;
-  declare bitcast: () => Node;
-  declare atan2: (y: NodeVal<number>) => Node;
-  declare min: (b: NodeVal<number>) => Node;
-  declare max: (b: NodeVal<number>) => Node;
-  declare mod: (b: NodeVal<number>) => Node;
-  declare step: (b: NodeVal<number>) => Node;
-  declare reflect: (b: NodeVal<number>) => Node;
-  declare distance: (b: NodeVal<number>) => Node;
-  declare difference: (b: NodeVal<number>) => Node;
-  declare dot: (b: NodeVal<number>) => Node;
-  declare cross: (b: NodeVal<number>) => Node;
-  declare pow: (b: NodeVal<number>) => Node;
-  declare pow2: () => Node;
-  declare pow3: () => Node;
-  declare transformDirection: (b: NodeVal<number>) => Node;
-  declare mix: (a: NodeVal<number>, b: NodeVal<number>) => Node;
-  declare clamp: (min?: NodeVal<number>, max?: NodeVal<number>) => Node;
-  declare refract: (normal: NodeVal<number>, eta: NodeVal<number>) => Node;
-  declare smoothstep: (min: NodeVal<number>, max: NodeVal<number>) => Node;
-  declare faceforward: (normal: NodeVal<number>, incident: NodeVal<number>) => Node;
-  declare saturate: () => Node;
-  declare cbrt: () => Node;
+  all(): Node {
+    throw Error('panic!');
+  }
+
+  any(): Node {
+    throw Error('panic!');
+  }
+
+  equals(): Node {
+    throw Error('panic!');
+  }
+
+  radians(): Node {
+    throw Error('panic!');
+  }
+
+  degrees(): Node {
+    throw Error('panic!');
+  }
+
+  exp(): Node {
+    throw Error('panic!');
+  }
+
+  exp2(): Node {
+    throw Error('panic!');
+  }
+
+  log(): Node {
+    throw Error('panic!');
+  }
+
+  log2(): Node {
+    throw Error('panic!');
+  }
+
+  sqrt(): Node {
+    throw Error('panic!');
+  }
+
+  inverseSqrt(): Node {
+    throw Error('panic!');
+  }
+
+  floor(): Node {
+    throw Error('panic!');
+  }
+
+  ceil(): Node {
+    throw Error('panic!');
+  }
+
+  normalize(): Node {
+    throw Error('panic!');
+  }
+
+  fract(): Node {
+    throw Error('panic!');
+  }
+
+  sin(): Node {
+    throw Error('panic!');
+  }
+
+  cos(): Node {
+    throw Error('panic!');
+  }
+
+  tan(): Node {
+    throw Error('panic!');
+  }
+
+  asin(): Node {
+    throw Error('panic!');
+  }
+
+  acos(): Node {
+    throw Error('panic!');
+  }
+
+  atan(): Node {
+    throw Error('panic!');
+  }
+
+  abs(): Node {
+    throw Error('panic!');
+  }
+
+  sign(): Node {
+    throw Error('panic!');
+  }
+
+  length(): Node {
+    throw Error('panic!');
+  }
+
+  lengthSq(): Node {
+    throw Error('panic!');
+  }
+
+  negate(): Node {
+    throw Error('panic!');
+  }
+
+  oneMinus(): Node {
+    throw Error('panic!');
+  }
+
+  dpdx(): Node {
+    throw Error('panic!');
+  }
+
+  dpdy(): Node {
+    throw Error('panic!');
+  }
+
+  round(): Node {
+    throw Error('panic!');
+  }
+
+  reciprocal(): Node {
+    throw Error('panic!');
+  }
+
+  trunc(): Node {
+    throw Error('panic!');
+  }
+
+  fwidth(): Node {
+    throw Error('panic!');
+  }
+
+  bitcast(): Node {
+    throw Error('panic!');
+  }
+
+  atan2(y: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  min(b: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  max(b: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  mod(b: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  step(b: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  reflect(b: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  distance(b: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  difference(b: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  dot(b: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  cross(b: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  pow(b: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  pow2(): Node {
+    throw Error('panic!');
+  }
+
+  pow3(): Node {
+    throw Error('panic!');
+  }
+
+  transformDirection(b: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  mix(a: NodeVal<number>, b: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  clamp(min?: NodeVal<number>, max?: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  refract(normal: NodeVal<number>, eta: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  smoothstep(min: NodeVal<number>, max: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  faceforward(normal: NodeVal<number>, incident: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  saturate(): Node {
+    throw Error('panic!');
+  }
+
+  cbrt(): Node {
+    throw Error('panic!');
+  }
+
   // operators
-  declare add: (...values: NodeVal<number>[]) => Node;
-  declare sub: (...values: NodeVal<number>[]) => Node;
-  declare mul: (...values: NodeVal<number>[]) => Node;
-  declare div: (...values: NodeVal<number>[]) => Node;
-  declare remainder: (...values: NodeVal<number>[]) => Node;
-  declare equal: (...values: NodeVal<number>[]) => Node;
-  declare notEqual: (...values: NodeVal<number>[]) => Node;
-  declare lessThan: (...values: NodeVal<number>[]) => Node;
-  declare greaterThan: (...values: NodeVal<number>[]) => Node;
-  declare lessThanEqual: (...values: NodeVal<number>[]) => Node;
-  declare greaterThanEqual: (...values: NodeVal<number>[]) => Node;
-  declare and: (...values: NodeVal<number>[]) => Node;
-  declare or: (...values: NodeVal<number>[]) => Node;
-  declare not: () => UnaryNode;
-  declare bitAnd: (...values: NodeVal<number>[]) => Node;
-  declare bitNot: () => UnaryNode;
-  declare bitOr: (...values: NodeVal<number>[]) => Node;
-  declare bitXor: (...values: NodeVal<number>[]) => Node;
-  declare shiftLeft: (...values: NodeVal<number>[]) => Node;
-  declare shiftRight: (...values: NodeVal<number>[]) => Node;
+  add(...values: NodeVal<number>[]): Node {
+    throw Error('panic!');
+  }
+
+  sub(...values: NodeVal<number>[]): Node {
+    throw Error('panic!');
+  }
+
+  mul(...values: NodeVal<number>[]): Node {
+    throw Error('panic!');
+  }
+
+  div(...values: NodeVal<number>[]): Node {
+    throw Error('panic!');
+  }
+
+  remainder(...values: NodeVal<number>[]): Node {
+    throw Error('panic!');
+  }
+
+  equal(...values: NodeVal<number>[]): Node {
+    throw Error('panic!');
+  }
+
+  notEqual(...values: NodeVal<number>[]): Node {
+    throw Error('panic!');
+  }
+
+  lessThan(...values: NodeVal<number>[]): Node {
+    throw Error('panic!');
+  }
+
+  greaterThan(...values: NodeVal<number>[]): Node {
+    throw Error('panic!');
+  }
+
+  lessThanEqual(...values: NodeVal<number>[]): Node {
+    throw Error('panic!');
+  }
+
+  greaterThanEqual(...values: NodeVal<number>[]): Node {
+    throw Error('panic!');
+  }
+
+  and(...values: NodeVal<number>[]): Node {
+    throw Error('panic!');
+  }
+
+  or(...values: NodeVal<number>[]): Node {
+    throw Error('panic!');
+  }
+
+  not(): UnaryNode {
+    throw Error('panic!');
+  }
+
+  bitAnd(...values: NodeVal<number>[]): Node {
+    throw Error('panic!');
+  }
+
+  bitNot(): UnaryNode {
+    throw Error('panic!');
+  }
+
+  bitOr(...values: NodeVal<number>[]): Node {
+    throw Error('panic!');
+  }
+
+  bitXor(...values: NodeVal<number>[]): Node {
+    throw Error('panic!');
+  }
+
+  shiftLeft(...values: NodeVal<number>[]): Node {
+    throw Error('panic!');
+  }
+
+  shiftRight(...values: NodeVal<number>[]): Node {
+    throw Error('panic!');
+  }
+
   // primitive nodes
-  declare color: (r?: NodeVal<number>, g?: NodeVal<number>, b?: NodeVal<number>, a?: NodeVal<number>) => Node;
-  declare f32: (value?: NodeVal<number>) => Node;
-  declare i32: (value?: NodeVal<number>) => Node;
-  declare u32: (value?: NodeVal<number>) => Node;
-  declare bool: (value?: NodeVal<number>) => Node;
-  declare vec2: (x?: NodeVal<number>, y?: NodeVal<number>) => Node;
-  declare ivec2: (x?: NodeVal<number>, y?: NodeVal<number>) => Node;
-  declare uvec2: (x?: NodeVal<number>, y?: NodeVal<number>) => Node;
-  declare bvec2: (x?: NodeVal<number>, y?: NodeVal<number>) => Node;
-  declare vec3: (x?: NodeVal<number>, y?: NodeVal<number>, z?: NodeVal<number>) => Node;
-  declare ivec3: (x?: NodeVal<number>, y?: NodeVal<number>, z?: NodeVal<number>) => Node;
-  declare uvec3: (x?: NodeVal<number>, y?: NodeVal<number>, z?: NodeVal<number>) => Node;
-  declare bvec3: (x?: NodeVal<number>, y?: NodeVal<number>, z?: NodeVal<number>) => Node;
-  declare vec4: (x?: NodeVal<number>, y?: NodeVal<number>, z?: NodeVal<number>, w?: NodeVal<number>) => Node;
-  declare ivec4: (x?: NodeVal<number>, y?: NodeVal<number>, z?: NodeVal<number>, w?: NodeVal<number>) => Node;
-  declare uvec4: (x?: NodeVal<number>, y?: NodeVal<number>, z?: NodeVal<number>, w?: NodeVal<number>) => Node;
-  declare bvec4: (x?: NodeVal<number>, y?: NodeVal<number>, z?: NodeVal<number>, w?: NodeVal<number>) => Node;
-  declare mat2: (a?: NodeVal<number>, b?: NodeVal<number>, c?: NodeVal<number>, d?: NodeVal<number>) => Node;
-  declare imat2: (a?: NodeVal<number>, b?: NodeVal<number>, c?: NodeVal<number>, d?: NodeVal<number>) => Node;
-  declare umat2: (a?: NodeVal<number>, b?: NodeVal<number>, c?: NodeVal<number>, d?: NodeVal<number>) => Node;
-  declare bmat2: (a?: NodeVal<number>, b?: NodeVal<number>, c?: NodeVal<number>, d?: NodeVal<number>) => Node;
-  declare mat3: (...values: NodeVal<number>[]) => Node;
-  declare imat3: (...values: NodeVal<number>[]) => Node;
-  declare umat3: (...values: NodeVal<number>[]) => Node;
-  declare bmat3: (...values: NodeVal<number>[]) => Node;
-  declare mat4: (...values: NodeVal<number>[]) => Node;
-  declare imat4: (...values: NodeVal<number>[]) => Node;
-  declare umat4: (...values: NodeVal<number>[]) => Node;
-  declare bmat4: (...values: NodeVal<number>[]) => Node;
-  declare convert: (type: TypeName) => Node;
+  color(r?: NodeVal<number>, g?: NodeVal<number>, b?: NodeVal<number>, a?: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  f32(value?: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  i32(value?: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  u32(value?: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  bool(value?: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  vec2(x?: NodeVal<number>, y?: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  ivec2(x?: NodeVal<number>, y?: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  uvec2(x?: NodeVal<number>, y?: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  bvec2(x?: NodeVal<number>, y?: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  vec3(x?: NodeVal<number>, y?: NodeVal<number>, z?: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  ivec3(x?: NodeVal<number>, y?: NodeVal<number>, z?: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  uvec3(x?: NodeVal<number>, y?: NodeVal<number>, z?: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  bvec3(x?: NodeVal<number>, y?: NodeVal<number>, z?: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  vec4(x?: NodeVal<number>, y?: NodeVal<number>, z?: NodeVal<number>, w?: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  ivec4(x?: NodeVal<number>, y?: NodeVal<number>, z?: NodeVal<number>, w?: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  uvec4(x?: NodeVal<number>, y?: NodeVal<number>, z?: NodeVal<number>, w?: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  bvec4(x?: NodeVal<number>, y?: NodeVal<number>, z?: NodeVal<number>, w?: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  mat2(a?: NodeVal<number>, b?: NodeVal<number>, c?: NodeVal<number>, d?: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  imat2(a?: NodeVal<number>, b?: NodeVal<number>, c?: NodeVal<number>, d?: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  umat2(a?: NodeVal<number>, b?: NodeVal<number>, c?: NodeVal<number>, d?: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  bmat2(a?: NodeVal<number>, b?: NodeVal<number>, c?: NodeVal<number>, d?: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  mat3(...values: NodeVal<number>[]): Node {
+    throw Error('panic!');
+  }
+
+  imat3(...values: NodeVal<number>[]): Node {
+    throw Error('panic!');
+  }
+
+  umat3(...values: NodeVal<number>[]): Node {
+    throw Error('panic!');
+  }
+
+  bmat3(...values: NodeVal<number>[]): Node {
+    throw Error('panic!');
+  }
+
+  mat4(...values: NodeVal<number>[]): Node {
+    throw Error('panic!');
+  }
+
+  imat4(...values: NodeVal<number>[]): Node {
+    throw Error('panic!');
+  }
+
+  umat4(...values: NodeVal<number>[]): Node {
+    throw Error('panic!');
+  }
+
+  bmat4(...values: NodeVal<number>[]): Node {
+    throw Error('panic!');
+  }
+
+  convert(type: TypeName): Node {
+    throw Error('panic!');
+  }
 
   // up to 1...16
   [index: number]: ArrayElementNode;
 
-  declare toAttribute: (type?: TypeName, stride?: number, offset?: number) => Node;
+  toAttribute(type?: TypeName, stride?: number, offset?: number): Node {
+    throw Error('panic!');
+  }
 
   // shader nodes
-  declare checker: () => Node;
-  declare discard: () => Node;
-  declare directionToColor: () => Node;
-  declare colorToDirection: () => Node;
+  checker(): Node {
+    throw Error('panic!');
+  }
+
+  discard(): Node {
+    throw Error('panic!');
+  }
+
+  directionToColor(): Node {
+    throw Error('panic!');
+  }
+
+  colorToDirection(): Node {
+    throw Error('panic!');
+  }
+
   declare remap: (
     fromMin: NodeVal<number>,
     fromMax: NodeVal<number>,
@@ -1160,14 +1529,36 @@ export class Node {
     toMin: NodeVal<number>,
     toMax: NodeVal<number>,
   ) => Node;
-  declare rotate: (angle: NodeVal<number>) => Node;
-  declare rotateUV: (angle: NodeVal<number>, center: NodeVal<number>) => Node;
-  declare storageElement: (index: NodeVal<number>) => Node;
+
+  rotate(angle: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  rotateUV(angle: NodeVal<number>, center: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  storageElement(index: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
   // functions
-  declare gaussianBlur: (sigma?: NodeVal<number>) => GaussianBlurNode;
-  declare bumpMap: (scale: NodeVal<number>) => Node;
-  declare normalMap: (scale: NodeVal<number>) => Node;
-  declare cubeTexture: (uv: UVNode, levelNode: NodeVal<number>) => Node;
+  gaussianBlur(sigma?: NodeVal<number>): GaussianBlurNode {
+    throw Error('panic!');
+  }
+
+  bumpMap(scale: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  normalMap(scale: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  cubeTexture(uv: UVNode, levelNode: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
   declare triplanarTexture: (
     textureY: TextureNode,
     textureZ: TextureNode,
@@ -1175,163 +1566,606 @@ export class Node {
     position: NodeVal<Vec3>,
     normal: NodeVal<Vec3>,
   ) => Node;
-  declare bicubic: (uv: UVNode, levelNode: NodeVal<number>) => Node;
-  declare texture: (uv: UVNode, levelNode: NodeVal<number>) => Node;
-  declare textureSize: (levelNode: NodeVal<number>) => Node;
-  declare hash: () => Node;
-  declare cond: (then: Node, or: Node) => Node;
-  declare lightingContext: (lightingModel: LightModel, backdrop: Node, alpha: NodeVal<number>) => Node;
-  declare compute: (count: NodeVal<number>, size?: number[]) => ComputeNode;
-  declare viewportTexture: (uv: UVNode, levelNode: NodeVal<number>) => Node;
-  declare viewportMipTexture: (uv: UVNode, levelNode: NodeVal<number>) => Node;
-  declare viewportDepthTexture: (uv: UVNode, levelNode: NodeVal<number>) => Node;
-  declare viewportSharedTexture: (uv: UVNode, levelNode: NodeVal<number>) => Node;
-  declare toneMapping: (mapping: ToneMapping, exposure: NodeVal<number>) => Node;
-  declare posterize: (steps: NodeVal<number>) => Node;
-  declare linearTosRGB: () => Node;
-  declare sRGBToLinear: () => Node;
-  declare linearToColorSpace: (space: ColorSpace) => Node;
-  declare colorSpaceToLinear: (space: ColorSpace) => Node;
-  declare saturation: (value: NodeVal<number>) => Node;
-  declare vibrance: (value: NodeVal<number>) => Node;
-  declare hue: (value: NodeVal<number>) => Node;
-  declare threshold: (value: NodeVal<number>) => Node;
-  declare burn: (value: NodeVal<number>) => Node;
-  declare dodge: (value: NodeVal<number>) => Node;
-  declare overlay: (value: NodeVal<number>) => Node;
-  declare screen: (value: NodeVal<number>) => Node;
-  declare anamorphic: (threshold: NodeVal<number>, scale: NodeVal<number>, samples: NodeVal<number>) => Node;
-  declare afterImage: (value: NodeVal<number>) => Node;
-  declare toVar: (name?: string) => Node;
-  declare temp: (name?: string) => Node;
-  declare label: (name: string) => Node;
-  declare context: (context: object) => Node;
-  declare cache: (value?: WeakMap<any, any>) => Node;
-  declare globalCache: () => Node;
-  declare bypass: (call: Node) => Node;
-  declare scriptable: (parameters: Record<string, any>) => Node;
-  declare scriptableValue: () => Node;
-  declare call: (parameters: Record<string, any>) => Node;
-  declare element: (index: NodeVal<number>) => ArrayElementNode;
+
+  bicubic(uv: UVNode, levelNode: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  texture(uv: UVNode, levelNode: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  textureSize(levelNode: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  hash(): Node {
+    throw Error('panic!');
+  }
+
+  cond(then: Node, or: Node): Node {
+    throw Error('panic!');
+  }
+
+  lightingContext(lightingModel: LightModel, backdrop: Node, alpha: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  compute(count: NodeVal<number>, size?: number[]): ComputeNode {
+    throw Error('panic!');
+  }
+
+  viewportTexture(uv: UVNode, levelNode: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  viewportMipTexture(uv: UVNode, levelNode: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  viewportDepthTexture(uv: UVNode, levelNode: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  viewportSharedTexture(uv: UVNode, levelNode: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  toneMapping(mapping: ToneMapping, exposure: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  posterize(steps: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  linearTosRGB(): Node {
+    throw Error('panic!');
+  }
+
+  sRGBToLinear(): Node {
+    throw Error('panic!');
+  }
+
+  linearToColorSpace(space: ColorSpace): Node {
+    throw Error('panic!');
+  }
+
+  colorSpaceToLinear(space: ColorSpace): Node {
+    throw Error('panic!');
+  }
+
+  saturation(value: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  vibrance(value: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  hue(value: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  threshold(value: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  burn(value: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  dodge(value: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  overlay(value: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  screen(value: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  anamorphic(threshold: NodeVal<number>, scale: NodeVal<number>, samples: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  afterImage(value: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  toVar(name?: string): Node {
+    throw Error('panic!');
+  }
+
+  temp(name?: string): Node {
+    throw Error('panic!');
+  }
+
+  label(name: string): Node {
+    throw Error('panic!');
+  }
+
+  context(context: object): Node {
+    throw Error('panic!');
+  }
+
+  cache(value?: WeakMap<any, any>): Node {
+    throw Error('panic!');
+  }
+
+  globalCache(): Node {
+    throw Error('panic!');
+  }
+
+  bypass(call: Node): Node {
+    throw Error('panic!');
+  }
+
+  scriptable(parameters: Record<string, any>): Node {
+    throw Error('panic!');
+  }
+
+  scriptableValue(): Node {
+    throw Error('panic!');
+  }
+
+  call(parameters: Record<string, any>): Node {
+    throw Error('panic!');
+  }
+
+  element(index: NodeVal<number>): ArrayElementNode {
+    throw Error('panic!');
+  }
 
   // assign variant
 
   // math nodes
-  declare allAssign: () => Node;
-  declare anyAssign: () => Node;
-  declare equalsAssign: () => Node;
-  declare radiansAssign: () => Node;
-  declare degreesAssign: () => Node;
-  declare expAssign: () => Node;
-  declare exp2Assign: () => Node;
-  declare logAssign: () => Node;
-  declare log2Assign: () => Node;
-  declare sqrtAssign: () => Node;
-  declare inverseSqrtAssign: () => Node;
-  declare floorAssign: () => Node;
-  declare ceilAssign: () => Node;
-  declare normalizeAssign: () => Node;
-  declare fractAssign: () => Node;
-  declare sinAssign: () => Node;
-  declare cosAssign: () => Node;
-  declare tanAssign: () => Node;
-  declare asinAssign: () => Node;
-  declare acosAssign: () => Node;
-  declare atanAssign: () => Node;
-  declare absAssign: () => Node;
-  declare signAssign: () => Node;
-  declare lengthAssign: () => Node;
-  declare lengthSqAssign: () => Node;
-  declare negateAssign: () => Node;
-  declare oneMinusAssign: () => Node;
-  declare dpdxAssign: () => Node;
-  declare dpdyAssign: () => Node;
-  declare roundAssign: () => Node;
-  declare reciprocalAssign: () => Node;
-  declare truncAssign: () => Node;
-  declare fwidthAssign: () => Node;
-  declare bitcastAssign: () => Node;
-  declare atan2Assign: (y: NodeVal<number>) => Node;
-  declare minAssign: (b: NodeVal<number>) => Node;
-  declare maxAssign: (b: NodeVal<number>) => Node;
-  declare modAssign: (b: NodeVal<number>) => Node;
-  declare stepAssign: (b: NodeVal<number>) => Node;
-  declare reflectAssign: (b: NodeVal<number>) => Node;
-  declare distanceAssign: (b: NodeVal<number>) => Node;
-  declare differenceAssign: (b: NodeVal<number>) => Node;
-  declare dotAssign: (b: NodeVal<number>) => Node;
-  declare crossAssign: (b: NodeVal<number>) => Node;
-  declare powAssign: (b: NodeVal<number>) => Node;
-  declare pow2Assign: () => Node;
-  declare pow3Assign: () => Node;
-  declare transformDirectionAssign: (b: NodeVal<number>) => Node;
-  declare mixAssign: (a: NodeVal<number>, b: NodeVal<number>) => Node;
-  declare clampAssign: (min: NodeVal<number>, max: NodeVal<number>) => Node;
-  declare refractAssign: (normal: NodeVal<number>, eta: NodeVal<number>) => Node;
-  declare smoothstepAssign: (min: NodeVal<number>, max: NodeVal<number>) => Node;
-  declare faceforwardAssign: (normal: NodeVal<number>, incident: NodeVal<number>) => Node;
-  declare saturateAssign: () => Node;
-  declare cbrtAssign: () => Node;
+  allAssign(): Node {
+    throw Error('panic!');
+  }
+
+  anyAssign(): Node {
+    throw Error('panic!');
+  }
+
+  equalsAssign(): Node {
+    throw Error('panic!');
+  }
+
+  radiansAssign(): Node {
+    throw Error('panic!');
+  }
+
+  degreesAssign(): Node {
+    throw Error('panic!');
+  }
+
+  expAssign(): Node {
+    throw Error('panic!');
+  }
+
+  exp2Assign(): Node {
+    throw Error('panic!');
+  }
+
+  logAssign(): Node {
+    throw Error('panic!');
+  }
+
+  log2Assign(): Node {
+    throw Error('panic!');
+  }
+
+  sqrtAssign(): Node {
+    throw Error('panic!');
+  }
+
+  inverseSqrtAssign(): Node {
+    throw Error('panic!');
+  }
+
+  floorAssign(): Node {
+    throw Error('panic!');
+  }
+
+  ceilAssign(): Node {
+    throw Error('panic!');
+  }
+
+  normalizeAssign(): Node {
+    throw Error('panic!');
+  }
+
+  fractAssign(): Node {
+    throw Error('panic!');
+  }
+
+  sinAssign(): Node {
+    throw Error('panic!');
+  }
+
+  cosAssign(): Node {
+    throw Error('panic!');
+  }
+
+  tanAssign(): Node {
+    throw Error('panic!');
+  }
+
+  asinAssign(): Node {
+    throw Error('panic!');
+  }
+
+  acosAssign(): Node {
+    throw Error('panic!');
+  }
+
+  atanAssign(): Node {
+    throw Error('panic!');
+  }
+
+  absAssign(): Node {
+    throw Error('panic!');
+  }
+
+  signAssign(): Node {
+    throw Error('panic!');
+  }
+
+  lengthAssign(): Node {
+    throw Error('panic!');
+  }
+
+  lengthSqAssign(): Node {
+    throw Error('panic!');
+  }
+
+  negateAssign(): Node {
+    throw Error('panic!');
+  }
+
+  oneMinusAssign(): Node {
+    throw Error('panic!');
+  }
+
+  dpdxAssign(): Node {
+    throw Error('panic!');
+  }
+
+  dpdyAssign(): Node {
+    throw Error('panic!');
+  }
+
+  roundAssign(): Node {
+    throw Error('panic!');
+  }
+
+  reciprocalAssign(): Node {
+    throw Error('panic!');
+  }
+
+  truncAssign(): Node {
+    throw Error('panic!');
+  }
+
+  fwidthAssign(): Node {
+    throw Error('panic!');
+  }
+
+  bitcastAssign(): Node {
+    throw Error('panic!');
+  }
+
+  atan2Assign(y: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  minAssign(b: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  maxAssign(b: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  modAssign(b: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  stepAssign(b: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  reflectAssign(b: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  distanceAssign(b: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  differenceAssign(b: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  dotAssign(b: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  crossAssign(b: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  powAssign(b: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  pow2Assign(): Node {
+    throw Error('panic!');
+  }
+
+  pow3Assign(): Node {
+    throw Error('panic!');
+  }
+
+  transformDirectionAssign(b: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  mixAssign(a: NodeVal<number>, b: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  clampAssign(min: NodeVal<number>, max: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  refractAssign(normal: NodeVal<number>, eta: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  smoothstepAssign(min: NodeVal<number>, max: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  faceforwardAssign(normal: NodeVal<number>, incident: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  saturateAssign(): Node {
+    throw Error('panic!');
+  }
+
+  cbrtAssign(): Node {
+    throw Error('panic!');
+  }
+
   // operators
-  declare addAssign: (b: NodeVal<number>) => Node;
-  declare subAssign: (b: NodeVal<number>) => Node;
-  declare mulAssign: (b: NodeVal<number>) => Node;
-  declare divAssign: (b: NodeVal<number>) => Node;
-  declare remainderAssign: (b: NodeVal<number>) => Node;
-  declare equalAssign: (b: NodeVal<number>) => Node;
-  declare notEqualAssign: (b: NodeVal<number>) => Node;
-  declare lessThanAssign: (b: NodeVal<number>) => Node;
-  declare greaterThanAssign: (b: NodeVal<number>) => Node;
-  declare lessThanEqualAssign: (b: NodeVal<number>) => Node;
-  declare greaterThanEqualAssign: (b: NodeVal<number>) => Node;
-  declare andAssign: (b: NodeVal<number>) => Node;
-  declare orAssign: (b: NodeVal<number>) => Node;
-  declare notAssign: () => UnaryNode;
-  declare bitAndAssign: (b: NodeVal<number>) => Node;
-  declare bitNotAssign: () => UnaryNode;
-  declare bitOrAssign: (b: NodeVal<number>) => Node;
-  declare bitXorAssign: (b: NodeVal<number>) => Node;
-  declare shiftLeftAssign: (b: NodeVal<number>) => Node;
-  declare shiftRightAssign: (b: NodeVal<number>) => Node;
+  addAssign(b: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  subAssign(b: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  mulAssign(b: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  divAssign(b: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  remainderAssign(b: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  equalAssign(b: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  notEqualAssign(b: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  lessThanAssign(b: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  greaterThanAssign(b: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  lessThanEqualAssign(b: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  greaterThanEqualAssign(b: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  andAssign(b: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  orAssign(b: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  notAssign(): UnaryNode {
+    throw Error('panic!');
+  }
+
+  bitAndAssign(b: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  bitNotAssign(): UnaryNode {
+    throw Error('panic!');
+  }
+
+  bitOrAssign(b: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  bitXorAssign(b: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  shiftLeftAssign(b: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  shiftRightAssign(b: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
   // primitive nodes
-  declare colorAssign: (r?: NodeVal<number>, g?: NodeVal<number>, b?: NodeVal<number>, a?: NodeVal<number>) => Node;
-  declare f32Assign: (value?: NodeVal<number>) => Node;
-  declare i32Assign: (value?: NodeVal<number>) => Node;
-  declare u32Assign: (value?: NodeVal<number>) => Node;
-  declare boolAssign: (value?: NodeVal<number>) => Node;
-  declare vec2Assign: (x?: NodeVal<number>, y?: NodeVal<number>) => Node;
-  declare ivec2Assign: (x?: NodeVal<number>, y?: NodeVal<number>) => Node;
-  declare uvec2Assign: (x?: NodeVal<number>, y?: NodeVal<number>) => Node;
-  declare bvec2Assign: (x?: NodeVal<number>, y?: NodeVal<number>) => Node;
-  declare vec3Assign: (x?: NodeVal<number>, y?: NodeVal<number>, z?: NodeVal<number>) => Node;
-  declare ivec3Assign: (x?: NodeVal<number>, y?: NodeVal<number>, z?: NodeVal<number>) => Node;
-  declare uvec3Assign: (x?: NodeVal<number>, y?: NodeVal<number>, z?: NodeVal<number>) => Node;
-  declare bvec3Assign: (x?: NodeVal<number>, y?: NodeVal<number>, z?: NodeVal<number>) => Node;
-  declare vec4Assign: (x?: NodeVal<number>, y?: NodeVal<number>, z?: NodeVal<number>, w?: NodeVal<number>) => Node;
-  declare ivec4Assign: (x?: NodeVal<number>, y?: NodeVal<number>, z?: NodeVal<number>, w?: NodeVal<number>) => Node;
-  declare uvec4Assign: (x?: NodeVal<number>, y?: NodeVal<number>, z?: NodeVal<number>, w?: NodeVal<number>) => Node;
-  declare bvec4Assign: (x?: NodeVal<number>, y?: NodeVal<number>, z?: NodeVal<number>, w?: NodeVal<number>) => Node;
-  declare mat2Assign: (a?: NodeVal<number>, b?: NodeVal<number>, c?: NodeVal<number>, d?: NodeVal<number>) => Node;
-  declare imat2Assign: (a?: NodeVal<number>, b?: NodeVal<number>, c?: NodeVal<number>, d?: NodeVal<number>) => Node;
-  declare umat2Assign: (a?: NodeVal<number>, b?: NodeVal<number>, c?: NodeVal<number>, d?: NodeVal<number>) => Node;
-  declare bmat2Assign: (a?: NodeVal<number>, b?: NodeVal<number>, c?: NodeVal<number>, d?: NodeVal<number>) => Node;
-  declare mat3Assign: (...values: NodeVal<number>[]) => Node;
-  declare imat3Assign: (...values: NodeVal<number>[]) => Node;
-  declare umat3Assign: (...values: NodeVal<number>[]) => Node;
-  declare bmat3Assign: (...values: NodeVal<number>[]) => Node;
-  declare mat4Assign: (...values: NodeVal<number>[]) => Node;
-  declare imat4Assign: (...values: NodeVal<number>[]) => Node;
-  declare umat4Assign: (...values: NodeVal<number>[]) => Node;
-  declare bmat4Assign: (...values: NodeVal<number>[]) => Node;
-  declare convertAssign: (type: TypeName) => Node;
+  colorAssign(r?: NodeVal<number>, g?: NodeVal<number>, b?: NodeVal<number>, a?: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  f32Assign(value?: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  i32Assign(value?: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  u32Assign(value?: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  boolAssign(value?: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  vec2Assign(x?: NodeVal<number>, y?: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  ivec2Assign(x?: NodeVal<number>, y?: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  uvec2Assign(x?: NodeVal<number>, y?: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  bvec2Assign(x?: NodeVal<number>, y?: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  vec3Assign(x?: NodeVal<number>, y?: NodeVal<number>, z?: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  ivec3Assign(x?: NodeVal<number>, y?: NodeVal<number>, z?: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  uvec3Assign(x?: NodeVal<number>, y?: NodeVal<number>, z?: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  bvec3Assign(x?: NodeVal<number>, y?: NodeVal<number>, z?: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  vec4Assign(x?: NodeVal<number>, y?: NodeVal<number>, z?: NodeVal<number>, w?: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  ivec4Assign(x?: NodeVal<number>, y?: NodeVal<number>, z?: NodeVal<number>, w?: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  uvec4Assign(x?: NodeVal<number>, y?: NodeVal<number>, z?: NodeVal<number>, w?: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  bvec4Assign(x?: NodeVal<number>, y?: NodeVal<number>, z?: NodeVal<number>, w?: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  mat2Assign(a?: NodeVal<number>, b?: NodeVal<number>, c?: NodeVal<number>, d?: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  imat2Assign(a?: NodeVal<number>, b?: NodeVal<number>, c?: NodeVal<number>, d?: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  umat2Assign(a?: NodeVal<number>, b?: NodeVal<number>, c?: NodeVal<number>, d?: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  bmat2Assign(a?: NodeVal<number>, b?: NodeVal<number>, c?: NodeVal<number>, d?: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  mat3Assign(...values: NodeVal<number>[]): Node {
+    throw Error('panic!');
+  }
+
+  imat3Assign(...values: NodeVal<number>[]): Node {
+    throw Error('panic!');
+  }
+
+  umat3Assign(...values: NodeVal<number>[]): Node {
+    throw Error('panic!');
+  }
+
+  bmat3Assign(...values: NodeVal<number>[]): Node {
+    throw Error('panic!');
+  }
+
+  mat4Assign(...values: NodeVal<number>[]): Node {
+    throw Error('panic!');
+  }
+
+  imat4Assign(...values: NodeVal<number>[]): Node {
+    throw Error('panic!');
+  }
+
+  umat4Assign(...values: NodeVal<number>[]): Node {
+    throw Error('panic!');
+  }
+
+  bmat4Assign(...values: NodeVal<number>[]): Node {
+    throw Error('panic!');
+  }
+
+  convertAssign(type: TypeName): Node {
+    throw Error('panic!');
+  }
+
   // up to 1...16
-  declare toAttributeAssign: (type?: TypeName, stride?: number, offset?: number) => Node;
+  toAttributeAssign(type?: TypeName, stride?: number, offset?: number): Node {
+    throw Error('panic!');
+  }
 
   // shader nodes
-  declare checkerAssign: () => Node;
-  declare discardAssign: () => Node;
-  declare directionToColorAssign: () => Node;
-  declare colorToDirectionAssign: () => Node;
+  checkerAssign(): Node {
+    throw Error('panic!');
+  }
+
+  discardAssign(): Node {
+    throw Error('panic!');
+  }
+
+  directionToColorAssign(): Node {
+    throw Error('panic!');
+  }
+
+  colorToDirectionAssign(): Node {
+    throw Error('panic!');
+  }
+
   declare remapAssign: (
     fromMin: NodeVal<number>,
     fromMax: NodeVal<number>,
@@ -1344,14 +2178,36 @@ export class Node {
     toMin: NodeVal<number>,
     toMax: NodeVal<number>,
   ) => Node;
-  declare rotateAssign: (angle: NodeVal<number>) => Node;
-  declare rotateUVAssign: (angle: NodeVal<number>, center: NodeVal<number>) => Node;
-  declare storageElementAssign: (index: NodeVal<number>) => Node;
+
+  rotateAssign(angle: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  rotateUVAssign(angle: NodeVal<number>, center: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  storageElementAssign(index: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
   // functions
-  declare gaussianBlurAssign: (sigma?: NodeVal<number>) => Node;
-  declare bumpMapAssign: (scale: NodeVal<number>) => Node;
-  declare normalMapAssign: (scale: NodeVal<number>) => Node;
-  declare cubeTextureAssign: (uv: UVNode, levelNode: NodeVal<number>) => Node;
+  gaussianBlurAssign(sigma?: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  bumpMapAssign(scale: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  normalMapAssign(scale: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  cubeTextureAssign(uv: UVNode, levelNode: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
   declare triplanarTextureAssign: (
     textureY: TextureNode,
     textureZ: TextureNode,
@@ -1359,44 +2215,158 @@ export class Node {
     position: NodeVal<Vec3>,
     normal: NodeVal<Vec3>,
   ) => Node;
-  declare bicubicAssign: (uv: UVNode, levelNode: NodeVal<number>) => Node;
-  declare textureAssign: (uv: UVNode, levelNode: NodeVal<number>) => Node;
-  declare textureSizeAssign: (levelNode: NodeVal<number>) => Node;
-  declare hashAssign: () => Node;
-  declare condAssign: (then: Node, or: Node) => Node;
-  declare lightingContextAssign: (lightingModel: LightModel, backdrop: Node, alpha: NodeVal<number>) => Node;
-  declare computeAssign: (count: NodeVal<number>, size?: number[]) => Node;
-  declare viewportTextureAssign: (uv: UVNode, levelNode: NodeVal<number>) => Node;
-  declare viewportMipTextureAssign: (uv: UVNode, levelNode: NodeVal<number>) => Node;
-  declare viewportDepthTextureAssign: (uv: UVNode, levelNode: NodeVal<number>) => Node;
-  declare viewportSharedTextureAssign: (uv: UVNode, levelNode: NodeVal<number>) => Node;
-  declare toneMappingAssign: (mapping: ToneMapping, exposure: NodeVal<number>) => Node;
-  declare posterizeAssign: (steps: NodeVal<number>) => Node;
-  declare linearTosRGBAssign: () => Node;
-  declare sRGBToLinearAssign: () => Node;
-  declare linearToColorSpaceAssign: (space: ColorSpace) => Node;
-  declare colorSpaceToLinearAssign: (space: ColorSpace) => Node;
-  declare saturationAssign: (value: NodeVal<number>) => Node;
-  declare vibranceAssign: (value: NodeVal<number>) => Node;
-  declare hueAssign: (value: NodeVal<number>) => Node;
-  declare thresholdAssign: (value: NodeVal<number>) => Node;
-  declare burnAssign: (value: NodeVal<number>) => Node;
-  declare dodgeAssign: (value: NodeVal<number>) => Node;
-  declare overlayAssign: (value: NodeVal<number>) => Node;
-  declare screenAssign: (value: NodeVal<number>) => Node;
-  declare anamorphicAssign: (threshold: NodeVal<number>, scale: NodeVal<number>, samples: NodeVal<number>) => Node;
-  declare afterImageAssign: (value: NodeVal<number>) => Node;
-  declare toVarAssign: (name: string) => Node;
-  declare tempAssign: (name: string) => Node;
-  declare labelAssign: (name: string) => Node;
-  declare contextAssign: (context: object) => Node;
-  declare cacheAssign: (value: WeakMap<any, any>) => Node;
-  declare globalCacheAssign: () => Node;
-  declare bypassAssign: (call: Node) => Node;
-  declare scriptableAssign: (parameters: Record<string, any>) => Node;
-  declare scriptableValueAssign: () => Node;
-  declare callAssign: (parameters: Record<string, any>) => Node;
-  declare elementAssign: (index: NodeVal<number>) => Node;
+
+  bicubicAssign(uv: UVNode, levelNode: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  textureAssign(uv: UVNode, levelNode: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  textureSizeAssign(levelNode: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  hashAssign(): Node {
+    throw Error('panic!');
+  }
+
+  condAssign(then: Node, or: Node): Node {
+    throw Error('panic!');
+  }
+
+  lightingContextAssign(lightingModel: LightModel, backdrop: Node, alpha: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  computeAssign(count: NodeVal<number>, size?: number[]): Node {
+    throw Error('panic!');
+  }
+
+  viewportTextureAssign(uv: UVNode, levelNode: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  viewportMipTextureAssign(uv: UVNode, levelNode: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  viewportDepthTextureAssign(uv: UVNode, levelNode: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  viewportSharedTextureAssign(uv: UVNode, levelNode: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  toneMappingAssign(mapping: ToneMapping, exposure: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  posterizeAssign(steps: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  linearTosRGBAssign(): Node {
+    throw Error('panic!');
+  }
+
+  sRGBToLinearAssign(): Node {
+    throw Error('panic!');
+  }
+
+  linearToColorSpaceAssign(space: ColorSpace): Node {
+    throw Error('panic!');
+  }
+
+  colorSpaceToLinearAssign(space: ColorSpace): Node {
+    throw Error('panic!');
+  }
+
+  saturationAssign(value: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  vibranceAssign(value: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  hueAssign(value: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  thresholdAssign(value: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  burnAssign(value: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  dodgeAssign(value: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  overlayAssign(value: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  screenAssign(value: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  anamorphicAssign(threshold: NodeVal<number>, scale: NodeVal<number>, samples: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  afterImageAssign(value: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
+
+  toVarAssign(name: string): Node {
+    throw Error('panic!');
+  }
+
+  tempAssign(name: string): Node {
+    throw Error('panic!');
+  }
+
+  labelAssign(name: string): Node {
+    throw Error('panic!');
+  }
+
+  contextAssign(context: object): Node {
+    throw Error('panic!');
+  }
+
+  cacheAssign(value: WeakMap<any, any>): Node {
+    throw Error('panic!');
+  }
+
+  globalCacheAssign(): Node {
+    throw Error('panic!');
+  }
+
+  bypassAssign(call: Node): Node {
+    throw Error('panic!');
+  }
+
+  scriptableAssign(parameters: Record<string, any>): Node {
+    throw Error('panic!');
+  }
+
+  scriptableValueAssign(): Node {
+    throw Error('panic!');
+  }
+
+  callAssign(parameters: Record<string, any>): Node {
+    throw Error('panic!');
+  }
+
+  elementAssign(index: NodeVal<number>): Node {
+    throw Error('panic!');
+  }
 }
 
 implSwizzle();

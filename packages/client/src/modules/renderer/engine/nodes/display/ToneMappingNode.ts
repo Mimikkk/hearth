@@ -182,7 +182,6 @@ export class ToneMappingNode extends TempNode {
   setup(builder: NodeBuilder): Node {
     const colorNode = this.colorNode || builder.context.color;
 
-    console.log({ colorNode: colorNode.rgb });
     return MappingByType[this.toneMapping]({ exposure: this.exposureNode, color: colorNode.rgb });
   }
 }

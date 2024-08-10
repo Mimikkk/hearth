@@ -6,7 +6,7 @@ import { buffer } from './BufferNode.js';
 import { asCommand, asNode } from '../shadernode/ShaderNode.primitves.ts';
 import { uniforms } from './UniformsNode.js';
 import { ArrayElementNode } from '../utils/ArrayElementNode.js';
-import { ConstNode } from '@modules/renderer/engine/nodes/core/ConstNode.js';
+import { ConstNode, NodeVal } from '@modules/renderer/engine/nodes/core/ConstNode.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import NodeFrame from '@modules/renderer/engine/nodes/core/NodeFrame.js';
@@ -50,12 +50,12 @@ export class ReferenceNode extends Node {
 
     this.properties = property.split('.');
     this.reference = null;
-    this.node = null;
+    this.node = null!;
 
     this.stage = NodeUpdateStage.Object;
   }
 
-  element(index: number): ReferenceElementNode {
+  element(index: NodeVal<number>): ReferenceElementNode {
     return new ReferenceElementNode(this, asNode(index));
   }
 
@@ -65,9 +65,9 @@ export class ReferenceNode extends Node {
     if (this.count !== null) {
       node = buffer(null, uniformType, this.count);
     } else if (Array.isArray(this.getValueFromReference())) {
-      node = uniforms(null, uniformType);
-    } else if (uniformType === 'texture') {
-      node = texture(null);
+      node = uniforms(null!, uniformType);
+    } else if (uniformType === TypeName.texture) {
+      node = texture(null!);
     } else {
       node = uniform(null, uniformType);
     }
@@ -91,7 +91,7 @@ export class ReferenceNode extends Node {
     return value;
   }
 
-  updateReference(state) {
+  updateReference(state: NodeFrame) {
     this.reference = this.object !== null ? this.object : state.object;
 
     return this.reference;

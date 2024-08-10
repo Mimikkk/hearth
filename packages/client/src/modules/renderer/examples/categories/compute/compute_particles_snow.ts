@@ -113,7 +113,7 @@ const createPostprocess = (scene: Scene, camera: PerspectiveCamera) => {
 
   const vignette = viewportTopLeft.distance(0.5).mul(1.2).clamp().oneMinus();
 
-  return scenepass.add(colorblur.mul(1.1)).mul(vignette).add(teapotpass.mul(10).add(teapotblur));
+  return scenepass.add(color).add(colorblur.mul(0.1)).mul(vignette).add(teapotpass.mul(10).add(teapotblur));
 };
 const createBuffer = (type: TypeName.vec4 | TypeName.vec3) => {
   const stride = type === TypeName.vec4 ? 4 : 3;
@@ -190,16 +190,22 @@ const createTeapot = () => {
 const camera = createCamera();
 const directionalLight = createDirectionalLight();
 const hemisphereLight = createHemisphereLight();
-const collisionCamera = createCollisionCamera();
 
-const collisionPostprocessTarget = new RenderTarget(1024, 1024);
-collisionPostprocessTarget.texture.type = TextureDataType.HalfFloat;
-collisionPostprocessTarget.texture.magFilter = MagnificationTextureFilter.Nearest;
-collisionPostprocessTarget.texture.minFilter = MinificationTextureFilter.Nearest;
-const collisionPostprocessMaterial = new MeshBasicNodeMaterial();
-collisionPostprocessMaterial.fog = false;
-collisionPostprocessMaterial.toneMapped = false;
-collisionPostprocessMaterial.colorNode = positionWorld.y;
+const createCollision = () => {
+  const collisionCamera = createCollisionCamera();
+  const collisionPostprocessTarget = new RenderTarget(1024, 1024);
+  collisionPostprocessTarget.texture.type = TextureDataType.HalfFloat;
+  collisionPostprocessTarget.texture.magFilter = MagnificationTextureFilter.Nearest;
+  collisionPostprocessTarget.texture.minFilter = MinificationTextureFilter.Nearest;
+  const collisionPostprocessMaterial = new MeshBasicNodeMaterial();
+  collisionPostprocessMaterial.fog = false;
+  collisionPostprocessMaterial.toneMapped = false;
+  collisionPostprocessMaterial.colorNode = positionWorld.y;
+
+  return [collisionCamera, collisionPostprocessTarget, collisionPostprocessMaterial] as const;
+};
+
+const [collisionCamera, collisionPostprocessTarget, collisionPostprocessMaterial] = createCollision();
 
 const dynamicPositionBuffer = createBuffer(TypeName.vec3);
 const scaleBuffer = createBuffer(TypeName.vec3);
