@@ -4,7 +4,9 @@ import { Vec2 } from '../../math/Vec2.js';
 import { Vec3 } from '../../math/Vec3.js';
 import { Mat4 } from '../../math/Mat4.js';
 import { Entity } from '../../core/Entity.js';
-import { Camera } from '@modules/renderer/engine/entities/cameras/Camera.js';
+import { ICamera } from '@modules/renderer/engine/entities/cameras/Camera.js';
+import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
+import { Group } from '@modules/renderer/engine/entities/Group.js';
 
 const _plane = new Plane();
 const _raycaster = Raycaster.new();
@@ -20,22 +22,38 @@ const _inverseMatrix = new Mat4();
 const _up = Vec3.new();
 const _right = Vec3.new();
 
-export class DragControls {
+interface Parameters {
   onHoverStart: (object: Entity) => void;
   onHoverEnd: (object: Entity) => void;
   onDragStart: (object: Entity) => void;
   onDrag: (object: Entity) => void;
   onDragEnd: (object: Entity) => void;
+  onClick: (object: Entity) => void;
+}
 
-  object: Camera;
+export class DragControls {
+  onHoverStart?: (object: Entity) => void;
+  onHoverEnd?: (object: Entity) => void;
+  onDragStart?: (object: Entity) => void;
+  onDrag?: (object: Entity) => void;
+  onDragEnd?: (object: Entity) => void;
+  onClick?: (object: Entity) => void;
+
+  camera: ICamera;
   enabled: boolean;
   recursive: boolean;
   transformGroup: boolean;
   mode: string;
   rotateSpeed: number;
 
-  constructor(objects: Entity[], camera: Camera, dom: HTMLElement) {
+  constructor(objects: Entity[], camera: ICamera, dom: HTMLElement, parameters?: Parameters) {
     dom.style.touchAction = 'none';
+    this.onHoverStart = parameters?.onHoverStart ?? undefined;
+    this.onHoverEnd = parameters?.onHoverEnd ?? undefined;
+    this.onDragStart = parameters?.onDragStart ?? undefined;
+    this.onDrag = parameters?.onDrag ?? undefined;
+    this.onDragEnd = parameters?.onDragEnd ?? undefined;
+    this.onClick = parameters?.onClick ?? undefined;
 
     let _selected: Entity | null = null;
     let _hovered: Entity | null = null;
@@ -159,6 +177,7 @@ export class DragControls {
         } else {
           _selected = _intersections[0].object;
         }
+        scope.onClick?.(_selected);
 
         _plane.fromNormalAndCoplanar(
           camera.getWorldDirection(_plane.normal),
@@ -168,9 +187,7 @@ export class DragControls {
 
         if (_raycaster.ray.intersectPlane(_plane, _intersection)) {
           if (scope.mode === 'translate') {
-            //@ts-expect-error
             _inverseMatrix.from(_selected.parent.matrixWorld).invert();
-            //@ts-expect-error
             _offset.from(_intersection).sub(_worldPosition.fromMat4Position(_selected.matrixWorld));
           } else if (scope.mode === 'rotate') {
             _up.set(0, 1, 0).applyQuaternion(camera.quaternion).normalize();
@@ -191,7 +208,6 @@ export class DragControls {
 
       if (_selected) {
         scope.onDragEnd?.(_selected);
-
         _selected = null;
       }
 
@@ -205,11 +221,10 @@ export class DragControls {
       _pointer.y = (-(event.clientY - rect.top) / rect.height) * 2 + 1;
     }
 
-    function findGroup(obj: Entity, group = null) {
-      //@ts-expect-error
-      if (obj.isGroup) group = obj;
+    function findGroup(obj: Entity, group: Group | null = null) {
+      if (Group.is(obj)) group = obj;
 
-      if (obj.parent === null) return group;
+      if (!obj.parent) return group;
 
       return findGroup(obj.parent, group);
     }
@@ -226,6 +241,10 @@ export class DragControls {
     this.getObjects = getObjects;
     this.getRaycaster = getRaycaster;
     this.setObjects = setObjects;
+  }
+
+  static attach(hearth: Hearth, camera: ICamera, objects: Entity[], parameters?: any) {
+    return new this(objects, camera, hearth.parameters.canvas, parameters);
   }
 
   activate: () => void;

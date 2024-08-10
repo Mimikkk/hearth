@@ -8,7 +8,7 @@ import {
 } from '@modules/renderer/engine/entities/materials/MeshLambertMaterial.js';
 import { Sphere } from '@modules/renderer/engine/math/Sphere.js';
 
-export class BoundingSphereVisualizer {
+export class BoundSphereVisualizer {
   object: Entity;
   bound: Mesh;
 
@@ -26,18 +26,14 @@ export class BoundingSphereVisualizer {
     this.bound.material.opacity = 0.2;
     this.bound.material.transparent = true;
 
-    this.bound.position.from(sphere.center);
+    this.bound.position = object.position;
   }
 
-  static create(object: Entity): BoundingSphereVisualizer {
+  static create(object: Entity): BoundSphereVisualizer {
     return new this(object);
   }
 
   static attach(object: Entity) {
-    const visualizer = new this(object);
-
-    object.add(visualizer.bound);
-
-    return visualizer.bound;
+    return new this(object).bound;
   }
 }

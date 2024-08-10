@@ -200,7 +200,7 @@ export * from './entities/textures/VideoTexture.js';
 // TODO - rename to *Visualizer
 export * from './entities/visualizers/ArrowHelper.js';
 export * from './entities/visualizers/AxesHelper.js';
-export * from './entities/visualizers/BoundingSphereVisualizer.js';
+export * from './entities/visualizers/BoundSphereVisualizer.js';
 export * from './entities/visualizers/Box3Helper.js';
 export * from './entities/visualizers/BoxHelper.js';
 export * from './entities/visualizers/CameraVisualizer.js';

@@ -2,22 +2,14 @@ import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindow
 import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 import { PerspectiveCamera } from '@modules/renderer/engine/entities/cameras/PerspectiveCamera.js';
 import { Scene } from '@modules/renderer/engine/entities/scenes/Scene.js';
-import {
-  BoxGeometry,
-  Geometry,
-  Fog,
-  Mesh,
-  MeshLambertMaterial,
-  Entity,
-  SpotLight,
-} from '@modules/renderer/engine/engine.js';
+import { BoxGeometry, Fog, Geometry, Mesh, MeshLambertMaterial, SpotLight } from '@modules/renderer/engine/engine.js';
 import { DragControls } from '@modules/renderer/engine/entities/controls/DragControls.js';
 import { MiniUi } from '@mimi/mini-ui';
 import { ColorMap } from '@modules/renderer/engine/math/Color.js';
 import { Random } from '@modules/renderer/engine/math/random.js';
 import { normalWorld } from '@modules/renderer/engine/nodes/accessors/NormalNode.js';
 import { color } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.primitves.js';
-import { BoundingSphereVisualizer } from '@modules/renderer/engine/entities/visualizers/BoundingSphereVisualizer.js';
+import { BoundSphereVisualizer } from '@modules/renderer/engine/entities/visualizers/BoundSphereVisualizer.js';
 import { Intersection } from '@modules/renderer/engine/core/Raycaster.js';
 
 const createCamera = () => {
@@ -43,40 +35,28 @@ const createBox = (geometry: Geometry, x: number, y: number, z: number) => {
   return mesh;
 };
 
-const useDragControls = () => {
-  const objects: Entity[] = [box1, box2];
-  const controls = new DragControls([...objects], camera, hearth.parameters.canvas);
-
-  return controls;
-};
-
-const light = createLight();
-const camera = createCamera();
-camera.add(light);
+const camera = createCamera().add(createLight());
 
 const reference = createBox(new BoxGeometry(0.1, 0.1, 0.1), 0, 1, 0);
 const box1 = createBox(new BoxGeometry(0.5, 0.2, 0.7), 0.5, 0, 0);
 const box2 = createBox(new BoxGeometry(0.2, 0.4, 0.7), -0.5, 0, 0);
 
-const scene = createScene();
+const sphere1 = BoundSphereVisualizer.attach(box1);
+const sphere2 = BoundSphereVisualizer.attach(box2);
 
-const sphere1 = BoundingSphereVisualizer.attach(box1);
-const sphere2 = BoundingSphereVisualizer.attach(box2);
-
-scene.add(camera, reference, box1, box2);
+const scene = createScene().add(camera, reference, box1, box2, sphere1, sphere2);
 
 const hearth = await Hearth.as({
-  animate() {
-    hearth.render(scene, camera);
+  async animate() {
+    await hearth.render(scene, camera);
   },
 });
-const dragControls = useDragControls();
+const controls = DragControls.attach(hearth, camera, [box1, box2]);
 
 useWindowResizer(hearth, camera);
 
 interface State {
   drag: {
-    selected: Entity | null;
     mode: 'translate' | 'rotate';
     intersections: Intersection[];
     selection: boolean;
@@ -86,7 +66,6 @@ interface State {
 
 const state = <State>{
   drag: {
-    selected: null,
     mode: 'translate',
     intersections: [],
     selection: true,
@@ -96,16 +75,14 @@ const state = <State>{
 MiniUi.create<State>('Drag controls', state)
   .shortcut('s', 'Toggle selection', state => {
     state.drag.selection = !state.drag.selection;
-    dragControls.configuration.enabled = state.drag.selection;
+    controls.enabled = state.drag.selection;
   })
   .shortcut('m', 'Toggle drag mode', state => {
     state.drag.mode = state.drag.mode === 'translate' ? 'rotate' : 'translate';
-    dragControls.configuration.mode = state.drag.mode;
+    controls.mode = state.drag.mode;
   })
-  .text('Selected:', s => (s.drag.selected ? s.drag.selected.uuid : 'None'))
-  .action('Log selected', s => console.info({ selected: s.drag.selected, intersections: s.drag.intersections }))
   .folder('Options')
-  .boolean('drag.selection', 'Selection', value => (dragControls.configuration.enabled = value))
+  .boolean('drag.selection', 'Selection', value => (controls.enabled = value))
   .option<'translate' | 'rotate'>(
     'drag.mode',
     'Mode',
@@ -113,7 +90,7 @@ MiniUi.create<State>('Drag controls', state)
       translate: 'Translate',
       rotate: 'Rotate',
     },
-    value => (dragControls.configuration.mode = value),
+    value => (controls.mode = value),
   )
   .boolean('drag.showBoundingSpheres', 'Show bounding spheres', () => {
     sphere1.visible = state.drag.showBoundingSpheres;
