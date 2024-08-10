@@ -24,10 +24,12 @@ export const SideBarItems: AccordionItem[] = [
       {
         id: Example.Compute.Particles.Snow,
         title: 'Compute Particles Snow',
+        masterdisk: true,
       },
       {
         id: Example.Compute.Points,
         title: 'Compute Points',
+        masterdisk: true,
       },
       {
         id: Example.Compute.Textures.Texture,
