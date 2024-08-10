@@ -70,6 +70,38 @@ const useAnimation = (item: Entity, animations: AnimationClip[]) => {
 
   return mixer;
 };
+const createPortals = () => {
+  const sphere = new SphereGeometry(0.3, 32, 16);
+  const createPortal = (backdropNode: Node, backdropAlphaNode?: Node) => {
+    const distance = 1;
+    const id = portals.children.length;
+    const rotation = degreeToRadian(id * 45);
+
+    const material = new MeshStandardNodeMaterial({ color: Random.color() });
+    material.roughnessNode = f32(0.2);
+    material.metalnessNode = f32(0);
+    material.backdropNode = backdropNode;
+    material.backdropAlphaNode = backdropAlphaNode;
+    material.transparent = true;
+
+    const mesh = new Mesh(sphere, material);
+    mesh.position.set(Math.cos(rotation) * distance, 1, Math.sin(rotation) * distance);
+
+    return mesh;
+  };
+
+  const portals = new Group();
+  portals.add(createPortal(viewportSharedTexture().bgr.hue(oscSine().mul(Math.PI))));
+  portals.add(createPortal(viewportSharedTexture().rgb.oneMinus()));
+  portals.add(createPortal(viewportSharedTexture().rgb.saturation(0)));
+  portals.add(createPortal(viewportSharedTexture().rgb.saturation(10), oscSine()));
+  portals.add(createPortal(viewportSharedTexture().rgb.overlay(checker(uv().mul(10)))));
+  portals.add(createPortal(viewportSharedTexture(viewportTopLeft.mul(40).floor().div(40))));
+  portals.add(createPortal(viewportSharedTexture(viewportTopLeft.mul(80).floor().div(80)).add(color(0x0033ff))));
+  portals.add(createPortal(vec3(0, 0, viewportSharedTexture().b)));
+
+  return portals;
+};
 const loadMichelle = async () => {
   const gltf = await GLTFLoader.loadAsync('resources/models/gltf/Michelle.glb');
   const material = gltf.scene.children[0].children[0].material as NodeMaterial;
@@ -89,42 +121,15 @@ const createFloor = () => {
 
 const floor = createFloor();
 const camera = createCamera().add(createSpotLight());
-const clock = Clock.new();
+
 const { michelle, animations } = await loadMichelle();
 
 const mixer = useAnimation(michelle, animations);
-const geometry = new SphereGeometry(0.3, 32, 16);
+const portals = createPortals();
 
-const portals = new Group();
-const createPortal = (backdropNode: Node, backdropAlphaNode?: Node) => {
-  const distance = 1;
-  const id = portals.children.length;
-  const rotation = degreeToRadian(id * 45);
+const scene = createScene().add(michelle, portals, floor, camera);
 
-  const material = new MeshStandardNodeMaterial({ color: Random.color() });
-  material.roughnessNode = f32(0.2);
-  material.metalnessNode = f32(0);
-  material.backdropNode = backdropNode;
-  material.backdropAlphaNode = backdropAlphaNode;
-  material.transparent = true;
-
-  const mesh = new Mesh(geometry, material);
-  mesh.position.set(Math.cos(rotation) * distance, 1, Math.sin(rotation) * distance);
-
-  return mesh;
-};
-portals.add(createPortal(viewportSharedTexture().bgr.hue(oscSine().mul(Math.PI))));
-portals.add(createPortal(viewportSharedTexture().rgb.oneMinus()));
-portals.add(createPortal(viewportSharedTexture().rgb.saturation(0)));
-portals.add(createPortal(viewportSharedTexture().rgb.saturation(10), oscSine()));
-portals.add(createPortal(viewportSharedTexture().rgb.overlay(checker(uv().mul(10)))));
-portals.add(createPortal(viewportSharedTexture(viewportTopLeft.mul(40).floor().div(40))));
-portals.add(createPortal(viewportSharedTexture(viewportTopLeft.mul(80).floor().div(80)).add(color(0x0033ff))));
-portals.add(createPortal(vec3(0, 0, viewportSharedTexture().b)));
-
-const scene = createScene();
-scene.add(michelle, portals, floor, camera);
-
+const clock = Clock.new();
 const hearth = await Hearth.as({
   async animate() {
     const delta = clock.tick();
