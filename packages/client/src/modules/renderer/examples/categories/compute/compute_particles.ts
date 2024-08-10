@@ -1,66 +1,91 @@
-import * as Engine from '@modules/renderer/engine/engine.js';
-import { Attribute } from '@modules/renderer/engine/engine.js';
+import {
+  Attribute,
+  Buffer,
+  BufferStep,
+  GPUBufferBindingTypeType,
+  GridVisualizer,
+  Hearth,
+  InstancedMesh,
+  Mesh,
+  MeshBasicMaterial,
+  OrbitControls,
+  PerspectiveCamera,
+  PlaneGeometry,
+  Raycaster,
+  Scene,
+  TextureLoader,
+  Vec2,
+  Vec3,
+} from '@modules/renderer/engine/engine.js';
 import {
   f32,
+  hsl,
   instanceIndex,
   NodeStack,
   SpriteNodeMaterial,
   storage,
   texture,
-  hsl,
+  TypeName,
   uniform,
   vec3,
 } from '@modules/renderer/engine/nodes/nodes.js';
 
-import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
-
-import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitControls.js';
-
-import { GUI } from 'lil-gui';
-import { TextureLoader } from '@modules/renderer/engine/loaders/textures/TextureLoader/TextureLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
-import { GPUBufferBindingTypeType, BufferStep } from '@modules/renderer/engine/hearth/constants.js';
+import { MiniUi } from '@mimi/mini-ui';
 
-const particleCount = 1000000;
-
+const count = 1000000;
 const gravity = uniform(-0.0098);
 const bounce = uniform(0.8);
 const friction = uniform(0.99);
 const size = uniform(0.12);
 
-const clickPosition = uniform(new Engine.Vec3());
-
-let camera, scene, hearth: Hearth;
-let controls;
-let computeParticles;
-
-const timestamps = document.getElementById('timestamps');
-
-init();
-
-async function init() {
-  const { innerWidth, innerHeight } = window;
-
-  camera = new Engine.PerspectiveCamera(50, innerWidth / innerHeight, 0.1, 1000);
+const createCamera = () => {
+  const camera = new PerspectiveCamera();
   camera.position.set(15, 30, 15);
 
-  scene = new Engine.Scene();
+  return camera;
+};
+const createBuffer = () => {
+  const buffer = Buffer.f32(count * 3, 3, BufferStep.Instance);
 
-  const textureLoader = new TextureLoader();
-  const map = await textureLoader.loadAsync('../../resources/textures/sprite.png');
+  return storage(Attribute.use(buffer, 3, 0, GPUBufferBindingTypeType.Storage), TypeName.vec3, count);
+};
+const createParticle = async () => {
+  const map = await TextureLoader.loadAsync('../../resources/textures/sprite.png');
+  const textureNode = texture(map);
 
-  const createBuffer = () =>
-    storage(
-      new Attribute(new Float32Array(particleCount * 3), 3, 0, BufferStep.Instance, GPUBufferBindingTypeType.Storage),
-      'vec3',
-      particleCount,
-    );
+  const material = new SpriteNodeMaterial();
+  material.colorNode = textureNode.mul(colorBuffer.element(instanceIndex));
+  material.positionNode = positionBuffer.toAttribute();
+  material.scaleNode = size;
+  material.depthWrite = false;
+  material.depthTest = true;
+  material.transparent = true;
 
-  const positionBuffer = createBuffer();
-  const velocityBuffer = createBuffer();
-  const colorBuffer = createBuffer();
+  const particles = new InstancedMesh(new PlaneGeometry(1, 1), material, count);
+  particles.frustumCulled = false;
 
-  const computeInit = hsl(() => {
+  return particles;
+};
+const createGrid = () => new GridVisualizer({ size: 100, divisions: 40, centerColor: 0x222222, lineColor: 0x222222 });
+const createPlane = () => {
+  const geometry = new PlaneGeometry(1000, 1000).rotateX(-Math.PI / 2);
+  const material = new MeshBasicMaterial({ visible: false });
+
+  return new Mesh(geometry, material);
+};
+
+const clickPosition = uniform(Vec3.new());
+const camera = createCamera();
+
+const scene = new Scene();
+
+const positionBuffer = createBuffer();
+const velocityBuffer = createBuffer();
+const colorBuffer = createBuffer();
+
+const computes = {
+  onInit: hsl(() => {
     const position = positionBuffer.element(instanceIndex);
     const color = colorBuffer.element(instanceIndex);
 
@@ -73,9 +98,8 @@ async function init() {
     position.z = randZ.mul(100).add(-50);
 
     color.assign(vec3(randX, randY, randZ));
-  })().compute(particleCount);
-
-  const computeUpdate = hsl(() => {
+  })().compute(count),
+  onUpdate: hsl(() => {
     const position = positionBuffer.element(instanceIndex);
     const velocity = velocityBuffer.element(instanceIndex);
 
@@ -91,47 +115,8 @@ async function init() {
       velocity.x = velocity.x.mul(0.9);
       velocity.z = velocity.z.mul(0.9);
     });
-  });
-
-  computeParticles = computeUpdate().compute(particleCount);
-
-  const textureNode = texture(map);
-
-  const particleMaterial = new SpriteNodeMaterial();
-  particleMaterial.colorNode = textureNode.mul(colorBuffer.element(instanceIndex));
-  particleMaterial.positionNode = positionBuffer.toAttribute();
-  particleMaterial.scaleNode = size;
-  particleMaterial.depthWrite = false;
-  particleMaterial.depthTest = true;
-  particleMaterial.transparent = true;
-
-  const particles = new Engine.Mesh(new Engine.PlaneGeometry(1, 1), particleMaterial);
-  particles.isInstancedMesh = true;
-  particles.count = particleCount;
-  particles.frustumCulled = false;
-  scene.add(particles);
-
-  const helper = new Engine.GridHelper(60, 40, 0x303030, 0x303030);
-  scene.add(helper);
-
-  const geometry = new Engine.PlaneGeometry(1000, 1000);
-  geometry.rotateX(-Math.PI / 2);
-
-  const plane = new Engine.Mesh(geometry, new Engine.MeshBasicMaterial({ visible: false }));
-  scene.add(plane);
-
-  const raycaster = new Engine.Raycaster();
-  const pointer = new Engine.Vec2();
-
-  hearth = await Hearth.as({ trackTimestamp: true });
-  hearth.setPixelRatio(window.devicePixelRatio);
-  hearth.setSize(window.innerWidth, window.innerHeight);
-  hearth.animation.loop = animate;
-  document.body.appendChild(hearth.parameters.canvas);
-
-  hearth.compute(computeInit);
-
-  const computeHit = hsl(() => {
+  })().compute(count),
+  onHit: hsl(() => {
     const position = positionBuffer.element(instanceIndex);
     const velocity = velocityBuffer.element(instanceIndex);
 
@@ -143,55 +128,60 @@ async function init() {
     const relativePower = power.mul(instanceIndex.hash().mul(0.5).add(0.5));
 
     velocity.assign(velocity.add(direction.mul(relativePower)));
-  })().compute(particleCount);
+  })().compute(count),
+};
 
-  function onMove(event) {
-    pointer.set((event.clientX / window.innerWidth) * 2 - 1, -(event.clientY / window.innerHeight) * 2 + 1);
+const particles = await createParticle();
+const grid = createGrid();
+const plane = createPlane();
 
-    raycaster.fromCamera(pointer, camera);
+scene.add(particles, grid, plane);
 
-    const intersects = raycaster.intersects([plane], false);
+const raycaster = Raycaster.new();
 
-    if (intersects.length > 0) {
-      const { point } = intersects[0];
+const timestamps = document.getElementById('timestamps')!;
+const hearth = await Hearth.as({
+  trackTimestamp: true,
+  async animate() {
+    await hearth.compute(computes.onUpdate);
+    await hearth.render(scene, camera);
 
-      clickPosition.value.from(point);
-      clickPosition.value.y = -1;
+    const { compute, render } = hearth.stats;
 
-      hearth.compute(computeHit);
-    }
-  }
-
-  hearth.parameters.canvas.addEventListener('pointermove', onMove);
-
-  controls = new OrbitControls(camera, hearth.parameters.canvas);
-  controls.minDistance = 5;
-  controls.maxDistance = 200;
-  controls.target.set(0, 0, 0);
-  controls.update();
-
-  useWindowResizer(hearth, camera);
-
-  const gui = new GUI();
-
-  gui.add(gravity, 'value', -0.0098, 0, 0.0001).name('gravity');
-  gui.add(bounce, 'value', 0.1, 1, 0.01).name('bounce');
-  gui.add(friction, 'value', 0.96, 0.99, 0.01).name('friction');
-  gui.add(size, 'value', 0.12, 0.5, 0.01).name('size');
-}
-
-async function animate() {
-  await hearth.compute(computeParticles);
-
-  await hearth.render(scene, camera);
-
-  if (hearth.hasFeature('timestamp-query')) {
-    if (hearth.stats.render.passes % 5 === 0) {
+    if (hearth.stats.render.passes % 20 === 0) {
       timestamps.innerHTML = `
-							Compute ${hearth.stats.compute.calls} pass in ${hearth.stats.compute.timestampTime.toFixed(6)}ms<br>
-							Draw ${hearth.stats.render.calls} pass in ${hearth.stats.render.timestampTime.toFixed(6)}ms`;
+							Compute ${compute.calls} pass in ${compute.timestampTime.toFixed(2)}ms
+							<br>
+							Draw ${render.calls} pass in ${render.timestampTime.toFixed(2)}ms`;
     }
-  } else {
-    timestamps.innerHTML = 'Timestamp queries not supported';
+  },
+});
+
+await hearth.compute(computes.onInit);
+
+const pointer = Vec2.new();
+hearth.parameters.canvas.addEventListener('pointermove', async (event: PointerEvent) => {
+  pointer.set((event.clientX / window.innerWidth) * 2 - 1, -(event.clientY / window.innerHeight) * 2 + 1);
+
+  raycaster.fromCamera(pointer, camera);
+
+  const intersects = raycaster.intersects([plane], false);
+
+  if (intersects.length > 0) {
+    const { point } = intersects[0];
+
+    clickPosition.value.from(point);
+    clickPosition.value.y = -1;
+
+    await hearth.compute(computes.onHit);
   }
-}
+});
+
+OrbitControls.attach(hearth, camera);
+useWindowResizer(hearth, camera);
+
+MiniUi.create('Controls', { gravity, bounce, friction, size })
+  .number('gravity.value', 'Gravity', -0.0098, 0, 0.0001)
+  .number('bounce.value', 'Bounce', 0.1, 1, 0.01)
+  .number('friction.value', 'Friction', 0.96, 0.99, 0.01)
+  .number('size.value', 'Size', 0.12, 0.5, 0.01);
