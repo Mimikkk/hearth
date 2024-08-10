@@ -27,6 +27,7 @@ import {
   instanceIndex,
   MeshBasicNodeMaterial,
   MeshStandardNodeMaterial,
+  Node,
   NodeStack,
   pass,
   positionLocal,
@@ -98,21 +99,19 @@ const createHemisphereLight = () => {
 const createPostprocess = (scene: Scene, camera: PerspectiveCamera) => {
   const scenepass = pass(scene, camera);
 
-  // const color = scenepass.getTextureNode();
-  //
-  // const teapotpass = pass(teapot, camera).getTextureNode();
-  // const teapotblur = teapotpass.gaussianBlur(3);
-  // teapotblur.resolution = new Vec2(0.2, 0.2);
-  //
-  // const colorblur = color.gaussianBlur();
-  // colorblur.resolution = new Vec2(0.5, 0.5);
-  // colorblur.directionNode = vec2(1);
-  //
-  // const vignette = viewportTopLeft.distance(0.5).mul(1.35).clamp().oneMinus();
-  //
-  // return scenepass.add(colorblur.mul(0.1)).mul(vignette).add(teapotpass.mul(10).add(teapotblur));
+  const color = scenepass.getTextureNode();
 
-  return scenepass;
+  const teapotpass = pass(teapot, camera).getTextureNode();
+  const teapotblur = teapotpass.gaussianBlur(3);
+  teapotblur.resolution = new Vec2(0.2, 0.2);
+
+  const colorblur = color.gaussianBlur();
+  colorblur.resolution = new Vec2(0.5, 0.5);
+  colorblur.directionNode = vec2(1);
+
+  const vignette = viewportTopLeft.distance(0.5).mul(1.35).clamp().oneMinus();
+
+  return scenepass.add(colorblur.mul(0.1)).mul(vignette).add(teapotpass.mul(10).add(teapotblur));
 };
 const createBuffer = (type: TypeName.vec4 | TypeName.vec3) => {
   const stride = type === TypeName.vec4 ? 4 : 3;
@@ -235,7 +234,7 @@ const surfaceOffset = 0.2;
 const speed = 0.4;
 
 const onUpdate = hsl(() => {
-  const getCoord = pos => pos.add(50).div(100);
+  const getCoord = (pos: Node) => pos.add(50).div(100);
 
   const position = dynamicPositionBuffer.element(instanceIndex);
   const scale = scaleBuffer.element(instanceIndex);
@@ -288,7 +287,7 @@ const hearth = await Hearth.as({
 
     postprocess.render();
   },
-  toneMapping: ToneMapping.ACESFilmic,
+  toneMapping: ToneMapping.Linear,
 });
 
 const controls = OrbitControls.attach(hearth, camera, {
