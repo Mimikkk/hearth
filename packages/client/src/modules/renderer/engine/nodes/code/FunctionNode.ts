@@ -72,7 +72,7 @@ export class FunctionNode extends CodeNode {
   }
 }
 
-export const wgsl = (code: string, includes: CodeNodeInclude[] = []) => {
+export const wgsl = (code: string, includes: any[] = []) => {
   for (let i = 0; i < includes.length; i++) {
     const include = includes[i];
 
