@@ -1,5 +1,5 @@
 import { TempNode } from '../core/TempNode.js';
-import { f32, asCommand, vec2, vec4 } from '../shadernode/ShaderNode.primitves.ts';
+import { asCommand, f32, vec2, vec4 } from '../shadernode/ShaderNode.primitves.ts';
 import { NodeUpdateStage } from '../core/constants.js';
 import { mul } from '../math/OperatorNode.js';
 import { uv } from '../accessors/UVNode.js';
@@ -11,13 +11,18 @@ import { implCommand } from '@modules/renderer/engine/nodes/core/Node.commands.j
 import { RenderTarget } from '@modules/renderer/engine/hearth/core/RenderTarget.js';
 import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
 import { hsl } from '@modules/renderer/engine/nodes/shadernode/hsl.js';
+import { TextureNode } from '@modules/renderer/engine/nodes/accessors/TextureNode.js';
+import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 
 const quadMesh1 = new QuadMesh();
 const quadMesh2 = new QuadMesh();
 
 export class GaussianBlurNode extends TempNode {
-  constructor(textureNode, sigma?: ConstNode<number>) {
-    super('vec4');
+  constructor(
+    public textureNode: TextureNode,
+    sigma?: ConstNode<number>,
+  ) {
+    super(TypeName.vec4);
 
     this.textureNode = textureNode;
     this.sigma = sigma?.value ?? 2;

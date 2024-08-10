@@ -189,7 +189,7 @@ export class ToneMappingNode extends TempNode {
 
 export const toneMapping = asCommand(ToneMappingNode);
 
-export const toneMappingExposure = rendererRef('parameters.toneMappingExposure', TypeName.vec3);
+export const toneMappingExposure = rendererRef('parameters.toneMappingExposure', TypeName.f32);
 
 export class ToneMappingCommandNode extends ToneMappingNode {
   constructor(color: ConstNode<Color>, mapping: ToneMapping, exposure: ConstNode<number>) {

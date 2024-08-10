@@ -12,6 +12,7 @@ import { Scene } from '@modules/renderer/engine/entities/scenes/Scene.js';
 import { DepthTexture } from '@modules/renderer/engine/entities/textures/DepthTexture.js';
 import { TextureDataType, ToneMapping } from '@modules/renderer/engine/constants.js';
 import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
+import { Entity } from '@modules/renderer/engine/core/Entity.js';
 
 export class PassTextureNode extends TextureNode {
   constructor(pass: PassNode, texture: Texture) {
@@ -48,7 +49,7 @@ export class PassNode extends TempNode {
   _cameraFar: UniformNode<number>;
 
   constructor(
-    public scene: Scene,
+    public entity: Entity,
     public camera: ICamera,
   ) {
     super(TypeName.vec4);
@@ -119,7 +120,7 @@ export class PassNode extends TempNode {
 
   updateBefore(frame) {
     const { hearth } = frame;
-    const { scene, camera } = this;
+    const { entity, camera } = this;
 
     this._pixelRatio = hearth._pixelRatio;
 
@@ -138,7 +139,7 @@ export class PassNode extends TempNode {
     hearth.parameters.toneMappingNode = null;
     hearth.updateRenderTarget(this.renderTarget);
 
-    hearth.render(scene, camera);
+    hearth.render(entity, camera);
 
     hearth.parameters.toneMapping = currentToneMapping;
     hearth.parameters.toneMappingNode = currentToneMappingNode;

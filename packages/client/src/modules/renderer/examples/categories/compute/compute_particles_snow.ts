@@ -8,8 +8,10 @@ import {
   Group,
   HemisphereLight,
   InstancedMesh,
+  MagnificationTextureFilter,
   Mesh,
   MeshStandardMaterial,
+  MinificationTextureFilter,
   OrthographicCamera,
   PerspectiveCamera,
   PlaneGeometry,
@@ -109,7 +111,7 @@ const createPostprocess = (scene: Scene, camera: PerspectiveCamera) => {
   colorblur.resolution = new Vec2(0.5, 0.5);
   colorblur.directionNode = vec2(1);
 
-  const vignette = viewportTopLeft.distance(0.5).mul(1.35).clamp().oneMinus();
+  const vignette = viewportTopLeft.distance(0.5).mul(1.2).clamp().oneMinus();
 
   return scenepass.add(colorblur.mul(0.1)).mul(vignette).add(teapotpass.mul(10).add(teapotblur));
 };
@@ -192,7 +194,8 @@ const collisionCamera = createCollisionCamera();
 
 const collisionPostprocessTarget = new RenderTarget(1024, 1024);
 collisionPostprocessTarget.texture.type = TextureDataType.HalfFloat;
-
+collisionPostprocessTarget.texture.magFilter = MagnificationTextureFilter.Nearest;
+collisionPostprocessTarget.texture.minFilter = MinificationTextureFilter.Nearest;
 const collisionPostprocessMaterial = new MeshBasicNodeMaterial();
 collisionPostprocessMaterial.fog = false;
 collisionPostprocessMaterial.toneMapped = false;
@@ -287,7 +290,7 @@ const hearth = await Hearth.as({
 
     postprocess.render();
   },
-  toneMapping: ToneMapping.Linear,
+  toneMapping: ToneMapping.ACESFilmic,
 });
 
 const controls = OrbitControls.attach(hearth, camera, {

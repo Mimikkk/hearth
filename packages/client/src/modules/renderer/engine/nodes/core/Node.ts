@@ -22,6 +22,7 @@ import type { ColorSpace, ToneMapping } from '@modules/renderer/engine/constants
 import { ComputeNode } from '@modules/renderer/engine/nodes/gpgpu/ComputeNode.js';
 import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
 import { Vec4 } from '@modules/renderer/engine/math/Vec4.js';
+import { GaussianBlurNode } from '@modules/renderer/engine/nodes/display/GaussianBlurNode.js';
 
 let _nodeId = 0;
 
@@ -1163,7 +1164,7 @@ export class Node {
   declare rotateUV: (angle: NodeVal<number>, center: NodeVal<number>) => Node;
   declare storageElement: (index: NodeVal<number>) => Node;
   // functions
-  declare gaussianBlur: (sigma?: NodeVal<number>) => Node;
+  declare gaussianBlur: (sigma?: NodeVal<number>) => GaussianBlurNode;
   declare bumpMap: (scale: NodeVal<number>) => Node;
   declare normalMap: (scale: NodeVal<number>) => Node;
   declare cubeTexture: (uv: UVNode, levelNode: NodeVal<number>) => Node;
