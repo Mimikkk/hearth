@@ -255,7 +255,7 @@ export class Stats {
     });
   }
 
-  static use(hearth: Hearth, options?: Options) {
+  static attach(hearth: Hearth, options?: Options) {
     return new Stats(hearth, options);
   }
 

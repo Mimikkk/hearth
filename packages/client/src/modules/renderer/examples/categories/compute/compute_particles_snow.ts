@@ -299,9 +299,10 @@ const controls = OrbitControls.attach(hearth, camera, {
   autoRotate: true,
   autoRotateSpeed: -0.7,
 });
+const stats = Stats.attach(hearth);
+
 const postprocess = hearth.postprocess(createPostprocess(scene, camera));
 
-const stats = Stats.use(hearth);
 await hearth.compute(onInit);
 
 useWindowResizer(hearth, camera);

@@ -76,7 +76,7 @@ const hearth = await Hearth.as({
     hearth.render(scene, camera);
   },
 });
-const stats = Stats.use(hearth);
+const stats = Stats.attach(hearth);
 useWindowResizer(hearth, camera);
 
 const selection = new SelectionControls(camera, scene);
