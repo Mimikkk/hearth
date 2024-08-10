@@ -13,9 +13,9 @@ import { Vec4 } from '@modules/renderer/engine/math/Vec4.js';
 type Coerce<T> = T extends Node
   ? T
   : T extends null
-    ? T | null
+    ? Coerce<NonNullable<T>> | null
     : T extends undefined
-      ? T | undefined
+      ? Coerce<NonNullable<T>> | undefined
       : T extends string
         ? T
         : T extends number | boolean | Vec2 | Vec3 | Vec4 | Mat3 | Mat4 | Color
@@ -45,19 +45,9 @@ export const asNodes = (array: any[]): Node[] => {
   return array;
 };
 
-type ReverseCoerce<T> = T extends Node
-  ? T
-  : T extends ConstNode<infer U>
-    ? ConstNode<U> | U
-    : T extends null
-      ? T | null
-      : T extends undefined
-        ? T | undefined
-        : T extends Hsl<infer U>
-          ? Hsl<U> | U
-          : T;
-
 export const asCommand =
-  <T extends new (...params: any) => any>(NodeClass: T) =>
-  (...params: ReverseCoerce<ConstructorParameters<T>>): InstanceType<T> =>
+  <T extends new (...params: any) => any, P extends any[] = ConstructorParameters<T>>(
+    NodeClass: T,
+  ): ((...params: P) => InstanceType<T>) =>
+  (...params) =>
     new NodeClass(...asNodes(params));

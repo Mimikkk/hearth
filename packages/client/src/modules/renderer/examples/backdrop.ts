@@ -13,6 +13,9 @@ import {
   vec3,
   viewportSharedTexture,
   viewportTopLeft,
+  mix,
+  positionWorld,
+  positionLocal,
 } from '@modules/renderer/engine/nodes/nodes.js';
 import { GLTFLoader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/GLTFLoader.js';
 import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
@@ -20,12 +23,14 @@ import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitC
 import {
   AnimationClip,
   AnimationMixer,
+  CircleGeometry,
   Clock,
   Color,
   Entity,
   Group,
   Mesh,
   PerspectiveCamera,
+  PlaneGeometry,
   Scene,
   SphereGeometry,
   SpotLight,
@@ -44,7 +49,8 @@ const createCamera = () => {
 };
 const createScene = () => {
   const scene = new Scene();
-  scene.background = Color.new(0x00aacc);
+  scene.backgroundNode = positionLocal.y.mix(color(0xffaa00), color(0x00aaff));
+
   return scene;
 };
 const createSpotLight = () => {
@@ -72,9 +78,17 @@ const loadMichelle = async () => {
   return { michelle: gltf.scene, animations: gltf.animations };
 };
 
-const camera = createCamera();
-const scene = createScene();
-const light = createSpotLight();
+const createFloor = () => {
+  const geometry = new CircleGeometry(2, 32).rotateX(-Math.PI / 2);
+  const material = new MeshStandardNodeMaterial({ color: new Color(0x00aa09) });
+  const mesh = new Mesh(geometry, material);
+  mesh.position.y = 0;
+
+  return mesh;
+};
+
+const floor = createFloor();
+const camera = createCamera().add(createSpotLight());
 const clock = Clock.new();
 const { michelle, animations } = await loadMichelle();
 
@@ -107,13 +121,11 @@ portals.add(createPortal(viewportSharedTexture().rgb.overlay(checker(uv().mul(10
 portals.add(createPortal(viewportSharedTexture(viewportTopLeft.mul(40).floor().div(40))));
 portals.add(createPortal(viewportSharedTexture(viewportTopLeft.mul(80).floor().div(80)).add(color(0x0033ff))));
 portals.add(createPortal(vec3(0, 0, viewportSharedTexture().b)));
-scene.add(michelle);
-scene.add(portals);
-camera.add(light);
-scene.add(camera);
+
+const scene = createScene();
+scene.add(michelle, portals, floor, camera);
 
 const hearth = await Hearth.as({
-  toneMappingNode: toneMapping(ToneMapping.Linear, 0.15),
   async animate() {
     const delta = clock.tick();
     controls.update(delta);
@@ -123,6 +135,7 @@ const hearth = await Hearth.as({
 
     await hearth.render(scene, camera);
   },
+  toneMappingNode: toneMapping(ToneMapping.ACESFilmic, 0.15),
 });
 const controls = useOrbitControls(camera, hearth.parameters.canvas);
 useWindowResizer(hearth, camera);
