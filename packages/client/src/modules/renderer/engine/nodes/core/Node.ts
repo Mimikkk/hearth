@@ -1079,7 +1079,7 @@ export class Node {
   declare pow3: () => Node;
   declare transformDirection: (b: NodeVal<number>) => Node;
   declare mix: (a: NodeVal<number>, b: NodeVal<number>) => Node;
-  declare clamp: (min: NodeVal<number>, max: NodeVal<number>) => Node;
+  declare clamp: (min?: NodeVal<number>, max?: NodeVal<number>) => Node;
   declare refract: (normal: NodeVal<number>, eta: NodeVal<number>) => Node;
   declare smoothstep: (min: NodeVal<number>, max: NodeVal<number>) => Node;
   declare faceforward: (normal: NodeVal<number>, incident: NodeVal<number>) => Node;
@@ -1202,11 +1202,11 @@ export class Node {
   declare screen: (value: NodeVal<number>) => Node;
   declare anamorphic: (threshold: NodeVal<number>, scale: NodeVal<number>, samples: NodeVal<number>) => Node;
   declare afterImage: (value: NodeVal<number>) => Node;
-  declare toVar: (name: string) => Node;
-  declare temp: (name: string) => Node;
+  declare toVar: (name?: string) => Node;
+  declare temp: (name?: string) => Node;
   declare label: (name: string) => Node;
   declare context: (context: object) => Node;
-  declare cache: (value: WeakMap<any, any>) => Node;
+  declare cache: (value?: WeakMap<any, any>) => Node;
   declare globalCache: () => Node;
   declare bypass: (call: Node) => Node;
   declare scriptable: (parameters: Record<string, any>) => Node;

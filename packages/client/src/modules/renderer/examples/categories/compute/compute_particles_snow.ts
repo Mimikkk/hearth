@@ -105,15 +105,15 @@ const createPostprocess = (scene: Scene, camera: PerspectiveCamera) => {
 
   const teapotpass = pass(teapot, camera).getTextureNode();
   const teapotblur = teapotpass.gaussianBlur(3);
-  teapotblur.resolution = new Vec2(0.2, 0.2);
+  teapotblur.resolution = Vec2.new(0.2, 0.2);
 
   const colorblur = color.gaussianBlur();
-  colorblur.resolution = new Vec2(0.5, 0.5);
+  colorblur.resolution = Vec2.new(0.5, 0.5);
   colorblur.directionNode = vec2(1);
 
   const vignette = viewportTopLeft.distance(0.5).mul(1.2).clamp().oneMinus();
 
-  return scenepass.add(colorblur.mul(0.1)).mul(vignette).add(teapotpass.mul(10).add(teapotblur));
+  return scenepass.add(colorblur.mul(1.1)).mul(vignette).add(teapotpass.mul(10).add(teapotblur));
 };
 const createBuffer = (type: TypeName.vec4 | TypeName.vec3) => {
   const stride = type === TypeName.vec4 ? 4 : 3;
@@ -290,7 +290,7 @@ const hearth = await Hearth.as({
 
     postprocess.render();
   },
-  toneMapping: ToneMapping.ACESFilmic,
+  toneMapping: ToneMapping.Neutral,
 });
 
 const controls = OrbitControls.attach(hearth, camera, {

@@ -306,8 +306,8 @@ export namespace TypeName {
 
   export const isComponent = (type: TypeName): boolean =>
     type === TypeName.f32 || type === TypeName.i32 || type === TypeName.u32 || type === TypeName.bool;
-  export const isVec = (type: TypeName): boolean => type.includes('vec');
-  export const isMat = (type: TypeName): boolean => type.includes('mat');
+  export const isVec = (type: TypeName): boolean => type?.includes('vec');
+  export const isMat = (type: TypeName): boolean => type?.includes('mat');
   export const isInt = (type: TypeName): boolean => {
     const c = component(type);
     return c === TypeName.i32 || c === TypeName.u32;

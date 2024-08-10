@@ -2,9 +2,9 @@ import { TempNode } from '../core/TempNode.js';
 import { asCommand, f32, vec2, vec4 } from '../shadernode/ShaderNode.primitves.ts';
 import { NodeUpdateStage } from '../core/constants.js';
 import { mul } from '../math/OperatorNode.js';
-import { uv } from '../accessors/UVNode.js';
-import { texturePass } from './PassNode.js';
-import { uniform } from '../core/UniformNode.js';
+import { uv, UVNode } from '../accessors/UVNode.js';
+import { PassTextureNode, texturePass } from './PassNode.js';
+import { uniform, UniformNode } from '../core/UniformNode.js';
 import { QuadMesh } from '@modules/renderer/engine/entities/QuadMesh.js';
 import { ConstNode } from '@modules/renderer/engine/nodes/core/ConstNode.js';
 import { implCommand } from '@modules/renderer/engine/nodes/core/Node.commands.js';
@@ -13,19 +13,29 @@ import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
 import { hsl } from '@modules/renderer/engine/nodes/shadernode/hsl.js';
 import { TextureNode } from '@modules/renderer/engine/nodes/accessors/TextureNode.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
+import NodeFrame from '@modules/renderer/engine/nodes/core/NodeFrame.js';
+import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 
 const quadMesh1 = new QuadMesh();
 const quadMesh2 = new QuadMesh();
 
 export class GaussianBlurNode extends TempNode {
+  directionNode: ConstNode<number>;
+  _invSize: UniformNode<Vec2>;
+  _passDirection: UniformNode<Vec2>;
+  _horizontalRT: RenderTarget;
+  _verticalRT: RenderTarget;
+  _textureNode: PassTextureNode;
+  resolution: Vec2;
+  _material: any;
+
   constructor(
     public textureNode: TextureNode,
-    sigma?: ConstNode<number>,
+    public sigma: ConstNode<number> = f32(2),
   ) {
     super(TypeName.vec4);
 
     this.textureNode = textureNode;
-    this.sigma = sigma?.value ?? 2;
 
     this.directionNode = vec2(1);
 
@@ -44,7 +54,7 @@ export class GaussianBlurNode extends TempNode {
     this.resolution = Vec2.new(1, 1);
   }
 
-  setSize(width, height) {
+  setSize(width: number, height: number): void {
     width = Math.max(Math.round(width * this.resolution.x), 1);
     height = Math.max(Math.round(height * this.resolution.y), 1);
 
@@ -53,7 +63,7 @@ export class GaussianBlurNode extends TempNode {
     this._verticalRT.setSize(width, height);
   }
 
-  updateBefore(frame) {
+  updateBefore(frame: NodeFrame) {
     const { hearth } = frame;
 
     const textureNode = this.textureNode;
@@ -93,21 +103,14 @@ export class GaussianBlurNode extends TempNode {
     return this._textureNode;
   }
 
-  setup(builder) {
+  setup(builder: NodeBuilder) {
     const textureNode = this.textureNode;
-
-    if (textureNode.isTextureNode !== true) {
-      console.error('GaussianBlurNode requires a TextureNode.');
-
-      return vec4();
-    }
-
     const uvNode = textureNode.uvNode || uv();
 
-    const sampleTexture = uv => textureNode.cache().context({ getUV: () => uv, forceUVContext: true });
+    const sampleTexture = (uv: UVNode) => textureNode.cache().context({ getUV: () => uv, forceUVContext: true });
 
     const blur = hsl(() => {
-      const kernelSize = 3 + 2 * this.sigma;
+      const kernelSize = 3 + 2 * this.sigma.value;
       const gaussianCoefficients = this._getCoefficients(kernelSize);
 
       const invSize = this._invSize;
@@ -132,7 +135,9 @@ export class GaussianBlurNode extends TempNode {
       return diffuseSum.div(weightSum);
     });
 
-    const material = this._material || (this._material = builder.createNodeMaterial());
+    if (!this._material) this._material = builder.createNodeMaterial();
+    const material = this._material;
+
     material.fragmentNode = blur();
 
     const properties = builder.getNodeProperties(this);

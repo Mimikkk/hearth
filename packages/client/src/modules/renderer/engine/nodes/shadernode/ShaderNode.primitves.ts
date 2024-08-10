@@ -18,7 +18,7 @@ const safeType = (node: ConstNode) => {
 const primitive = <T>(type: TypeName) => {
   const isComponent = TypeName.isComponent(type);
 
-  return (...params: NodeVal<T>[]) => {
+  function convert(...params: NodeVal<T>[]): ConstNode<T> {
     if (params.length === 0 || (!isComponent && params.every(param => typeof param !== 'object')))
       params = [TypeName.asValue(type, ...params)];
 
@@ -31,7 +31,8 @@ const primitive = <T>(type: TypeName) => {
 
     const nodes = params.map(param => asConst(param));
     return new JoinNode(nodes, type);
-  };
+  }
+  return convert;
 };
 
 export const color = primitive<number>(TypeName.color);

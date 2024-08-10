@@ -36,6 +36,19 @@ import { PointsMaterial } from '@modules/renderer/engine/entities/materials/Poin
 import { LineBasicMaterial } from '@modules/renderer/engine/entities/materials/LineBasicMaterial.js';
 import { PropertyBinding } from '@modules/renderer/engine/animation/PropertyBinding.js';
 import { Geometry } from '@modules/renderer/engine/core/Geometry.js';
+import { ColorManagement } from '@modules/renderer/engine/math/ColorManagement.ts';
+import { Box3 } from '@modules/renderer/engine/math/Box3.js';
+import { Sphere } from '@modules/renderer/engine/math/Sphere.js';
+import { QuaternionKeyframeTrack } from '@modules/renderer/engine/animation/tracks/QuaternionKeyframeTrack.js';
+import { Bone } from '@modules/renderer/engine/entities/Bone.ts';
+import { Skeleton } from '@modules/renderer/engine/entities/Skeleton.js';
+import { OrthographicCamera } from '@modules/renderer/engine/entities/cameras/OrthographicCamera.js';
+import { Points } from '@modules/renderer/engine/entities/Points.js';
+import { Line } from '@modules/renderer/engine/entities/Line.js';
+import { LineSegments } from '@modules/renderer/engine/entities/LineSegments.js';
+import { PerspectiveCamera } from '@modules/renderer/engine/entities/cameras/PerspectiveCamera.js';
+import { radianToDegree } from '@modules/renderer/engine/math/MathUtils.js';
+import { VectorKeyframeTrack } from '@modules/renderer/engine/animation/tracks/VectorKeyframeTrack.ts';
 
 export type PluginFn = (parser: Parser) => Plugin;
 
@@ -2780,7 +2793,7 @@ class Parser {
 
     if (cameraDef.type === 'perspective') {
       camera = new PerspectiveCamera(
-        MathUtils.radToDeg(params.yfov),
+        radianToDegree(params.yfov),
         params.aspectRatio || 1,
         params.znear || 1,
         params.zfar || 2e6,

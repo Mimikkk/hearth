@@ -23,7 +23,7 @@ export class TextureNode extends UniformNode<Texture> {
 
   constructor(
     value: Texture,
-    public uvNode: ConstNode<number> | null = null,
+    public uvNode: UVNode | null = null,
     public levelNode: ConstNode<number> | null = null,
   ) {
     super(value, TypeName.texture);
