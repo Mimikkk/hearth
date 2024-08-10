@@ -1,11 +1,36 @@
-import * as Engine from '@modules/renderer/engine/engine.js';
-import { Attribute } from '@modules/renderer/engine/engine.js';
+import {
+  AmbientLight,
+  Attribute,
+  BoxGeometry,
+  Buffer,
+  BufferStep,
+  Clock,
+  DirectionalLight,
+  GeometryLoader,
+  GeometryUtils,
+  GPUBufferBindingTypeType,
+  Hearth,
+  Mesh,
+  MeshBasicMaterial,
+  MeshStandardMaterial,
+  OrbitControls,
+  OrthographicCamera,
+  PerspectiveCamera,
+  PlaneGeometry,
+  RenderTarget,
+  Scene,
+  Side,
+  TextureDataType,
+  Vec3,
+} from '@modules/renderer/engine/engine.js';
 import {
   cameraProjectionMatrix,
   cameraViewMatrix,
+  hsl,
   instanceIndex,
   MeshBasicNodeMaterial,
   modelWorldMatrix,
+  Node,
   NodeStack,
   positionGeometry,
   positionWorld,
@@ -13,158 +38,129 @@ import {
   texture,
   timerDelta,
   timerLocal,
-  hsl,
+  TypeName,
   u32,
   uv,
   vec2,
 } from '@modules/renderer/engine/nodes/nodes.js';
-
-import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
-
-import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitControls.js';
-
-import { GUI } from 'lil-gui';
-
-import * as GeometryUtils from '@modules/renderer/engine/utils/GeometryUtils.js';
-import { GeometryLoader } from '@modules/renderer/engine/loaders/geometries/GeometryLoader/GeometryLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
-import { GPUBufferBindingTypeType, BufferStep } from '@modules/renderer/engine/hearth/constants.js';
+import { MiniUi } from '@mimi/mini-ui';
 
-const maxParticleCount = 50000;
-const instanceCount = maxParticleCount / 2;
+const count = 50000;
+const instanceCount = count / 2;
 
-let camera, scene, hearth;
-let controls;
-let computeParticles;
-let monkey;
-let clock;
-
-let collisionBox, collisionCamera, collisionPosRT, collisionPosMaterial;
-let collisionBoxPos, collisionBoxPosUI;
-
-init();
-
-async function init() {
-  const { innerWidth, innerHeight } = window;
-
-  camera = new Engine.PerspectiveCamera(60, innerWidth / innerHeight, 0.1, 110);
+const createCamera = () => {
+  const camera = new PerspectiveCamera();
   camera.position.set(40, 8, 0);
   camera.lookAt(0, 0, 0);
+  return camera;
+};
+const createDirectionalLight = () => {
+  const light = new DirectionalLight(0xffffff, 0.5);
+  light.castShadow = true;
+  light.position.set(3, 17, 17);
+  light.castShadow = true;
+  light.shadow.camera.near = 1;
+  light.shadow.camera.far = 50;
+  light.shadow.camera.right = 25;
+  light.shadow.camera.left = -25;
+  light.shadow.camera.top = 25;
+  light.shadow.camera.bottom = -25;
+  light.shadow.mapSize.width = 2048;
+  light.shadow.mapSize.height = 2048;
+  light.shadow.bias = -0.01;
 
-  scene = new Engine.Scene();
+  return light;
+};
+const createAmbientLight = () => new AmbientLight(0x111111);
+const createCollisionCamera = () => {
+  const camera = new OrthographicCamera(-50, 50, 50, -50, 0.1, 50);
+  camera.position.y = 50;
+  camera.lookAt(0, 0, 0);
+  camera.layers.disableAll();
+  camera.layers.enable(1);
 
-  const dirLight = new Engine.DirectionalLight(0xffffff, 0.5);
-  dirLight.castShadow = true;
-  dirLight.position.set(3, 17, 17);
-  dirLight.castShadow = true;
-  dirLight.shadow.camera.near = 1;
-  dirLight.shadow.camera.far = 50;
-  dirLight.shadow.camera.right = 25;
-  dirLight.shadow.camera.left = -25;
-  dirLight.shadow.camera.top = 25;
-  dirLight.shadow.camera.bottom = -25;
-  dirLight.shadow.mapSize.width = 2048;
-  dirLight.shadow.mapSize.height = 2048;
-  dirLight.shadow.bias = -0.01;
+  return camera;
+};
+const createBuffer = () =>
+  storage(
+    Attribute.use(Buffer.f32(count * 3, 3, BufferStep.Instance), 3, 0, GPUBufferBindingTypeType.Storage),
+    TypeName.vec3,
+    count,
+  );
 
-  scene.add(dirLight);
-  scene.add(new Engine.AmbientLight(0x111111));
+const collisionPostprocessTarget = new RenderTarget(1024, 1024);
+collisionPostprocessTarget.texture.type = TextureDataType.HalfFloat;
+const collisionPostprocessMaterial = new MeshBasicNodeMaterial();
+collisionPostprocessMaterial.colorNode = positionWorld;
+const collisionPostprocessPosition = new Vec3();
 
-  collisionCamera = new Engine.OrthographicCamera(-50, 50, 50, -50, 0.1, 50);
-  collisionCamera.position.y = 50;
-  collisionCamera.lookAt(0, 0, 0);
-  collisionCamera.layers.disableAll();
-  collisionCamera.layers.enable(1);
+const positionBuffer = createBuffer();
+const velocityBuffer = createBuffer();
+const ripplePositionBuffer = createBuffer();
+const rippleTimeBuffer = createBuffer();
 
-  collisionPosRT = new Engine.RenderTarget(1024, 1024);
-  collisionPosRT.texture.type = Engine.TextureDataType.HalfFloat;
+const timer = timerLocal(1);
+const randU32 = () => u32(Math.random() * 0xffffff);
+const onInit = hsl(() => {
+  const position = positionBuffer.element(instanceIndex);
+  const velocity = velocityBuffer.element(instanceIndex);
+  const rippleTime = rippleTimeBuffer.element(instanceIndex);
 
-  collisionPosMaterial = new MeshBasicNodeMaterial();
-  collisionPosMaterial.colorNode = positionWorld;
+  const randX = instanceIndex.hash();
+  const randY = instanceIndex.add(randU32()).hash();
+  const randZ = instanceIndex.add(randU32()).hash();
 
-  const createBuffer = (type = 'vec3') =>
-    storage(
-      new Attribute(
-        new Float32Array(maxParticleCount * 3),
-        3,
-        0,
-        BufferStep.Instance,
-        GPUBufferBindingTypeType.Storage,
-      ),
-      type,
-      maxParticleCount,
-    );
+  position.x = randX.mul(100).add(-50);
+  position.y = randY.mul(25);
+  position.z = randZ.mul(100).add(-50);
 
-  const positionBuffer = createBuffer();
-  const velocityBuffer = createBuffer();
-  const ripplePositionBuffer = createBuffer();
-  const rippleTimeBuffer = createBuffer();
+  velocity.y = randX.mul(-0.04).add(-0.2);
 
-  const timer = timerLocal();
+  rippleTime.x = 1000;
+})().compute(count);
+const onUpdate = hsl(() => {
+  const getCoord = (pos: Node) => pos.add(50).div(100);
 
-  const randUint = () => u32(Math.random() * 0xffffff);
+  const position = positionBuffer.element(instanceIndex);
+  const velocity = velocityBuffer.element(instanceIndex);
+  const ripplePosition = ripplePositionBuffer.element(instanceIndex);
+  const rippleTime = rippleTimeBuffer.element(instanceIndex);
 
-  const computeInit = hsl(() => {
-    const position = positionBuffer.element(instanceIndex);
-    const velocity = velocityBuffer.element(instanceIndex);
-    const rippleTime = rippleTimeBuffer.element(instanceIndex);
+  position.addAssign(velocity);
 
-    const randX = instanceIndex.hash();
-    const randY = instanceIndex.add(randUint()).hash();
-    const randZ = instanceIndex.add(randUint()).hash();
+  rippleTime.x = rippleTime.x.add(timerDelta().mul(4));
 
-    position.x = randX.mul(100).add(-50);
-    position.y = randY.mul(25);
-    position.z = randZ.mul(100).add(-50);
+  const collisionArea = texture(collisionPostprocessTarget.texture, getCoord(position.xz));
 
-    velocity.y = randX.mul(-0.04).add(-0.2);
+  const surfaceOffset = 0.05;
 
-    rippleTime.x = 1000;
-  })().compute(maxParticleCount);
+  const floorPosition = collisionArea.y.add(surfaceOffset);
 
-  const computeUpdate = hsl(() => {
-    const getCoord = pos => pos.add(50).div(100);
+  const ripplePivotOffsetY = -0.9;
 
-    const position = positionBuffer.element(instanceIndex);
-    const velocity = velocityBuffer.element(instanceIndex);
-    const ripplePosition = ripplePositionBuffer.element(instanceIndex);
-    const rippleTime = rippleTimeBuffer.element(instanceIndex);
+  NodeStack.if(position.y.add(ripplePivotOffsetY).lessThan(floorPosition), () => {
+    position.y = 25;
 
-    position.addAssign(velocity);
+    ripplePosition.xz = position.xz;
+    ripplePosition.y = floorPosition;
 
-    rippleTime.x = rippleTime.x.add(timerDelta().mul(4));
+    rippleTime.x = 1;
 
-    const collisionArea = texture(collisionPosRT.texture, getCoord(position.xz));
-
-    const surfaceOffset = 0.05;
-
-    const floorPosition = collisionArea.y.add(surfaceOffset);
-
-    const ripplePivotOffsetY = -0.9;
-
-    NodeStack.if(position.y.add(ripplePivotOffsetY).lessThan(floorPosition), () => {
-      position.y = 25;
-
-      ripplePosition.xz = position.xz;
-      ripplePosition.y = floorPosition;
-
-      rippleTime.x = 1;
-
-      position.x = instanceIndex.add(timer).hash().mul(100).add(-50);
-      position.z = instanceIndex.add(timer.add(randUint())).hash().mul(100).add(-50);
-    });
-
-    const rippleOnSurface = texture(collisionPosRT.texture, getCoord(ripplePosition.xz));
-
-    const rippleFloorArea = rippleOnSurface.y.add(surfaceOffset);
-
-    NodeStack.if(ripplePosition.y.greaterThan(rippleFloorArea), () => {
-      rippleTime.x = 1000;
-    });
+    position.x = instanceIndex.add(timer).hash().mul(100).add(-50);
+    position.z = instanceIndex.add(timer.add(randU32())).hash().mul(100).add(-50);
   });
 
-  computeParticles = computeUpdate().compute(maxParticleCount);
+  const rippleOnSurface = texture(collisionPostprocessTarget.texture, getCoord(ripplePosition.xz));
 
+  const rippleFloorArea = rippleOnSurface.y.add(surfaceOffset);
+
+  NodeStack.if(ripplePosition.y.greaterThan(rippleFloorArea), () => {
+    rippleTime.x = 1000;
+  });
+})().compute(count);
+
+const createRainParticles = () => {
   const billboarding = hsl(() => {
     const particlePosition = positionBuffer.toAttribute();
 
@@ -178,8 +174,8 @@ async function init() {
     modelViewMatrix[0][1] = 0;
     modelViewMatrix[0][2] = 0;
 
-    //modelViewMatrix[ 0 ][ 0 ] = modelWorldMatrix[ 0 ].length();
-    //modelViewMatrix[ 1 ][ 1 ] = modelWorldMatrix[ 1 ].length();
+    modelViewMatrix[0][0] = modelWorldMatrix[0].length();
+    modelViewMatrix[1][1] = modelWorldMatrix[1].length();
 
     modelViewMatrix[2][0] = 0;
     modelViewMatrix[2][1] = 0;
@@ -188,129 +184,126 @@ async function init() {
     return cameraProjectionMatrix.mul(modelViewMatrix).mul(positionGeometry);
   });
 
-  const rainMaterial = new MeshBasicNodeMaterial();
-  rainMaterial.colorNode = uv().distance(vec2(0.5, 0)).oneMinus().mul(3).exp().mul(0.1);
-  rainMaterial.vertexNode = billboarding();
-  rainMaterial.opacity = 0.2;
-  rainMaterial.side = Engine.Side.Double;
-  rainMaterial.depthWrite = false;
-  rainMaterial.depthTest = true;
-  rainMaterial.transparent = true;
+  const material = new MeshBasicNodeMaterial();
+  material.colorNode = uv().distance(vec2(0.5, 0)).oneMinus().mul(3).exp().mul(0.1);
+  material.vertexNode = billboarding();
+  material.opacity = 0.2;
+  material.side = Side.Double;
+  material.depthWrite = false;
+  material.depthTest = true;
+  material.transparent = true;
 
-  const rainParticles = new Engine.Mesh(new Engine.PlaneGeometry(0.1, 2), rainMaterial);
-  rainParticles.isInstancedMesh = true;
-  rainParticles.count = instanceCount;
-  scene.add(rainParticles);
+  const mesh = new Mesh(new PlaneGeometry(0.1, 2), material);
+  mesh.isInstancedMesh = true;
+  mesh.count = instanceCount;
 
-  const rippleTime = rippleTimeBuffer.element(instanceIndex).x;
-
-  const rippleEffect = hsl(() => {
+  return mesh;
+};
+const createRainRipples = () => {
+  const time = rippleTimeBuffer.element(instanceIndex).x;
+  const effect = hsl(() => {
     const center = uv().add(vec2(-0.5)).length().mul(7);
-    const distance = rippleTime.sub(center);
+    const distance = time.sub(center);
 
     return distance.min(1).sub(distance.max(1).sub(1));
   });
 
-  const rippleMaterial = new MeshBasicNodeMaterial();
-  rippleMaterial.colorNode = rippleEffect();
-  rippleMaterial.positionNode = positionGeometry.add(ripplePositionBuffer.toAttribute());
-  rippleMaterial.opacityNode = rippleTime.mul(0.3).oneMinus().max(0).mul(0.5);
-  rippleMaterial.side = Engine.Side.Double;
-  rippleMaterial.depthWrite = false;
-  rippleMaterial.depthTest = true;
-  rippleMaterial.transparent = true;
+  const material = new MeshBasicNodeMaterial();
+  material.colorNode = effect();
+  material.positionNode = positionGeometry.add(ripplePositionBuffer.toAttribute());
+  material.opacityNode = time.mul(0.3).oneMinus().max(0).mul(0.5);
+  material.side = Side.Double;
+  material.depthWrite = false;
+  material.depthTest = true;
+  material.transparent = true;
 
-  const surfaceRippleGeometry = new Engine.PlaneGeometry(2.5, 2.5);
-  surfaceRippleGeometry.rotateX(-Math.PI / 2);
+  const surface = new PlaneGeometry(2.5, 2.5).rotateX(-Math.PI / 2);
+  const xRipple = new PlaneGeometry(1, 2).rotateY(-Math.PI / 2);
+  const zRipple = new PlaneGeometry(1, 2);
 
-  const xRippleGeometry = new Engine.PlaneGeometry(1, 2);
-  xRippleGeometry.rotateY(-Math.PI / 2);
+  const geometry = GeometryUtils.mergeGeometries([surface, xRipple, zRipple]);
 
-  const zRippleGeometry = new Engine.PlaneGeometry(1, 2);
+  const mesh = new Mesh(geometry, material);
+  mesh.isInstancedMesh = true;
+  mesh.count = instanceCount;
 
-  const rippleGeometry = GeometryUtils.mergeGeometries([surfaceRippleGeometry, xRippleGeometry, zRippleGeometry]);
+  return mesh;
+};
+const createFloor = () => {
+  const geometry = new PlaneGeometry(1000, 1000).rotateX(-Math.PI / 2);
+  const material = new MeshBasicMaterial({ color: 0x050505 });
 
-  const rippleParticles = new Engine.Mesh(rippleGeometry, rippleMaterial);
-  rippleParticles.isInstancedMesh = true;
-  rippleParticles.count = instanceCount;
-  scene.add(rippleParticles);
+  return new Mesh(geometry, material);
+};
+const createRoof = () => {
+  const geometry = new BoxGeometry(30, 1, 15);
+  const material = new MeshStandardMaterial();
+  material.color.set(0x333333);
 
-  const floorGeometry = new Engine.PlaneGeometry(1000, 1000);
-  floorGeometry.rotateX(-Math.PI / 2);
+  const roof = new Mesh(geometry, material);
+  roof.position.y = 12;
+  roof.scale.x = 3.5;
+  roof.layers.enable(1);
+  roof.castShadow = true;
 
-  const plane = new Engine.Mesh(floorGeometry, new Engine.MeshBasicMaterial({ color: 0x050505 }));
-  scene.add(plane);
+  return roof;
+};
+const loadSuzanne = async () => {
+  const geometry = await GeometryLoader.loadAsync('../../resources/models/json/suzanne_buffergeometry.json');
+  geometry.computeVertexNormals();
 
-  collisionBox = new Engine.Mesh(new Engine.BoxGeometry(30, 1, 15), new Engine.MeshStandardMaterial());
-  collisionBox.material.color.set(0x333333);
-  collisionBox.position.y = 12;
-  collisionBox.scale.x = 3.5;
-  collisionBox.layers.enable(1);
-  collisionBox.castShadow = true;
-  scene.add(collisionBox);
+  const mesh = new Mesh(geometry, new MeshStandardMaterial({ roughness: 1, metalness: 0 }));
+  mesh.receiveShadow = true;
+  mesh.scale.setScalar(5);
+  mesh.setRotationY(Math.PI / 2);
+  mesh.position.y = 4.5;
+  mesh.layers.enable(1);
 
-  const loader = new GeometryLoader();
-  loader.loadAsync('../../resources/models/json/suzanne_buffergeometry.json').then(function (geometry) {
-    geometry.computeVertexNormals();
+  return mesh;
+};
 
-    monkey = new Engine.Mesh(geometry, new Engine.MeshStandardMaterial({ roughness: 1, metalness: 0 }));
-    monkey.receiveShadow = true;
-    monkey.scale.setScalar(5);
-    monkey.setRotationY(Math.PI / 2);
-    monkey.position.y = 4.5;
-    monkey.layers.enable(1);
+const rain = createRainParticles();
+const ripples = createRainRipples();
+const plane = createFloor();
+const roof = createRoof();
+const suzanne = await loadSuzanne();
+const camera = createCamera();
+const collisionCamera = createCollisionCamera();
+const scene = new Scene();
+scene.add(camera, createDirectionalLight(), createAmbientLight(), rain, ripples, plane, roof, suzanne);
 
-    scene.add(monkey);
-  });
+const clock = Clock.new();
+const hearth = await Hearth.as({
+  async animate() {
+    const delta = clock.tick();
+    suzanne.rotateY(delta);
 
-  clock = new Engine.Clock();
+    collisionPostprocessPosition.set(state.position.x, state.position.y, -state.position.z);
+    roof.position.lerp(collisionPostprocessPosition, 10 * delta);
 
-  hearth = await Hearth.as();
-  hearth.setPixelRatio(window.devicePixelRatio);
-  hearth.setSize(window.innerWidth, window.innerHeight);
-  hearth.animation.loop = animate;
-  document.body.appendChild(hearth.parameters.canvas);
+    scene.overrideMaterial = collisionPostprocessMaterial;
+    hearth.updateRenderTarget(collisionPostprocessTarget);
+    await hearth.render(scene, collisionCamera);
 
-  hearth.compute(computeInit);
+    await hearth.compute(onUpdate);
 
-  controls = new OrbitControls(camera, hearth.parameters.canvas);
-  controls.minDistance = 5;
-  controls.maxDistance = 50;
-  controls.update();
+    scene.overrideMaterial = null;
+    hearth.updateRenderTarget(null);
+    await hearth.render(scene, camera);
+  },
+});
 
-  useWindowResizer(hearth, camera);
+await hearth.compute(onInit);
+OrbitControls.attach(hearth, camera);
+useWindowResizer(hearth, camera);
 
-  const gui = new GUI();
+const state = {
+  position: Vec3.from(roof.position),
+  scale: roof.scale,
+  ripples: ripples,
+};
 
-  collisionBoxPosUI = new Engine.Vec3().from(collisionBox.position);
-  collisionBoxPos = new Engine.Vec3();
-
-  gui.add(collisionBoxPosUI, 'z', -50, 50, 0.001).name('position');
-  gui.add(collisionBox.scale, 'x', 0.1, 3.5, 0.01).name('scale');
-  gui
-    .add(rainParticles, 'count', 200, maxParticleCount, 1)
-    .name('drop count')
-    .onChange(v => (rippleParticles.count = v));
-}
-
-function animate() {
-  const delta = clock.tick();
-
-  if (monkey) {
-    monkey.rotateY(delta);
-  }
-
-  collisionBoxPos.set(collisionBoxPosUI.x, collisionBoxPosUI.y, -collisionBoxPosUI.z);
-
-  collisionBox.position.lerp(collisionBoxPos, 10 * delta);
-
-  scene.overrideMaterial = collisionPosMaterial;
-  hearth.updateRenderTarget(collisionPosRT);
-  hearth.render(scene, collisionCamera);
-
-  hearth.compute(computeParticles);
-
-  scene.overrideMaterial = null;
-  hearth.updateRenderTarget(null);
-  hearth.render(scene, camera);
-}
+MiniUi.create('Controls', state)
+  .number('position.z', 'Roof position', -50, 50, 0.01)
+  .number('scale.x', 'Roof scale', 0.1, 3.5, 0.01)
+  .number('ripples.count', 'Drop count', 200, count, 1);

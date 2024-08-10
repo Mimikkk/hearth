@@ -39,7 +39,7 @@ export enum TimerType {
   Frame = 'frame',
 }
 
-export const timerLocal = (scale: number, value: number = 0) => new TimerNode(TimerType.Local, scale, value);
-export const timerGlobal = (scale: number, value: number = 0) => new TimerNode(TimerType.Total, scale, value);
-export const timerDelta = (scale: number, value: number = 0) => new TimerNode(TimerType.Delta, scale, value);
+export const timerLocal = (scale: number = 1, value: number = 0) => new TimerNode(TimerType.Local, scale, value);
+export const timerGlobal = (scale: number = 1, value: number = 0) => new TimerNode(TimerType.Total, scale, value);
+export const timerDelta = (scale: number = 1, value: number = 0) => new TimerNode(TimerType.Delta, scale, value);
 export const frameId = new TimerNode(TimerType.Frame).u32();

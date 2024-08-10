@@ -47,12 +47,12 @@ export const asNodes = (array: any[]): Node[] => {
 
 type ReverseCoerce<T> = T extends Node
   ? T
-  : T extends null
-    ? T | null
-    : T extends undefined
-      ? T | undefined
-      : T extends ConstNode<infer U>
-        ? ConstNode<U> | U
+  : T extends ConstNode<infer U>
+    ? ConstNode<U> | U
+    : T extends null
+      ? T | null
+      : T extends undefined
+        ? T | undefined
         : T extends Hsl<infer U>
           ? Hsl<U> | U
           : T;
