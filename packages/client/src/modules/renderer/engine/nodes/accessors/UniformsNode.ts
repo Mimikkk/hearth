@@ -4,46 +4,49 @@ import { ArrayElementNode } from '../utils/ArrayElementNode.js';
 import { BufferNode } from './BufferNode.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { ConstNode } from '@modules/renderer/engine/nodes/core/ConstNode.js';
+import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
+import { Node } from '@modules/renderer/engine/nodes/core/Node.js';
 
 export class UniformsElementNode extends ArrayElementNode {
-  constructor(arrayBuffer, indexNode) {
+  constructor(arrayBuffer: UniformsNode, indexNode: ConstNode<number>) {
     super(arrayBuffer, indexNode);
-
-    this.isArrayBufferElementNode = true;
   }
 
-  getNodeType(builder) {
-    return this.array.getElementType(builder);
+  getNodeType(): TypeName {
+    return (this.array as UniformsNode).getElementType();
   }
 
-  generate(builder) {
+  generate(builder: NodeBuilder): string {
     const snippet = super.generate(builder);
     const type = this.getNodeType();
 
-    return builder.format(snippet, 'vec4', type);
+    return builder.format(snippet, TypeName.vec4, type);
   }
 }
 
-export class UniformsNode extends BufferNode {
-  constructor(value, elementType = null) {
-    super(null, 'vec4');
+export class UniformsNode<T extends Node = any> extends BufferNode<Float32Array> {
+  array: T[];
+  elementType: TypeName;
+  _elementType: TypeName | null;
+  _elementLength: number;
 
-    this.array = value;
+  constructor(array: T[], elementType: TypeName) {
+    super(null!, TypeName.vec4);
+
+    this.array = array;
     this.elementType = elementType;
 
     this._elementType = null;
     this._elementLength = 0;
 
     this.stage = NodeUpdateStage.Render;
-
-    this.isArrayBufferNode = true;
   }
 
-  getElementType() {
+  getElementType(): TypeName {
     return this.elementType || this._elementType;
   }
 
-  getElementLength() {
+  getElementLength(): number {
     return this._elementLength;
   }
 
@@ -57,32 +60,41 @@ export class UniformsNode extends BufferNode {
       for (let i = 0; i < array.length; i++) {
         const index = i * 4;
 
+        //@ts-expect-error
         value[index] = array[i];
       }
-    } else if (elementType === 'color') {
+    } else if (elementType === TypeName.color) {
       for (let i = 0; i < array.length; i++) {
         const index = i * 4;
         const vector = array[i];
 
+        //@ts-expect-error
         value[index] = vector.r;
+        //@ts-expect-error
         value[index + 1] = vector.g;
+        //@ts-expect-error
         value[index + 2] = vector.b || 0;
-        //value[ index + 3 ] = vector.a || 0;
+        //@ts-expect-error
+        value[index + 3] = vector.a || 0;
       }
     } else {
       for (let i = 0; i < array.length; i++) {
         const index = i * 4;
         const vector = array[i];
 
+        //@ts-expect-error
         value[index] = vector.x;
+        //@ts-expect-error
         value[index + 1] = vector.y;
+        //@ts-expect-error
         value[index + 2] = vector.z || 0;
+        //@ts-expect-error
         value[index + 3] = vector.w || 0;
       }
     }
   }
 
-  setup(builder) {
+  setup(builder: NodeBuilder) {
     const length = this.array.length;
 
     this._elementType = this.elementType === null ? TypeName.ofValue(this.array[0]) : this.elementType;
@@ -94,7 +106,8 @@ export class UniformsNode extends BufferNode {
     return super.setup(builder);
   }
 
-  element(index: number | ConstNode<number>) {
+  //@ts-expect-error
+  element(index: number | ConstNode<number>): UniformsElementNode {
     return new UniformsElementNode(this, asNode(index));
   }
 }

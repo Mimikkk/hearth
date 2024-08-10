@@ -1,6 +1,7 @@
 import { TextureNode } from './TextureNode.js';
 import { asCommand } from '../shadernode/ShaderNode.primitves.ts';
 import { StorageTexture } from '@modules/renderer/engine/entities/textures/StorageTexture.js';
+import { Node } from '@modules/renderer/engine/nodes/core/Node.js';
 
 export class TextureStoreNode extends TextureNode {
   constructor(value, uvNode, storeNode = null) {

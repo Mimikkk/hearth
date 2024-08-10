@@ -9,6 +9,7 @@ import { ArrayElementNode } from '../utils/ArrayElementNode.js';
 import { ConstNode } from '@modules/renderer/engine/nodes/core/ConstNode.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
+import NodeFrame from '@modules/renderer/engine/nodes/core/NodeFrame.js';
 
 export class ReferenceElementNode extends ArrayElementNode {
   constructor(
@@ -102,7 +103,7 @@ export class ReferenceNode extends Node {
     return this.node;
   }
 
-  update() {
+  update(frame: NodeFrame) {
     this.updateValue();
   }
 

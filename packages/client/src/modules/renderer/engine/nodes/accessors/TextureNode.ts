@@ -1,71 +1,84 @@
 import { uniform, UniformNode } from '../core/UniformNode.js';
-import { uv } from './UVNode.js';
-import { textureSize } from './TextureSizeNode.js';
+import { uv, UVNode } from './UVNode.js';
+import { textureSize, TextureSizeNode } from './TextureSizeNode.js';
 import { colorSpaceToLinear } from '../display/ColorSpaceNode.js';
 import { expression } from '../code/ExpressionNode.js';
 import { maxMipLevel } from '../utils/MaxMipLevelNode.js';
-import { asNode, asCommand, vec3 } from '../shadernode/ShaderNode.primitves.ts';
+import { asCommand, asNode, vec3 } from '../shadernode/ShaderNode.primitves.ts';
 import { NodeUpdateStage } from '../core/constants.js';
 import { implCommand } from '@modules/renderer/engine/nodes/core/Node.commands.js';
+import { Texture } from '@modules/renderer/engine/entities/textures/Texture.js';
+import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
+import { Node } from '@modules/renderer/engine/nodes/core/Node.js';
+import { ConstNode, NodeVal } from '@modules/renderer/engine/nodes/core/ConstNode.js';
+import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
+import { DepthTexture } from '@modules/renderer/engine/entities/textures/DepthTexture.js';
 
-export class TextureNode extends UniformNode {
-  constructor(value, uvNode = null, levelNode = null) {
-    super(value);
+export class TextureNode extends UniformNode<Texture> {
+  declare isTextureNode: true;
+  compareNode: Node;
+  depthNode: Node;
+  sampler: boolean;
+  updateMatrix: boolean;
+
+  constructor(
+    value: Texture,
+    public uvNode: ConstNode<number> | null = null,
+    public levelNode: ConstNode<number> | null = null,
+  ) {
+    super(value, TypeName.texture);
 
     this.isTextureNode = true;
 
-    this.uvNode = uvNode;
-    this.levelNode = levelNode;
-    this.compareNode = null;
-    this.depthNode = null;
+    this.compareNode = null!;
+    this.depthNode = null!;
 
     this.sampler = true;
     this.updateMatrix = false;
     this.stage = NodeUpdateStage.None;
 
-    this.setUpdateMatrix(uvNode === null);
+    this.setUpdateMatrix(!!uvNode);
   }
 
-  getUniformHash() {
+  getUniformHash(): string {
     return this.value.uuid;
   }
 
-  getNodeType() {
-    if (this.value.isDepthTexture === true) return 'f32';
-
-    return 'vec4';
+  getNodeType(): TypeName {
+    if (DepthTexture.is(this.value)) return TypeName.f32;
+    return TypeName.vec4;
   }
 
-  getInputType() {
-    return 'texture';
+  getInputType(): TypeName {
+    return TypeName.texture;
   }
 
-  getDefaultUV() {
+  getDefaultUV(): UVNode {
     return uv(this.value.channel);
   }
 
-  updateReference() {
+  updateReference(): Texture {
     return this.value;
   }
 
-  getTransformedUV(uvNode) {
+  getTransformedUV(uvNode: UVNode): Node {
     const texture = this.value;
 
     return uniform(texture.matrix).mul(vec3(uvNode, 1)).xy;
   }
 
-  setUpdateMatrix(value) {
+  setUpdateMatrix(value: boolean): this {
     this.updateMatrix = value;
     this.stage = value ? NodeUpdateStage.Frame : NodeUpdateStage.None;
 
     return this;
   }
 
-  setupUV(builder, uvNode) {
+  setupUV(builder: NodeBuilder, uvNode: UVNode): UVNode {
     return uvNode;
   }
 
-  setup(builder) {
+  setup(builder: NodeBuilder) {
     const properties = builder.getNodeProperties(this);
 
     let uvNode = this.uvNode;
@@ -94,11 +107,18 @@ export class TextureNode extends UniformNode {
     properties.depthNode = this.depthNode;
   }
 
-  generateUV(builder, uvNode) {
-    return uvNode.build(builder, this.sampler === true ? 'vec2' : 'ivec2');
+  generateUV(builder: NodeBuilder, uvNode: UVNode): string {
+    return uvNode.build(builder, this.sampler ? TypeName.vec2 : TypeName.ivec2);
   }
 
-  generateSnippet(builder, textureProperty, uvSnippet, levelSnippet, depthSnippet, compareSnippet) {
+  generateSnippet(
+    builder: NodeBuilder,
+    textureProperty: string,
+    uvSnippet: string,
+    levelSnippet: string,
+    depthSnippet: string,
+    compareSnippet: string,
+  ): string {
     const texture = this.value;
 
     let snippet;
@@ -107,7 +127,7 @@ export class TextureNode extends UniformNode {
       snippet = builder.codeTextureLevel(texture, textureProperty, uvSnippet, levelSnippet, depthSnippet);
     } else if (compareSnippet) {
       snippet = builder.codeTextureCompare(texture, textureProperty, uvSnippet, compareSnippet, depthSnippet);
-    } else if (this.sampler === false) {
+    } else if (!this.sampler) {
       snippet = builder.codeTextureLoad(texture, textureProperty, uvSnippet, depthSnippet);
     } else {
       snippet = builder.codeTexture(texture, textureProperty, uvSnippet, depthSnippet);
@@ -116,7 +136,7 @@ export class TextureNode extends UniformNode {
     return snippet;
   }
 
-  generate(builder, output) {
+  generate(builder: NodeBuilder, output?: TypeName): string {
     const properties = builder.getNodeProperties(this);
 
     const texture = this.value;
@@ -125,9 +145,9 @@ export class TextureNode extends UniformNode {
       throw new Error('TextureNode: Need a engine.js texture.');
     }
 
-    const textureProperty = super.generate(builder, 'property');
+    const textureProperty = super.generate(builder, TypeName.property);
 
-    if (output === 'sampler') {
+    if (output === TypeName.sampler) {
       return textureProperty + '_sampler';
     } else if (builder.isReference(output)) {
       return textureProperty;
@@ -140,9 +160,9 @@ export class TextureNode extends UniformNode {
         const { uvNode, levelNode, compareNode, depthNode } = properties;
 
         const uvSnippet = this.generateUV(builder, uvNode);
-        const levelSnippet = levelNode ? levelNode.build(builder, 'f32') : null;
-        const depthSnippet = depthNode ? depthNode.build(builder, 'i32') : null;
-        const compareSnippet = compareNode ? compareNode.build(builder, 'f32') : null;
+        const levelSnippet = levelNode ? levelNode.build(builder, TypeName.f32) : null;
+        const depthSnippet = depthNode ? depthNode.build(builder, TypeName.i32) : null;
+        const compareSnippet = compareNode ? compareNode.build(builder, TypeName.f32) : null;
 
         const nodeVar = builder.getVarFromNode(this);
 
@@ -195,21 +215,21 @@ export class TextureNode extends UniformNode {
     return textureNode;
   }
 
-  blur(levelNode) {
+  blur(levelNode: NodeVal<number>): TextureNode {
     const textureNode = this.clone();
     textureNode.levelNode = levelNode.mul(maxMipLevel(textureNode));
 
     return textureNode;
   }
 
-  level(levelNode) {
+  level(levelNode: NodeVal<number>): TextureNode {
     const textureNode = this.clone();
     textureNode.levelNode = levelNode;
 
     return textureNode;
   }
 
-  size(levelNode) {
+  size(levelNode: NodeVal<number>): TextureSizeNode {
     return textureSize(this, levelNode);
   }
 
@@ -220,7 +240,7 @@ export class TextureNode extends UniformNode {
     return textureNode;
   }
 
-  depth(depthNode) {
+  depth(depthNode: NodeVal<number>): TextureNode {
     const textureNode = this.clone();
     textureNode.depthNode = asNode(depthNode);
 
