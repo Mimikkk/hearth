@@ -46,8 +46,7 @@ import {
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 import { MiniUi } from '@mimi/mini-ui';
 
-const count = 50000;
-const instanceCount = count / 2;
+const maxCount = 50000;
 
 const createCamera = () => {
   const camera = new PerspectiveCamera();
@@ -84,10 +83,112 @@ const createCollisionCamera = () => {
 };
 const createBuffer = () =>
   storage(
-    Attribute.use(Buffer.f32(count * 3, 3, BufferStep.Instance), 3, 0, GPUBufferBindingTypeType.Storage),
+    Attribute.use(Buffer.f32(maxCount * 3, 3, BufferStep.Instance), 3, 0, GPUBufferBindingTypeType.Storage),
     TypeName.vec3,
-    count,
+    maxCount,
   );
+
+const createRainParticles = () => {
+  const billboarding = hsl(() => {
+    const particlePosition = positionBuffer.toAttribute();
+
+    const worldMatrix = modelWorldMatrix.toVar();
+    worldMatrix[3][0] = particlePosition.x;
+    worldMatrix[3][1] = particlePosition.y;
+    worldMatrix[3][2] = particlePosition.z;
+
+    const modelViewMatrix = cameraViewMatrix.mul(worldMatrix);
+    modelViewMatrix[0][0] = 1;
+    modelViewMatrix[0][1] = 0;
+    modelViewMatrix[0][2] = 0;
+
+    // modelViewMatrix[0][0] = modelWorldMatrix[0].length();
+    // modelViewMatrix[1][1] = modelWorldMatrix[1].length();
+
+    modelViewMatrix[2][0] = 0;
+    modelViewMatrix[2][1] = 0;
+    modelViewMatrix[2][2] = 1;
+
+    return cameraProjectionMatrix.mul(modelViewMatrix).mul(positionGeometry);
+  });
+
+  const material = new MeshBasicNodeMaterial();
+  material.colorNode = uv().distance(vec2(0.5, 0)).oneMinus().mul(3).exp().mul(0.1);
+  material.vertexNode = billboarding();
+  material.opacity = 0.2;
+  material.side = Side.Double;
+  material.depthWrite = false;
+  material.depthTest = true;
+  material.transparent = true;
+
+  const mesh = new Mesh(new PlaneGeometry(0.1, 2), material);
+  mesh.isInstancedMesh = true;
+  mesh.count = maxCount / 2;
+
+  return mesh;
+};
+const createRainRipples = () => {
+  const time = rippleTimeBuffer.element(instanceIndex).x;
+  const effect = hsl(() => {
+    const center = uv().add(vec2(-0.5)).length().mul(7);
+    const distance = time.sub(center);
+
+    return distance.min(1).sub(distance.max(1).sub(1));
+  });
+
+  const material = new MeshBasicNodeMaterial();
+  material.colorNode = effect();
+  material.positionNode = positionGeometry.add(ripplePositionBuffer.toAttribute());
+  material.opacityNode = time.mul(0.3).oneMinus().max(0).mul(0.5);
+  material.side = Side.Double;
+  material.depthWrite = false;
+  material.depthTest = true;
+  material.transparent = true;
+
+  const surface = new PlaneGeometry(2.5, 2.5).rotateX(-Math.PI / 2);
+  const xRipple = new PlaneGeometry(1, 2).rotateY(-Math.PI / 2);
+  const zRipple = new PlaneGeometry(1, 2);
+
+  const geometry = GeometryUtils.mergeGeometries([surface, xRipple, zRipple]);
+
+  const mesh = new Mesh(geometry, material);
+  mesh.isInstancedMesh = true;
+  mesh.count = maxCount / 2;
+
+  return mesh;
+};
+const createFloor = () => {
+  const geometry = new PlaneGeometry(1000, 1000).rotateX(-Math.PI / 2);
+  const material = new MeshBasicMaterial({ color: 0x050505 });
+
+  return new Mesh(geometry, material);
+};
+const createRoof = () => {
+  const geometry = new BoxGeometry(30, 1, 15);
+  const material = new MeshStandardMaterial();
+  material.color.set(0x333333);
+
+  const roof = new Mesh(geometry, material);
+  roof.position.y = 12;
+  roof.scale.x = 3.5;
+  roof.layers.enable(1);
+  roof.castShadow = true;
+
+  return roof;
+};
+const loadSuzanne = async () => {
+  const geometry = await GeometryLoader.loadAsync('../../resources/models/json/suzanne_buffergeometry.json');
+  geometry.computeVertexNormals();
+
+  const mesh = new Mesh(geometry, new MeshStandardMaterial({ roughness: 1, metalness: 0 }));
+  mesh.receiveShadow = true;
+  mesh.scale.setScalar(5);
+  mesh.setRotationY(Math.PI / 2);
+  mesh.position.y = 4.5;
+  mesh.layers.enable(1);
+
+  return mesh;
+};
 
 const collisionPostprocessTarget = new RenderTarget(1024, 1024);
 collisionPostprocessTarget.texture.type = TextureDataType.HalfFloat;
@@ -118,7 +219,7 @@ const onInit = hsl(() => {
   velocity.y = randX.mul(-0.04).add(-0.2);
 
   rippleTime.x = 1000;
-})().compute(count);
+})().compute(maxCount);
 const onUpdate = hsl(() => {
   const getCoord = (pos: Node) => pos.add(50).div(100);
 
@@ -158,109 +259,7 @@ const onUpdate = hsl(() => {
   NodeStack.if(ripplePosition.y.greaterThan(rippleFloorArea), () => {
     rippleTime.x = 1000;
   });
-})().compute(count);
-
-const createRainParticles = () => {
-  const billboarding = hsl(() => {
-    const particlePosition = positionBuffer.toAttribute();
-
-    const worldMatrix = modelWorldMatrix.toVar();
-    worldMatrix[3][0] = particlePosition.x;
-    worldMatrix[3][1] = particlePosition.y;
-    worldMatrix[3][2] = particlePosition.z;
-
-    const modelViewMatrix = cameraViewMatrix.mul(worldMatrix);
-    modelViewMatrix[0][0] = 1;
-    modelViewMatrix[0][1] = 0;
-    modelViewMatrix[0][2] = 0;
-
-    modelViewMatrix[0][0] = modelWorldMatrix[0].length();
-    modelViewMatrix[1][1] = modelWorldMatrix[1].length();
-
-    modelViewMatrix[2][0] = 0;
-    modelViewMatrix[2][1] = 0;
-    modelViewMatrix[2][2] = 1;
-
-    return cameraProjectionMatrix.mul(modelViewMatrix).mul(positionGeometry);
-  });
-
-  const material = new MeshBasicNodeMaterial();
-  material.colorNode = uv().distance(vec2(0.5, 0)).oneMinus().mul(3).exp().mul(0.1);
-  material.vertexNode = billboarding();
-  material.opacity = 0.2;
-  material.side = Side.Double;
-  material.depthWrite = false;
-  material.depthTest = true;
-  material.transparent = true;
-
-  const mesh = new Mesh(new PlaneGeometry(0.1, 2), material);
-  mesh.isInstancedMesh = true;
-  mesh.count = instanceCount;
-
-  return mesh;
-};
-const createRainRipples = () => {
-  const time = rippleTimeBuffer.element(instanceIndex).x;
-  const effect = hsl(() => {
-    const center = uv().add(vec2(-0.5)).length().mul(7);
-    const distance = time.sub(center);
-
-    return distance.min(1).sub(distance.max(1).sub(1));
-  });
-
-  const material = new MeshBasicNodeMaterial();
-  material.colorNode = effect();
-  material.positionNode = positionGeometry.add(ripplePositionBuffer.toAttribute());
-  material.opacityNode = time.mul(0.3).oneMinus().max(0).mul(0.5);
-  material.side = Side.Double;
-  material.depthWrite = false;
-  material.depthTest = true;
-  material.transparent = true;
-
-  const surface = new PlaneGeometry(2.5, 2.5).rotateX(-Math.PI / 2);
-  const xRipple = new PlaneGeometry(1, 2).rotateY(-Math.PI / 2);
-  const zRipple = new PlaneGeometry(1, 2);
-
-  const geometry = GeometryUtils.mergeGeometries([surface, xRipple, zRipple]);
-
-  const mesh = new Mesh(geometry, material);
-  mesh.isInstancedMesh = true;
-  mesh.count = instanceCount;
-
-  return mesh;
-};
-const createFloor = () => {
-  const geometry = new PlaneGeometry(1000, 1000).rotateX(-Math.PI / 2);
-  const material = new MeshBasicMaterial({ color: 0x050505 });
-
-  return new Mesh(geometry, material);
-};
-const createRoof = () => {
-  const geometry = new BoxGeometry(30, 1, 15);
-  const material = new MeshStandardMaterial();
-  material.color.set(0x333333);
-
-  const roof = new Mesh(geometry, material);
-  roof.position.y = 12;
-  roof.scale.x = 3.5;
-  roof.layers.enable(1);
-  roof.castShadow = true;
-
-  return roof;
-};
-const loadSuzanne = async () => {
-  const geometry = await GeometryLoader.loadAsync('../../resources/models/json/suzanne_buffergeometry.json');
-  geometry.computeVertexNormals();
-
-  const mesh = new Mesh(geometry, new MeshStandardMaterial({ roughness: 1, metalness: 0 }));
-  mesh.receiveShadow = true;
-  mesh.scale.setScalar(5);
-  mesh.setRotationY(Math.PI / 2);
-  mesh.position.y = 4.5;
-  mesh.layers.enable(1);
-
-  return mesh;
-};
+})().compute(maxCount);
 
 const rain = createRainParticles();
 const ripples = createRainRipples();
@@ -300,10 +299,13 @@ useWindowResizer(hearth, camera);
 const state = {
   position: Vec3.from(roof.position),
   scale: roof.scale,
-  ripples: ripples,
+  count: ripples.count,
 };
 
 MiniUi.create('Controls', state)
   .number('position.z', 'Roof position', -50, 50, 0.01)
   .number('scale.x', 'Roof scale', 0.1, 3.5, 0.01)
-  .number('ripples.count', 'Drop count', 200, count, 1);
+  .number('count', 'Drop count', 200, maxCount, 1, count => {
+    ripples.count = count;
+    rain.count = count;
+  });
