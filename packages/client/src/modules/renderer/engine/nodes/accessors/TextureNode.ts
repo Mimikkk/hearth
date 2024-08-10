@@ -246,8 +246,6 @@ export class TextureNode extends UniformNode {
 export const texture = asCommand(TextureNode);
 export const textureLoad = (...params) => texture(...params).setSampler(false);
 
-//export const textureLevel = ( value, uv, level ) => texture( value, uv ).level( level );
-
 export const sampler = aTexture => (aTexture.isNode === true ? aTexture : texture(aTexture)).convert('sampler');
 
 implCommand('texture', TextureNode);

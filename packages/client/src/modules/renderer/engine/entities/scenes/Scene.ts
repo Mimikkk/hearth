@@ -39,6 +39,12 @@ export class Scene extends Entity {
     return scene?.isScene === true;
   }
 
+  static of(...entities: Entity[]): Scene {
+    const scene = new Scene();
+    scene.add(...entities);
+    return scene;
+  }
+
   copy(source: this, recursive?: boolean): this {
     super.copy(source, recursive);
 

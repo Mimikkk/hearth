@@ -1,5 +1,6 @@
 import { TextureNode } from './TextureNode.js';
 import { asCommand } from '../shadernode/ShaderNode.primitves.ts';
+import { StorageTexture } from '@modules/renderer/engine/entities/textures/StorageTexture.js';
 
 export class TextureStoreNode extends TextureNode {
   constructor(value, uvNode, storeNode = null) {
@@ -50,10 +51,8 @@ export class TextureStoreNode extends TextureNode {
 
 const textureStoreBase = asCommand(TextureStoreNode);
 
-export const textureStore = (value, uvNode, storeNode) => {
+export const textureStore = (value?: StorageTexture, uvNode?: Node, storeNode?: Node) => {
   const node = textureStoreBase(value, uvNode, storeNode);
-
-  if (storeNode !== null) node.append();
-
+  if (storeNode) node.append();
   return node;
 };

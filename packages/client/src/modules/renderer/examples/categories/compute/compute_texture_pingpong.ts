@@ -1,172 +1,155 @@
-import * as Engine from '@modules/renderer/engine/engine.js';
-import { texture, textureStore, wgsl, instanceIndex, uniform } from '@modules/renderer/engine/nodes/nodes.js';
-
+import {
+  Mesh,
+  MeshBasicMaterial,
+  OrthographicCamera,
+  PlaneGeometry,
+  Scene,
+  Texture,
+  TextureDataType,
+  Vec2,
+} from '@modules/renderer/engine/engine.js';
+import { instanceIndex, texture, textureStore, uniform, wgsl } from '@modules/renderer/engine/nodes/nodes.js';
 import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 import { StorageTexture } from '@modules/renderer/engine/entities/textures/StorageTexture.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
-let camera, scene, hearth;
-let computeInitNode, computeToPing, computeToPong;
-let pingTexture, pongTexture;
-let material;
-let phase = true;
-let lastUpdate = -1;
-
-const seed = uniform(new Engine.Vec2());
-
-await init();
-render();
-
-async function init() {
+const createCamera = () => {
   const aspect = window.innerWidth / window.innerHeight;
-  camera = new Engine.OrthographicCamera(-aspect, aspect, 1, -1, 0, 2);
+  const camera = new OrthographicCamera(-aspect, aspect, 1, -1, 0, 2);
   camera.position.z = 1;
 
-  scene = new Engine.Scene();
+  return camera;
+};
+const createStorageTexture = () => {
+  const width = 512;
+  const height = 512;
+  const texture = new StorageTexture(width, height);
+  texture.type = TextureDataType.HalfFloat;
 
-  const hdr = true;
-  const width = 512,
-    height = 512;
+  return texture;
+};
+const createPlane = (texture: Texture): Mesh => {
+  const geometry = new PlaneGeometry(1, 1);
+  const material = new MeshBasicMaterial({ color: 0xffffff, map: texture });
 
-  pingTexture = new StorageTexture(width, height);
-  pongTexture = new StorageTexture(width, height);
+  return new Mesh(geometry, material);
+};
 
-  if (hdr) {
-    pingTexture.type = Engine.TextureDataType.HalfFloat;
-    pongTexture.type = Engine.TextureDataType.HalfFloat;
+const width = 512;
+const height = 512;
+const pingTexture = createStorageTexture();
+const pongTexture = createStorageTexture();
+const seed = uniform(Vec2.new());
+
+const common = wgsl(
+  `
+  fn random(n: vec2f) -> f32 {
+    return fract(sin(dot(n, vec2f(12.9898, 4.1414))) * 43758.5453);
   }
 
-  const wgslFormat = hdr ? 'rgba16float' : 'rgba8unorm';
+  fn blur(image: texture_2d<f32>, uv: vec2i) -> vec4f {
+    var color = vec4f( 0.0 );
 
-  const rand2 = wgsl(`
-					fn rand2( n: vec2f ) -> f32 {
+    color += textureLoad(image, uv + vec2i( - 1, 1 ), 0);
+    color += textureLoad(image, uv + vec2i( - 1, - 1 ), 0);
+    color += textureLoad(image, uv + vec2i( 0, 0 ), 0);
+    color += textureLoad(image, uv + vec2i( 1, - 1 ), 0);
+    color += textureLoad(image, uv + vec2i( 1, 1 ), 0);
 
-						return fract( sin( dot( n, vec2f( 12.9898, 4.1414 ) ) ) * 43758.5453 );
+    return color / 5.0; 
+  }
 
-					}
+  fn getUV(posX: u32, posY: u32) -> vec2f {
+    return vec2f(f32(posX)/ ${width}.0, f32(posY) / ${height}.0);
+  }
+  `,
+);
 
-					fn blur( image : texture_2d<f32>, uv : vec2i ) -> vec4f {
+const reset = wgsl(
+  `
+  fn reset(writeTex: texture_storage_2d<rgba16float, write>, index: u32, seed: vec2f) -> void {
+    let posX = index % ${width};
+    let posY = index / ${width};
+    let indexUV = vec2u(posX, posY);
+    let uv = getUV(posX, posY);
 
-						var color = vec4f( 0.0 );
+    let r = random(uv + seed * 100) - random(uv + seed * 300);
+    let g = random(uv + seed * 200) - random(uv + seed * 300);
+    let b = random(uv + seed * 200) - random(uv + seed * 100);
 
-						color += textureLoad( image, uv + vec2i( - 1, 1 ), 0 );
-						color += textureLoad( image, uv + vec2i( - 1, - 1 ), 0 );
-						color += textureLoad( image, uv + vec2i( 0, 0 ), 0 );
-						color += textureLoad( image, uv + vec2i( 1, - 1 ), 0 );
-						color += textureLoad( image, uv + vec2i( 1, 1 ), 0 );
+    textureStore(writeTex, indexUV, vec4(r, g, b, 1));
+  }
+  `,
+  [common],
+)({
+  writeTex: textureStore(pingTexture),
+  index: instanceIndex,
+  seed,
+}).compute(width * height);
 
-						return color / 5.0; 
-					}
+const pingpong = wgsl(
+  `
+  fn pingpong(readTex: texture_2d<f32>, writeTex: texture_storage_2d<rgba16float, write>, index: u32) -> void {
+    let posX = index % ${width};
+    let posY = index / ${width};
+    let indexUV = vec2i(i32(posX), i32(posY));
+    let color = blur(readTex, indexUV).rgb;
+    
+    textureStore(writeTex, indexUV, vec4f(color * 1.05, 1));
+  }
+  `,
+  [common],
+);
 
-					fn getUV( posX: u32, posY: u32 ) -> vec2f {
+const pong = pingpong({
+  readTex: texture(pingTexture),
+  writeTex: textureStore(pongTexture),
+  index: instanceIndex,
+}).compute(width * height);
+const ping = pingpong({
+  readTex: texture(pongTexture),
+  writeTex: textureStore(pingTexture),
+  index: instanceIndex,
+}).compute(width * height);
 
-						let uv = vec2f( f32( posX ) / ${width}.0, f32( posY ) / ${height}.0 );
+const plane = createPlane(pongTexture);
+const scene = Scene.of(plane);
 
-						return uv;
+let phase = true;
+let lastUpdate = -1;
+const camera = createCamera();
+const hearth = await Hearth.as({
+  async animate() {
+    const time = performance.now();
+    const seconds = Math.floor(time / 1000);
 
-					}
-				`);
+    if (phase && seconds !== lastUpdate) {
+      seed.value.set(Math.random(), Math.random());
+      await hearth.compute(reset);
 
-  const computeInitWGSL = wgsl(
-    `
-					fn computeInitWGSL( writeTex: texture_storage_2d<${wgslFormat}, write>, index: u32, seed: vec2f ) -> void {
+      lastUpdate = seconds;
+    }
 
-						let posX = index % ${width};
-						let posY = index / ${width};
-						let indexUV = vec2u( posX, posY );
-						let uv = getUV( posX, posY );
+    await hearth.compute(phase ? pong : ping);
 
-						let r = rand2( uv + seed * 100 ) - rand2( uv + seed * 300 );
-						let g = rand2( uv + seed * 200 ) - rand2( uv + seed * 300 );
-						let b = rand2( uv + seed * 200 ) - rand2( uv + seed * 100 );
+    (plane.material as MeshBasicMaterial).map = phase ? pongTexture : pingTexture;
 
-						textureStore( writeTex, indexUV, vec4( r, g, b, 1 ) );
+    phase = !phase;
 
-					}
-				`,
-    [rand2],
-  );
-
-  computeInitNode = computeInitWGSL({
-    writeTex: textureStore(pingTexture),
-    index: instanceIndex,
-    seed,
-  }).compute(width * height);
-
-  const computePingPongWGSL = wgsl(
-    `
-					fn computePingPongWGSL( readTex: texture_2d<f32>, writeTex: texture_storage_2d<${wgslFormat}, write>, index: u32 ) -> void {
-
-						let posX = index % ${width};
-						let posY = index / ${width};
-						let indexUV = vec2i( i32( posX ), i32( posY ) );
-
-						let color = blur( readTex, indexUV ).rgb;
-
-						textureStore( writeTex, indexUV, vec4f( color * 1.05, 1 ) );
-
-					}
-				`,
-    [rand2],
-  );
-
-  computeToPong = computePingPongWGSL({
-    readTex: texture(pingTexture),
-    writeTex: textureStore(pongTexture),
-    index: instanceIndex,
-  }).compute(width * height);
-  computeToPing = computePingPongWGSL({
-    readTex: texture(pongTexture),
-    writeTex: textureStore(pingTexture),
-    index: instanceIndex,
-  }).compute(width * height);
-
-  material = new Engine.MeshBasicMaterial({ color: 0xffffff, map: pongTexture });
-
-  const plane = new Engine.Mesh(new Engine.PlaneGeometry(1, 1), material);
-  scene.add(plane);
-
-  hearth = await Hearth.as();
-  hearth.setPixelRatio(window.devicePixelRatio);
+    await hearth.render(scene, camera);
+  },
+});
+useWindowResizer(hearth, camera, () => {
   hearth.setSize(window.innerWidth, window.innerHeight);
-  hearth.animation.loop = render;
-  document.body.appendChild(hearth.parameters.canvas);
 
-  useWindowResizer(hearth, camera, () => {
-    hearth.setSize(window.innerWidth, window.innerHeight);
+  const aspect = window.innerWidth / window.innerHeight;
 
-    const aspect = window.innerWidth / window.innerHeight;
+  const frustumHeight = camera.top - camera.bottom;
 
-    const frustumHeight = camera.top - camera.bottom;
+  camera.left = (-frustumHeight * aspect) / 2;
+  camera.right = (frustumHeight * aspect) / 2;
 
-    camera.left = (-frustumHeight * aspect) / 2;
-    camera.right = (frustumHeight * aspect) / 2;
+  camera.updateProjectionMatrix();
+});
 
-    camera.updateProjectionMatrix();
-
-    render();
-  });
-
-  hearth.compute(computeInitNode);
-}
-
-function render() {
-  const time = performance.now();
-  const seconds = Math.floor(time / 1000);
-
-  if (phase && seconds !== lastUpdate) {
-    seed.value.set(Math.random(), Math.random());
-
-    hearth.compute(computeInitNode);
-
-    lastUpdate = seconds;
-  }
-
-  hearth.compute(phase ? computeToPong : computeToPing);
-
-  material.map = phase ? pongTexture : pingTexture;
-
-  phase = !phase;
-
-  hearth.render(scene, camera);
-}
+await hearth.compute(reset);
