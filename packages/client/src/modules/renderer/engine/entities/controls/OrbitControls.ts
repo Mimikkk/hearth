@@ -67,47 +67,36 @@ export class OrbitControls {
   constructor(
     public camera: ICamera,
     public domElement: HTMLElement,
+    parameters?: OrbitControlsParameters,
   ) {
     this.domElement.style.touchAction = 'none';
 
     this.enabled = true;
-
-    this.target = Vec3.new();
-
-    this.cursor = Vec3.new();
-
-    this.minDistance = 0;
-    this.maxDistance = Infinity;
-
-    this.minZoom = 0;
-    this.maxZoom = Infinity;
-
-    this.minTargetRadius = 0;
-    this.maxTargetRadius = Infinity;
-
-    this.minPolarAngle = 0;
-    this.maxPolarAngle = Math.PI;
-
-    this.minAzimuthAngle = -Infinity;
-    this.maxAzimuthAngle = Infinity;
-
-    this.enableDamping = false;
-    this.dampingFactor = 0.05;
-
-    this.enableZoom = true;
-    this.zoomSpeed = 1.0;
-
-    this.enableRotate = true;
-    this.rotateSpeed = 1.0;
-
-    this.enablePan = true;
-    this.panSpeed = 1.0;
-    this.screenSpacePanning = true;
-    this.keyPanSpeed = 7.0;
-    this.zoomToCursor = false;
-
-    this.autoRotate = false;
-    this.autoRotateSpeed = 2.0;
+    this.target = parameters?.target ?? Vec3.new();
+    this.cursor = parameters?.cursor ?? Vec3.new();
+    this.minDistance = parameters?.minDistance ?? 0;
+    this.maxDistance = parameters?.maxDistance ?? Infinity;
+    this.minZoom = parameters?.minZoom ?? 0;
+    this.maxZoom = parameters?.maxZoom ?? Infinity;
+    this.minTargetRadius = parameters?.minTargetRadius ?? 0;
+    this.maxTargetRadius = parameters?.maxTargetRadius ?? Infinity;
+    this.minPolarAngle = parameters?.minPolarAngle ?? 0;
+    this.maxPolarAngle = parameters?.maxPolarAngle ?? Math.PI;
+    this.minAzimuthAngle = parameters?.minAzimuthAngle ?? -Infinity;
+    this.maxAzimuthAngle = parameters?.maxAzimuthAngle ?? Infinity;
+    this.enableDamping = parameters?.enableDamping ?? false;
+    this.dampingFactor = parameters?.dampingFactor ?? 0.05;
+    this.enableZoom = parameters?.enableZoom ?? true;
+    this.zoomSpeed = parameters?.zoomSpeed ?? 1.0;
+    this.enableRotate = parameters?.enableRotate ?? true;
+    this.rotateSpeed = parameters?.rotateSpeed ?? 1.0;
+    this.enablePan = parameters?.enablePan ?? true;
+    this.panSpeed = parameters?.panSpeed ?? 1.0;
+    this.screenSpacePanning = parameters?.screenSpacePanning ?? true;
+    this.keyPanSpeed = parameters?.keyPanSpeed ?? 7.0;
+    this.zoomToCursor = parameters?.zoomToCursor ?? false;
+    this.autoRotate = parameters?.autoRotate ?? false;
+    this.autoRotateSpeed = parameters?.autoRotateSpeed ?? 2.0;
 
     this.keys = { LEFT: 'ArrowLeft', UP: 'ArrowUp', RIGHT: 'ArrowRight', BOTTOM: 'ArrowDown' };
 
@@ -897,7 +886,39 @@ export class OrbitControls {
     this.update();
   }
 
-  static attach(hearth: Hearth, camera: ICamera) {
-    return new OrbitControls(camera, hearth.parameters.canvas);
+  static attach(hearth: Hearth, camera: ICamera, parameters?: Partial<OrbitControls>) {
+    return new OrbitControls(camera, hearth.parameters.canvas, parameters);
   }
+}
+
+interface OrbitControlsParameters {
+  onChange?: () => void;
+  onStart?: () => void;
+  onEnd?: () => void;
+  enabled?: boolean;
+  target?: Vec3;
+  cursor?: Vec3;
+  minDistance?: number;
+  maxDistance?: number;
+  minZoom?: number;
+  maxZoom?: number;
+  minTargetRadius?: number;
+  maxTargetRadius?: number;
+  minPolarAngle?: number;
+  maxPolarAngle?: number;
+  minAzimuthAngle?: number;
+  maxAzimuthAngle?: number;
+  enableDamping?: boolean;
+  dampingFactor?: number;
+  enableZoom?: boolean;
+  zoomSpeed?: number;
+  enableRotate?: boolean;
+  rotateSpeed?: number;
+  enablePan?: boolean;
+  panSpeed?: number;
+  screenSpacePanning?: boolean;
+  keyPanSpeed?: number;
+  zoomToCursor?: boolean;
+  autoRotate?: boolean;
+  autoRotateSpeed?: number;
 }

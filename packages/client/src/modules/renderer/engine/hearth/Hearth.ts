@@ -522,7 +522,7 @@ export class Hearth {
   }
 
   postprocess(into: Node) {
-    return new HearthPostprocess(this, into).render();
+    return new HearthPostprocess(this, into);
   }
 
   createRenderPipeline(renderObject: RenderObject) {

@@ -37,7 +37,7 @@ export class TextureNode extends UniformNode<Texture> {
     this.updateMatrix = false;
     this.stage = NodeUpdateStage.None;
 
-    this.setUpdateMatrix(!!uvNode);
+    this.setUpdateMatrix(!uvNode);
   }
 
   getUniformHash(): string {

@@ -1,7 +1,29 @@
-import * as Engine from '@modules/renderer/engine/engine.js';
-import { Attribute } from '@modules/renderer/engine/engine.js';
+import {
+  Attribute,
+  Buffer,
+  ConeGeometry,
+  CylinderGeometry,
+  DirectionalLight,
+  Fog,
+  Group,
+  HemisphereLight,
+  InstancedMesh,
+  Mesh,
+  MeshStandardMaterial,
+  OrthographicCamera,
+  PerspectiveCamera,
+  PlaneGeometry,
+  RenderTarget,
+  Scene,
+  SphereGeometry,
+  TextureDataType,
+  ToneMapping,
+  Vec2,
+  Vec3,
+} from '@modules/renderer/engine/engine.js';
 import {
   color,
+  hsl,
   instanceIndex,
   MeshBasicNodeMaterial,
   MeshStandardNodeMaterial,
@@ -10,9 +32,10 @@ import {
   positionLocal,
   positionWorld,
   storage,
+  StorageBufferNode,
   texture,
   timerLocal,
-  hsl,
+  TypeName,
   u32,
   vec2,
   vec3,
@@ -23,284 +46,262 @@ import { TeapotGeometry } from '@modules/renderer/engine/entities/geometries/Tea
 
 import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 
-import { HearthPostprocess } from '@modules/renderer/engine/hearth/Hearth.Postprocess.js';
-
 import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitControls.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
-import { WorldAxesControls } from '@modules/renderer/engine/entities/controls/WorldAxesControls.js';
 import { BufferStep, GPUBufferBindingTypeType } from '@modules/renderer/engine/hearth/constants.js';
 import { Stats } from '../../ui/stats.js';
 
-const maxParticleCount = 100000;
-
-let camera, scene, hearth;
-let viewHelper!: WorldAxesControls;
-let controls;
-let computeParticles;
-let postProcessing;
-
-let collisionCamera, collisionPosRT, collisionPosMaterial;
-
-init();
-
-async function init() {
-  const { innerWidth, innerHeight } = window;
-
-  camera = new Engine.PerspectiveCamera(60, innerWidth / innerHeight, 0.1, 100);
+const maxCount = 100000;
+const createCamera = () => {
+  const camera = new PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 100);
   camera.position.set(20, 2, 20);
   camera.layers.enable(2);
   camera.lookAt(0, 40, 0);
 
-  scene = new Engine.Scene();
-  scene.fog = new Engine.Fog(0x0f3c37, 5, 40);
-
-  const dirLight = new Engine.DirectionalLight(0xf9ff9b, 9);
-  dirLight.castShadow = true;
-  dirLight.position.set(10, 10, 0);
-  dirLight.castShadow = true;
-  dirLight.shadow.camera.near = 1;
-  dirLight.shadow.camera.far = 30;
-  dirLight.shadow.camera.right = 30;
-  dirLight.shadow.camera.left = -30;
-  dirLight.shadow.camera.top = 30;
-  dirLight.shadow.camera.bottom = -30;
-  dirLight.shadow.mapSize.width = 2048;
-  dirLight.shadow.mapSize.height = 2048;
-  dirLight.shadow.bias = -0.009;
-  scene.add(dirLight);
-
-  scene.add(new Engine.HemisphereLight(0x0f3c37, 0x080d10, 100));
-
-  collisionCamera = new Engine.OrthographicCamera(-50, 50, 50, -50, 0.1, 50);
-  collisionCamera.position.y = 50;
-  collisionCamera.lookAt(0, 0, 0);
-  collisionCamera.layers.enable(1);
-
-  collisionPosRT = new Engine.RenderTarget(1024, 1024);
-  collisionPosRT.texture.type = Engine.TextureDataType.HalfFloat;
-
-  collisionPosMaterial = new MeshBasicNodeMaterial();
-  collisionPosMaterial.fog = false;
-  collisionPosMaterial.toneMapped = false;
-  collisionPosMaterial.colorNode = positionWorld.y;
-
-  const createBuffer = (type = 'vec3') =>
-    storage(
-      new Attribute(
-        new Float32Array(maxParticleCount * (type === 'vec4' ? 4 : 3)),
-        type === 'vec4' ? 4 : 3,
-        0,
-        BufferStep.Instance,
-        GPUBufferBindingTypeType.Storage,
-      ),
-      type,
-      maxParticleCount,
-    );
-
-  const positionBuffer = createBuffer();
-  const scaleBuffer = createBuffer();
-  const staticPositionBuffer = createBuffer();
-  const dataBuffer = createBuffer('vec4');
-
-  const timer = timerLocal();
-
-  const randUint = () => u32(Math.random() * 0xffffff);
-
-  const computeInit = hsl(() => {
-    const position = positionBuffer.element(instanceIndex);
-    const scale = scaleBuffer.element(instanceIndex);
-    const particleData = dataBuffer.element(instanceIndex);
-
-    const randX = instanceIndex.hash();
-    const randY = instanceIndex.add(randUint()).hash();
-    const randZ = instanceIndex.add(randUint()).hash();
-
-    position.x = randX.mul(100).add(-50);
-    position.y = randY.mul(500).add(3);
-    position.z = randZ.mul(100).add(-50);
-
-    scale.xyz = instanceIndex.add(Math.random()).hash().mul(0.8).add(0.2);
-
-    staticPositionBuffer.element(instanceIndex).assign(vec3(1000, 10000, 1000));
-
-    particleData.y = randY.mul(-0.1).add(-0.02);
-
-    particleData.x = position.x;
-    particleData.z = position.z;
-    particleData.w = randX;
-  })().compute(maxParticleCount);
-
-  const surfaceOffset = 0.2;
-  const speed = 0.4;
-
-  const computeUpdate = hsl(() => {
-    const getCoord = pos => pos.add(50).div(100);
-
-    const position = positionBuffer.element(instanceIndex);
-    const scale = scaleBuffer.element(instanceIndex);
-    const particleData = dataBuffer.element(instanceIndex);
-
-    const velocity = particleData.y;
-    const random = particleData.w;
-
-    const rippleOnSurface = texture(collisionPosRT.texture, getCoord(position.xz));
-    const rippleFloorArea = rippleOnSurface.y.add(scale.x.mul(surfaceOffset));
-
-    NodeStack.if(position.y.greaterThan(rippleFloorArea), () => {
-      position.x = particleData.x.add(timer.mul(random.mul(random)).mul(speed).sin().mul(3));
-      position.z = particleData.z.add(timer.mul(random).mul(speed).cos().mul(random.mul(10)));
-
-      position.y = position.y.add(velocity);
-    }).else(() => {
-      staticPositionBuffer.element(instanceIndex).assign(position);
-    });
-  });
-
-  computeParticles = computeUpdate().compute(maxParticleCount);
-
-  const geometry = new Engine.SphereGeometry(surfaceOffset, 5, 5);
-
-  function particle(staticParticles) {
-    const posBuffer = staticParticles ? staticPositionBuffer : positionBuffer;
-    const layer = staticParticles ? 1 : 2;
-
-    const staticMaterial = new MeshStandardNodeMaterial({
-      color: 0xeeeeee,
-      roughness: 0.9,
-      metalness: 0,
-    });
-
-    staticMaterial.positionNode = positionLocal.mul(scaleBuffer.toAttribute()).add(posBuffer.toAttribute());
-
-    const rainParticles = new Engine.Mesh(geometry, staticMaterial);
-    rainParticles.isInstancedMesh = true;
-    rainParticles.count = maxParticleCount;
-    rainParticles.castShadow = true;
-    rainParticles.layers.disableAll();
-    rainParticles.layers.enable(layer);
-
-    return rainParticles;
-  }
-
-  const dynamicParticles = particle();
-  const staticParticles = particle(true);
-
-  scene.add(dynamicParticles);
-  scene.add(staticParticles);
-
-  const floorGeometry = new Engine.PlaneGeometry(100, 100);
-  floorGeometry.rotateX(-Math.PI / 2);
-
-  const plane = new Engine.Mesh(
-    floorGeometry,
-    new Engine.MeshStandardMaterial({
-      color: 0x0c1e1e,
-      roughness: 0.5,
-      metalness: 0,
-      transparent: true,
-    }),
-  );
-
-  plane.material.opacityNode = positionLocal.xz.mul(0.05).distance(0).saturate().oneMinus();
-
-  scene.add(plane);
-
-  function tree(count = 8) {
-    const coneMaterial = new MeshStandardNodeMaterial({
-      color: 0x0d492c,
-      roughness: 0.6,
-      metalness: 0,
-    });
-
-    const object = new Engine.Group();
-
-    for (let i = 0; i < count; i++) {
-      const radius = 1 + i;
-
-      const coneGeometry = new Engine.ConeGeometry(radius * 0.95, radius * 1.25, 32);
-
-      const cone = new Engine.Mesh(coneGeometry, coneMaterial);
-      cone.castShadow = true;
-      cone.position.y = (count - i) * 1.5 + count * 0.6;
-      object.add(cone);
-    }
-
-    const geometry = new Engine.CylinderGeometry(1, 1, count, 32);
-    const cone = new Engine.Mesh(geometry, coneMaterial);
-    cone.position.y = count / 2;
-    object.add(cone);
-
-    return object;
-  }
-
-  const teapotTree = new Engine.Mesh(
-    new TeapotGeometry(0.5, 18),
-    new MeshBasicNodeMaterial({
-      color: 0xfcfb9e,
-    }),
-  );
-
-  teapotTree.position.y = 18;
-
-  scene.add(tree());
-  scene.add(teapotTree);
-
+  return camera;
+};
+const createScene = () => {
+  const scene = new Scene();
+  scene.fog = new Fog(0x0f3c37, 5, 40);
   scene.backgroundNode = viewportTopLeft.distance(0.5).mul(2).mix(color(0x0f4140), color(0x060a0d));
 
-  hearth = await Hearth.as();
+  return scene;
+};
+const createCollisionCamera = () => {
+  const camera = new OrthographicCamera(-50, 50, 50, -50, 0.1, 50);
+  camera.position.y = 50;
+  camera.lookAt(0, 0, 0);
+  camera.layers.enable(1);
 
-  viewHelper = new WorldAxesControls(camera, hearth.parameters.canvas);
-  controls = new OrbitControls(camera, hearth.parameters.canvas);
-  controls.target.set(0, 10, 0);
-  controls.minDistance = 25;
-  controls.maxDistance = 35;
-  controls.maxPolarAngle = Math.PI / 1.7;
-  controls.autoRotate = true;
-  controls.autoRotateSpeed = -0.7;
-  controls.update();
+  return camera;
+};
+const createDirectionalLight = () => {
+  const light = new DirectionalLight(0xf9ff9b, 9);
+  light.castShadow = true;
+  light.position.set(10, 10, 0);
+  light.castShadow = true;
+  light.shadow.camera.near = 1;
+  light.shadow.camera.far = 30;
+  light.shadow.camera.right = 30;
+  light.shadow.camera.left = -30;
+  light.shadow.camera.top = 30;
+  light.shadow.camera.bottom = -30;
+  light.shadow.mapSize.width = 2048;
+  light.shadow.mapSize.height = 2048;
+  light.shadow.bias = -0.009;
 
-  const scenePass = pass(scene, camera);
-  const scenePassColor = scenePass.getTextureNode();
-  const vignet = viewportTopLeft.distance(0.5).mul(1.35).clamp().oneMinus();
+  return light;
+};
+const createHemisphereLight = () => {
+  return new HemisphereLight(0x0f3c37, 0x080d10, 100);
+};
+const createPostprocess = (scene: Scene, camera: PerspectiveCamera) => {
+  const scenepass = pass(scene, camera);
 
-  const teapotTreePass = pass(teapotTree, camera).getTextureNode();
-  const teapotTreePassBlurred = teapotTreePass.gaussianBlur(3);
-  teapotTreePassBlurred.resolution = new Engine.Vec2(0.2, 0.2);
+  // const color = scenepass.getTextureNode();
+  //
+  // const teapotpass = pass(teapot, camera).getTextureNode();
+  // const teapotblur = teapotpass.gaussianBlur(3);
+  // teapotblur.resolution = new Vec2(0.2, 0.2);
+  //
+  // const colorblur = color.gaussianBlur();
+  // colorblur.resolution = new Vec2(0.5, 0.5);
+  // colorblur.directionNode = vec2(1);
+  //
+  // const vignette = viewportTopLeft.distance(0.5).mul(1.35).clamp().oneMinus();
+  //
+  // return scenepass.add(colorblur.mul(0.1)).mul(vignette).add(teapotpass.mul(10).add(teapotblur));
 
-  const scenePassColorBlurred = scenePassColor.gaussianBlur();
-  scenePassColorBlurred.resolution = new Engine.Vec2(0.5, 0.5);
-  scenePassColorBlurred.directionNode = vec2(1);
+  return scenepass;
+};
+const createBuffer = (type: TypeName.vec4 | TypeName.vec3) => {
+  const stride = type === TypeName.vec4 ? 4 : 3;
+  const buffer = Buffer.f32(maxCount * stride, stride, BufferStep.Instance);
 
-  let totalPass = scenePass;
-  totalPass = totalPass.add(scenePassColorBlurred.mul(0.1));
-  totalPass = totalPass.mul(vignet);
-  totalPass = totalPass.add(teapotTreePass.mul(10).add(teapotTreePassBlurred));
+  return storage(Attribute.use(buffer, stride, 0, GPUBufferBindingTypeType.Storage), type, maxCount);
+};
+const createParticles = (posBuffer: StorageBufferNode, layer: number) => {
+  const geometry = new SphereGeometry(surfaceOffset, 5, 5);
+  const material = new MeshStandardNodeMaterial({
+    color: 0xeeeeee,
+    roughness: 0.9,
+    metalness: 0,
+  });
 
-  hearth.parameters.toneMapping = Engine.ToneMapping.ACESFilmic;
-  hearth.setPixelRatio(window.devicePixelRatio);
-  hearth.setSize(window.innerWidth, window.innerHeight);
-  hearth.animation.loop = async () => {
+  material.positionNode = positionLocal.mul(scaleBuffer.toAttribute()).add(posBuffer.toAttribute());
+
+  const particles = new InstancedMesh(geometry, material, maxCount);
+  particles.castShadow = true;
+  particles.layers.disableAll();
+  particles.layers.enable(layer);
+
+  return particles;
+};
+const createFloor = () => {
+  const geometry = new PlaneGeometry(100, 100).rotateX(-Math.PI / 2);
+  const material = new MeshStandardMaterial({
+    color: 0x0c1e1e,
+    roughness: 0.5,
+    metalness: 0,
+    transparent: true,
+  });
+  material.opacityNode = positionLocal.xz.mul(0.05).distance(0).saturate().oneMinus();
+
+  return new Mesh(geometry, material);
+};
+const createTree = (count: number = 8): Group => {
+  const material = new MeshStandardNodeMaterial({
+    color: 0x0d492c,
+    roughness: 0.6,
+    metalness: 0,
+  });
+
+  const cones = new Group();
+  for (let i = 0; i < count; ++i) {
+    const radius = 1 + i;
+
+    const geometry = new ConeGeometry(radius * 0.95, radius * 1.25, 32);
+
+    const cone = new Mesh(geometry, material);
+    cone.castShadow = true;
+    cone.position.y = (count - i) * 1.5 + count * 0.6;
+
+    cones.add(cone);
+  }
+
+  const geometry = new CylinderGeometry(1, 1, count, 32);
+  const cone = new Mesh(geometry, material);
+  cone.position.y = count / 2;
+  cones.add(cone);
+
+  return cones;
+};
+const createTeapot = () => {
+  const geometry = new TeapotGeometry(0.5, 18);
+  const material = new MeshBasicNodeMaterial({ color: 0xfcfb9e });
+
+  const teapot = new Mesh(geometry, material);
+  teapot.position.y = 18;
+
+  return teapot;
+};
+
+const camera = createCamera();
+const directionalLight = createDirectionalLight();
+const hemisphereLight = createHemisphereLight();
+const collisionCamera = createCollisionCamera();
+
+const collisionPostprocessTarget = new RenderTarget(1024, 1024);
+collisionPostprocessTarget.texture.type = TextureDataType.HalfFloat;
+
+const collisionPostprocessMaterial = new MeshBasicNodeMaterial();
+collisionPostprocessMaterial.fog = false;
+collisionPostprocessMaterial.toneMapped = false;
+collisionPostprocessMaterial.colorNode = positionWorld.y;
+
+const dynamicPositionBuffer = createBuffer(TypeName.vec3);
+const scaleBuffer = createBuffer(TypeName.vec3);
+const staticPositionBuffer = createBuffer(TypeName.vec3);
+const dataBuffer = createBuffer(TypeName.vec4);
+
+const timer = timerLocal();
+const randu32 = () => u32(Math.random() * 0xffffff);
+
+const onInit = hsl(() => {
+  const position = dynamicPositionBuffer.element(instanceIndex);
+  const scale = scaleBuffer.element(instanceIndex);
+  const particleData = dataBuffer.element(instanceIndex);
+
+  const randX = instanceIndex.hash();
+  const randY = instanceIndex.add(randu32()).hash();
+  const randZ = instanceIndex.add(randu32()).hash();
+
+  position.x = randX.mul(100).add(-50);
+  position.y = randY.mul(500).add(3);
+  position.z = randZ.mul(100).add(-50);
+
+  scale.xyz = instanceIndex.add(Math.random()).hash().mul(0.8).add(0.2);
+
+  staticPositionBuffer.element(instanceIndex).assign(vec3(1000, 10000, 1000));
+
+  particleData.y = randY.mul(-0.1).add(-0.02);
+
+  particleData.x = position.x;
+  particleData.z = position.z;
+  particleData.w = randX;
+})().compute(maxCount);
+
+const surfaceOffset = 0.2;
+const speed = 0.4;
+
+const onUpdate = hsl(() => {
+  const getCoord = pos => pos.add(50).div(100);
+
+  const position = dynamicPositionBuffer.element(instanceIndex);
+  const scale = scaleBuffer.element(instanceIndex);
+  const particleData = dataBuffer.element(instanceIndex);
+
+  const velocity = particleData.y;
+  const random = particleData.w;
+
+  const rippleOnSurface = texture(collisionPostprocessTarget.texture, getCoord(position.xz));
+  const rippleFloorArea = rippleOnSurface.y.add(scale.x.mul(surfaceOffset));
+
+  NodeStack.if(position.y.greaterThan(rippleFloorArea), () => {
+    position.x = particleData.x.add(timer.mul(random.mul(random)).mul(speed).sin().mul(3));
+    position.z = particleData.z.add(timer.mul(random).mul(speed).cos().mul(random.mul(10)));
+
+    position.y = position.y.add(velocity);
+  }).else(() => {
+    staticPositionBuffer.element(instanceIndex).assign(position);
+  });
+})().compute(maxCount);
+
+const staticParticles = createParticles(staticPositionBuffer, 1);
+const dynamicParticles = createParticles(dynamicPositionBuffer, 2);
+const plane = createFloor();
+const teapot = createTeapot();
+const tree = createTree();
+const scene = createScene().add(
+  directionalLight,
+  hemisphereLight,
+  dynamicParticles,
+  staticParticles,
+  plane,
+  tree,
+  teapot,
+);
+
+const hearth = await Hearth.as({
+  async animate() {
     stats?.update();
     controls?.update();
 
-    scene.overrideMaterial = collisionPosMaterial;
-    hearth.updateRenderTarget(collisionPosRT);
+    scene.overrideMaterial = collisionPostprocessMaterial;
+    hearth.updateRenderTarget(collisionPostprocessTarget);
     await hearth.render(scene, collisionCamera);
 
-    await hearth.compute(computeParticles);
+    await hearth.compute(onUpdate);
 
     scene.overrideMaterial = null;
     hearth.updateRenderTarget(null);
 
-    await postProcessing.render();
-  };
-  document.body.appendChild(hearth.parameters.canvas);
+    postprocess.render();
+  },
+  toneMapping: ToneMapping.ACESFilmic,
+});
 
-  postProcessing = new HearthPostprocess(hearth);
-  postProcessing.outputNode = totalPass;
+const controls = OrbitControls.attach(hearth, camera, {
+  target: Vec3.new(0, 10, 0),
+  minDistance: 25,
+  maxDistance: 35,
+  maxPolarAngle: Math.PI / 1.7,
+  autoRotate: true,
+  autoRotateSpeed: -0.7,
+});
+const postprocess = hearth.postprocess(createPostprocess(scene, camera));
 
-  const stats = Stats.use(hearth);
-  await hearth.compute(computeInit);
+const stats = Stats.use(hearth);
+await hearth.compute(onInit);
 
-  useWindowResizer(hearth, camera);
-}
+useWindowResizer(hearth, camera);

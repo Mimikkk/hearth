@@ -6,7 +6,7 @@ import { Node } from '@modules/renderer/engine/nodes/core/Node.js';
 export class HearthPostprocess {
   constructor(
     public hearth: Hearth,
-    public outputNode?: Node,
+    public outputNode: Node,
   ) {}
 
   render() {

@@ -6,7 +6,7 @@ import { IndexNode } from '@modules/renderer/engine/nodes/core/IndexNode.js';
 import { ConstNode } from '@modules/renderer/engine/nodes/core/ConstNode.js';
 import { asCommand, asNode } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.as.js';
 
-export class StorageBufferNode<A extends Attribute> extends BufferNode<A> {
+export class StorageBufferNode<A extends Attribute = any> extends BufferNode<A> {
   declare isStorageBufferNode: true;
 
   constructor(value: A, type: TypeName, count: ConstNode<number> = asNode(0)) {
