@@ -87,7 +87,7 @@ async function init() {
   fireInstancedSprite.renderOrder = 1;
   scene.add(fireInstancedSprite);
 
-  const helper = new Engine.GridHelper(3000, 40, 0x303030, 0x303030);
+  const helper = new Engine.GridVisualizer(3000, 40, 0x303030, 0x303030);
   helper.position.y = -75;
   scene.add(helper);
 

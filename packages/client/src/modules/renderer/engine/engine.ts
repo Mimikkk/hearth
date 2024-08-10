@@ -205,7 +205,7 @@ export * from './entities/visualizers/Box3Helper.js';
 export * from './entities/visualizers/BoxHelper.js';
 export * from './entities/visualizers/CameraVisualizer.js';
 export * from './entities/visualizers/DirectionalLightHelper.js';
-export * from './entities/visualizers/GridHelper.js';
+export * from './entities/visualizers/GridVisualizer.js';
 export * from './entities/visualizers/HemisphereLightHelper.js';
 export * from './entities/visualizers/PlaneHelper.js';
 export * from './entities/visualizers/PointLightHelper.js';

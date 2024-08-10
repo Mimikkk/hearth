@@ -52,6 +52,19 @@ export class Geometry {
     this.instanceCount = 1;
   }
 
+  static new(): Geometry {
+    return new Geometry();
+  }
+
+  static withAttributes(attributes: Record<string, Attribute>, into: Geometry = Geometry.new()): Geometry {
+    return into.withAttributes(attributes);
+  }
+
+  withAttributes(attributes: Record<string, Attribute>): this {
+    this.attributes = attributes;
+    return this;
+  }
+
   static is(value: any): value is Geometry {
     return value?.isGeometry === true;
   }

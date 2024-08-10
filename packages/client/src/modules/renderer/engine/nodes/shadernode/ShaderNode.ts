@@ -1,5 +1,5 @@
 import { Node } from '../core/Node.js';
-import { asNode } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.as.js';
+import { asCommand, asNode } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.as.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import { HslLayout } from '@modules/renderer/engine/nodes/shadernode/hsl.js';

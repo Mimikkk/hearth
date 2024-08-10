@@ -4,7 +4,7 @@ import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.typ
 import { Attribute } from '@modules/renderer/engine/core/Attribute.js';
 import { IndexNode } from '@modules/renderer/engine/nodes/core/IndexNode.js';
 import { ConstNode } from '@modules/renderer/engine/nodes/core/ConstNode.js';
-import { asNode } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.as.js';
+import { asCommand, asNode } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.as.js';
 
 export class StorageBufferNode<A extends Attribute> extends BufferNode<A> {
   declare isStorageBufferNode: true;
@@ -24,9 +24,4 @@ export class StorageBufferNode<A extends Attribute> extends BufferNode<A> {
 
 StorageBufferNode.prototype.isStorageBufferNode = true;
 
-export const storage = (value: Attribute, type: TypeName.vec2, count: number = 0): StorageBufferNode =>
-  new StorageBufferNode(value, type, count);
-
-export const storageObject = (value: Attribute, type: TypeName.vec2, count: number = 0): StorageBufferNode => {
-  return new StorageBufferNode(value, type, count);
-};
+export const storage = asCommand(StorageBufferNode);

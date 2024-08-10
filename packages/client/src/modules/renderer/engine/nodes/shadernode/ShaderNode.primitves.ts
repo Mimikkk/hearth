@@ -15,10 +15,10 @@ const safeType = (node: ConstNode) => {
   }
 };
 
-const primitive = (type: TypeName) => {
+const primitive = <T>(type: TypeName) => {
   const isComponent = TypeName.isComponent(type);
 
-  return (...params: NodeVal[]) => {
+  return (...params: NodeVal<T>[]) => {
     if (params.length === 0 || (!isComponent && params.every(param => typeof param !== 'object')))
       params = [TypeName.asValue(type, ...params)];
 
@@ -34,35 +34,35 @@ const primitive = (type: TypeName) => {
   };
 };
 
-export const color = primitive(TypeName.color);
-export const f32 = primitive(TypeName.f32);
-export const i32 = primitive(TypeName.i32);
-export const u32 = primitive(TypeName.u32);
-export const bool = primitive(TypeName.bool);
-export const vec2 = primitive(TypeName.vec2);
-export const ivec2 = primitive(TypeName.ivec2);
-export const uvec2 = primitive(TypeName.uvec2);
-export const bvec2 = primitive(TypeName.bvec2);
-export const vec3 = primitive(TypeName.vec3);
-export const ivec3 = primitive(TypeName.ivec3);
-export const uvec3 = primitive(TypeName.uvec3);
-export const bvec3 = primitive(TypeName.bvec3);
-export const vec4 = primitive(TypeName.vec4);
-export const ivec4 = primitive(TypeName.ivec4);
-export const uvec4 = primitive(TypeName.uvec4);
-export const bvec4 = primitive(TypeName.bvec4);
-export const mat2 = primitive(TypeName.mat2);
-export const imat2 = primitive(TypeName.imat2);
-export const umat2 = primitive(TypeName.umat2);
-export const bmat2 = primitive(TypeName.bmat2);
-export const mat3 = primitive(TypeName.mat3);
-export const imat3 = primitive(TypeName.imat3);
-export const umat3 = primitive(TypeName.umat3);
-export const bmat3 = primitive(TypeName.bmat3);
-export const mat4 = primitive(TypeName.mat4);
-export const imat4 = primitive(TypeName.imat4);
-export const umat4 = primitive(TypeName.umat4);
-export const bmat4 = primitive(TypeName.bmat4);
+export const color = primitive<number>(TypeName.color);
+export const f32 = primitive<number>(TypeName.f32);
+export const i32 = primitive<number>(TypeName.i32);
+export const u32 = primitive<number>(TypeName.u32);
+export const bool = primitive<boolean>(TypeName.bool);
+export const vec2 = primitive<number>(TypeName.vec2);
+export const ivec2 = primitive<number>(TypeName.ivec2);
+export const uvec2 = primitive<number>(TypeName.uvec2);
+export const bvec2 = primitive<number>(TypeName.bvec2);
+export const vec3 = primitive<number>(TypeName.vec3);
+export const ivec3 = primitive<number>(TypeName.ivec3);
+export const uvec3 = primitive<number>(TypeName.uvec3);
+export const bvec3 = primitive<number>(TypeName.bvec3);
+export const vec4 = primitive<number>(TypeName.vec4);
+export const ivec4 = primitive<number>(TypeName.ivec4);
+export const uvec4 = primitive<number>(TypeName.uvec4);
+export const bvec4 = primitive<number>(TypeName.bvec4);
+export const mat2 = primitive<number>(TypeName.mat2);
+export const imat2 = primitive<number>(TypeName.imat2);
+export const umat2 = primitive<number>(TypeName.umat2);
+export const bmat2 = primitive<number>(TypeName.bmat2);
+export const mat3 = primitive<number>(TypeName.mat3);
+export const imat3 = primitive<number>(TypeName.imat3);
+export const umat3 = primitive<number>(TypeName.umat3);
+export const bmat3 = primitive<number>(TypeName.bmat3);
+export const mat4 = primitive<number>(TypeName.mat4);
+export const imat4 = primitive<number>(TypeName.imat4);
+export const umat4 = primitive<number>(TypeName.umat4);
+export const bmat4 = primitive<number>(TypeName.bmat4);
 
 export const element = asCommand(ArrayElementNode);
 export const convert = asCommand(ConvertNode);

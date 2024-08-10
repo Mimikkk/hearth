@@ -10,6 +10,7 @@ import { Intersection, Raycaster } from '@modules/renderer/engine/core/Raycaster
 import { LineSegments } from '@modules/renderer/engine/entities/LineSegments.js';
 import { Line3 } from '@modules/renderer/engine/math/Line3.js';
 import { LineGeometry } from '@modules/renderer/engine/entities/lines/LineGeometry.js';
+import { Geometry } from '@modules/renderer/engine/core/Geometry.js';
 
 const _start = Vec3.new();
 const _end = Vec3.new();
@@ -21,9 +22,9 @@ export class Line extends Entity {
   declare isLine: true;
 
   material: Material;
-  geometry: LineGeometry;
+  geometry: Geometry;
 
-  constructor(geometry: LineGeometry, material: LineBasicMaterial) {
+  constructor(geometry: Geometry, material: LineBasicMaterial) {
     super();
 
     this.geometry = geometry;

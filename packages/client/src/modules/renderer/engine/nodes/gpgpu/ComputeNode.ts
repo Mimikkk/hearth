@@ -1,6 +1,5 @@
 import { Node } from '../core/Node.js';
 import { NodeUpdateStage } from '../core/constants.js';
-import { ShaderCallNode } from '../shadernode/ShaderNode.primitves.ts';
 import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { ShaderStage, TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
@@ -8,6 +7,7 @@ import { FunctionCallNode } from '@modules/renderer/engine/nodes/code/FunctionCa
 import { NodeFrame } from '@modules/renderer/engine/nodes/core/NodeFrame.js';
 import { implCommand } from '@modules/renderer/engine/nodes/core/Node.commands.js';
 import { ConstNode } from '@modules/renderer/engine/nodes/core/ConstNode.js';
+import { ShaderCallNode } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.js';
 
 export class ComputeNode extends Node {
   dispatchCount: number;

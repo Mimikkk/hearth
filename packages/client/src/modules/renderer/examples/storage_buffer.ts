@@ -5,7 +5,7 @@ import {
   instanceIndex,
   MeshBasicNodeMaterial,
   NodeStack,
-  storageObject,
+  storage,
   hsl,
   u32,
   uv,
@@ -44,7 +44,7 @@ async function init() {
     const buffer = Buffer.f32(size * typeSize, typeSize, BufferStep.Instance);
     const arrayBuffer = new Attribute(buffer, typeSize, 0, undefined, GPUBufferBindingTypeType.Storage);
 
-    arrayBufferNodes.push(storageObject(arrayBuffer, type[i], size));
+    arrayBufferNodes.push(storage(arrayBuffer, type[i], size));
   }
 
   const computeInitOrder = hsl(() => {

@@ -26,7 +26,7 @@ export class PerspectiveCamera extends Camera {
 
   constructor(
     public fov: number = 50,
-    public aspect: number = 1,
+    public aspect: number = window.innerWidth / window.innerHeight,
     public near: number = 0.1,
     public far: number = 2000,
   ) {

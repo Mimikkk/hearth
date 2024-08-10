@@ -9,6 +9,8 @@ import { Quaternion } from '@modules/renderer/engine/math/Quaternion.js';
 import { Spherical } from '@modules/renderer/engine/math/Spherical.js';
 import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
 import { Mat4 } from '@modules/renderer/engine/math/Mat4.js';
+import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
+import { ICamera } from '@modules/renderer/engine/entities/cameras/Camera.js';
 
 const _ray = new Ray();
 const _plane = new Plane();
@@ -63,7 +65,7 @@ export class OrbitControls {
   dispose: () => void;
 
   constructor(
-    public object: OrthographicCamera | PerspectiveCamera,
+    public camera: ICamera,
     public domElement: HTMLElement,
   ) {
     this.domElement.style.touchAction = 'none';
@@ -112,8 +114,8 @@ export class OrbitControls {
     this.mouseButtons = { LEFT: Mouse.Rotate, MIDDLE: Mouse.Dolly, RIGHT: Mouse.Pan };
 
     this.target0 = this.target.clone();
-    this.position0 = this.object.position.clone();
-    this.zoom0 = this.object.zoom;
+    this.position0 = this.camera.position.clone();
+    this.zoom0 = this.camera.zoom;
 
     this._domElementKeyEvents = null;
 
@@ -126,7 +128,7 @@ export class OrbitControls {
     };
 
     this.getDistance = function () {
-      return this.object.position.distanceTo(this.target);
+      return this.camera.position.distanceTo(this.target);
     };
 
     this.listenToKeyEvents = function (domElement) {
@@ -141,16 +143,16 @@ export class OrbitControls {
 
     this.saveState = function () {
       scope.target0.from(scope.target);
-      scope.position0.from(scope.object.position);
-      scope.zoom0 = scope.object.zoom;
+      scope.position0.from(scope.camera.position);
+      scope.zoom0 = scope.camera.zoom;
     };
 
     this.reset = function () {
       scope.target.from(scope.target0);
-      scope.object.position.from(scope.position0);
-      scope.object.zoom = scope.zoom0;
+      scope.camera.position.from(scope.position0);
+      scope.camera.zoom = scope.zoom0;
 
-      scope.object.updateProjectionMatrix();
+      scope.camera.updateProjectionMatrix();
       scope.onChange?.();
 
       scope.update();
@@ -161,7 +163,7 @@ export class OrbitControls {
     this.update = (function () {
       const offset = Vec3.new();
 
-      const quat = Quaternion.fromUnit(object.up, Vec3.new(0, 1, 0));
+      const quat = Quaternion.fromUnit(camera.up, Vec3.new(0, 1, 0));
       const quatInverse = quat.clone().invert();
 
       const lastPosition = Vec3.new();
@@ -171,7 +173,7 @@ export class OrbitControls {
       const twoPI = 2 * Math.PI;
 
       return function update(deltaTime = null!) {
-        const position = scope.object.position;
+        const position = scope.camera.position;
 
         offset.from(position).sub(scope.target);
 
@@ -225,7 +227,7 @@ export class OrbitControls {
 
         let zoomChanged = false;
 
-        if ((scope.zoomToCursor && performCursorZoom) || scope.object instanceof OrthographicCamera) {
+        if ((scope.zoomToCursor && performCursorZoom) || scope.camera instanceof OrthographicCamera) {
           spherical.radius = clampDistance(spherical.radius);
         } else {
           const prevRadius = spherical.radius;
@@ -239,7 +241,7 @@ export class OrbitControls {
 
         position.from(scope.target).add(offset);
 
-        scope.object.lookAt(scope.target);
+        scope.camera.lookAt(scope.target);
 
         if (scope.enableDamping === true) {
           sphericalDelta.theta *= 1 - scope.dampingFactor;
@@ -254,30 +256,30 @@ export class OrbitControls {
 
         if (scope.zoomToCursor && performCursorZoom) {
           let newRadius = null;
-          if (scope.object instanceof PerspectiveCamera) {
+          if (scope.camera instanceof PerspectiveCamera) {
             const prevRadius = offset.length();
             newRadius = clampDistance(prevRadius * scale);
 
             const radiusDelta = prevRadius - newRadius;
-            scope.object.position.addScaled(dollyDirection, radiusDelta);
-            scope.object.updateMatrixWorld();
+            scope.camera.position.addScaled(dollyDirection, radiusDelta);
+            scope.camera.updateMatrixWorld();
 
             zoomChanged = !!radiusDelta;
-          } else if (scope.object instanceof OrthographicCamera) {
+          } else if (scope.camera instanceof OrthographicCamera) {
             const mouseBefore = Vec3.new(mouse.x, mouse.y, 0);
-            mouseBefore.unproject(scope.object);
+            mouseBefore.unproject(scope.camera);
 
-            const prevZoom = scope.object.zoom;
-            scope.object.zoom = Math.max(scope.minZoom, Math.min(scope.maxZoom, scope.object.zoom / scale));
-            scope.object.updateProjectionMatrix();
+            const prevZoom = scope.camera.zoom;
+            scope.camera.zoom = Math.max(scope.minZoom, Math.min(scope.maxZoom, scope.camera.zoom / scale));
+            scope.camera.updateProjectionMatrix();
 
-            zoomChanged = prevZoom !== scope.object.zoom;
+            zoomChanged = prevZoom !== scope.camera.zoom;
 
             const mouseAfter = Vec3.new(mouse.x, mouse.y, 0);
-            mouseAfter.unproject(scope.object);
+            mouseAfter.unproject(scope.camera);
 
-            scope.object.position.sub(mouseAfter).add(mouseBefore);
-            scope.object.updateMatrixWorld();
+            scope.camera.position.sub(mouseAfter).add(mouseBefore);
+            scope.camera.updateMatrixWorld();
 
             newRadius = offset.length();
           }
@@ -286,27 +288,27 @@ export class OrbitControls {
             if (this.screenSpacePanning) {
               scope.target
                 .set(0, 0, -1)
-                .transformDirection(scope.object.matrix)
+                .transformDirection(scope.camera.matrix)
                 .scale(newRadius)
-                .add(scope.object.position);
+                .add(scope.camera.position);
             } else {
-              _ray.origin.from(scope.object.position);
-              _ray.direction.set(0, 0, -1).transformDirection(scope.object.matrix);
+              _ray.origin.from(scope.camera.position);
+              _ray.direction.set(0, 0, -1).transformDirection(scope.camera.matrix);
 
-              if (Math.abs(scope.object.up.dot(_ray.direction)) < TILT_LIMIT) {
-                object.lookAt(scope.target);
+              if (Math.abs(scope.camera.up.dot(_ray.direction)) < TILT_LIMIT) {
+                camera.lookAt(scope.target);
               } else {
-                _plane.fromNormalAndCoplanar(scope.object.up, scope.target);
+                _plane.fromNormalAndCoplanar(scope.camera.up, scope.target);
                 _ray.intersectPlane(_plane, scope.target);
               }
             }
           }
-        } else if (scope.object instanceof OrthographicCamera) {
-          const prevZoom = scope.object.zoom;
-          scope.object.zoom = Math.max(scope.minZoom, Math.min(scope.maxZoom, scope.object.zoom / scale));
+        } else if (scope.camera instanceof OrthographicCamera) {
+          const prevZoom = scope.camera.zoom;
+          scope.camera.zoom = Math.max(scope.minZoom, Math.min(scope.maxZoom, scope.camera.zoom / scale));
 
-          if (prevZoom !== scope.object.zoom) {
-            scope.object.updateProjectionMatrix();
+          if (prevZoom !== scope.camera.zoom) {
+            scope.camera.updateProjectionMatrix();
             zoomChanged = true;
           }
         }
@@ -316,14 +318,14 @@ export class OrbitControls {
 
         if (
           zoomChanged ||
-          lastPosition.distanceSqTo(scope.object.position) > EPS ||
-          8 * (1 - lastQuaternion.dot(scope.object.quaternion)) > EPS ||
+          lastPosition.distanceSqTo(scope.camera.position) > EPS ||
+          8 * (1 - lastQuaternion.dot(scope.camera.quaternion)) > EPS ||
           lastTargetPosition.distanceSqTo(scope.target) > EPS
         ) {
           scope.onChange?.();
 
-          lastPosition.from(scope.object.position);
-          lastQuaternion.from(scope.object.quaternion);
+          lastPosition.from(scope.camera.position);
+          lastQuaternion.from(scope.camera.quaternion);
           lastTargetPosition.from(scope.target);
 
           return true;
@@ -433,7 +435,7 @@ export class OrbitControls {
           v.fromMat4Column(objectMatrix, 1);
         } else {
           v.fromMat4Column(objectMatrix, 0);
-          v.asCross(scope.object.up, v);
+          v.asCross(scope.camera.up, v);
         }
 
         v.scale(distance);
@@ -448,23 +450,23 @@ export class OrbitControls {
       return function pan(deltaX: number, deltaY: number) {
         const element = scope.domElement;
 
-        if (scope.object instanceof PerspectiveCamera) {
-          const position = scope.object.position;
+        if (scope.camera instanceof PerspectiveCamera) {
+          const position = scope.camera.position;
           offset.from(position).sub(scope.target);
           let targetDistance = offset.length();
 
-          targetDistance *= Math.tan(((scope.object.fov / 2) * Math.PI) / 180.0);
+          targetDistance *= Math.tan(((scope.camera.fov / 2) * Math.PI) / 180.0);
 
-          panLeft((2 * deltaX * targetDistance) / element.clientHeight, scope.object.matrix);
-          panUp((2 * deltaY * targetDistance) / element.clientHeight, scope.object.matrix);
-        } else if (scope.object.isOrthographicCamera) {
+          panLeft((2 * deltaX * targetDistance) / element.clientHeight, scope.camera.matrix);
+          panUp((2 * deltaY * targetDistance) / element.clientHeight, scope.camera.matrix);
+        } else if (scope.camera.isOrthographicCamera) {
           panLeft(
-            (deltaX * (scope.object.right - scope.object.left)) / scope.object.zoom / element.clientWidth,
-            scope.object.matrix,
+            (deltaX * (scope.camera.right - scope.camera.left)) / scope.camera.zoom / element.clientWidth,
+            scope.camera.matrix,
           );
           panUp(
-            (deltaY * (scope.object.top - scope.object.bottom)) / scope.object.zoom / element.clientHeight,
-            scope.object.matrix,
+            (deltaY * (scope.camera.top - scope.camera.bottom)) / scope.camera.zoom / element.clientHeight,
+            scope.camera.matrix,
           );
         } else {
           console.warn('WARNING: OrbitControls.js encountered an unknown camera type - pan disabled.');
@@ -497,7 +499,7 @@ export class OrbitControls {
       mouse.x = (dx / w) * 2 - 1;
       mouse.y = -(dy / h) * 2 + 1;
 
-      dollyDirection.set(mouse.x, mouse.y, 1).unproject(scope.object).sub(scope.object.position).normalize();
+      dollyDirection.set(mouse.x, mouse.y, 1).unproject(scope.camera).sub(scope.camera.position).normalize();
     }
 
     function clampDistance(dist: number) {
@@ -893,5 +895,9 @@ export class OrbitControls {
     document.addEventListener('keydown', interceptControlDown, { passive: true, capture: true });
 
     this.update();
+  }
+
+  static attach(hearth: Hearth, camera: ICamera) {
+    return new OrbitControls(camera, hearth.parameters.canvas);
   }
 }

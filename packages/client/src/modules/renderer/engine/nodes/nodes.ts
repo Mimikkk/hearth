@@ -178,3 +178,4 @@ export * from './geometry/RangeNode.js';
 export * from './gpgpu/ComputeNode.js';
 // builder
 export * from './builder/NodeBuilder.js';
+export * from './builder/NodeBuilder.types.js';

@@ -54,7 +54,7 @@ async function init() {
 
   scene = new Engine.Scene();
 
-  const helper = new Engine.GridHelper(1000, 40, 0x303030, 0x303030);
+  const helper = new Engine.GridVisualizer(1000, 40, 0x303030, 0x303030);
   helper.position.y = -75;
   scene.add(helper);
 

@@ -9,6 +9,7 @@ import {
   SpriteMaterial,
   SpriteMaterialParameters,
 } from '@modules/renderer/engine/entities/materials/SpriteMaterial.js';
+import { Node } from '../core/Node.js';
 
 export class SpriteNodeMaterial extends NodeMaterial {
   rotationNode: Node | null;

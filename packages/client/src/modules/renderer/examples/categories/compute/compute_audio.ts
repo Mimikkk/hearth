@@ -5,11 +5,11 @@ import {
   f32,
   instanceIndex,
   storage,
-  storageObject,
   texture,
   hsl,
   uniform,
   viewportTopLeft,
+  TypeName,
 } from '@modules/renderer/engine/nodes/nodes.js';
 
 import { GUI } from 'lil-gui';
@@ -67,11 +67,11 @@ async function init() {
 
   waveGPUBuffer = new Attribute(waveBuffer, 1, 0, BufferStep.Instance, GPUBufferBindingTypeType.Storage);
 
-  const waveStorageNode = storage(waveGPUBuffer, 'f32', waveBuffer.length);
+  const waveStorageNode = storage(waveGPUBuffer, TypeName.f32, waveBuffer.length);
 
-  const waveNode = storageObject(
+  const waveNode = storage(
     new Attribute(waveBuffer, 1, 0, BufferStep.Instance, GPUBufferBindingTypeType.ReadOnlyStorage),
-    'f32',
+    TypeName.f32,
     waveBuffer.length,
   );
 

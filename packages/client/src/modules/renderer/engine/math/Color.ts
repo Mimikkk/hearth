@@ -231,7 +231,6 @@ export class Color {
     this.g = array[offset + 1];
     this.b = array[offset + 2];
 
-
     return this.set(array[offset], array[offset + 1], array[offset + 2]);
   }
 
@@ -239,7 +238,6 @@ export class Color {
     array[offset] = this.r;
     array[offset + 1] = this.g;
     array[offset + 2] = this.b;
-    array[offset + 3] = this.a;
     return array;
   }
 

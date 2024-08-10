@@ -19,6 +19,9 @@ import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
 import type { UVNode } from '@modules/renderer/engine/nodes/accessors/UVNode.js';
 import type { LightModel } from '@modules/renderer/engine/nodes/functions/LightModel.js';
 import type { ColorSpace, ToneMapping } from '@modules/renderer/engine/constants.js';
+import { ComputeNode } from '@modules/renderer/engine/nodes/gpgpu/ComputeNode.js';
+import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
+import { Vec4 } from '@modules/renderer/engine/math/Vec4.js';
 
 let _nodeId = 0;
 
@@ -276,128 +279,738 @@ export class Node {
   }
 
   // swizzle read
-  declare x: SplitNode;
-  declare y: SplitNode;
-  declare z: SplitNode;
-  declare w: SplitNode;
-  declare xy: SplitNode;
-  declare yx: SplitNode;
-  declare xz: SplitNode;
-  declare zx: SplitNode;
-  declare xw: SplitNode;
-  declare wx: SplitNode;
-  declare yz: SplitNode;
-  declare zy: SplitNode;
-  declare yw: SplitNode;
-  declare wy: SplitNode;
-  declare zw: SplitNode;
-  declare wz: SplitNode;
-  declare xyz: SplitNode;
-  declare xzy: SplitNode;
-  declare yxz: SplitNode;
-  declare yzx: SplitNode;
-  declare zxy: SplitNode;
-  declare zyx: SplitNode;
-  declare xyw: SplitNode;
-  declare xwy: SplitNode;
-  declare yxw: SplitNode;
-  declare ywx: SplitNode;
-  declare wxy: SplitNode;
-  declare wyx: SplitNode;
-  declare xzw: SplitNode;
-  declare xwz: SplitNode;
-  declare zxw: SplitNode;
-  declare zwx: SplitNode;
-  declare wxz: SplitNode;
-  declare wzx: SplitNode;
-  declare yzw: SplitNode;
-  declare ywz: SplitNode;
-  declare zyw: SplitNode;
-  declare zwy: SplitNode;
-  declare wyz: SplitNode;
-  declare wzy: SplitNode;
-  declare xyzw: SplitNode;
-  declare xywz: SplitNode;
-  declare xzyw: SplitNode;
-  declare xzwy: SplitNode;
-  declare xwyz: SplitNode;
-  declare xwzy: SplitNode;
-  declare yxzw: SplitNode;
-  declare yxwz: SplitNode;
-  declare yzxw: SplitNode;
-  declare yzwx: SplitNode;
-  declare ywxz: SplitNode;
-  declare ywzx: SplitNode;
-  declare zxyw: SplitNode;
-  declare zxwy: SplitNode;
-  declare zyxw: SplitNode;
-  declare zywx: SplitNode;
-  declare zwxy: SplitNode;
-  declare zwyx: SplitNode;
-  declare wxyz: SplitNode;
-  declare wxzy: SplitNode;
-  declare wyxz: SplitNode;
-  declare wyzx: SplitNode;
-  declare wzxy: SplitNode;
-  declare wzyx: SplitNode;
-  declare r: SplitNode;
-  declare g: SplitNode;
-  declare b: SplitNode;
-  declare a: SplitNode;
-  declare rg: SplitNode;
-  declare gr: SplitNode;
-  declare rb: SplitNode;
-  declare br: SplitNode;
-  declare ra: SplitNode;
-  declare ar: SplitNode;
-  declare gb: SplitNode;
-  declare bg: SplitNode;
-  declare ga: SplitNode;
-  declare ag: SplitNode;
-  declare ba: SplitNode;
-  declare ab: SplitNode;
-  declare rgb: SplitNode;
-  declare rbg: SplitNode;
-  declare grb: SplitNode;
-  declare gbr: SplitNode;
-  declare brg: SplitNode;
-  declare bgr: SplitNode;
-  declare rga: SplitNode;
-  declare rag: SplitNode;
-  declare gra: SplitNode;
-  declare gar: SplitNode;
-  declare arg: SplitNode;
-  declare agr: SplitNode;
-  declare rba: SplitNode;
-  declare rab: SplitNode;
-  declare bra: SplitNode;
-  declare bar: SplitNode;
-  declare arb: SplitNode;
-  declare abr: SplitNode;
-  declare gba: SplitNode;
-  declare gab: SplitNode;
-  declare bga: SplitNode;
-  declare bag: SplitNode;
-  declare agb: SplitNode;
-  declare abg: SplitNode;
-  declare rgba: SplitNode;
-  declare rgab: SplitNode;
-  declare rbga: SplitNode;
-  declare rbag: SplitNode;
-  declare ragb: SplitNode;
-  declare rabg: SplitNode;
-  declare grba: SplitNode;
-  declare grab: SplitNode;
-  declare garb: SplitNode;
-  declare gabr: SplitNode;
-  declare agrb: SplitNode;
-  declare agbr: SplitNode;
-  declare brga: SplitNode;
-  declare brag: SplitNode;
-  declare bgar: SplitNode;
-  declare bgra: SplitNode;
-  declare abgr: SplitNode;
-  declare abrg: SplitNode;
+  set x(value: NodeVal<number>) {}
+
+  set y(value: NodeVal<number>) {}
+
+  set z(value: NodeVal<number>) {}
+
+  set w(value: NodeVal<number>) {}
+
+  set xy(value: NodeVal<Vec2>) {}
+
+  set yx(value: NodeVal<Vec2>) {}
+
+  set xz(value: NodeVal<Vec2>) {}
+
+  set zx(value: NodeVal<Vec2>) {}
+
+  set xw(value: NodeVal<Vec2>) {}
+
+  set wx(value: NodeVal<Vec2>) {}
+
+  set yz(value: NodeVal<Vec2>) {}
+
+  set zy(value: NodeVal<Vec2>) {}
+
+  set yw(value: NodeVal<Vec2>) {}
+
+  set wy(value: NodeVal<Vec2>) {}
+
+  set zw(value: NodeVal<Vec2>) {}
+
+  set wz(value: NodeVal<Vec2>) {}
+
+  set xyz(value: NodeVal<Vec3>) {}
+
+  set xzy(value: NodeVal<Vec3>) {}
+
+  set yxz(value: NodeVal<Vec3>) {}
+
+  set yzx(value: NodeVal<Vec3>) {}
+
+  set zxy(value: NodeVal<Vec3>) {}
+
+  set zyx(value: NodeVal<Vec3>) {}
+
+  set xyw(value: NodeVal<Vec3>) {}
+
+  set xwy(value: NodeVal<Vec3>) {}
+
+  set yxw(value: NodeVal<Vec3>) {}
+
+  set ywx(value: NodeVal<Vec3>) {}
+
+  set wxy(value: NodeVal<Vec3>) {}
+
+  set wyx(value: NodeVal<Vec3>) {}
+
+  set xzw(value: NodeVal<Vec3>) {}
+
+  set xwz(value: NodeVal<Vec3>) {}
+
+  set zxw(value: NodeVal<Vec3>) {}
+
+  set zwx(value: NodeVal<Vec3>) {}
+
+  set wxz(value: NodeVal<Vec3>) {}
+
+  set wzx(value: NodeVal<Vec3>) {}
+
+  set yzw(value: NodeVal<Vec3>) {}
+
+  set ywz(value: NodeVal<Vec3>) {}
+
+  set zyw(value: NodeVal<Vec3>) {}
+
+  set zwy(value: NodeVal<Vec3>) {}
+
+  set wyz(value: NodeVal<Vec3>) {}
+
+  set wzy(value: NodeVal<Vec3>) {}
+
+  set xyzw(value: NodeVal<Vec4>) {}
+
+  set xywz(value: NodeVal<Vec4>) {}
+
+  set xzyw(value: NodeVal<Vec4>) {}
+
+  set xzwy(value: NodeVal<Vec4>) {}
+
+  set xwyz(value: NodeVal<Vec4>) {}
+
+  set xwzy(value: NodeVal<Vec4>) {}
+
+  set yxzw(value: NodeVal<Vec4>) {}
+
+  set yxwz(value: NodeVal<Vec4>) {}
+
+  set yzxw(value: NodeVal<Vec4>) {}
+
+  set yzwx(value: NodeVal<Vec4>) {}
+
+  set ywxz(value: NodeVal<Vec4>) {}
+
+  set ywzx(value: NodeVal<Vec4>) {}
+
+  set zxyw(value: NodeVal<Vec4>) {}
+
+  set zxwy(value: NodeVal<Vec4>) {}
+
+  set zyxw(value: NodeVal<Vec4>) {}
+
+  set zywx(value: NodeVal<Vec4>) {}
+
+  set zwxy(value: NodeVal<Vec4>) {}
+
+  set zwyx(value: NodeVal<Vec4>) {}
+
+  set wxyz(value: NodeVal<Vec4>) {}
+
+  set wxzy(value: NodeVal<Vec4>) {}
+
+  set wyxz(value: NodeVal<Vec4>) {}
+
+  set wyzx(value: NodeVal<Vec4>) {}
+
+  set wzxy(value: NodeVal<Vec4>) {}
+
+  set wzyx(value: NodeVal<Vec4>) {}
+
+  set r(value: NodeVal<number>) {}
+
+  set g(value: NodeVal<number>) {}
+
+  set b(value: NodeVal<number>) {}
+
+  set a(value: NodeVal<number>) {}
+
+  set rg(value: NodeVal<Vec2>) {}
+
+  set gr(value: NodeVal<Vec2>) {}
+
+  set rb(value: NodeVal<Vec2>) {}
+
+  set br(value: NodeVal<Vec2>) {}
+
+  set ra(value: NodeVal<Vec2>) {}
+
+  set ar(value: NodeVal<Vec2>) {}
+
+  set gb(value: NodeVal<Vec2>) {}
+
+  set bg(value: NodeVal<Vec2>) {}
+
+  set ga(value: NodeVal<Vec2>) {}
+
+  set ag(value: NodeVal<Vec2>) {}
+
+  set ba(value: NodeVal<Vec2>) {}
+
+  set ab(value: NodeVal<Vec2>) {}
+
+  set rgb(value: NodeVal<Vec3>) {}
+
+  set rbg(value: NodeVal<Vec3>) {}
+
+  set grb(value: NodeVal<Vec3>) {}
+
+  set gbr(value: NodeVal<Vec3>) {}
+
+  set brg(value: NodeVal<Vec3>) {}
+
+  set bgr(value: NodeVal<Vec3>) {}
+
+  set rga(value: NodeVal<Vec3>) {}
+
+  set rag(value: NodeVal<Vec3>) {}
+
+  set gra(value: NodeVal<Vec3>) {}
+
+  set gar(value: NodeVal<Vec3>) {}
+
+  set arg(value: NodeVal<Vec3>) {}
+
+  set agr(value: NodeVal<Vec3>) {}
+
+  set rba(value: NodeVal<Vec3>) {}
+
+  set rab(value: NodeVal<Vec3>) {}
+
+  set bra(value: NodeVal<Vec3>) {}
+
+  set bar(value: NodeVal<Vec3>) {}
+
+  set arb(value: NodeVal<Vec3>) {}
+
+  set abr(value: NodeVal<Vec3>) {}
+
+  set gba(value: NodeVal<Vec3>) {}
+
+  set gab(value: NodeVal<Vec3>) {}
+
+  set bga(value: NodeVal<Vec3>) {}
+
+  set bag(value: NodeVal<Vec3>) {}
+
+  set agb(value: NodeVal<Vec3>) {}
+
+  set abg(value: NodeVal<Vec3>) {}
+
+  set rgba(value: NodeVal<Vec4>) {}
+
+  set rgab(value: NodeVal<Vec4>) {}
+
+  set rbga(value: NodeVal<Vec4>) {}
+
+  set rbag(value: NodeVal<Vec4>) {}
+
+  set ragb(value: NodeVal<Vec4>) {}
+
+  set rabg(value: NodeVal<Vec4>) {}
+
+  set grba(value: NodeVal<Vec4>) {}
+
+  set grab(value: NodeVal<Vec4>) {}
+
+  set garb(value: NodeVal<Vec4>) {}
+
+  set gabr(value: NodeVal<Vec4>) {}
+
+  set agrb(value: NodeVal<Vec4>) {}
+
+  set agbr(value: NodeVal<Vec4>) {}
+
+  set brga(value: NodeVal<Vec4>) {}
+
+  set brag(value: NodeVal<Vec4>) {}
+
+  set bgar(value: NodeVal<Vec4>) {}
+
+  set bgra(value: NodeVal<Vec4>) {}
+
+  set abgr(value: NodeVal<Vec4>) {}
+
+  set abrg(value: NodeVal<Vec4>) {}
+
+  // swizzle read
+  get x(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get y(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get z(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get w(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get xy(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get yx(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get xz(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get zx(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get xw(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get wx(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get yz(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get zy(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get yw(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get wy(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get zw(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get wz(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get xyz(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get xzy(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get yxz(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get yzx(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get zxy(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get zyx(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get xyw(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get xwy(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get yxw(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get ywx(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get wxy(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get wyx(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get xzw(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get xwz(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get zxw(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get zwx(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get wxz(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get wzx(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get yzw(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get ywz(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get zyw(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get zwy(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get wyz(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get wzy(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get xyzw(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get xywz(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get xzyw(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get xzwy(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get xwyz(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get xwzy(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get yxzw(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get yxwz(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get yzxw(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get yzwx(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get ywxz(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get ywzx(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get zxyw(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get zxwy(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get zyxw(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get zywx(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get zwxy(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get zwyx(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get wxyz(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get wxzy(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get wyxz(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get wyzx(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get wzxy(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get wzyx(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get r(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get g(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get b(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get a(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get rg(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get gr(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get rb(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get br(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get ra(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get ar(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get gb(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get bg(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get ga(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get ag(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get ba(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get ab(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get rgb(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get rbg(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get grb(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get gbr(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get brg(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get bgr(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get rga(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get rag(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get gra(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get gar(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get arg(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get agr(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get rba(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get rab(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get bra(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get bar(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get arb(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get abr(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get gba(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get gab(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get bga(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get bag(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get agb(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get abg(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get rgba(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get rgab(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get rbga(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get rbag(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get ragb(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get rabg(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get grba(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get grab(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get garb(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get gabr(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get agrb(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get agbr(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get brga(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get brag(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get bgar(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get bgra(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get abgr(): SplitNode {
+    throw Error('panic!');
+  }
+
+  get abrg(): SplitNode {
+    throw Error('panic!');
+  }
 
   // swizzle set
   declare setX: (x: NodeVal<number>) => SetNode;
@@ -416,371 +1029,373 @@ export class Node {
   declare setRGBA: (r: NodeVal<number>, g: NodeVal<number>, b: NodeVal<number>, a: NodeVal<number>) => SetNode;
 
   // math nodes
-  declare all: () => this;
-  declare any: () => this;
-  declare equals: () => this;
-  declare radians: () => this;
-  declare degrees: () => this;
-  declare exp: () => this;
-  declare exp2: () => this;
-  declare log: () => this;
-  declare log2: () => this;
-  declare sqrt: () => this;
-  declare inverseSqrt: () => this;
-  declare floor: () => this;
-  declare ceil: () => this;
-  declare normalize: () => this;
-  declare fract: () => this;
-  declare sin: () => this;
-  declare cos: () => this;
-  declare tan: () => this;
-  declare asin: () => this;
-  declare acos: () => this;
-  declare atan: () => this;
-  declare abs: () => this;
-  declare sign: () => this;
-  declare length: () => this;
-  declare lengthSq: () => this;
-  declare negate: () => this;
-  declare oneMinus: () => this;
-  declare dpdx: () => this;
-  declare dpdy: () => this;
-  declare round: () => this;
-  declare reciprocal: () => this;
-  declare trunc: () => this;
-  declare fwidth: () => this;
-  declare bitcast: () => this;
-  declare atan2: (y: NodeVal<number>) => this;
-  declare min: (b: NodeVal<number>) => this;
-  declare max: (b: NodeVal<number>) => this;
-  declare mod: (b: NodeVal<number>) => this;
-  declare step: (b: NodeVal<number>) => this;
-  declare reflect: (b: NodeVal<number>) => this;
-  declare distance: (b: NodeVal<number>) => this;
-  declare difference: (b: NodeVal<number>) => this;
-  declare dot: (b: NodeVal<number>) => this;
-  declare cross: (b: NodeVal<number>) => this;
-  declare pow: (b: NodeVal<number>) => this;
-  declare pow2: () => this;
-  declare pow3: () => this;
-  declare transformDirection: (b: NodeVal<number>) => this;
-  declare mix: (a: NodeVal<number>, b: NodeVal<number>) => this;
-  declare clamp: (min: NodeVal<number>, max: NodeVal<number>) => this;
-  declare refract: (normal: NodeVal<number>, eta: NodeVal<number>) => this;
-  declare smoothstep: (min: NodeVal<number>, max: NodeVal<number>) => this;
-  declare faceforward: (normal: NodeVal<number>, incident: NodeVal<number>) => this;
-  declare saturate: () => this;
-  declare cbrt: () => this;
+  declare all: () => Node;
+  declare any: () => Node;
+  declare equals: () => Node;
+  declare radians: () => Node;
+  declare degrees: () => Node;
+  declare exp: () => Node;
+  declare exp2: () => Node;
+  declare log: () => Node;
+  declare log2: () => Node;
+  declare sqrt: () => Node;
+  declare inverseSqrt: () => Node;
+  declare floor: () => Node;
+  declare ceil: () => Node;
+  declare normalize: () => Node;
+  declare fract: () => Node;
+  declare sin: () => Node;
+  declare cos: () => Node;
+  declare tan: () => Node;
+  declare asin: () => Node;
+  declare acos: () => Node;
+  declare atan: () => Node;
+  declare abs: () => Node;
+  declare sign: () => Node;
+  declare length: () => Node;
+  declare lengthSq: () => Node;
+  declare negate: () => Node;
+  declare oneMinus: () => Node;
+  declare dpdx: () => Node;
+  declare dpdy: () => Node;
+  declare round: () => Node;
+  declare reciprocal: () => Node;
+  declare trunc: () => Node;
+  declare fwidth: () => Node;
+  declare bitcast: () => Node;
+  declare atan2: (y: NodeVal<number>) => Node;
+  declare min: (b: NodeVal<number>) => Node;
+  declare max: (b: NodeVal<number>) => Node;
+  declare mod: (b: NodeVal<number>) => Node;
+  declare step: (b: NodeVal<number>) => Node;
+  declare reflect: (b: NodeVal<number>) => Node;
+  declare distance: (b: NodeVal<number>) => Node;
+  declare difference: (b: NodeVal<number>) => Node;
+  declare dot: (b: NodeVal<number>) => Node;
+  declare cross: (b: NodeVal<number>) => Node;
+  declare pow: (b: NodeVal<number>) => Node;
+  declare pow2: () => Node;
+  declare pow3: () => Node;
+  declare transformDirection: (b: NodeVal<number>) => Node;
+  declare mix: (a: NodeVal<number>, b: NodeVal<number>) => Node;
+  declare clamp: (min: NodeVal<number>, max: NodeVal<number>) => Node;
+  declare refract: (normal: NodeVal<number>, eta: NodeVal<number>) => Node;
+  declare smoothstep: (min: NodeVal<number>, max: NodeVal<number>) => Node;
+  declare faceforward: (normal: NodeVal<number>, incident: NodeVal<number>) => Node;
+  declare saturate: () => Node;
+  declare cbrt: () => Node;
   // operators
-  declare add: (b: NodeVal<number>) => this;
-  declare sub: (b: NodeVal<number>) => this;
-  declare mul: (b: NodeVal<number>) => this;
-  declare div: (b: NodeVal<number>) => this;
-  declare remainder: (b: NodeVal<number>) => this;
-  declare equal: (b: NodeVal<number>) => this;
-  declare notEqual: (b: NodeVal<number>) => this;
-  declare lessThan: (b: NodeVal<number>) => this;
-  declare greaterThan: (b: NodeVal<number>) => this;
-  declare lessThanEqual: (b: NodeVal<number>) => this;
-  declare greaterThanEqual: (b: NodeVal<number>) => this;
-  declare and: (b: NodeVal<number>) => this;
-  declare or: (b: NodeVal<number>) => this;
+  declare add: (b: NodeVal<number>) => Node;
+  declare sub: (b: NodeVal<number>) => Node;
+  declare mul: (b: NodeVal<number>) => Node;
+  declare div: (b: NodeVal<number>) => Node;
+  declare remainder: (b: NodeVal<number>) => Node;
+  declare equal: (b: NodeVal<number>) => Node;
+  declare notEqual: (b: NodeVal<number>) => Node;
+  declare lessThan: (b: NodeVal<number>) => Node;
+  declare greaterThan: (b: NodeVal<number>) => Node;
+  declare lessThanEqual: (b: NodeVal<number>) => Node;
+  declare greaterThanEqual: (b: NodeVal<number>) => Node;
+  declare and: (b: NodeVal<number>) => Node;
+  declare or: (b: NodeVal<number>) => Node;
   declare not: () => UnaryNode;
-  declare bitAnd: (b: NodeVal<number>) => this;
+  declare bitAnd: (b: NodeVal<number>) => Node;
   declare bitNot: () => UnaryNode;
-  declare bitOr: (b: NodeVal<number>) => this;
-  declare bitXor: (b: NodeVal<number>) => this;
-  declare shiftLeft: (b: NodeVal<number>) => this;
-  declare shiftRight: (b: NodeVal<number>) => this;
+  declare bitOr: (b: NodeVal<number>) => Node;
+  declare bitXor: (b: NodeVal<number>) => Node;
+  declare shiftLeft: (b: NodeVal<number>) => Node;
+  declare shiftRight: (b: NodeVal<number>) => Node;
   // primitive nodes
-  declare color: (r?: NodeVal<number>, g?: NodeVal<number>, b?: NodeVal<number>, a?: NodeVal<number>) => this;
-  declare f32: (value?: NodeVal<number>) => this;
-  declare i32: (value?: NodeVal<number>) => this;
-  declare u32: (value?: NodeVal<number>) => this;
-  declare bool: (value?: NodeVal<number>) => this;
-  declare vec2: (x?: NodeVal<number>, y?: NodeVal<number>) => this;
-  declare ivec2: (x?: NodeVal<number>, y?: NodeVal<number>) => this;
-  declare uvec2: (x?: NodeVal<number>, y?: NodeVal<number>) => this;
-  declare bvec2: (x?: NodeVal<number>, y?: NodeVal<number>) => this;
-  declare vec3: (x?: NodeVal<number>, y?: NodeVal<number>, z?: NodeVal<number>) => this;
-  declare ivec3: (x?: NodeVal<number>, y?: NodeVal<number>, z?: NodeVal<number>) => this;
-  declare uvec3: (x?: NodeVal<number>, y?: NodeVal<number>, z?: NodeVal<number>) => this;
-  declare bvec3: (x?: NodeVal<number>, y?: NodeVal<number>, z?: NodeVal<number>) => this;
-  declare vec4: (x?: NodeVal<number>, y?: NodeVal<number>, z?: NodeVal<number>, w?: NodeVal<number>) => this;
-  declare ivec4: (x?: NodeVal<number>, y?: NodeVal<number>, z?: NodeVal<number>, w?: NodeVal<number>) => this;
-  declare uvec4: (x?: NodeVal<number>, y?: NodeVal<number>, z?: NodeVal<number>, w?: NodeVal<number>) => this;
-  declare bvec4: (x?: NodeVal<number>, y?: NodeVal<number>, z?: NodeVal<number>, w?: NodeVal<number>) => this;
-  declare mat2: (a?: NodeVal<number>, b?: NodeVal<number>, c?: NodeVal<number>, d?: NodeVal<number>) => this;
-  declare imat2: (a?: NodeVal<number>, b?: NodeVal<number>, c?: NodeVal<number>, d?: NodeVal<number>) => this;
-  declare umat2: (a?: NodeVal<number>, b?: NodeVal<number>, c?: NodeVal<number>, d?: NodeVal<number>) => this;
-  declare bmat2: (a?: NodeVal<number>, b?: NodeVal<number>, c?: NodeVal<number>, d?: NodeVal<number>) => this;
-  declare mat3: (...values: NodeVal<number>[]) => this;
-  declare imat3: (...values: NodeVal<number>[]) => this;
-  declare umat3: (...values: NodeVal<number>[]) => this;
-  declare bmat3: (...values: NodeVal<number>[]) => this;
-  declare mat4: (...values: NodeVal<number>[]) => this;
-  declare imat4: (...values: NodeVal<number>[]) => this;
-  declare umat4: (...values: NodeVal<number>[]) => this;
-  declare bmat4: (...values: NodeVal<number>[]) => this;
-  declare convert: (type: TypeName) => this;
+  declare color: (r?: NodeVal<number>, g?: NodeVal<number>, b?: NodeVal<number>, a?: NodeVal<number>) => Node;
+  declare f32: (value?: NodeVal<number>) => Node;
+  declare i32: (value?: NodeVal<number>) => Node;
+  declare u32: (value?: NodeVal<number>) => Node;
+  declare bool: (value?: NodeVal<number>) => Node;
+  declare vec2: (x?: NodeVal<number>, y?: NodeVal<number>) => Node;
+  declare ivec2: (x?: NodeVal<number>, y?: NodeVal<number>) => Node;
+  declare uvec2: (x?: NodeVal<number>, y?: NodeVal<number>) => Node;
+  declare bvec2: (x?: NodeVal<number>, y?: NodeVal<number>) => Node;
+  declare vec3: (x?: NodeVal<number>, y?: NodeVal<number>, z?: NodeVal<number>) => Node;
+  declare ivec3: (x?: NodeVal<number>, y?: NodeVal<number>, z?: NodeVal<number>) => Node;
+  declare uvec3: (x?: NodeVal<number>, y?: NodeVal<number>, z?: NodeVal<number>) => Node;
+  declare bvec3: (x?: NodeVal<number>, y?: NodeVal<number>, z?: NodeVal<number>) => Node;
+  declare vec4: (x?: NodeVal<number>, y?: NodeVal<number>, z?: NodeVal<number>, w?: NodeVal<number>) => Node;
+  declare ivec4: (x?: NodeVal<number>, y?: NodeVal<number>, z?: NodeVal<number>, w?: NodeVal<number>) => Node;
+  declare uvec4: (x?: NodeVal<number>, y?: NodeVal<number>, z?: NodeVal<number>, w?: NodeVal<number>) => Node;
+  declare bvec4: (x?: NodeVal<number>, y?: NodeVal<number>, z?: NodeVal<number>, w?: NodeVal<number>) => Node;
+  declare mat2: (a?: NodeVal<number>, b?: NodeVal<number>, c?: NodeVal<number>, d?: NodeVal<number>) => Node;
+  declare imat2: (a?: NodeVal<number>, b?: NodeVal<number>, c?: NodeVal<number>, d?: NodeVal<number>) => Node;
+  declare umat2: (a?: NodeVal<number>, b?: NodeVal<number>, c?: NodeVal<number>, d?: NodeVal<number>) => Node;
+  declare bmat2: (a?: NodeVal<number>, b?: NodeVal<number>, c?: NodeVal<number>, d?: NodeVal<number>) => Node;
+  declare mat3: (...values: NodeVal<number>[]) => Node;
+  declare imat3: (...values: NodeVal<number>[]) => Node;
+  declare umat3: (...values: NodeVal<number>[]) => Node;
+  declare bmat3: (...values: NodeVal<number>[]) => Node;
+  declare mat4: (...values: NodeVal<number>[]) => Node;
+  declare imat4: (...values: NodeVal<number>[]) => Node;
+  declare umat4: (...values: NodeVal<number>[]) => Node;
+  declare bmat4: (...values: NodeVal<number>[]) => Node;
+  declare convert: (type: TypeName) => Node;
+
   // up to 1...16
   [index: number]: ArrayElementNode;
-  declare toAttribute: (type?: TypeName, stride?: number, offset?: number) => this;
+
+  declare toAttribute: (type?: TypeName, stride?: number, offset?: number) => Node;
 
   // shader nodes
-  declare checker: () => this;
-  declare discard: () => this;
-  declare directionToColor: () => this;
-  declare colorToDirection: () => this;
+  declare checker: () => Node;
+  declare discard: () => Node;
+  declare directionToColor: () => Node;
+  declare colorToDirection: () => Node;
   declare remap: (
     fromMin: NodeVal<number>,
     fromMax: NodeVal<number>,
     toMin: NodeVal<number>,
     toMax: NodeVal<number>,
-  ) => this;
+  ) => Node;
   declare remapClamp: (
     fromMin: NodeVal<number>,
     fromMax: NodeVal<number>,
     toMin: NodeVal<number>,
     toMax: NodeVal<number>,
-  ) => this;
-  declare rotate: (angle: NodeVal<number>) => this;
-  declare rotateUV: (angle: NodeVal<number>, center: NodeVal<number>) => this;
-  declare storageElement: (index: NodeVal<number>) => this;
+  ) => Node;
+  declare rotate: (angle: NodeVal<number>) => Node;
+  declare rotateUV: (angle: NodeVal<number>, center: NodeVal<number>) => Node;
+  declare storageElement: (index: NodeVal<number>) => Node;
   // functions
-  declare gaussianBlur: (sigma?: NodeVal<number>) => this;
-  declare bumpMap: (scale: NodeVal<number>) => this;
-  declare normalMap: (scale: NodeVal<number>) => this;
-  declare cubeTexture: (uv: UVNode, levelNode: NodeVal<number>) => this;
+  declare gaussianBlur: (sigma?: NodeVal<number>) => Node;
+  declare bumpMap: (scale: NodeVal<number>) => Node;
+  declare normalMap: (scale: NodeVal<number>) => Node;
+  declare cubeTexture: (uv: UVNode, levelNode: NodeVal<number>) => Node;
   declare triplanarTexture: (
     textureY: TextureNode,
     textureZ: TextureNode,
     scale: NodeVal<number>,
     position: NodeVal<Vec3>,
     normal: NodeVal<Vec3>,
-  ) => this;
-  declare bicubic: (uv: UVNode, levelNode: NodeVal<number>) => this;
-  declare texture: (uv: UVNode, levelNode: NodeVal<number>) => this;
-  declare textureSize: (levelNode: NodeVal<number>) => this;
-  declare hash: () => this;
-  declare cond: (then: Node, or: Node) => this;
-  declare lightingContext: (lightingModel: LightModel, backdrop: Node, alpha: NodeVal<number>) => this;
-  declare compute: (count: NodeVal<number>, size?: number[]) => this;
-  declare viewportTexture: (uv: UVNode, levelNode: NodeVal<number>) => this;
-  declare viewportMipTexture: (uv: UVNode, levelNode: NodeVal<number>) => this;
-  declare viewportDepthTexture: (uv: UVNode, levelNode: NodeVal<number>) => this;
-  declare viewportSharedTexture: (uv: UVNode, levelNode: NodeVal<number>) => this;
-  declare toneMapping: (mapping: ToneMapping, exposure: NodeVal<number>) => this;
-  declare posterize: (steps: NodeVal<number>) => this;
-  declare linearTosRGB: () => this;
-  declare sRGBToLinear: () => this;
-  declare linearToColorSpace: (space: ColorSpace) => this;
-  declare colorSpaceToLinear: (space: ColorSpace) => this;
-  declare saturation: (value: NodeVal<number>) => this;
-  declare vibrance: (value: NodeVal<number>) => this;
-  declare hue: (value: NodeVal<number>) => this;
-  declare threshold: (value: NodeVal<number>) => this;
-  declare burn: (value: NodeVal<number>) => this;
-  declare dodge: (value: NodeVal<number>) => this;
-  declare overlay: (value: NodeVal<number>) => this;
-  declare screen: (value: NodeVal<number>) => this;
-  declare anamorphic: (threshold: NodeVal<number>, scale: NodeVal<number>, samples: NodeVal<number>) => this;
-  declare afterImage: (value: NodeVal<number>) => this;
-  declare toVar: (name: string) => this;
-  declare temp: (name: string) => this;
-  declare label: (name: string) => this;
-  declare context: (context: object) => this;
-  declare cache: (value: WeakMap<any, any>) => this;
-  declare globalCache: () => this;
-  declare bypass: (call: Node) => this;
-  declare scriptable: (parameters: Record<string, any>) => this;
-  declare scriptableValue: () => this;
-  declare call: (parameters: Record<string, any>) => this;
-  declare element: (index: NodeVal<number>) => this;
+  ) => Node;
+  declare bicubic: (uv: UVNode, levelNode: NodeVal<number>) => Node;
+  declare texture: (uv: UVNode, levelNode: NodeVal<number>) => Node;
+  declare textureSize: (levelNode: NodeVal<number>) => Node;
+  declare hash: () => Node;
+  declare cond: (then: Node, or: Node) => Node;
+  declare lightingContext: (lightingModel: LightModel, backdrop: Node, alpha: NodeVal<number>) => Node;
+  declare compute: (count: NodeVal<number>, size?: number[]) => ComputeNode;
+  declare viewportTexture: (uv: UVNode, levelNode: NodeVal<number>) => Node;
+  declare viewportMipTexture: (uv: UVNode, levelNode: NodeVal<number>) => Node;
+  declare viewportDepthTexture: (uv: UVNode, levelNode: NodeVal<number>) => Node;
+  declare viewportSharedTexture: (uv: UVNode, levelNode: NodeVal<number>) => Node;
+  declare toneMapping: (mapping: ToneMapping, exposure: NodeVal<number>) => Node;
+  declare posterize: (steps: NodeVal<number>) => Node;
+  declare linearTosRGB: () => Node;
+  declare sRGBToLinear: () => Node;
+  declare linearToColorSpace: (space: ColorSpace) => Node;
+  declare colorSpaceToLinear: (space: ColorSpace) => Node;
+  declare saturation: (value: NodeVal<number>) => Node;
+  declare vibrance: (value: NodeVal<number>) => Node;
+  declare hue: (value: NodeVal<number>) => Node;
+  declare threshold: (value: NodeVal<number>) => Node;
+  declare burn: (value: NodeVal<number>) => Node;
+  declare dodge: (value: NodeVal<number>) => Node;
+  declare overlay: (value: NodeVal<number>) => Node;
+  declare screen: (value: NodeVal<number>) => Node;
+  declare anamorphic: (threshold: NodeVal<number>, scale: NodeVal<number>, samples: NodeVal<number>) => Node;
+  declare afterImage: (value: NodeVal<number>) => Node;
+  declare toVar: (name: string) => Node;
+  declare temp: (name: string) => Node;
+  declare label: (name: string) => Node;
+  declare context: (context: object) => Node;
+  declare cache: (value: WeakMap<any, any>) => Node;
+  declare globalCache: () => Node;
+  declare bypass: (call: Node) => Node;
+  declare scriptable: (parameters: Record<string, any>) => Node;
+  declare scriptableValue: () => Node;
+  declare call: (parameters: Record<string, any>) => Node;
+  declare element: (index: NodeVal<number>) => ArrayElementNode;
 
   // assign variant
 
   // math nodes
-  declare allAssign: () => this;
-  declare anyAssign: () => this;
-  declare equalsAssign: () => this;
-  declare radiansAssign: () => this;
-  declare degreesAssign: () => this;
-  declare expAssign: () => this;
-  declare exp2Assign: () => this;
-  declare logAssign: () => this;
-  declare log2Assign: () => this;
-  declare sqrtAssign: () => this;
-  declare inverseSqrtAssign: () => this;
-  declare floorAssign: () => this;
-  declare ceilAssign: () => this;
-  declare normalizeAssign: () => this;
-  declare fractAssign: () => this;
-  declare sinAssign: () => this;
-  declare cosAssign: () => this;
-  declare tanAssign: () => this;
-  declare asinAssign: () => this;
-  declare acosAssign: () => this;
-  declare atanAssign: () => this;
-  declare absAssign: () => this;
-  declare signAssign: () => this;
-  declare lengthAssign: () => this;
-  declare lengthSqAssign: () => this;
-  declare negateAssign: () => this;
-  declare oneMinusAssign: () => this;
-  declare dpdxAssign: () => this;
-  declare dpdyAssign: () => this;
-  declare roundAssign: () => this;
-  declare reciprocalAssign: () => this;
-  declare truncAssign: () => this;
-  declare fwidthAssign: () => this;
-  declare bitcastAssign: () => this;
-  declare atan2Assign: (y: NodeVal<number>) => this;
-  declare minAssign: (b: NodeVal<number>) => this;
-  declare maxAssign: (b: NodeVal<number>) => this;
-  declare modAssign: (b: NodeVal<number>) => this;
-  declare stepAssign: (b: NodeVal<number>) => this;
-  declare reflectAssign: (b: NodeVal<number>) => this;
-  declare distanceAssign: (b: NodeVal<number>) => this;
-  declare differenceAssign: (b: NodeVal<number>) => this;
-  declare dotAssign: (b: NodeVal<number>) => this;
-  declare crossAssign: (b: NodeVal<number>) => this;
-  declare powAssign: (b: NodeVal<number>) => this;
-  declare pow2Assign: () => this;
-  declare pow3Assign: () => this;
-  declare transformDirectionAssign: (b: NodeVal<number>) => this;
-  declare mixAssign: (a: NodeVal<number>, b: NodeVal<number>) => this;
-  declare clampAssign: (min: NodeVal<number>, max: NodeVal<number>) => this;
-  declare refractAssign: (normal: NodeVal<number>, eta: NodeVal<number>) => this;
-  declare smoothstepAssign: (min: NodeVal<number>, max: NodeVal<number>) => this;
-  declare faceforwardAssign: (normal: NodeVal<number>, incident: NodeVal<number>) => this;
-  declare saturateAssign: () => this;
-  declare cbrtAssign: () => this;
+  declare allAssign: () => Node;
+  declare anyAssign: () => Node;
+  declare equalsAssign: () => Node;
+  declare radiansAssign: () => Node;
+  declare degreesAssign: () => Node;
+  declare expAssign: () => Node;
+  declare exp2Assign: () => Node;
+  declare logAssign: () => Node;
+  declare log2Assign: () => Node;
+  declare sqrtAssign: () => Node;
+  declare inverseSqrtAssign: () => Node;
+  declare floorAssign: () => Node;
+  declare ceilAssign: () => Node;
+  declare normalizeAssign: () => Node;
+  declare fractAssign: () => Node;
+  declare sinAssign: () => Node;
+  declare cosAssign: () => Node;
+  declare tanAssign: () => Node;
+  declare asinAssign: () => Node;
+  declare acosAssign: () => Node;
+  declare atanAssign: () => Node;
+  declare absAssign: () => Node;
+  declare signAssign: () => Node;
+  declare lengthAssign: () => Node;
+  declare lengthSqAssign: () => Node;
+  declare negateAssign: () => Node;
+  declare oneMinusAssign: () => Node;
+  declare dpdxAssign: () => Node;
+  declare dpdyAssign: () => Node;
+  declare roundAssign: () => Node;
+  declare reciprocalAssign: () => Node;
+  declare truncAssign: () => Node;
+  declare fwidthAssign: () => Node;
+  declare bitcastAssign: () => Node;
+  declare atan2Assign: (y: NodeVal<number>) => Node;
+  declare minAssign: (b: NodeVal<number>) => Node;
+  declare maxAssign: (b: NodeVal<number>) => Node;
+  declare modAssign: (b: NodeVal<number>) => Node;
+  declare stepAssign: (b: NodeVal<number>) => Node;
+  declare reflectAssign: (b: NodeVal<number>) => Node;
+  declare distanceAssign: (b: NodeVal<number>) => Node;
+  declare differenceAssign: (b: NodeVal<number>) => Node;
+  declare dotAssign: (b: NodeVal<number>) => Node;
+  declare crossAssign: (b: NodeVal<number>) => Node;
+  declare powAssign: (b: NodeVal<number>) => Node;
+  declare pow2Assign: () => Node;
+  declare pow3Assign: () => Node;
+  declare transformDirectionAssign: (b: NodeVal<number>) => Node;
+  declare mixAssign: (a: NodeVal<number>, b: NodeVal<number>) => Node;
+  declare clampAssign: (min: NodeVal<number>, max: NodeVal<number>) => Node;
+  declare refractAssign: (normal: NodeVal<number>, eta: NodeVal<number>) => Node;
+  declare smoothstepAssign: (min: NodeVal<number>, max: NodeVal<number>) => Node;
+  declare faceforwardAssign: (normal: NodeVal<number>, incident: NodeVal<number>) => Node;
+  declare saturateAssign: () => Node;
+  declare cbrtAssign: () => Node;
   // operators
-  declare addAssign: (b: NodeVal<number>) => this;
-  declare subAssign: (b: NodeVal<number>) => this;
-  declare mulAssign: (b: NodeVal<number>) => this;
-  declare divAssign: (b: NodeVal<number>) => this;
-  declare remainderAssign: (b: NodeVal<number>) => this;
-  declare equalAssign: (b: NodeVal<number>) => this;
-  declare notEqualAssign: (b: NodeVal<number>) => this;
-  declare lessThanAssign: (b: NodeVal<number>) => this;
-  declare greaterThanAssign: (b: NodeVal<number>) => this;
-  declare lessThanEqualAssign: (b: NodeVal<number>) => this;
-  declare greaterThanEqualAssign: (b: NodeVal<number>) => this;
-  declare andAssign: (b: NodeVal<number>) => this;
-  declare orAssign: (b: NodeVal<number>) => this;
+  declare addAssign: (b: NodeVal<number>) => Node;
+  declare subAssign: (b: NodeVal<number>) => Node;
+  declare mulAssign: (b: NodeVal<number>) => Node;
+  declare divAssign: (b: NodeVal<number>) => Node;
+  declare remainderAssign: (b: NodeVal<number>) => Node;
+  declare equalAssign: (b: NodeVal<number>) => Node;
+  declare notEqualAssign: (b: NodeVal<number>) => Node;
+  declare lessThanAssign: (b: NodeVal<number>) => Node;
+  declare greaterThanAssign: (b: NodeVal<number>) => Node;
+  declare lessThanEqualAssign: (b: NodeVal<number>) => Node;
+  declare greaterThanEqualAssign: (b: NodeVal<number>) => Node;
+  declare andAssign: (b: NodeVal<number>) => Node;
+  declare orAssign: (b: NodeVal<number>) => Node;
   declare notAssign: () => UnaryNode;
-  declare bitAndAssign: (b: NodeVal<number>) => this;
+  declare bitAndAssign: (b: NodeVal<number>) => Node;
   declare bitNotAssign: () => UnaryNode;
-  declare bitOrAssign: (b: NodeVal<number>) => this;
-  declare bitXorAssign: (b: NodeVal<number>) => this;
-  declare shiftLeftAssign: (b: NodeVal<number>) => this;
-  declare shiftRightAssign: (b: NodeVal<number>) => this;
+  declare bitOrAssign: (b: NodeVal<number>) => Node;
+  declare bitXorAssign: (b: NodeVal<number>) => Node;
+  declare shiftLeftAssign: (b: NodeVal<number>) => Node;
+  declare shiftRightAssign: (b: NodeVal<number>) => Node;
   // primitive nodes
-  declare colorAssign: (r?: NodeVal<number>, g?: NodeVal<number>, b?: NodeVal<number>, a?: NodeVal<number>) => this;
-  declare f32Assign: (value?: NodeVal<number>) => this;
-  declare i32Assign: (value?: NodeVal<number>) => this;
-  declare u32Assign: (value?: NodeVal<number>) => this;
-  declare boolAssign: (value?: NodeVal<number>) => this;
-  declare vec2Assign: (x?: NodeVal<number>, y?: NodeVal<number>) => this;
-  declare ivec2Assign: (x?: NodeVal<number>, y?: NodeVal<number>) => this;
-  declare uvec2Assign: (x?: NodeVal<number>, y?: NodeVal<number>) => this;
-  declare bvec2Assign: (x?: NodeVal<number>, y?: NodeVal<number>) => this;
-  declare vec3Assign: (x?: NodeVal<number>, y?: NodeVal<number>, z?: NodeVal<number>) => this;
-  declare ivec3Assign: (x?: NodeVal<number>, y?: NodeVal<number>, z?: NodeVal<number>) => this;
-  declare uvec3Assign: (x?: NodeVal<number>, y?: NodeVal<number>, z?: NodeVal<number>) => this;
-  declare bvec3Assign: (x?: NodeVal<number>, y?: NodeVal<number>, z?: NodeVal<number>) => this;
-  declare vec4Assign: (x?: NodeVal<number>, y?: NodeVal<number>, z?: NodeVal<number>, w?: NodeVal<number>) => this;
-  declare ivec4Assign: (x?: NodeVal<number>, y?: NodeVal<number>, z?: NodeVal<number>, w?: NodeVal<number>) => this;
-  declare uvec4Assign: (x?: NodeVal<number>, y?: NodeVal<number>, z?: NodeVal<number>, w?: NodeVal<number>) => this;
-  declare bvec4Assign: (x?: NodeVal<number>, y?: NodeVal<number>, z?: NodeVal<number>, w?: NodeVal<number>) => this;
-  declare mat2Assign: (a?: NodeVal<number>, b?: NodeVal<number>, c?: NodeVal<number>, d?: NodeVal<number>) => this;
-  declare imat2Assign: (a?: NodeVal<number>, b?: NodeVal<number>, c?: NodeVal<number>, d?: NodeVal<number>) => this;
-  declare umat2Assign: (a?: NodeVal<number>, b?: NodeVal<number>, c?: NodeVal<number>, d?: NodeVal<number>) => this;
-  declare bmat2Assign: (a?: NodeVal<number>, b?: NodeVal<number>, c?: NodeVal<number>, d?: NodeVal<number>) => this;
-  declare mat3Assign: (...values: NodeVal<number>[]) => this;
-  declare imat3Assign: (...values: NodeVal<number>[]) => this;
-  declare umat3Assign: (...values: NodeVal<number>[]) => this;
-  declare bmat3Assign: (...values: NodeVal<number>[]) => this;
-  declare mat4Assign: (...values: NodeVal<number>[]) => this;
-  declare imat4Assign: (...values: NodeVal<number>[]) => this;
-  declare umat4Assign: (...values: NodeVal<number>[]) => this;
-  declare bmat4Assign: (...values: NodeVal<number>[]) => this;
-  declare convertAssign: (type: TypeName) => this;
+  declare colorAssign: (r?: NodeVal<number>, g?: NodeVal<number>, b?: NodeVal<number>, a?: NodeVal<number>) => Node;
+  declare f32Assign: (value?: NodeVal<number>) => Node;
+  declare i32Assign: (value?: NodeVal<number>) => Node;
+  declare u32Assign: (value?: NodeVal<number>) => Node;
+  declare boolAssign: (value?: NodeVal<number>) => Node;
+  declare vec2Assign: (x?: NodeVal<number>, y?: NodeVal<number>) => Node;
+  declare ivec2Assign: (x?: NodeVal<number>, y?: NodeVal<number>) => Node;
+  declare uvec2Assign: (x?: NodeVal<number>, y?: NodeVal<number>) => Node;
+  declare bvec2Assign: (x?: NodeVal<number>, y?: NodeVal<number>) => Node;
+  declare vec3Assign: (x?: NodeVal<number>, y?: NodeVal<number>, z?: NodeVal<number>) => Node;
+  declare ivec3Assign: (x?: NodeVal<number>, y?: NodeVal<number>, z?: NodeVal<number>) => Node;
+  declare uvec3Assign: (x?: NodeVal<number>, y?: NodeVal<number>, z?: NodeVal<number>) => Node;
+  declare bvec3Assign: (x?: NodeVal<number>, y?: NodeVal<number>, z?: NodeVal<number>) => Node;
+  declare vec4Assign: (x?: NodeVal<number>, y?: NodeVal<number>, z?: NodeVal<number>, w?: NodeVal<number>) => Node;
+  declare ivec4Assign: (x?: NodeVal<number>, y?: NodeVal<number>, z?: NodeVal<number>, w?: NodeVal<number>) => Node;
+  declare uvec4Assign: (x?: NodeVal<number>, y?: NodeVal<number>, z?: NodeVal<number>, w?: NodeVal<number>) => Node;
+  declare bvec4Assign: (x?: NodeVal<number>, y?: NodeVal<number>, z?: NodeVal<number>, w?: NodeVal<number>) => Node;
+  declare mat2Assign: (a?: NodeVal<number>, b?: NodeVal<number>, c?: NodeVal<number>, d?: NodeVal<number>) => Node;
+  declare imat2Assign: (a?: NodeVal<number>, b?: NodeVal<number>, c?: NodeVal<number>, d?: NodeVal<number>) => Node;
+  declare umat2Assign: (a?: NodeVal<number>, b?: NodeVal<number>, c?: NodeVal<number>, d?: NodeVal<number>) => Node;
+  declare bmat2Assign: (a?: NodeVal<number>, b?: NodeVal<number>, c?: NodeVal<number>, d?: NodeVal<number>) => Node;
+  declare mat3Assign: (...values: NodeVal<number>[]) => Node;
+  declare imat3Assign: (...values: NodeVal<number>[]) => Node;
+  declare umat3Assign: (...values: NodeVal<number>[]) => Node;
+  declare bmat3Assign: (...values: NodeVal<number>[]) => Node;
+  declare mat4Assign: (...values: NodeVal<number>[]) => Node;
+  declare imat4Assign: (...values: NodeVal<number>[]) => Node;
+  declare umat4Assign: (...values: NodeVal<number>[]) => Node;
+  declare bmat4Assign: (...values: NodeVal<number>[]) => Node;
+  declare convertAssign: (type: TypeName) => Node;
   // up to 1...16
-  declare toAttributeAssign: (type?: TypeName, stride?: number, offset?: number) => this;
+  declare toAttributeAssign: (type?: TypeName, stride?: number, offset?: number) => Node;
 
   // shader nodes
-  declare checkerAssign: () => this;
-  declare discardAssign: () => this;
-  declare directionToColorAssign: () => this;
-  declare colorToDirectionAssign: () => this;
+  declare checkerAssign: () => Node;
+  declare discardAssign: () => Node;
+  declare directionToColorAssign: () => Node;
+  declare colorToDirectionAssign: () => Node;
   declare remapAssign: (
     fromMin: NodeVal<number>,
     fromMax: NodeVal<number>,
     toMin: NodeVal<number>,
     toMax: NodeVal<number>,
-  ) => this;
+  ) => Node;
   declare remapClampAssign: (
     fromMin: NodeVal<number>,
     fromMax: NodeVal<number>,
     toMin: NodeVal<number>,
     toMax: NodeVal<number>,
-  ) => this;
-  declare rotateAssign: (angle: NodeVal<number>) => this;
-  declare rotateUVAssign: (angle: NodeVal<number>, center: NodeVal<number>) => this;
-  declare storageElementAssign: (index: NodeVal<number>) => this;
+  ) => Node;
+  declare rotateAssign: (angle: NodeVal<number>) => Node;
+  declare rotateUVAssign: (angle: NodeVal<number>, center: NodeVal<number>) => Node;
+  declare storageElementAssign: (index: NodeVal<number>) => Node;
   // functions
-  declare gaussianBlurAssign: (sigma?: NodeVal<number>) => this;
-  declare bumpMapAssign: (scale: NodeVal<number>) => this;
-  declare normalMapAssign: (scale: NodeVal<number>) => this;
-  declare cubeTextureAssign: (uv: UVNode, levelNode: NodeVal<number>) => this;
+  declare gaussianBlurAssign: (sigma?: NodeVal<number>) => Node;
+  declare bumpMapAssign: (scale: NodeVal<number>) => Node;
+  declare normalMapAssign: (scale: NodeVal<number>) => Node;
+  declare cubeTextureAssign: (uv: UVNode, levelNode: NodeVal<number>) => Node;
   declare triplanarTextureAssign: (
     textureY: TextureNode,
     textureZ: TextureNode,
     scale: NodeVal<number>,
     position: NodeVal<Vec3>,
     normal: NodeVal<Vec3>,
-  ) => this;
-  declare bicubicAssign: (uv: UVNode, levelNode: NodeVal<number>) => this;
-  declare textureAssign: (uv: UVNode, levelNode: NodeVal<number>) => this;
-  declare textureSizeAssign: (levelNode: NodeVal<number>) => this;
-  declare hashAssign: () => this;
-  declare condAssign: (then: Node, or: Node) => this;
-  declare lightingContextAssign: (lightingModel: LightModel, backdrop: Node, alpha: NodeVal<number>) => this;
-  declare computeAssign: (count: NodeVal<number>, size?: number[]) => this;
-  declare viewportTextureAssign: (uv: UVNode, levelNode: NodeVal<number>) => this;
-  declare viewportMipTextureAssign: (uv: UVNode, levelNode: NodeVal<number>) => this;
-  declare viewportDepthTextureAssign: (uv: UVNode, levelNode: NodeVal<number>) => this;
-  declare viewportSharedTextureAssign: (uv: UVNode, levelNode: NodeVal<number>) => this;
-  declare toneMappingAssign: (mapping: ToneMapping, exposure: NodeVal<number>) => this;
-  declare posterizeAssign: (steps: NodeVal<number>) => this;
-  declare linearTosRGBAssign: () => this;
-  declare sRGBToLinearAssign: () => this;
-  declare linearToColorSpaceAssign: (space: ColorSpace) => this;
-  declare colorSpaceToLinearAssign: (space: ColorSpace) => this;
-  declare saturationAssign: (value: NodeVal<number>) => this;
-  declare vibranceAssign: (value: NodeVal<number>) => this;
-  declare hueAssign: (value: NodeVal<number>) => this;
-  declare thresholdAssign: (value: NodeVal<number>) => this;
-  declare burnAssign: (value: NodeVal<number>) => this;
-  declare dodgeAssign: (value: NodeVal<number>) => this;
-  declare overlayAssign: (value: NodeVal<number>) => this;
-  declare screenAssign: (value: NodeVal<number>) => this;
-  declare anamorphicAssign: (threshold: NodeVal<number>, scale: NodeVal<number>, samples: NodeVal<number>) => this;
-  declare afterImageAssign: (value: NodeVal<number>) => this;
-  declare toVarAssign: (name: string) => this;
-  declare tempAssign: (name: string) => this;
-  declare labelAssign: (name: string) => this;
-  declare contextAssign: (context: object) => this;
-  declare cacheAssign: (value: WeakMap<any, any>) => this;
-  declare globalCacheAssign: () => this;
-  declare bypassAssign: (call: Node) => this;
-  declare scriptableAssign: (parameters: Record<string, any>) => this;
-  declare scriptableValueAssign: () => this;
-  declare callAssign: (parameters: Record<string, any>) => this;
-  declare elementAssign: (index: NodeVal<number>) => this;
+  ) => Node;
+  declare bicubicAssign: (uv: UVNode, levelNode: NodeVal<number>) => Node;
+  declare textureAssign: (uv: UVNode, levelNode: NodeVal<number>) => Node;
+  declare textureSizeAssign: (levelNode: NodeVal<number>) => Node;
+  declare hashAssign: () => Node;
+  declare condAssign: (then: Node, or: Node) => Node;
+  declare lightingContextAssign: (lightingModel: LightModel, backdrop: Node, alpha: NodeVal<number>) => Node;
+  declare computeAssign: (count: NodeVal<number>, size?: number[]) => Node;
+  declare viewportTextureAssign: (uv: UVNode, levelNode: NodeVal<number>) => Node;
+  declare viewportMipTextureAssign: (uv: UVNode, levelNode: NodeVal<number>) => Node;
+  declare viewportDepthTextureAssign: (uv: UVNode, levelNode: NodeVal<number>) => Node;
+  declare viewportSharedTextureAssign: (uv: UVNode, levelNode: NodeVal<number>) => Node;
+  declare toneMappingAssign: (mapping: ToneMapping, exposure: NodeVal<number>) => Node;
+  declare posterizeAssign: (steps: NodeVal<number>) => Node;
+  declare linearTosRGBAssign: () => Node;
+  declare sRGBToLinearAssign: () => Node;
+  declare linearToColorSpaceAssign: (space: ColorSpace) => Node;
+  declare colorSpaceToLinearAssign: (space: ColorSpace) => Node;
+  declare saturationAssign: (value: NodeVal<number>) => Node;
+  declare vibranceAssign: (value: NodeVal<number>) => Node;
+  declare hueAssign: (value: NodeVal<number>) => Node;
+  declare thresholdAssign: (value: NodeVal<number>) => Node;
+  declare burnAssign: (value: NodeVal<number>) => Node;
+  declare dodgeAssign: (value: NodeVal<number>) => Node;
+  declare overlayAssign: (value: NodeVal<number>) => Node;
+  declare screenAssign: (value: NodeVal<number>) => Node;
+  declare anamorphicAssign: (threshold: NodeVal<number>, scale: NodeVal<number>, samples: NodeVal<number>) => Node;
+  declare afterImageAssign: (value: NodeVal<number>) => Node;
+  declare toVarAssign: (name: string) => Node;
+  declare tempAssign: (name: string) => Node;
+  declare labelAssign: (name: string) => Node;
+  declare contextAssign: (context: object) => Node;
+  declare cacheAssign: (value: WeakMap<any, any>) => Node;
+  declare globalCacheAssign: () => Node;
+  declare bypassAssign: (call: Node) => Node;
+  declare scriptableAssign: (parameters: Record<string, any>) => Node;
+  declare scriptableValueAssign: () => Node;
+  declare callAssign: (parameters: Record<string, any>) => Node;
+  declare elementAssign: (index: NodeVal<number>) => Node;
 }
 
 implSwizzle();
