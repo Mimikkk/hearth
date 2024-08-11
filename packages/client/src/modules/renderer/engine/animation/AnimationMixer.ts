@@ -6,6 +6,7 @@ import { AnimationClip } from './AnimationClip.js';
 import { AnimationBlendMode } from '../constants.js';
 import { Interpolant } from '@modules/renderer/engine/math/interpolants/Interpolant.js';
 import { Entity } from '@modules/renderer/engine/core/Entity.js';
+import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 
 export class AnimationMixer {
   indices = new WeakMap<object, number>();
@@ -353,6 +354,11 @@ export class AnimationMixer {
     for (let i = 0; i < this._actions.length; i++) this._actions[i].time = 0;
 
     return this.update(timeSec);
+  }
+
+  attach(hearth: Hearth) {
+    hearth.animation.before.push(this.update.bind(this));
+    return this;
   }
 }
 

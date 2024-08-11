@@ -9,7 +9,11 @@ import { Vec4 } from '@modules/renderer/engine/math/Vec4.js';
 import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
 import { RenderTarget } from '@modules/renderer/engine/hearth/core/RenderTarget.js';
 import { Entity } from '@modules/renderer/engine/core/Entity.js';
-import { Filter, TextureDataType } from '@modules/renderer/engine/constants.js';
+import { MinificationTextureFilter, TextureDataType } from '@modules/renderer/engine/constants.js';
+import { ICamera } from '@modules/renderer/engine/entities/cameras/Camera.js';
+import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
+import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
+import NodeFrame from '@modules/renderer/engine/nodes/core/NodeFrame.js';
 
 const _reflectorPlane = new Plane();
 const _normal = Vec3.new();
@@ -30,24 +34,36 @@ const _defaultUV = vec2(viewportTopLeft.x.oneMinus(), viewportTopLeft.y);
 
 let _inReflector = false;
 
+interface Parameters {
+  target?: Entity;
+  resolution?: number;
+  generateMipmaps?: boolean;
+  bounces?: boolean;
+}
+
 export class ReflectorNode extends TextureNode {
-  constructor(parameters = {}) {
+  target: Entity;
+  resolution: number;
+  generateMipmaps: boolean;
+  bounces: boolean;
+  virtualCameras: WeakMap<ICamera, ICamera>;
+  renderTargets: WeakMap<ICamera, RenderTarget>;
+
+  constructor(parameters?: Parameters) {
     super(_defaultRT.texture, _defaultUV);
 
-    const { target = new Entity(), resolution = 1, generateMipmaps = false, bounces = true } = parameters;
+    this.target = parameters?.target ?? new Entity();
+    this.resolution = parameters?.resolution ?? 1;
+    this.generateMipmaps = parameters?.generateMipmaps ?? false;
+    this.bounces = parameters?.bounces ?? true;
 
-    this.target = target;
-    this.resolution = resolution;
-    this.generateMipmaps = generateMipmaps;
-    this.bounces = bounces;
-
-    this.updateBeforeType = bounces ? NodeUpdateStage.Render : NodeUpdateStage.Frame;
+    this.updateBeforeType = this.bounces ? NodeUpdateStage.Render : NodeUpdateStage.Frame;
 
     this.virtualCameras = new WeakMap();
     this.renderTargets = new WeakMap();
   }
 
-  _updateResolution(renderTarget, hearth) {
+  _updateResolution(renderTarget: RenderTarget, hearth: Hearth) {
     const resolution = this.resolution;
 
     hearth.getDrawSize(_size);
@@ -55,17 +71,14 @@ export class ReflectorNode extends TextureNode {
     renderTarget.setSize(Math.round(_size.width * resolution), Math.round(_size.height * resolution));
   }
 
-  setup(builder) {
+  setup(builder: NodeBuilder): void {
     this._updateResolution(_defaultRT, builder.hearth);
 
     return super.setup(builder);
   }
 
-  getTextureNode() {
-    return this.textureNode;
-  }
 
-  getVirtualCamera(camera) {
+  getVirtualCamera(camera: ICamera): ICamera {
     let virtualCamera = this.virtualCameras.get(camera);
 
     if (virtualCamera === undefined) {
@@ -77,14 +90,14 @@ export class ReflectorNode extends TextureNode {
     return virtualCamera;
   }
 
-  getRenderTarget(camera) {
+  getRenderTarget(camera: ICamera): RenderTarget {
     let renderTarget = this.renderTargets.get(camera);
 
     if (renderTarget === undefined) {
       renderTarget = new RenderTarget(0, 0, { type: TextureDataType.HalfFloat });
 
-      if (this.generateMipmaps === true) {
-        renderTarget.texture.minFilter = Filter.LinearMipmapLinear;
+      if (this.generateMipmaps) {
+        renderTarget.texture.minFilter = MinificationTextureFilter.LinearMipmapLinear;
         renderTarget.texture.generateMipmaps = true;
       }
 
@@ -94,8 +107,8 @@ export class ReflectorNode extends TextureNode {
     return renderTarget;
   }
 
-  updateBefore(frame) {
-    if (this.bounces === false && _inReflector) return false;
+  updateBefore(frame: NodeFrame) {
+    if (!this.bounces && _inReflector) return false;
 
     _inReflector = true;
 

@@ -13,6 +13,7 @@ import { Node } from '@modules/renderer/engine/nodes/core/Node.js';
 import { ConstNode, NodeVal } from '@modules/renderer/engine/nodes/core/ConstNode.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { DepthTexture } from '@modules/renderer/engine/entities/textures/DepthTexture.js';
+import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
 
 export class TextureNode extends UniformNode<Texture> {
   declare isTextureNode: true;
@@ -23,13 +24,12 @@ export class TextureNode extends UniformNode<Texture> {
 
   constructor(
     value: Texture,
-    public uvNode: UVNode | null = null,
-    public levelNode: ConstNode<number> | null = null,
+    public uvNode: ConstNode<Vec2> = null!,
+    public levelNode: ConstNode<number> = null!,
   ) {
     super(value, TypeName.texture);
 
     this.isTextureNode = true;
-
     this.compareNode = null!;
     this.depthNode = null!;
 
@@ -208,7 +208,7 @@ export class TextureNode extends UniformNode<Texture> {
     return this.sampler;
   }
 
-  uv(uvNode) {
+  uv(uvNode: UVNode): TextureNode {
     const textureNode = this.clone();
     textureNode.uvNode = uvNode;
 
@@ -217,14 +217,14 @@ export class TextureNode extends UniformNode<Texture> {
 
   blur(levelNode: NodeVal<number>): TextureNode {
     const textureNode = this.clone();
-    textureNode.levelNode = levelNode.mul(maxMipLevel(textureNode));
+    textureNode.levelNode = asNode(levelNode).mul(maxMipLevel(textureNode));
 
     return textureNode;
   }
 
   level(levelNode: NodeVal<number>): TextureNode {
     const textureNode = this.clone();
-    textureNode.levelNode = levelNode;
+    textureNode.levelNode = asNode(levelNode);
 
     return textureNode;
   }
@@ -233,7 +233,7 @@ export class TextureNode extends UniformNode<Texture> {
     return textureSize(this, levelNode);
   }
 
-  compare(compareNode) {
+  compare(compareNode: NodeVal<number>): TextureNode {
     const textureNode = this.clone();
     textureNode.compareNode = asNode(compareNode);
 

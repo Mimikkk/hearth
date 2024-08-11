@@ -1,7 +1,7 @@
 import { NodeUpdateStage } from './constants.js';
 import { Scene } from '@modules/renderer/engine/entities/scenes/Scene.js';
 import { Entity } from '@modules/renderer/engine/core/Entity.js';
-import { Camera } from '@modules/renderer/engine/entities/cameras/Camera.js';
+import { Camera, ICamera } from '@modules/renderer/engine/entities/cameras/Camera.js';
 import { Material } from '@modules/renderer/engine/entities/materials/Material.js';
 import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 import { Node } from '../core/Node.js';
@@ -18,7 +18,7 @@ export class NodeFrame {
   updateBeforeMap: WeakMap<Node, ReferenceMap>;
   hearth: Hearth;
   material: Material;
-  camera: Camera;
+  camera: ICamera;
   object: Entity;
   scene: Scene;
   clock: Clock;
