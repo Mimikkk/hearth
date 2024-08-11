@@ -113,7 +113,7 @@ const createPostprocess = (scene: Scene, camera: PerspectiveCamera) => {
 
   const vignette = viewportTopLeft.distance(0.5).mul(1.2).clamp().oneMinus();
 
-  return scenepass.add(color).add(colorblur.mul(0.1)).mul(vignette).add(teapotpass.mul(10).add(teapotblur));
+  return color.add(colorblur.mul(0.1)).mul(vignette).add(teapotpass.mul(10).add(teapotblur));
 };
 const createBuffer = (type: TypeName.vec4 | TypeName.vec3) => {
   const stride = type === TypeName.vec4 ? 4 : 3;
