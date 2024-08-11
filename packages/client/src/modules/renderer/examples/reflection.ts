@@ -98,24 +98,22 @@ const loadFloor = async () => {
 };
 const createPostprocess = (hearth: Hearth, scene: Scene, camera: PerspectiveCamera) => {
   const scenePass = pass(scene, camera);
-  const scenePassColor = scenePass.getTextureNode();
-  const scenePassDepth = scenePass.getDepthNode().remapClamp(0.3, 0.5);
+  const color = scenePass.getTextureNode();
+  const depth = scenePass.getDepthNode();
 
-  const scenePassColorBlurred = scenePassColor.gaussianBlur();
-  scenePassColorBlurred.directionNode = scenePassDepth;
+  const diffuse = color.gaussianBlur();
+  diffuse.directionNode = depth;
 
-  return hearth.postprocess(scenePassColorBlurred.mul(vignette()));
+  return hearth.postprocess(diffuse.mul(vignette()));
 };
 
-const camera = createCamera();
 const { sunLight, waterAmbientLight, skyAmbientLight } = createLights();
-
-
 const { model, mixer } = await loadMichelle();
 const { floor, reflection } = await loadFloor();
 const scene = createScene().add(sunLight, waterAmbientLight, skyAmbientLight, model, floor, reflection.target);
 
 const hearth = await Hearth.as();
+const camera = createCamera();
 
 OrbitControls.attach(hearth, camera, {
   minDistance: 1,

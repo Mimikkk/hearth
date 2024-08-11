@@ -13,7 +13,6 @@ import { Node } from '@modules/renderer/engine/nodes/core/Node.js';
 import { ConstNode, NodeVal } from '@modules/renderer/engine/nodes/core/ConstNode.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import { DepthTexture } from '@modules/renderer/engine/entities/textures/DepthTexture.js';
-import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
 
 export class TextureNode extends UniformNode<Texture> {
   declare isTextureNode: true;
@@ -24,7 +23,7 @@ export class TextureNode extends UniformNode<Texture> {
 
   constructor(
     value: Texture,
-    public uvNode: ConstNode<Vec2> = null!,
+    public uvNode: Node = null!,
     public levelNode: ConstNode<number> = null!,
   ) {
     super(value, TypeName.texture);

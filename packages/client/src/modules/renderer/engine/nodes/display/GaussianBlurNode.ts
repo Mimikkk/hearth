@@ -6,7 +6,6 @@ import { uv, UVNode } from '../accessors/UVNode.js';
 import { PassTextureNode, texturePass } from './PassNode.js';
 import { uniform, UniformNode } from '../core/UniformNode.js';
 import { QuadMesh } from '@modules/renderer/engine/entities/QuadMesh.js';
-import { ConstNode } from '@modules/renderer/engine/nodes/core/ConstNode.js';
 import { implCommand } from '@modules/renderer/engine/nodes/core/Node.commands.js';
 import { RenderTarget } from '@modules/renderer/engine/hearth/core/RenderTarget.js';
 import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
@@ -15,12 +14,9 @@ import { TextureNode } from '@modules/renderer/engine/nodes/accessors/TextureNod
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
 import NodeFrame from '@modules/renderer/engine/nodes/core/NodeFrame.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
-
-const quadMesh1 = new QuadMesh();
-const quadMesh2 = new QuadMesh();
+import { Node } from '@modules/renderer/engine/nodes/core/Node.js';
 
 export class GaussianBlurNode extends TempNode {
-  directionNode: ConstNode<number>;
   _invSize: UniformNode<Vec2>;
   _passDirection: UniformNode<Vec2>;
   _horizontalRT: RenderTarget;
@@ -31,14 +27,12 @@ export class GaussianBlurNode extends TempNode {
 
   constructor(
     public textureNode: TextureNode,
-    public sigma: ConstNode<number> = f32(2),
+    public sigma: Node = f32(2),
+    public directionNode: Node = vec2(1),
   ) {
     super(TypeName.vec4);
 
     this.textureNode = textureNode;
-
-    this.directionNode = vec2(1);
-
     this._invSize = uniform(Vec2.new());
     this._passDirection = uniform(Vec2.new());
 
@@ -72,8 +66,8 @@ export class GaussianBlurNode extends TempNode {
     const currentRenderTarget = hearth.target;
     const currentTexture = textureNode.value;
 
-    quadMesh1.material = this._material;
-    quadMesh2.material = this._material;
+    quad1.material = this._material;
+    quad2.material = this._material;
 
     this.setSize(map.image.width, map.image.height);
 
@@ -86,14 +80,14 @@ export class GaussianBlurNode extends TempNode {
 
     this._passDirection.value.set(1, 0);
 
-    quadMesh1.render(hearth);
+    quad1.render(hearth);
 
     textureNode.value = this._horizontalRT.texture;
     hearth.updateRenderTarget(this._verticalRT);
 
     this._passDirection.value.set(0, 1);
 
-    quadMesh2.render(hearth);
+    quad2.render(hearth);
 
     hearth.updateRenderTarget(currentRenderTarget);
     textureNode.value = currentTexture;
@@ -156,6 +150,9 @@ export class GaussianBlurNode extends TempNode {
     return coefficients;
   }
 }
+
+const quad1 = new QuadMesh();
+const quad2 = new QuadMesh();
 
 export const gaussianBlur = asCommand(GaussianBlurNode);
 
