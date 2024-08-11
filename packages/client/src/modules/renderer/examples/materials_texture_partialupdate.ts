@@ -56,7 +56,7 @@ function randomizePosition(into: Vec2): void {
 }
 
 const color = Color.new();
-const texture = new DataTexture(new Uint8Array(32 * 32 * 4), 32, 32);
+const texture = new DataTexture({ data: new Uint8Array(32 * 32 * 4), width: 32, height: 32 });
 
 function regenerateDataTexture(into: DataTexture): void {
   const { data } = into.image;

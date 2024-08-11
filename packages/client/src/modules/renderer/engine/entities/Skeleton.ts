@@ -118,24 +118,17 @@ export class Skeleton {
     const boneMatrices = new Float32Array(size * size * 4);
     boneMatrices.set(this.boneMatrices);
 
-    const boneTexture = new DataTexture(
-      boneMatrices,
-      size,
-      size,
-      TextureFormat.RGBA,
-      TextureDataType.Float,
-      undefined!,
-      undefined!,
-      undefined!,
-      undefined!,
-      undefined!,
-      undefined!,
-      undefined!,
-    );
-    boneTexture.needsUpdate = true;
-
     this.boneMatrices = boneMatrices;
-    this.boneTexture = boneTexture;
+    this.boneTexture = new DataTexture(
+      {
+        data: boneMatrices,
+        width: size,
+        height: size,
+        format: TextureFormat.RGBA,
+        type: TextureDataType.Float,
+        needsUpdate: true,
+      },
+    );
 
     return this;
   }

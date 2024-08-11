@@ -190,18 +190,13 @@ export class InstancedMesh extends Mesh {
 
     if (this.morphTexture === null) {
       this.morphTexture = new DataTexture(
-        new Float32Array(len * this.count),
-        len,
-        this.count,
-        TextureFormat.Red,
-        TextureDataType.Float,
-        undefined!,
-        undefined!,
-        undefined!,
-        undefined!,
-        undefined!,
-        undefined!,
-        undefined!,
+        {
+          data: new Float32Array(len * this.count),
+          width: len,
+          height: this.count,
+          format: TextureFormat.Red,
+          type: TextureDataType.Float,
+        },
       );
     }
 
@@ -222,7 +217,8 @@ export class InstancedMesh extends Mesh {
     array.set(objectInfluences, dataIndex + 1);
   }
 
-  updateMorphTargets() {}
+  updateMorphTargets() {
+  }
 }
 
 InstancedMesh.prototype.isInstancedMesh = true;

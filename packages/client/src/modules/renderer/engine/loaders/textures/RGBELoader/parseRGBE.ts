@@ -47,27 +47,22 @@ type ParseResult = {
   height: number;
   type: TextureDataType;
 };
-const createDataTexture = (result: ParseResult): DataTexture => {
-  //@ts-expect-error
-  const texture = new DataTexture();
-
-  texture.wrapS = Wrapping.ClampToEdge;
-  texture.wrapT = Wrapping.ClampToEdge;
-  texture.minFilter = MinificationTextureFilter.Linear;
-  texture.magFilter = MagnificationTextureFilter.Linear;
-  texture.anisotropy = 1;
-  texture.colorSpace = ColorSpace.LinearSRGB;
-  texture.generateMipmaps = false;
-  texture.flipY = true;
-  texture.image.width = result.width;
-  texture.image.height = result.height;
-  texture.image.data = result.data;
-  texture.type = result.type;
-
-  texture.needsUpdate = true;
-
-  return texture;
-};
+const createDataTexture = (result: ParseResult): DataTexture =>
+  new DataTexture({
+    data: result.data,
+    width: result.width,
+    height: result.height,
+    wrapS: Wrapping.ClampToEdge,
+    wrapT: Wrapping.ClampToEdge,
+    minFilter: MinificationTextureFilter.Linear,
+    magFilter: MagnificationTextureFilter.Linear,
+    anisotropy: 1,
+    colorSpace: ColorSpace.LinearSRGB,
+    generateMipmaps: false,
+    flipY: true,
+    type: result.type,
+    needsUpdate: true,
+  });
 
 export const parseRGBE = (buffer: ArrayBuffer, type: SupportedRGBEType): DataTexture => {
   const rgbe_read_error = 1;

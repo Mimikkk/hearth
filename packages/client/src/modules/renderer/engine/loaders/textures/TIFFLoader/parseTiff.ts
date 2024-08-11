@@ -17,16 +17,18 @@ const parse = (buffer: ArrayBuffer): ParseResult => {
 };
 
 export const parseTiff = (buffer: ArrayBuffer): DataTexture => {
-  //@ts-expect-error - improve texture handling
-  const texture = new DataTexture();
-  texture.image = parse(buffer);
-  texture.wrapS = Wrapping.ClampToEdge;
-  texture.wrapT = Wrapping.ClampToEdge;
-  texture.magFilter = MagnificationTextureFilter.Linear;
-  texture.minFilter = MinificationTextureFilter.LinearMipmapLinear;
-  texture.anisotropy = 1;
-  texture.flipY = true;
-  texture.needsUpdate = true;
+  const image = parse(buffer);
 
-  return texture;
+  return new DataTexture({
+    data: image.data,
+    width: image.width,
+    height: image.height,
+    wrapS: Wrapping.ClampToEdge,
+    wrapT: Wrapping.ClampToEdge,
+    minFilter: MinificationTextureFilter.LinearMipmapLinear,
+    magFilter: MagnificationTextureFilter.Linear,
+    anisotropy: 1,
+    flipY: true,
+    needsUpdate: true,
+  });
 };

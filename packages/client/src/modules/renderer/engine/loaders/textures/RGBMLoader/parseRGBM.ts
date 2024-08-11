@@ -60,24 +60,22 @@ interface ParseResult {
 }
 
 const parseDataTexture = (buffer: ArrayBuffer, type: SupportedRGBMType, maxRange: number) => {
-  //@ts-expect-error
-  const texture = new DataTexture();
-  texture.wrapS = Wrapping.ClampToEdge;
-  texture.wrapT = Wrapping.ClampToEdge;
-  texture.magFilter = MagnificationTextureFilter.Linear;
-  texture.minFilter = MinificationTextureFilter.Linear;
-  texture.anisotropy = 1;
-
   const details = parseBuffer(buffer, type, maxRange);
-  texture.image.width = details.width;
-  texture.image.height = details.height;
-  texture.image.data = details.data;
-  texture.flipY = details.flipY;
-  texture.format = details.format;
-  texture.type = details.type;
-  texture.needsUpdate = true;
 
-  return texture;
+  return new DataTexture({
+    data: details.data,
+    width: details.width,
+    height: details.height,
+    format: details.format,
+    flipY: details.flipY,
+    type: details.type,
+    wrapS: Wrapping.ClampToEdge,
+    wrapT: Wrapping.ClampToEdge,
+    magFilter: MagnificationTextureFilter.Linear,
+    minFilter: MinificationTextureFilter.Linear,
+    anisotropy: 1,
+    needsUpdate: true,
+  });
 };
 export const parseRGBM = (buffers: ArrayBuffer[], type: SupportedRGBMType, maxRange: number): CubeTexture => {
   //@ts-expect-error - improve texture handling

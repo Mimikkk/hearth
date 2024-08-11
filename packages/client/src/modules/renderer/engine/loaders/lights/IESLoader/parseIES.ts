@@ -16,15 +16,18 @@ export interface SupportedMap {
   [TextureDataType.Float]: Float32Array;
 }
 
-const createDataTexture = (data: Uint8Array | Uint16Array | Float32Array, type: SupportedType): DataTexture => {
-  //@ts-expect-error - improve texture handling
-  const texture = new DataTexture(data, 180, 1, TextureFormat.Red, type);
-  texture.minFilter = MinificationTextureFilter.Linear;
-  texture.magFilter = MagnificationTextureFilter.Linear;
-  texture.needsUpdate = true;
+const createDataTexture = (data: Uint8Array | Uint16Array | Float32Array, type: SupportedType): DataTexture =>
+  new DataTexture({
+    data: data,
+    width: 180,
+    height: 1,
+    format: TextureFormat.Red,
+    type,
+    minFilter: MinificationTextureFilter.Linear,
+    magFilter: MagnificationTextureFilter.Linear,
+    needsUpdate: true,
+  });
 
-  return texture;
-};
 const readIes = <ST extends SupportedType>(iesLamp: IESLamp, type: SupportedType): SupportedMap[ST] => {
   const width = 360;
   const height = 180;
