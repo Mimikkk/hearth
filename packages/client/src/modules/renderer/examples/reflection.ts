@@ -7,7 +7,7 @@ import {
   reflector,
   texture,
   uv,
-  viewportTopLeft,
+  vignette,
 } from '@modules/renderer/engine/nodes/nodes.js';
 
 import { GLTFLoader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/GLTFLoader.js';
@@ -16,8 +16,6 @@ import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 import { HearthPostprocess } from '@modules/renderer/engine/hearth/Hearth.Postprocess.js';
 
 import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitControls.js';
-
-import { ColorSpace } from '@modules/renderer/engine/engine.js';
 import { TextureLoader } from '@modules/renderer/engine/loaders/textures/TextureLoader/TextureLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
@@ -60,7 +58,7 @@ async function init() {
   clock = new Engine.Clock();
 
   const loader = new GLTFLoader();
-  loader.loadAsync('resources/models/gltf/Michelle.glb').then(function (gltf) {
+  loader.loadAsync('resources/models/gltf/Michelle.glb').then(function(gltf) {
     model = gltf.scene;
     model.children[0].children[0].castShadow = true;
 
@@ -120,10 +118,8 @@ async function init() {
   const scenePassColorBlurred = scenePassColor.gaussianBlur();
   scenePassColorBlurred.directionNode = scenePassDepth;
 
-  const vignet = viewportTopLeft.distance(0.5).mul(1.35).clamp().oneMinus();
-
   postProcessing = new HearthPostprocess(hearth);
-  postProcessing.outputNode = scenePassColorBlurred.mul(vignet);
+  postProcessing.outputNode = scenePassColorBlurred.mul(vignette());
 
   useWindowResizer(hearth, camera);
 }

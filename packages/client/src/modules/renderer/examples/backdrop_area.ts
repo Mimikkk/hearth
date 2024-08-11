@@ -13,13 +13,10 @@ import {
 } from '@modules/renderer/engine/nodes/nodes.js';
 
 import { GUI } from 'lil-gui';
-
-import { GLTFLoader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/GLTFLoader.js';
-
-import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
-
-import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitControls.js';
 import {
+  GLTFLoader,
+  Hearth,
+  OrbitControls,
   AnimationMixer,
   BoxGeometry,
   Clock,

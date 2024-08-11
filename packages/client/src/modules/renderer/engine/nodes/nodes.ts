@@ -166,6 +166,8 @@ export * from './display/GaussianBlurNode.js';
 export * from './display/AfterImageNode.js';
 export * from './display/AnamorphicNode.js';
 export * from './display/PassNode.js';
+export * from './display/VignetteNode.js';
+
 // /procedural
 export * from './procedural/CheckerNode.js';
 // /pmrem
