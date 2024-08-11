@@ -7,7 +7,9 @@ import { Entity } from '../../core/Entity.js';
 import { ICamera } from '@modules/renderer/engine/entities/cameras/Camera.js';
 import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 import { Group } from '@modules/renderer/engine/entities/Group.js';
-import { Quaternion } from '@modules/renderer/engine/math/Quaternion.js';
+
+type AxisMode = 'world' | 'view' | 'local';
+type TransformMode = 'translate' | 'rotate';
 
 interface Parameters {
   onHoverStart?: (object: Entity) => void;
@@ -19,7 +21,12 @@ interface Parameters {
   useAxisX?: boolean;
   useAxisY?: boolean;
   useAxisZ?: boolean;
-  useAxisMode?: 'world' | 'view';
+  useAxisMode?: AxisMode;
+  mode?: TransformMode;
+  enabled?: boolean;
+  recursive?: boolean;
+  transformGroup?: boolean;
+  rotateSpeed?: number;
 }
 
 export class DragControls {
@@ -32,276 +39,324 @@ export class DragControls {
   useAxisX: boolean;
   useAxisY: boolean;
   useAxisZ: boolean;
-  useAxisMode: 'world' | 'view';
-
-  camera: ICamera;
+  useAxisMode: AxisMode;
+  mode: TransformMode;
   enabled: boolean;
   recursive: boolean;
   transformGroup: boolean;
-  mode: string;
   rotateSpeed: number;
 
-  constructor(objects: Entity[], camera: ICamera, dom: HTMLElement, parameters?: Parameters) {
-    dom.style.touchAction = 'none';
-    this.onHoverStart = parameters?.onHoverStart ?? undefined;
-    this.onHoverEnd = parameters?.onHoverEnd ?? undefined;
-    this.onDragStart = parameters?.onDragStart ?? undefined;
-    this.onDrag = parameters?.onDrag ?? undefined;
-    this.onDragEnd = parameters?.onDragEnd ?? undefined;
-    this.onClick = parameters?.onClick ?? undefined;
+  #selected: Entity | null = null;
+  #hovered: Entity | null = null;
+  #intersections: Intersection[] = [];
+  #raycaster: Raycaster = Raycaster.new();
+  #pointer: Vec2 = Vec2.new();
+  #previousPointer: Vec2 = Vec2.new();
+  #plane: Plane = new Plane();
+  #offset: Vec3 = Vec3.new();
+  #intersection: Vec3 = Vec3.new();
+  #worldPosition: Vec3 = Vec3.new();
+  #inverseMatrix: Mat4 = new Mat4();
+  #up: Vec3 = Vec3.new();
+  #right: Vec3 = Vec3.new();
+  #localDelta: Vec3 = Vec3.new();
+  #cameraRight: Vec3 = Vec3.new();
+  #cameraUp: Vec3 = Vec3.new();
+  #cameraForward: Vec3 = Vec3.new();
+  #deltaPosition: Vec3 = Vec3.new();
+  #previousPosition: Vec3 = Vec3.new();
+  #diff: Vec2 = Vec2.new();
+
+  constructor(
+    public objects: Entity[],
+    public camera: ICamera,
+    public dom: HTMLElement,
+    parameters?: Parameters,
+  ) {
+    this.dom.style.touchAction = 'none';
+
+    this.onHoverStart = parameters?.onHoverStart;
+    this.onHoverEnd = parameters?.onHoverEnd;
+    this.onDragStart = parameters?.onDragStart;
+    this.onDrag = parameters?.onDrag;
+    this.onDragEnd = parameters?.onDragEnd;
+    this.onClick = parameters?.onClick;
     this.useAxisX = parameters?.useAxisX ?? true;
     this.useAxisY = parameters?.useAxisY ?? true;
     this.useAxisZ = parameters?.useAxisZ ?? true;
     this.useAxisMode = parameters?.useAxisMode ?? 'world';
+    this.mode = parameters?.mode ?? 'translate';
+    this.enabled = parameters?.enabled ?? true;
+    this.recursive = parameters?.recursive ?? false;
+    this.transformGroup = parameters?.transformGroup ?? false;
+    this.rotateSpeed = parameters?.rotateSpeed ?? 1;
 
-    let _selected: Entity | null = null;
-    let _hovered: Entity | null = null;
+    this.activate();
+  }
 
-    const _intersections: Intersection[] = [];
+  activate(): void {
+    this.dom.addEventListener('pointermove', this.#onPointerMove);
+    this.dom.addEventListener('pointerdown', this.#onPointerDown);
+    this.dom.addEventListener('pointerup', this.#onPointerCancel);
+    this.dom.addEventListener('pointerleave', this.#onPointerCancel);
+  }
 
-    this.mode = 'translate';
+  deactivate(): void {
+    this.dom.removeEventListener('pointermove', this.#onPointerMove);
+    this.dom.removeEventListener('pointerdown', this.#onPointerDown);
+    this.dom.removeEventListener('pointerup', this.#onPointerCancel);
+    this.dom.removeEventListener('pointerleave', this.#onPointerCancel);
+    this.dom.style.cursor = '';
+  }
 
-    this.rotateSpeed = 1;
+  dispose(): void {
+    this.deactivate();
+  }
 
-    const scope = this;
+  #onPointerMove = (event: PointerEvent): void => {
+    if (!this.enabled) return;
 
-    function activate() {
-      dom.addEventListener('pointermove', onPointerMove);
-      dom.addEventListener('pointerdown', onPointerDown);
-      dom.addEventListener('pointerup', onPointerCancel);
-      dom.addEventListener('pointerleave', onPointerCancel);
-    }
+    this.#updatePointer(event);
 
-    function deactivate() {
-      dom.removeEventListener('pointermove', onPointerMove);
-      dom.removeEventListener('pointerdown', onPointerDown);
-      dom.removeEventListener('pointerup', onPointerCancel);
-      dom.removeEventListener('pointerleave', onPointerCancel);
+    this.#raycaster.fromCamera(this.#pointer, this.camera);
 
-      dom.style.cursor = '';
-    }
-
-    function dispose() {
-      deactivate();
-    }
-
-    function getObjects() {
-      return objects;
-    }
-
-    function setObjects(objects: Entity[]) {
-      objects = objects;
-    }
-
-    function getRaycaster() {
-      return _raycaster;
-    }
-
-    function onPointerMove(event: PointerEvent) {
-      if (scope.enabled === false) return;
-
-      updatePointer(event);
-
-      _raycaster.fromCamera(_pointer, camera);
-
-      if (_selected) {
-        if (scope.mode === 'translate') {
-          if (_raycaster.ray.intersectPlane(_plane, _intersection)) {
-            if (scope.useAxisMode === 'local') {
-              _deltaPosition.from(_intersection).sub(_previousPosition);
-
-              _cameraRight.fromMat4Column(camera.matrix, 0).normalize();
-              _cameraUp.fromMat4Column(camera.matrix, 1).normalize();
-              _cameraForward.fromMat4Column(camera.matrix, 2).normalize();
-
-              const deltaX = _deltaPosition.dot(_cameraRight);
-              const deltaY = _deltaPosition.dot(_cameraUp);
-              const deltaZ = _deltaPosition.dot(_cameraForward);
-
-              if (scope.useAxisX) _selected.position.addScaled(_cameraRight, deltaX);
-              if (scope.useAxisY) _selected.position.addScaled(_cameraUp, deltaY);
-              if (scope.useAxisZ) _selected.position.addScaled(_cameraForward, deltaZ);
-              _previousPosition.from(_intersection);
-              _selected.updateMatrixWorld();
-            } else {
-              _localDelta.from(_intersection).sub(_previousPosition);
-
-              _selected.parent!.matrixWorld.decompose(_worldPosition, _worldQuaternion, _worldScale);
-              _parentScale.from(_worldScale).negate();
-
-              if (!scope.useAxisX) _localDelta.x = 0;
-              if (!scope.useAxisY) _localDelta.y = 0;
-              if (!scope.useAxisZ) _localDelta.z = 0;
-
-              _localDelta.applyQuaternion(_worldQuaternion).div(_worldScale);
-
-              _selected.position.add(_localDelta);
-              _previousPosition.from(_intersection);
-            }
-          }
-        } else if (scope.mode === 'rotate') {
-          _diff.asSub(_pointer, _previousPointer).scale(scope.rotateSpeed);
-          _selected.rotateOnWorldAxis(_up, _diff.x);
-          _selected.rotateOnWorldAxis(_right.normalize(), -_diff.y);
-        }
-
-        scope.onDrag?.(_selected);
-        _previousPointer.from(_pointer);
-      } else {
-        if (event.pointerType === 'mouse' || event.pointerType === 'pen') {
-          _intersections.length = 0;
-
-          _raycaster.fromCamera(_pointer, camera);
-          _raycaster.intersects(objects, scope.recursive, _intersections);
-
-          if (_intersections.length > 0) {
-            const object = _intersections[0].object;
-
-            _plane.fromNormalAndCoplanar(
-              camera.getWorldDirection(_plane.normal),
-              _worldPosition.fromMat4Position(object.matrixWorld),
-            );
-
-            if (_hovered !== object && _hovered !== null) {
-              scope.onHoverEnd?.(_hovered);
-
-              dom.style.cursor = 'auto';
-              _hovered = null;
-            }
-
-            if (_hovered !== object) {
-              scope.onHoverStart?.(object);
-
-              dom.style.cursor = 'pointer';
-              _hovered = object;
-            }
-          } else {
-            if (_hovered !== null) {
-              scope.onHoverEnd?.(_hovered);
-
-              dom.style.cursor = 'auto';
-              _hovered = null;
-            }
-          }
-        }
+    if (this.#selected) {
+      if (this.mode === 'translate') {
+        this.#handleTranslation();
+      } else if (this.mode === 'rotate') {
+        this.#handleRotation();
       }
 
-      _previousPointer.from(_pointer);
+      this.onDrag?.(this.#selected);
+      this.#previousPointer.from(this.#pointer);
+    } else {
+      this.#handleHover(event);
     }
 
-    function onPointerDown(event: PointerEvent) {
-      if (scope.enabled === false) return;
+    this.#previousPointer.from(this.#pointer);
+  };
 
-      updatePointer(event);
+  #onPointerDown = (event: PointerEvent): void => {
+    if (!this.enabled) return;
 
-      _intersections.length = 0;
+    this.#updatePointer(event);
 
-      _raycaster.fromCamera(_pointer, camera);
-      _raycaster.intersects(objects, scope.recursive, _intersections);
+    this.#intersections.length = 0;
 
-      if (_intersections.length > 0) {
-        if (scope.transformGroup === true) {
-          _selected = findGroup(_intersections[0].object);
-        } else {
-          _selected = _intersections[0].object;
-        }
-        scope.onClick?.(_selected!);
+    this.#raycaster.fromCamera(this.#pointer, this.camera);
+    this.#raycaster.intersects(this.objects, this.recursive, this.#intersections);
 
-        _plane.fromNormalAndCoplanar(
-          camera.getWorldDirection(_plane.normal),
-          //@ts-expect-error
-          _worldPosition.fromMat4Position(_selected.matrixWorld),
+    if (this.#intersections.length > 0) {
+      this.#selected = this.transformGroup
+        ? this.#findGroup(this.#intersections[0].object)
+        : this.#intersections[0].object;
+      this.onClick?.(this.#selected!);
+
+      this.#plane.fromNormalAndCoplanar(
+        this.camera.getWorldDirection(this.#plane.normal),
+        this.#worldPosition.fromMat4Position(this.#selected.matrixWorld),
+      );
+
+      if (this.#raycaster.ray.intersectPlane(this.#plane, this.#intersection)) {
+        this.#handleDragStart();
+      }
+
+      this.dom.style.cursor = 'move';
+      this.#previousPosition.from(this.#intersection);
+      this.onDragStart?.(this.#selected!);
+    }
+
+    this.#previousPointer.from(this.#pointer);
+  };
+
+  #onPointerCancel = (): void => {
+    if (!this.enabled) return;
+
+    if (this.#selected) {
+      this.onDragEnd?.(this.#selected);
+      this.#selected = null;
+    }
+
+    this.dom.style.cursor = this.#hovered ? 'pointer' : 'auto';
+  };
+
+  #updatePointer(event: PointerEvent): void {
+    const rect = this.dom.getBoundingClientRect();
+    this.#pointer.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+    this.#pointer.y = (-(event.clientY - rect.top) / rect.height) * 2 + 1;
+  }
+
+  #findGroup(obj: Entity, group: Group | null = null): Group | null {
+    if (Group.is(obj)) group = obj;
+    if (!obj.parent) return group;
+    return this.#findGroup(obj.parent, group);
+  }
+
+  #handleTranslation(): void {
+    if (!this.#raycaster.ray.intersectPlane(this.#plane, this.#intersection)) return;
+    switch (this.useAxisMode) {
+      case 'world':
+        return this.#handleWorldTranslation();
+      case 'view':
+        return this.#handleViewTranslation();
+      case 'local':
+        return this.#handleLocalTranslation();
+    }
+  }
+
+  #handleWorldTranslation(): void {
+    this.#localDelta.from(this.#intersection).sub(this.#previousPosition);
+
+    if (!this.useAxisX) this.#localDelta.x = 0;
+    if (!this.useAxisY) this.#localDelta.y = 0;
+    if (!this.useAxisZ) this.#localDelta.z = 0;
+
+    this.#selected!.position.add(this.#localDelta);
+    this.#previousPosition.from(this.#intersection);
+  }
+
+  #handleViewTranslation(): void {
+    this.#deltaPosition.from(this.#intersection).sub(this.#previousPosition);
+
+    this.#cameraRight.fromMat4Column(this.camera.matrix, 0).normalize();
+    this.#cameraUp.fromMat4Column(this.camera.matrix, 1).normalize();
+    this.#cameraForward.fromMat4Column(this.camera.matrix, 2).normalize();
+
+    const deltaX = this.#deltaPosition.dot(this.#cameraRight);
+    const deltaY = this.#deltaPosition.dot(this.#cameraUp);
+    const deltaZ = -this.#deltaPosition.dot(this.#cameraForward);
+
+    if (this.useAxisX) this.#selected!.position.addScaled(this.#cameraRight, deltaX);
+    if (this.useAxisY) this.#selected!.position.addScaled(this.#cameraUp, deltaY);
+    if (this.useAxisZ) this.#selected!.position.addScaled(this.#cameraForward, deltaZ);
+
+    this.#previousPosition.from(this.#intersection);
+  }
+
+  #handleLocalTranslation(): void {
+    this.#deltaPosition.from(this.#intersection).sub(this.#previousPosition);
+
+    const localRight = Vec3.new(1, 0, 0).applyQuaternion(this.#selected!.quaternion);
+    const localUp = Vec3.new(0, 1, 0).applyQuaternion(this.#selected!.quaternion);
+    const localForward = Vec3.new(0, 0, 1).applyQuaternion(this.#selected!.quaternion);
+
+    const deltaX = this.#deltaPosition.dot(localRight);
+    const deltaY = this.#deltaPosition.dot(localUp);
+    const deltaZ = this.#deltaPosition.dot(localForward);
+
+    if (this.useAxisX) this.#selected!.position.addScaled(localRight, deltaX);
+    if (this.useAxisY) this.#selected!.position.addScaled(localUp, deltaY);
+    if (this.useAxisZ) this.#selected!.position.addScaled(localForward, deltaZ);
+
+    this.#previousPosition.from(this.#intersection);
+  }
+
+  #handleRotation(): void {
+    this.#diff.asSub(this.#pointer, this.#previousPointer).scale(this.rotateSpeed);
+
+    switch (this.useAxisMode) {
+      case 'world':
+        this.#handleWorldRotation();
+        break;
+      case 'view':
+        this.#handleViewRotation();
+        break;
+      case 'local':
+        this.#handleLocalRotation();
+        break;
+    }
+  }
+
+  #handleWorldRotation(): void {
+    if (this.useAxisY) {
+      const worldUp = Vec3.new(0, 1, 0);
+      this.#selected!.rotateOnWorldAxis(worldUp, this.#diff.x);
+    }
+    if (this.useAxisX) {
+      const worldRight = Vec3.new(1, 0, 0);
+      this.#selected!.rotateOnWorldAxis(worldRight, -this.#diff.y);
+    }
+    if (this.useAxisZ) {
+      const worldForward = Vec3.new(0, 0, 1);
+      this.#selected!.rotateOnWorldAxis(worldForward, this.#diff.x + this.#diff.y);
+    }
+  }
+
+  #handleViewRotation(): void {
+    this.#cameraUp.fromMat4Column(this.camera.matrix, 1).normalize();
+    this.#cameraRight.fromMat4Column(this.camera.matrix, 0).normalize();
+    this.#cameraForward.fromMat4Column(this.camera.matrix, 2).normalize();
+
+    if (this.useAxisY) {
+      this.#selected!.rotateOnWorldAxis(this.#cameraUp, this.#diff.x);
+    }
+    if (this.useAxisX) {
+      this.#selected!.rotateOnWorldAxis(this.#cameraRight, -this.#diff.y);
+    }
+    if (this.useAxisZ) {
+      this.#selected!.rotateOnWorldAxis(this.#cameraForward, this.#diff.x + this.#diff.y);
+    }
+  }
+
+  #handleLocalRotation(): void {
+    if (this.useAxisY) {
+      this.#selected!.rotateOnAxis(Vec3.new(0, 1, 0), this.#diff.x);
+    }
+    if (this.useAxisX) {
+      this.#selected!.rotateOnAxis(Vec3.new(1, 0, 0), -this.#diff.y);
+    }
+    if (this.useAxisZ) {
+      this.#selected!.rotateOnAxis(Vec3.new(0, 0, 1), this.#diff.x + this.#diff.y);
+    }
+  }
+
+  #handleHover(event: PointerEvent): void {
+    if (event.pointerType === 'mouse' || event.pointerType === 'pen') {
+      this.#intersections.length = 0;
+
+      this.#raycaster.fromCamera(this.#pointer, this.camera);
+      this.#raycaster.intersects(this.objects, this.recursive, this.#intersections);
+
+      if (this.#intersections.length > 0) {
+        const object = this.#intersections[0].object;
+
+        this.#plane.fromNormalAndCoplanar(
+          this.camera.getWorldDirection(this.#plane.normal),
+          this.#worldPosition.fromMat4Position(object.matrixWorld),
         );
 
-        if (_raycaster.ray.intersectPlane(_plane, _intersection)) {
-          if (scope.mode === 'translate') {
-            _inverseMatrix.from(_selected.parent.matrixWorld).invert();
-            _offset.from(_intersection).sub(_worldPosition.fromMat4Position(_selected.matrixWorld));
-          } else if (scope.mode === 'rotate') {
-            _up.set(0, 1, 0).applyQuaternion(camera.quaternion).normalize();
-            _right.set(1, 0, 0).applyQuaternion(camera.quaternion).normalize();
-          }
+        if (this.#hovered !== object && this.#hovered !== null) {
+          this.onHoverEnd?.(this.#hovered);
+          this.dom.style.cursor = 'auto';
+          this.#hovered = null;
         }
 
-        dom.style.cursor = 'move';
-
-        _previousPosition.from(_intersection);
-
-        scope.onDragStart?.(_selected!);
+        if (this.#hovered !== object) {
+          this.onHoverStart?.(object);
+          this.dom.style.cursor = 'pointer';
+          this.#hovered = object;
+        }
+      } else {
+        if (this.#hovered !== null) {
+          this.onHoverEnd?.(this.#hovered);
+          this.dom.style.cursor = 'auto';
+          this.#hovered = null;
+        }
       }
-
-      _previousPointer.from(_pointer);
     }
-
-    function onPointerCancel() {
-      if (scope.enabled === false) return;
-
-      if (_selected) {
-        scope.onDragEnd?.(_selected);
-        _selected = null;
-      }
-
-      dom.style.cursor = _hovered ? 'pointer' : 'auto';
-    }
-
-    function updatePointer(event: PointerEvent) {
-      const rect = dom.getBoundingClientRect();
-
-      _pointer.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
-      _pointer.y = (-(event.clientY - rect.top) / rect.height) * 2 + 1;
-    }
-
-    function findGroup(obj: Entity, group: Group | null = null) {
-      if (Group.is(obj)) group = obj;
-
-      if (!obj.parent) return group;
-
-      return findGroup(obj.parent, group);
-    }
-
-    activate();
-
-    this.enabled = true;
-    this.recursive = true;
-    this.transformGroup = false;
-
-    this.activate = activate;
-    this.deactivate = deactivate;
-    this.dispose = dispose;
-    this.getObjects = getObjects;
-    this.getRaycaster = getRaycaster;
-    this.setObjects = setObjects;
   }
 
-  static attach(hearth: Hearth, camera: ICamera, objects: Entity[], parameters?: any) {
+  #handleDragStart(): void {
+    if (this.mode === 'translate') {
+      this.#inverseMatrix.from(this.#selected!.parent!.matrixWorld).invert();
+      this.#offset.from(this.#intersection).sub(this.#worldPosition.fromMat4Position(this.#selected!.matrixWorld));
+    } else if (this.mode === 'rotate') {
+      this.#up.set(0, 1, 0).applyQuaternion(this.camera.quaternion).normalize();
+      this.#right.set(1, 0, 0).applyQuaternion(this.camera.quaternion).normalize();
+    }
+  }
+
+  static attach(hearth: Hearth, camera: ICamera, objects: Entity[], parameters?: Parameters): DragControls {
     return new this(objects, camera, hearth.parameters.canvas, parameters);
   }
-
-  activate: () => void;
-  deactivate: () => void;
-  dispose: () => void;
-  getObjects: () => Entity[];
-  getRaycaster: () => Raycaster;
-  setObjects: (objects: Entity[]) => void;
 }
-
-const _plane = new Plane();
-const _raycaster = Raycaster.new();
-const _pointer = Vec2.new();
-const _offset = Vec3.new();
-const _diff = Vec2.new();
-const _previousPointer = Vec2.new();
-const _intersection = Vec3.new();
-const _worldPosition = Vec3.new();
-const _inverseMatrix = new Mat4();
-const _up = Vec3.new();
-const _right = Vec3.new();
-const _parentScale = Vec3.new();
-const _worldQuaternion = Quaternion.new();
-const _worldScale = Vec3.new();
-const _localDelta = Vec3.new();
-const _cameraRight = Vec3.new();
-const _cameraUp = Vec3.new();
-const _cameraForward = Vec3.new();
-const _deltaPosition = Vec3.new();
-const _previousPosition = Vec3.new();

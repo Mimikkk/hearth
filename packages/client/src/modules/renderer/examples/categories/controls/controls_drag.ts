@@ -81,7 +81,7 @@ interface State {
     axisX: boolean;
     axisY: boolean;
     axisZ: boolean;
-    axis: 'world' | 'local';
+    axis: 'world' | 'view';
   };
 }
 
@@ -111,7 +111,7 @@ MiniUi.create<State>('Drag controls', state)
     controls.useAxisZ = state.drag.axisZ;
   })
   .shortcut('w', 'Toggle axis mode', state => {
-    state.drag.axis = state.drag.axis === 'world' ? 'local' : 'world';
+    state.drag.axis = state.drag.axis === 'world' ? 'view' : 'world';
     controls.useAxisMode = state.drag.axis;
   })
   .shortcut('s', 'Toggle selection', state => {
@@ -133,12 +133,12 @@ MiniUi.create<State>('Drag controls', state)
     },
     value => (controls.mode = value),
   )
-  .option<'world' | 'local'>(
+  .option<'world' | 'view'>(
     'drag.axis',
     'Axis mode',
     {
       world: 'World',
-      local: 'Local',
+      view: 'View',
     },
     value => (controls.useAxisMode = value),
   )
