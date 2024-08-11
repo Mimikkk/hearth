@@ -13,6 +13,7 @@ import { DepthTexture } from '@modules/renderer/engine/entities/textures/DepthTe
 import { TextureDataType, ToneMapping } from '@modules/renderer/engine/constants.js';
 import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
 import { Entity } from '@modules/renderer/engine/core/Entity.js';
+import { NodeFrame } from '@modules/renderer/engine/nodes/core/NodeFrame.js';
 
 export class PassTextureNode extends TextureNode {
   constructor(pass: PassNode, texture: Texture) {
@@ -118,7 +119,7 @@ export class PassNode extends TempNode {
     return this.scope === PassNode.COLOR ? this.getTextureNode() : this.getDepthNode();
   }
 
-  updateBefore(frame) {
+  updateBefore(frame: NodeFrame) {
     const { hearth } = frame;
     const { entity, camera } = this;
 
@@ -146,7 +147,7 @@ export class PassNode extends TempNode {
     hearth.updateRenderTarget(currentRenderTarget);
   }
 
-  setSize(width, height) {
+  setSize(width: number, height: number) {
     this._width = width;
     this._height = height;
 
@@ -156,7 +157,7 @@ export class PassNode extends TempNode {
     this.renderTarget.setSize(effectiveWidth, effectiveHeight);
   }
 
-  setPixelRatio(pixelRatio) {
+  setPixelRatio(pixelRatio: number) {
     this._pixelRatio = pixelRatio;
 
     this.setSize(this._width, this._height);
