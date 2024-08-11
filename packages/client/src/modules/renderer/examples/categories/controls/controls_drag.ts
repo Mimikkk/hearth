@@ -20,7 +20,6 @@ import { Random } from '@modules/renderer/engine/math/random.js';
 import { normalWorld } from '@modules/renderer/engine/nodes/accessors/NormalNode.js';
 import { color } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.primitves.js';
 import { BoundSphereVisualizer } from '@modules/renderer/engine/entities/visualizers/BoundSphereVisualizer.js';
-import { Intersection } from '@modules/renderer/engine/core/Raycaster.js';
 
 const createCamera = () => {
   const camera = new PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.25, 30);
@@ -77,79 +76,52 @@ useWindowResizer(hearth, camera);
 interface State {
   drag: {
     mode: TransformMode;
-    intersections: Intersection[];
-    selection: boolean;
     showBoundingSpheres: boolean;
-    axisX: boolean;
-    axisY: boolean;
-    axisZ: boolean;
-    axis: AxisMode;
   };
+  controls: DragControls;
 }
 
 const state = <State>{
   drag: {
     mode: 'translate',
-    intersections: [],
-    selection: true,
     showBoundingSpheres: true,
-    axisX: controls.useAxisX,
-    axisY: controls.useAxisY,
-    axisZ: controls.useAxisZ,
-    axis: controls.useAxisMode,
   },
+  controls,
 };
 MiniUi.create<State>('Drag controls', state)
   .shortcut('x', 'Toggle axis x', state => {
-    state.drag.axisX = !state.drag.axisX;
-    controls.useAxisX = state.drag.axisX;
+    state.controls.useAxisX = !state.controls.useAxisX;
   })
   .shortcut('y', 'Toggle axis y', state => {
-    state.drag.axisY = !state.drag.axisY;
-    controls.useAxisY = state.drag.axisY;
+    state.controls.useAxisY = !state.controls.useAxisY;
   })
   .shortcut('z', 'Toggle axis y', state => {
-    state.drag.axisZ = !state.drag.axisZ;
-    controls.useAxisZ = state.drag.axisZ;
+    state.controls.useAxisZ = !state.controls.useAxisZ;
   })
   .shortcut('w', 'Toggle axis mode', state => {
-    // handle 3 axis - local -> world -> view
-    state.drag.axis = state.drag.axis === 'world' ? 'local' : state.drag.axis === 'local' ? 'view' : 'world';
-
-    controls.useAxisMode = state.drag.axis;
+    const axis = state.controls.useAxisMode;
+    state.controls.useAxisMode = axis === 'world' ? 'local' : axis === 'local' ? 'view' : 'world';
   })
-  .shortcut('s', 'Toggle selection', state => {
-    state.drag.selection = !state.drag.selection;
-    controls.enabled = state.drag.selection;
+  .shortcut('e', 'Toggle enable', state => {
+    state.controls.enabled = !state.controls.enabled;
   })
   .shortcut('m', 'Toggle drag mode', state => {
-    state.drag.mode = state.drag.mode === 'translate' ? 'rotate' : 'translate';
-    controls.mode = state.drag.mode;
+    state.controls.mode = state.controls.mode === 'translate' ? 'rotate' : 'translate';
   })
   .folder('Options')
-  .boolean('drag.selection', 'Selection', value => (controls.enabled = value))
-  .option<TransformMode>(
-    'drag.mode',
-    'Mode',
-    {
-      translate: 'Translate',
-      rotate: 'Rotate',
-    },
-    value => (controls.mode = value),
-  )
-  .option<AxisMode>(
-    'drag.axis',
-    'Axis mode',
-    {
-      world: 'World',
-      local: 'Local',
-      view: 'View',
-    },
-    value => (controls.useAxisMode = value),
-  )
-  .boolean('drag.axisX', 'Axis X', value => (controls.useAxisX = value))
-  .boolean('drag.axisY', 'Axis Y', value => (controls.useAxisY = value))
-  .boolean('drag.axisZ', 'Axis Z', value => (controls.useAxisZ = value))
+  .boolean('controls.enabled', 'Enabled')
+  .option<TransformMode>('controls.mode', 'Mode', {
+    translate: 'Translate',
+    rotate: 'Rotate',
+  })
+  .option<AxisMode>('controls.useAxisMode', 'Axis mode', {
+    world: 'World',
+    local: 'Local',
+    view: 'View',
+  })
+  .boolean('controls.useAxisX', 'Axis X', value => (controls.useAxisX = value))
+  .boolean('controls.useAxisY', 'Axis Y', value => (controls.useAxisY = value))
+  .boolean('controls.useAxisZ', 'Axis Z', value => (controls.useAxisZ = value))
   .boolean('drag.showBoundingSpheres', 'Show bounding spheres', () => {
     sphere1.visible = state.drag.showBoundingSpheres;
     sphere2.visible = state.drag.showBoundingSpheres;
