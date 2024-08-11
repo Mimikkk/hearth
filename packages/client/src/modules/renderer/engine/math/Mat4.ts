@@ -253,8 +253,6 @@ export class Mat4 {
   }
 
   fromMat4Rotation(mat: Const<Mat4>): this {
-
-
     const te = this.elements;
     const me = mat.elements;
 
@@ -431,11 +429,9 @@ export class Mat4 {
       te[10] = bd * f + ac;
     }
 
-
     te[3] = 0;
     te[7] = 0;
     te[11] = 0;
-
 
     te[12] = 0;
     te[13] = 0;
@@ -460,8 +456,6 @@ export class Mat4 {
     const x = _lookAt1.asCross(up, z);
 
     if (x.lengthSq() === 0) {
-
-
       if (Math.abs(up.z) === 1) {
         z.x += 0.0001;
       } else {
@@ -653,7 +647,6 @@ export class Mat4 {
   }
 
   invert(): this {
-
     const te = this.elements,
       n11 = te[0],
       n21 = te[1],
@@ -790,8 +783,6 @@ export class Mat4 {
   }
 
   asRotationAxis(axis: Const<Vec3>, angle: number): this {
-
-
     const c = Math.cos(angle);
     const s = Math.sin(angle);
     const t = 1 - c;
@@ -889,14 +880,12 @@ export class Mat4 {
     const sy = _decompose0.set(te[4], te[5], te[6]).length();
     const sz = _decompose0.set(te[8], te[9], te[10]).length();
 
-
     const det = this.determinant();
     if (det < 0) sx = -sx;
 
     position.x = te[12];
     position.y = te[13];
     position.z = te[14];
-
 
     const _m1 = new Mat4().from(this);
 

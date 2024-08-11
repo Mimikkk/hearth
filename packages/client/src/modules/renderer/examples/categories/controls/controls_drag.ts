@@ -2,7 +2,15 @@ import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindow
 import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 import { PerspectiveCamera } from '@modules/renderer/engine/entities/cameras/PerspectiveCamera.js';
 import { Scene } from '@modules/renderer/engine/entities/scenes/Scene.js';
-import { BoxGeometry, Fog, Geometry, Mesh, MeshLambertMaterial, SpotLight } from '@modules/renderer/engine/engine.js';
+import {
+  BoxGeometry,
+  Fog,
+  Geometry,
+  Mesh,
+  MeshLambertMaterial,
+  OrbitControls,
+  SpotLight,
+} from '@modules/renderer/engine/engine.js';
 import { DragControls } from '@modules/renderer/engine/entities/controls/DragControls.js';
 import { MiniUi } from '@mimi/mini-ui';
 import { ColorMap } from '@modules/renderer/engine/math/Color.js';
@@ -51,7 +59,16 @@ const hearth = await Hearth.as({
     await hearth.render(scene, camera);
   },
 });
-const controls = DragControls.attach(hearth, camera, [box1, box2]);
+
+const orbit = OrbitControls.attach(hearth, camera);
+const controls = DragControls.attach(hearth, camera, [box1, box2], {
+  onDragStart() {
+    orbit.enabled = false;
+  },
+  onDragEnd() {
+    orbit.enabled = true;
+  },
+});
 
 useWindowResizer(hearth, camera);
 
@@ -61,6 +78,10 @@ interface State {
     intersections: Intersection[];
     selection: boolean;
     showBoundingSpheres: boolean;
+    axisX: boolean;
+    axisY: boolean;
+    axisZ: boolean;
+    axis: 'world' | 'local';
   };
 }
 
@@ -70,9 +91,29 @@ const state = <State>{
     intersections: [],
     selection: true,
     showBoundingSpheres: true,
+    axisX: controls.useAxisX,
+    axisY: controls.useAxisY,
+    axisZ: controls.useAxisZ,
+    axis: controls.useAxisMode,
   },
 };
 MiniUi.create<State>('Drag controls', state)
+  .shortcut('x', 'Toggle axis x', state => {
+    state.drag.axisX = !state.drag.axisX;
+    controls.useAxisX = state.drag.axisX;
+  })
+  .shortcut('y', 'Toggle axis y', state => {
+    state.drag.axisY = !state.drag.axisY;
+    controls.useAxisY = state.drag.axisY;
+  })
+  .shortcut('z', 'Toggle axis y', state => {
+    state.drag.axisZ = !state.drag.axisZ;
+    controls.useAxisZ = state.drag.axisZ;
+  })
+  .shortcut('w', 'Toggle axis mode', state => {
+    state.drag.axis = state.drag.axis === 'world' ? 'local' : 'world';
+    controls.useAxisMode = state.drag.axis;
+  })
   .shortcut('s', 'Toggle selection', state => {
     state.drag.selection = !state.drag.selection;
     controls.enabled = state.drag.selection;
@@ -92,6 +133,18 @@ MiniUi.create<State>('Drag controls', state)
     },
     value => (controls.mode = value),
   )
+  .option<'world' | 'local'>(
+    'drag.axis',
+    'Axis mode',
+    {
+      world: 'World',
+      local: 'Local',
+    },
+    value => (controls.useAxisMode = value),
+  )
+  .boolean('drag.axisX', 'Axis X', value => (controls.useAxisX = value))
+  .boolean('drag.axisY', 'Axis Y', value => (controls.useAxisY = value))
+  .boolean('drag.axisZ', 'Axis Z', value => (controls.useAxisZ = value))
   .boolean('drag.showBoundingSpheres', 'Show bounding spheres', () => {
     sphere1.visible = state.drag.showBoundingSpheres;
     sphere2.visible = state.drag.showBoundingSpheres;

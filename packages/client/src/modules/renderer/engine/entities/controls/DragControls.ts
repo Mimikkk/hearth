@@ -7,28 +7,19 @@ import { Entity } from '../../core/Entity.js';
 import { ICamera } from '@modules/renderer/engine/entities/cameras/Camera.js';
 import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 import { Group } from '@modules/renderer/engine/entities/Group.js';
-
-const _plane = new Plane();
-const _raycaster = Raycaster.new();
-
-const _pointer = Vec2.new();
-const _offset = Vec3.new();
-const _diff = Vec2.new();
-const _previousPointer = Vec2.new();
-const _intersection = Vec3.new();
-const _worldPosition = Vec3.new();
-const _inverseMatrix = new Mat4();
-
-const _up = Vec3.new();
-const _right = Vec3.new();
+import { Quaternion } from '@modules/renderer/engine/math/Quaternion.js';
 
 interface Parameters {
-  onHoverStart: (object: Entity) => void;
-  onHoverEnd: (object: Entity) => void;
-  onDragStart: (object: Entity) => void;
-  onDrag: (object: Entity) => void;
-  onDragEnd: (object: Entity) => void;
-  onClick: (object: Entity) => void;
+  onHoverStart?: (object: Entity) => void;
+  onHoverEnd?: (object: Entity) => void;
+  onDragStart?: (object: Entity) => void;
+  onDrag?: (object: Entity) => void;
+  onDragEnd?: (object: Entity) => void;
+  onClick?: (object: Entity) => void;
+  useAxisX?: boolean;
+  useAxisY?: boolean;
+  useAxisZ?: boolean;
+  useAxisMode?: 'world' | 'view';
 }
 
 export class DragControls {
@@ -38,6 +29,10 @@ export class DragControls {
   onDrag?: (object: Entity) => void;
   onDragEnd?: (object: Entity) => void;
   onClick?: (object: Entity) => void;
+  useAxisX: boolean;
+  useAxisY: boolean;
+  useAxisZ: boolean;
+  useAxisMode: 'world' | 'view';
 
   camera: ICamera;
   enabled: boolean;
@@ -54,6 +49,10 @@ export class DragControls {
     this.onDrag = parameters?.onDrag ?? undefined;
     this.onDragEnd = parameters?.onDragEnd ?? undefined;
     this.onClick = parameters?.onClick ?? undefined;
+    this.useAxisX = parameters?.useAxisX ?? true;
+    this.useAxisY = parameters?.useAxisY ?? true;
+    this.useAxisZ = parameters?.useAxisZ ?? true;
+    this.useAxisMode = parameters?.useAxisMode ?? 'world';
 
     let _selected: Entity | null = null;
     let _hovered: Entity | null = null;
@@ -108,7 +107,37 @@ export class DragControls {
       if (_selected) {
         if (scope.mode === 'translate') {
           if (_raycaster.ray.intersectPlane(_plane, _intersection)) {
-            _selected.position.from(_intersection.sub(_offset).applyMat4(_inverseMatrix));
+            if (scope.useAxisMode === 'local') {
+              _deltaPosition.from(_intersection).sub(_previousPosition);
+
+              _cameraRight.fromMat4Column(camera.matrix, 0).normalize();
+              _cameraUp.fromMat4Column(camera.matrix, 1).normalize();
+              _cameraForward.fromMat4Column(camera.matrix, 2).normalize();
+
+              const deltaX = _deltaPosition.dot(_cameraRight);
+              const deltaY = _deltaPosition.dot(_cameraUp);
+              const deltaZ = _deltaPosition.dot(_cameraForward);
+
+              if (scope.useAxisX) _selected.position.addScaled(_cameraRight, deltaX);
+              if (scope.useAxisY) _selected.position.addScaled(_cameraUp, deltaY);
+              if (scope.useAxisZ) _selected.position.addScaled(_cameraForward, deltaZ);
+              _previousPosition.from(_intersection);
+              _selected.updateMatrixWorld();
+            } else {
+              _localDelta.from(_intersection).sub(_previousPosition);
+
+              _selected.parent!.matrixWorld.decompose(_worldPosition, _worldQuaternion, _worldScale);
+              _parentScale.from(_worldScale).negate();
+
+              if (!scope.useAxisX) _localDelta.x = 0;
+              if (!scope.useAxisY) _localDelta.y = 0;
+              if (!scope.useAxisZ) _localDelta.z = 0;
+
+              _localDelta.applyQuaternion(_worldQuaternion).div(_worldScale);
+
+              _selected.position.add(_localDelta);
+              _previousPosition.from(_intersection);
+            }
           }
         } else if (scope.mode === 'rotate') {
           _diff.asSub(_pointer, _previousPointer).scale(scope.rotateSpeed);
@@ -117,7 +146,6 @@ export class DragControls {
         }
 
         scope.onDrag?.(_selected);
-
         _previousPointer.from(_pointer);
       } else {
         if (event.pointerType === 'mouse' || event.pointerType === 'pen') {
@@ -177,7 +205,7 @@ export class DragControls {
         } else {
           _selected = _intersections[0].object;
         }
-        scope.onClick?.(_selected);
+        scope.onClick?.(_selected!);
 
         _plane.fromNormalAndCoplanar(
           camera.getWorldDirection(_plane.normal),
@@ -196,6 +224,8 @@ export class DragControls {
         }
 
         dom.style.cursor = 'move';
+
+        _previousPosition.from(_intersection);
 
         scope.onDragStart?.(_selected!);
       }
@@ -254,3 +284,24 @@ export class DragControls {
   getRaycaster: () => Raycaster;
   setObjects: (objects: Entity[]) => void;
 }
+
+const _plane = new Plane();
+const _raycaster = Raycaster.new();
+const _pointer = Vec2.new();
+const _offset = Vec3.new();
+const _diff = Vec2.new();
+const _previousPointer = Vec2.new();
+const _intersection = Vec3.new();
+const _worldPosition = Vec3.new();
+const _inverseMatrix = new Mat4();
+const _up = Vec3.new();
+const _right = Vec3.new();
+const _parentScale = Vec3.new();
+const _worldQuaternion = Quaternion.new();
+const _worldScale = Vec3.new();
+const _localDelta = Vec3.new();
+const _cameraRight = Vec3.new();
+const _cameraUp = Vec3.new();
+const _cameraForward = Vec3.new();
+const _deltaPosition = Vec3.new();
+const _previousPosition = Vec3.new();

@@ -422,12 +422,12 @@ export class Entity {
     return target.fromMat4Position(this.matrixWorld);
   }
 
-  getWorldQuaternion(target: Quaternion): Quaternion {
+  getWorldQuaternion(into: Quaternion = Quaternion.new()): Quaternion {
     this.updateWorldMatrix(true, false);
 
-    this.matrixWorld.decompose(_position, target, _scale);
+    this.matrixWorld.decompose(_position, into, _scale);
 
-    return target;
+    return into;
   }
 
   getWorldScale(target: Vec3): Vec3 {
