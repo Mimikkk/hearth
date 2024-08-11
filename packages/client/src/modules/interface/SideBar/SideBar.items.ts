@@ -63,10 +63,6 @@ export const SideBarItems: AccordionItem[] = [
         title: 'Controls Selection',
         masterdisk: true,
       },
-      {
-        id: Example.Controls.Transform,
-        title: 'Controls Transform',
-      },
     ],
   },
   {
