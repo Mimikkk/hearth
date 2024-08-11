@@ -3,6 +3,7 @@ import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 import { PerspectiveCamera } from '@modules/renderer/engine/entities/cameras/PerspectiveCamera.js';
 import { Scene } from '@modules/renderer/engine/entities/scenes/Scene.js';
 import {
+  AxisMode,
   BoxGeometry,
   Fog,
   Geometry,
@@ -10,6 +11,7 @@ import {
   MeshLambertMaterial,
   OrbitControls,
   SpotLight,
+  TransformMode,
 } from '@modules/renderer/engine/engine.js';
 import { DragControls } from '@modules/renderer/engine/entities/controls/DragControls.js';
 import { MiniUi } from '@mimi/mini-ui';
@@ -74,14 +76,14 @@ useWindowResizer(hearth, camera);
 
 interface State {
   drag: {
-    mode: 'translate' | 'rotate';
+    mode: TransformMode;
     intersections: Intersection[];
     selection: boolean;
     showBoundingSpheres: boolean;
     axisX: boolean;
     axisY: boolean;
     axisZ: boolean;
-    axis: 'world' | 'view';
+    axis: AxisMode;
   };
 }
 
@@ -111,7 +113,9 @@ MiniUi.create<State>('Drag controls', state)
     controls.useAxisZ = state.drag.axisZ;
   })
   .shortcut('w', 'Toggle axis mode', state => {
-    state.drag.axis = state.drag.axis === 'world' ? 'view' : 'world';
+    // handle 3 axis - local -> world -> view
+    state.drag.axis = state.drag.axis === 'world' ? 'local' : state.drag.axis === 'local' ? 'view' : 'world';
+
     controls.useAxisMode = state.drag.axis;
   })
   .shortcut('s', 'Toggle selection', state => {
@@ -124,7 +128,7 @@ MiniUi.create<State>('Drag controls', state)
   })
   .folder('Options')
   .boolean('drag.selection', 'Selection', value => (controls.enabled = value))
-  .option<'translate' | 'rotate'>(
+  .option<TransformMode>(
     'drag.mode',
     'Mode',
     {
@@ -133,11 +137,12 @@ MiniUi.create<State>('Drag controls', state)
     },
     value => (controls.mode = value),
   )
-  .option<'world' | 'view'>(
+  .option<AxisMode>(
     'drag.axis',
     'Axis mode',
     {
       world: 'World',
+      local: 'Local',
       view: 'View',
     },
     value => (controls.useAxisMode = value),

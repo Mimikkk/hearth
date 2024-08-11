@@ -8,8 +8,8 @@ import { ICamera } from '@modules/renderer/engine/entities/cameras/Camera.js';
 import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 import { Group } from '@modules/renderer/engine/entities/Group.js';
 
-type AxisMode = 'world' | 'view' | 'local';
-type TransformMode = 'translate' | 'rotate';
+export type AxisMode = 'world' | 'view' | 'local';
+export type TransformMode = 'translate' | 'rotate';
 
 interface Parameters {
   onHoverStart?: (object: Entity) => void;
