@@ -223,8 +223,13 @@ async function createRawTexture(container: KTX2Container) {
   if (UNCOMPRESSED_FORMATS.has(FORMAT_MAP[vkFormat as keyof typeof FORMAT_MAP] as TextureFormat)) {
     texture =
       container.pixelDepth === 0
-        ? new DataTexture({ data: mipmaps[0].data, width:container.pixelWidth, height: container.pixelHeight})
-        : new Data3DTexture(mipmaps[0].data, container.pixelWidth, container.pixelHeight, container.pixelDepth);
+        ? new DataTexture({ data: mipmaps[0].data, width: container.pixelWidth, height: container.pixelHeight })
+        : new Data3DTexture({
+            data: mipmaps[0].data,
+            width: container.pixelWidth,
+            height: container.pixelHeight,
+            depth: container.pixelDepth,
+          });
   } else {
     if (container.pixelDepth > 0) throw new Error('KTX2Loader: Unsupported pixelDepth.');
 

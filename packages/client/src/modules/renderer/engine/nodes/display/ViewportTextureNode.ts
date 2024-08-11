@@ -17,7 +17,7 @@ export class ViewportTextureNode extends TextureNode {
 
   constructor(uvNode = viewportTopLeft, levelNode = null, framebufferTexture: FramebufferTexture | null = null) {
     if (framebufferTexture === null) {
-      framebufferTexture = new FramebufferTexture();
+      framebufferTexture = new FramebufferTexture({ width: 1, height: 1 });
       framebufferTexture.minFilter = MinificationTextureFilter.LinearMipmapLinear;
     }
 

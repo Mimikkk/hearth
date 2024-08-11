@@ -9,7 +9,7 @@ let _sharedFramebuffer = null;
 export class ViewportSharedTextureNode extends ViewportTextureNode {
   constructor(uvNode = viewportTopLeft, levelNode = null) {
     if (_sharedFramebuffer === null) {
-      _sharedFramebuffer = new FramebufferTexture();
+      _sharedFramebuffer = new FramebufferTexture({ width: 1, height: 1 });
     }
 
     super(uvNode, levelNode, _sharedFramebuffer);

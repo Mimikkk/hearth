@@ -1,52 +1,24 @@
-import { Texture } from './Texture.js';
-import {
-  ColorSpace,
-  CubeMapping,
-  DepthTextureFormat,
-  MagnificationTextureFilter,
-  Mapping,
-  MinificationTextureFilter,
-  TextureDataType,
-  TextureFormat,
-  Wrapping,
-} from '../../constants.js';
+import { Texture, TextureParameters } from './Texture.js';
+import { CubeMapping, DepthTextureFormat } from '../../constants.js';
 
 export class CubeTexture extends Texture {
   declare isCubeTexture: true;
 
-  constructor(
-    images: (HTMLImageElement | HTMLCanvasElement | { width: number; height: number; depth: number })[],
-    mapping: CubeMapping,
-    wrapS: Wrapping,
-    wrapT: Wrapping,
-    magFilter: MagnificationTextureFilter,
-    minFilter: MinificationTextureFilter,
-    format: DepthTextureFormat | null,
-    type: TextureDataType,
-    anisotropy: number,
-    colorSpace: ColorSpace,
-  ) {
-    images = images ?? [];
-    mapping = mapping ?? CubeMapping.Reflection;
+  constructor(parameters: CubeTextureParameters) {
+    super({
+      ...parameters,
+      mapping: parameters.mapping ?? CubeMapping.Reflection,
+      image: parameters.images ?? [],
+      flipY: false,
+    });
+  }
 
-    super(
-      images as never,
-      mapping as unknown as Mapping,
-      wrapS,
-      wrapT,
-      magFilter,
-      minFilter,
-      format as unknown as TextureFormat,
-      type,
-      anisotropy,
-      colorSpace,
-    );
-
-    this.flipY = false;
+  static is(value: any): value is CubeTexture {
+    return value?.isCubeTexture === true;
   }
 
   get images() {
-    return this.image;
+    return this.image as (HTMLImageElement | HTMLCanvasElement | { width: number; height: number; depth: number })[];
   }
 
   set images(value) {
@@ -55,3 +27,9 @@ export class CubeTexture extends Texture {
 }
 
 CubeTexture.prototype.isCubeTexture = true;
+
+export interface CubeTextureParameters extends Omit<TextureParameters, 'image' | 'mapping' | 'format'> {
+  images?: (HTMLImageElement | HTMLCanvasElement | { width: number; height: number; depth: number })[];
+  mapping?: CubeMapping;
+  format?: DepthTextureFormat | null;
+}

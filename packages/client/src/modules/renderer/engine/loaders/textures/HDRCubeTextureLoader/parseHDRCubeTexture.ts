@@ -19,20 +19,19 @@ const createDataTexture = ({ image: { data, width, height } }: DataTexture, cube
     minFilter: cube.minFilter,
     magFilter: cube.magFilter,
     generateMipmaps: cube.generateMipmaps,
-
   });
 
 export type SupportedHDRType = TextureDataType.Float | TextureDataType.HalfFloat;
 export const parseHDRCubeTexture = (buffers: ArrayBuffer[], type: SupportedHDRType): CubeTexture => {
-  //@ts-expect-error - improve texture handling
-  const texture = new CubeTexture();
-  texture.type = type;
-  texture.colorSpace = ColorSpace.LinearSRGB;
-  texture.minFilter = MinificationTextureFilter.Linear;
-  texture.magFilter = MagnificationTextureFilter.Linear;
-  texture.generateMipmaps = false;
+  const texture = new CubeTexture({
+    type,
+    colorSpace: ColorSpace.LinearSRGB,
+    minFilter: MinificationTextureFilter.Linear,
+    magFilter: MagnificationTextureFilter.Linear,
+    generateMipmaps: false,
+    needsUpdate: true,
+  });
   texture.images = buffers.map(buffer => createDataTexture(parseRGBE(buffer, type), texture));
-  texture.needsUpdate = true;
 
   return texture;
 };

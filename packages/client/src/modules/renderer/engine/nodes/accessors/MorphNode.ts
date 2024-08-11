@@ -1,6 +1,6 @@
 import { Node } from '../core/Node.js';
 import { NodeUpdateStage } from '../core/constants.js';
-import { i32, ivec2, asCommand } from '../shadernode/ShaderNode.primitves.ts';
+import { asCommand, i32, ivec2 } from '../shadernode/ShaderNode.primitves.ts';
 import { uniform } from '../core/UniformNode.js';
 import { ref } from './ReferenceNode.js';
 import { positionLocal } from './PositionNode.js';
@@ -62,9 +62,14 @@ function getEntry(geometry) {
 
     const buffer = new Float32Array(width * height * 4 * morphTargetsCount);
 
-    const bufferTexture = new DataArrayTexture(buffer, width, height, morphTargetsCount);
-    bufferTexture.type = TextureDataType.Float;
-    bufferTexture.needsUpdate = true;
+    const bufferTexture = new DataArrayTexture({
+      data: buffer,
+      width,
+      height,
+      depth: morphTargetsCount,
+      type: TextureDataType.Float,
+      needsUpdate: true,
+    });
 
     const vertexDataStride = vertexDataCount * 4;
 

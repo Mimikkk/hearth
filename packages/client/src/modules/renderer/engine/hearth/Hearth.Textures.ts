@@ -584,10 +584,10 @@ export class HearthTextures extends DataMap<any, any> {
     let defaultCubeTexture = this.defaultTexture;
 
     if (defaultCubeTexture === null) {
-      //@ts-expect-error
-      const texture = new CubeTexture();
-      texture.minFilter = MinificationTextureFilter.Nearest;
-      texture.magFilter = MagnificationTextureFilter.Nearest;
+      const texture = new CubeTexture({
+        minFilter: MinificationTextureFilter.Nearest,
+        magFilter: MagnificationTextureFilter.Nearest,
+      });
 
       this.createTexture(texture, { width: 1, height: 1, depth: 6 });
 

@@ -1,7 +1,6 @@
 import { CubeTexture } from '@modules/renderer/engine/entities/textures/CubeTexture.js';
 import { RenderTarget } from './RenderTarget.js';
 import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
-import { CubeMapping, DepthTextureFormat } from '@modules/renderer/engine/constants.js';
 
 export class CubeRenderTarget extends RenderTarget {
   constructor(size = 1, options?: RenderTarget.Options) {
@@ -10,23 +9,11 @@ export class CubeRenderTarget extends RenderTarget {
     const image = { width: size, height: size, depth: 1 };
     const images = [image, image, image, image, image, image];
 
-    const { mapping, wrapS, wrapT, magFilter, minFilter, format, type, anisotropy, colorSpace } = this.configuration;
-    this.texture = new CubeTexture(
+    this.texture = new CubeTexture({
+      ...this.configuration,
       images,
-      mapping as never as CubeMapping,
-      wrapS,
-      wrapT,
-      magFilter,
-      minFilter,
-      format as never as DepthTextureFormat,
-      type,
-      anisotropy,
-      colorSpace,
-    );
-
-    this.texture.isRenderTargetTexture = true;
-    this.texture.generateMipmaps = this.configuration.generateMipmaps;
-    this.texture.minFilter = minFilter;
+      isRenderTargetTexture: true,
+    });
   }
 
   clear(hearth: Hearth, color: boolean, depth: boolean, stencil: boolean): void {
