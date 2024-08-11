@@ -3,12 +3,12 @@ import {
   f32,
   fog,
   MeshPhongNodeMaterial,
+  Node,
   Noise,
   normalWorld,
   positionView,
   positionWorld,
   timerLocal,
-  triF32,
 } from '@modules/renderer/engine/nodes/nodes.js';
 import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitControls.js';
@@ -23,7 +23,6 @@ import { HemisphereLight } from '@modules/renderer/engine/entities/lights/Hemisp
 import { PlaneGeometry } from '@modules/renderer/engine/entities/geometries/PlaneGeometry.js';
 import { MeshPhongMaterial } from '@modules/renderer/engine/entities/materials/MeshPhongMaterial.js';
 import { Mesh } from '@modules/renderer/engine/entities/Mesh.js';
-import { ICamera } from '@modules/renderer/engine/entities/cameras/Camera.js';
 
 const createGround = () => {
   const geometry = new PlaneGeometry(200, 200);
@@ -37,18 +36,37 @@ const createGround = () => {
 
   return mesh;
 };
-const createSkyScrapper = () => {
+const createSkyScrappers = () => {
+  const level = positionView.z.negate().smoothstep(0, camera.far - 300);
+
   const windows = positionWorld.y
     .mul(10)
     .floor()
     .mod(4)
     .sign()
-    .mix(color(0x000066).add(fogNoiseDistance), color(0xffffff));
+    .mix(color(0x000066).add(level), color(0xffffff));
 
   const geometry = new BoxGeometry(1, 1, 1);
   const material = new MeshPhongNodeMaterial({ colorNode: windows });
 
   return new InstancedMesh(geometry, material, 4000);
+};
+const randomizeSkyScrappers = (skyscrappers: InstancedMesh) => {
+  const dummy = new Entity();
+  const center = new Vec3();
+  for (let i = 0; i < skyScrappers.count; i++) {
+    dummy.position.x = Math.random() * 600 - 300;
+    dummy.position.z = Math.random() * 600 - 300;
+    const distance = Math.max(dummy.position.distanceTo(center) * 0.012, 1);
+
+    const scaleY = Math.random() * 7 + 0.5;
+    dummy.position.y = 0.5 * scaleY * distance;
+    dummy.scale.x = dummy.scale.z = Math.random() * 3 + 0.5;
+    dummy.scale.y = scaleY * distance;
+
+    dummy.updateMatrix();
+    skyscrappers.setMatrixAt(i, dummy.matrix);
+  }
 };
 const createCamera = () => {
   const camera = new PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 600);
@@ -56,74 +74,44 @@ const createCamera = () => {
 
   return camera;
 };
-const createLight = (sky: Node, ground: Node) => {
-  return new HemisphereLight(sky.value, ground.value, 0.5);
-};
-const useControls = (camera: ICamera, hearth: Hearth) => {
-  const controls = new OrbitControls(camera, hearth.parameters.canvas);
-  controls.target.set(0, 2, 0);
-  controls.minDistance = 7;
-  controls.maxDistance = 100;
-  controls.maxPolarAngle = Math.PI / 2;
-  controls.autoRotate = true;
-  controls.autoRotateSpeed = 0.1;
-  controls.update();
-  return controls;
-};
+const createLight = (sky: Node, ground: Node) => new HemisphereLight(sky.value, ground.value, 0.5);
+const createFog = () => {
+  const level = positionView.z.negate().smoothstep(0, camera.far - 300);
 
-const camera = createCamera();
+  const distance = level.mul(20).max(4);
+  const ground = f32(distance).sub(positionWorld.y).div(distance).pow(3).saturate().mul(0.98);
+
+  const timer = timerLocal();
+  const fogNoiseA = Noise.tri.f32(positionWorld.mul(0.005), 0.2, timer);
+  const fogNoiseB = Noise.tri.f32(positionWorld.mul(0.01), 0.2, timer.mul(1.2));
+  const noise = fogNoiseA.add(fogNoiseB).mul(groundColor);
+
+  return fog(level.oneMinus().mix(groundColor, noise), ground);
+};
+const createScene = (sky: Node, ground: Node) => {
+  const scene = new Scene();
+  scene.fogNode = createFog();
+  scene.backgroundNode = normalWorld.y.max(0).mix(ground, sky);
+
+  return scene;
+};
 
 const skyColor = color(0xf0f5f5);
 const groundColor = color(0xd0dee7);
 
-const fogNoiseDistance = positionView.z.negate().smoothstep(0, camera.far - 300);
-const distance = fogNoiseDistance.mul(20).max(4);
-const alpha = 0.98;
-const groundFogArea = f32(distance).sub(positionWorld.y).div(distance).pow(3).saturate().mul(alpha);
-
-const timer = timerLocal(1);
-const fogNoiseA = Noise.tri.f32(positionWorld.mul(0.005), 0.2, timer);
-const fogNoiseB = Noise.tri.f32(positionWorld.mul(0.01), 0.2, timer.mul(1.2));
-const fogNoise = fogNoiseA.add(fogNoiseB).mul(groundColor);
-
-const skyScrapper = createSkyScrapper();
-
-const dummy = new Entity();
-
-const center = new Vec3();
-for (let i = 0; i < skyScrapper.count; i++) {
-  const scaleY = Math.random() * 7 + 0.5;
-  dummy.position.x = Math.random() * 600 - 300;
-
-  dummy.position.z = Math.random() * 600 - 300;
-
-  const distance = Math.max(dummy.position.distanceTo(center) * 0.012, 1);
-
-  dummy.position.y = 0.5 * scaleY * distance;
-  dummy.scale.x = dummy.scale.z = Math.random() * 3 + 0.5;
-
-  dummy.scale.y = scaleY * distance;
-
-  dummy.updateMatrix();
-  skyScrapper.setMatrixAt(i, dummy.matrix);
-}
+const camera = createCamera();
+const skyScrappers = createSkyScrappers();
+randomizeSkyScrappers(skyScrappers);
 
 const ground = createGround();
 const light = createLight(skyColor, groundColor);
-const scene = new Scene();
-scene.fogNode = fog(fogNoiseDistance.oneMinus().mix(groundColor, fogNoise), groundFogArea);
-scene.backgroundNode = normalWorld.y.max(0).mix(groundColor, skyColor);
-scene.add(skyScrapper);
-scene.add(light);
-scene.add(ground);
+const scene = createScene(skyColor, groundColor).add(skyScrappers, light, ground);
 
 const hearth = await Hearth.as({
   animate() {
-    controls.update();
-
     hearth.render(scene, camera);
   },
 });
-const controls = useControls(camera, hearth);
 
+OrbitControls.attach(hearth, camera, { autoRotate: true, autoRotateSpeed: 0.5 });
 useWindowResizer(hearth, camera);

@@ -14,24 +14,19 @@ import { TextureDataType, ToneMapping } from '@modules/renderer/engine/constants
 import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
 import { Entity } from '@modules/renderer/engine/core/Entity.js';
 import { NodeFrame } from '@modules/renderer/engine/nodes/core/NodeFrame.js';
+import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 
 export class PassTextureNode extends TextureNode {
-  constructor(pass: PassNode, texture: Texture) {
+  constructor(public passNode: PassNode, texture: Texture) {
     super(texture);
-
-    this.passNode = pass;
 
     this.setUpdateMatrix(false);
   }
 
-  setup(builder) {
+  setup(builder: NodeBuilder): void {
     this.passNode.build(builder);
 
     return super.setup(builder);
-  }
-
-  clone() {
-    return new this.constructor(this.passNode, this.value);
   }
 }
 
@@ -116,7 +111,7 @@ export class PassNode extends TempNode {
   }
 
   setup() {
-    return this.scope === PassNode.COLOR ? this.getTextureNode() : this.getDepthNode();
+    return this.scope === Variant.Color ? this.getTextureNode() : this.getDepthNode();
   }
 
   updateBefore(frame: NodeFrame) {

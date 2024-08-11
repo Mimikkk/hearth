@@ -887,7 +887,11 @@ export class OrbitControls {
   }
 
   static attach(hearth: Hearth, camera: ICamera, parameters?: Partial<OrbitControls>) {
-    return new OrbitControls(camera, hearth.parameters.canvas, parameters);
+    const controls = new this(camera, hearth.parameters.canvas, parameters);
+
+    hearth.animation.before.push(controls.update);
+
+    return controls;
   }
 }
 
