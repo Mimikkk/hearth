@@ -75,7 +75,7 @@ export const SideBarItems: AccordionItem[] = [
       { id: Example.BackdropWater, title: 'Backdrop Water', masterdisk: true },
       { id: Example.CustomFog, title: 'Custom Fog', masterdisk: true },
       { id: Example.CustomFogBackground, title: 'Custom Fog Background' },
-      { id: Example.Reflection, title: 'Reflection' },
+      { id: Example.Reflection, title: 'Reflection', masterdisk: true },
     ],
   },
   {
