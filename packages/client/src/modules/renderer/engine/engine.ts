@@ -106,7 +106,6 @@ export * from './entities/cameras/OrthographicCamera.js';
 export * from './entities/controls/DragControls.js';
 export * from './entities/controls/OrbitControls.js';
 export * from './entities/controls/SelectionControls.js';
-export * from './entities/controls/TransformControls.js';
 export * from './entities/controls/WorldAxesControls.js';
 // /geometries
 export * from './entities/geometries/BoxGeometry.js';

@@ -3,43 +3,37 @@ import {
   color,
   f32,
   MeshStandardNodeMaterial,
-  NodeMaterial,
   Node,
   oscSine,
-  output,
-  timerLocal,
+  positionLocal,
   toneMapping,
   uv,
   vec3,
   viewportSharedTexture,
   viewportTopLeft,
-  mix,
-  positionWorld,
-  positionLocal,
 } from '@modules/renderer/engine/nodes/nodes.js';
-import { GLTFLoader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/GLTFLoader.js';
-import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
-import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitControls.js';
 import {
   AnimationClip,
   AnimationMixer,
-  CircleGeometry,
   Clock,
   Color,
+  CylinderGeometry,
   Entity,
+  GLTFLoader,
   Group,
+  Hearth,
   Mesh,
+  OrbitControls,
   PerspectiveCamera,
-  PlaneGeometry,
+  Random,
   Scene,
   SphereGeometry,
   SpotLight,
   ToneMapping,
+  Vec3,
 } from '@modules/renderer/engine/engine.js';
 import { degreeToRadian } from '@modules/renderer/engine/math/MathUtils.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
-import { Random } from '@modules/renderer/engine/math/random.js';
-import { ICamera } from '@modules/renderer/engine/entities/cameras/Camera.js';
 
 const createCamera = () => {
   const camera = new PerspectiveCamera();
@@ -49,19 +43,14 @@ const createCamera = () => {
 };
 const createScene = () => {
   const scene = new Scene();
-  scene.backgroundNode = positionLocal.y.mix(color(0xffaa00), color(0x00aaff));
+  scene.backgroundNode = positionLocal.y.mix(color(0xffaa00), color(0x00aaff)).mul(5);
 
   return scene;
 };
 const createSpotLight = () => {
-  const light = new SpotLight(0xffffff, 1);
-  light.power = 2000;
+  const light = new SpotLight(0xffffff);
+  light.power = 5000;
   return light;
-};
-const useOrbitControls = (camera: ICamera, canvas: HTMLCanvasElement) => {
-  const controls = new OrbitControls(camera, canvas);
-  controls.target.set(0, 1, 0);
-  return controls;
 };
 const useAnimation = (item: Entity, animations: AnimationClip[]) => {
   const mixer = new AnimationMixer(item);
@@ -102,21 +91,15 @@ const createPortals = () => {
 
   return portals;
 };
+const createFloor = () => {
+  const geometry = new CylinderGeometry(1, 2, 1, 64);
+  const material = new MeshStandardNodeMaterial({ color: new Color(0x000f09) });
+  return new Mesh(geometry, material).translateY(-0.5);
+};
 const loadMichelle = async () => {
   const gltf = await GLTFLoader.loadAsync('resources/models/gltf/Michelle.glb');
-  const material = gltf.scene.children[0].children[0].material as NodeMaterial;
-  material.outputNode = oscSine(timerLocal(0.1)).mix(output, output.add(0.1).posterize(4).mul(2));
 
   return { michelle: gltf.scene, animations: gltf.animations };
-};
-
-const createFloor = () => {
-  const geometry = new CircleGeometry(2, 32).rotateX(-Math.PI / 2);
-  const material = new MeshStandardNodeMaterial({ color: new Color(0x00aa09) });
-  const mesh = new Mesh(geometry, material);
-  mesh.position.y = 0;
-
-  return mesh;
 };
 
 const floor = createFloor();
@@ -133,7 +116,6 @@ const clock = Clock.new();
 const hearth = await Hearth.as({
   async animate() {
     const delta = clock.tick();
-    controls.update(delta);
 
     if (mixer) mixer.update(delta);
     portals.rotateY(delta * 0.5);
@@ -142,5 +124,5 @@ const hearth = await Hearth.as({
   },
   toneMappingNode: toneMapping(ToneMapping.ACESFilmic, 0.15),
 });
-const controls = useOrbitControls(camera, hearth.parameters.canvas);
+OrbitControls.attach(hearth, camera, { target: Vec3.new(0, 1, 0) });
 useWindowResizer(hearth, camera);
