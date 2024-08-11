@@ -34,7 +34,7 @@ async function init() {
   const video = document.getElementById('video');
   video.play();
 
-  const texture = new Engine.VideoTexture(video);
+  const texture = new Engine.VideoTexture({ video });
   texture.colorSpace = Engine.ColorSpace.SRGB;
   const material = new Engine.MeshBasicMaterial({ map: texture });
 

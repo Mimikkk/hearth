@@ -1,4 +1,4 @@
-export const createFlakesCanvas = (width: number, height: number) => {
+export const createFlakesCanvas = (width: number = 512, height: number = 512) => {
   const canvas = document.createElement('canvas');
   canvas.width = width;
   canvas.height = height;

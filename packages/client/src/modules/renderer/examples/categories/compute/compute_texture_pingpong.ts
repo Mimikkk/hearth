@@ -23,7 +23,7 @@ const createCamera = () => {
 const createStorageTexture = () => {
   const width = 512;
   const height = 512;
-  const texture = new StorageTexture(width, height);
+  const texture = new StorageTexture({ width, height });
   texture.type = TextureDataType.HalfFloat;
 
   return texture;

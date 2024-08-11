@@ -16,12 +16,12 @@ import { v4 } from 'uuid';
 
 let _textureId = 0;
 
-export class Texture {
+export class Texture<T = any> {
   declare isTexture: true;
   id: number;
   uuid: string;
   name: string;
-  source: Source;
+  source: Source<T>;
   mipmaps: (ImageData | CubeTexture)[];
   mapping: Mapping;
   channel: number;
@@ -52,7 +52,7 @@ export class Texture {
   userData: any;
 
   constructor(
-    image?: TexImageSource | OffscreenCanvas | TextureParameters,
+    image?: TexImageSource | OffscreenCanvas | TextureParameters<T>,
     mapping: Mapping = Mapping.UV,
     wrapS: Wrapping = Wrapping.ClampToEdge,
     wrapT: Wrapping = Wrapping.ClampToEdge,
@@ -63,7 +63,18 @@ export class Texture {
     anisotropy: number = 1,
     colorSpace: ColorSpace | null = null,
   ) {
-    const config = configure({ mapping, wrapS, wrapT, magFilter, minFilter, format, anisotropy, type, colorSpace, image, ...image });
+    const config = configure({
+      mapping,
+      wrapS,
+      wrapT,
+      magFilter,
+      minFilter,
+      format,
+      anisotropy,
+      type,
+      colorSpace,
+      image, ...image,
+    });
 
     this.name = config.name;
     this.mipmaps = config.mipmaps;
@@ -91,11 +102,13 @@ export class Texture {
     this.isRenderTargetTexture = config.isRenderTargetTexture;
     this.needsPMREMUpdate = config.needsPMREMUpdate;
 
+
     this.version = 0;
     this.id = ++_textureId;
     this.uuid = v4();
     this.source = new Source(config.image);
     this.matrix = Mat3.new();
+    if (config.needsUpdate) this.needsUpdate = true;
   }
 
   static is(texture: any): texture is Texture {
@@ -179,8 +192,8 @@ export class Texture {
 
 Texture.prototype.isTexture = true;
 
-export interface TextureParameters {
-  image?: TexImageSource | OffscreenCanvas;
+export interface TextureParameters<T = any> {
+  image?: TexImageSource | OffscreenCanvas | T;
   mapping?: Mapping;
   wrapS?: Wrapping;
   wrapT?: Wrapping;
@@ -207,7 +220,7 @@ export interface TextureParameters {
   name?: string;
   channel?: number;
   internalFormat?: PixelFormat | null;
-
+needsUpdate?: boolean;
 }
 
 export interface TextureConfiguration {
@@ -238,9 +251,10 @@ export interface TextureConfiguration {
   name: string;
   channel: number;
   internalFormat: PixelFormat | null;
+  needsUpdate: boolean;
 }
 
-export const configure = (parameters?: TextureParameters): TextureConfiguration => {
+export const configure = <T, >(parameters?: TextureParameters<T>): TextureConfiguration => {
   return {
     internalFormat: parameters?.internalFormat ?? null,
     name: parameters?.name ?? '',
@@ -269,5 +283,6 @@ export const configure = (parameters?: TextureParameters): TextureConfiguration 
     onUpdate: parameters?.onUpdate,
     isRenderTargetTexture: parameters?.isRenderTargetTexture ?? false,
     needsPMREMUpdate: parameters?.needsPMREMUpdate ?? false,
+    needsUpdate: parameters?.needsUpdate ?? false,
   };
 };

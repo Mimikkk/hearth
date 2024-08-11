@@ -189,7 +189,6 @@ export * from './entities/textures/Data3DTexture.js';
 export * from './entities/textures/DataArrayTexture.js';
 export * from './entities/textures/DataTexture.js';
 export * from './entities/textures/DepthTexture.js';
-export * from './entities/textures/FlakesTexture.js';
 export * from './entities/textures/FramebufferTexture.js';
 export * from './entities/textures/StorageTexture.js';
 export * from './entities/textures/Source.js';

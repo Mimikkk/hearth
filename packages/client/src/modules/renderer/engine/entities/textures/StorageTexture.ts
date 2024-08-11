@@ -1,19 +1,19 @@
-import { Texture } from '@modules/renderer/engine/entities/textures/Texture.js';
+import { Texture, TextureParameters } from '@modules/renderer/engine/entities/textures/Texture.js';
 import { MagnificationTextureFilter, MinificationTextureFilter } from '@modules/renderer/engine/constants.js';
 
-export class StorageTexture extends Texture {
+export class StorageTexture extends Texture<{ width: number, height: number }> {
   declare isStorageTexture: true;
-  magFilter: MagnificationTextureFilter;
-  minFilter: MinificationTextureFilter;
 
-  constructor(width: number = 1, height: number = 1) {
-    //@ts-expect-error
-    super();
-
-    this.image = { width, height };
-
-    this.magFilter = MagnificationTextureFilter.Linear;
-    this.minFilter = MinificationTextureFilter.Linear;
-    this.isStorageTexture = true;
+  constructor(parameters: StorageTextureParameters) {
+    super({
+      magFilter: MagnificationTextureFilter.Linear,
+      minFilter: MinificationTextureFilter.Linear,
+      ...parameters,
+      image: { width: parameters.width, height: parameters.height },
+    });
   }
 }
+
+StorageTexture.prototype.isStorageTexture = true;
+
+export type StorageTextureParameters = Omit<TextureParameters, 'image'> & { width: number; height: number };

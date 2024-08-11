@@ -2,14 +2,14 @@ import { v4 } from 'uuid';
 
 let _sourceId = 0;
 
-export class Source {
+export class Source<T = any> {
   id: number;
   uuid: string;
   data: any;
   dataReady: boolean;
   version: number;
 
-  constructor(data: TexImageSource | OffscreenCanvas) {
+  constructor(data: T) {
     this.id = ++_sourceId;
 
     this.uuid = v4();

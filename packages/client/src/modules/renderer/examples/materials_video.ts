@@ -20,7 +20,7 @@ const meshes = [],
   ygrid = 10;
 
 const startButton = document.getElementById('startButton');
-startButton.addEventListener('click', function () {
+startButton.addEventListener('click', function() {
   init();
 });
 
@@ -48,11 +48,11 @@ async function init() {
 
   video = document.getElementById('video');
   video.play();
-  video.addEventListener('play', function () {
+  video.addEventListener('play', function() {
     this.currentTime = 3;
   });
 
-  texture = new Engine.VideoTexture(video);
+  texture = new Engine.VideoTexture({ video });
 
   let i, j, ox, oy, geometry;
 

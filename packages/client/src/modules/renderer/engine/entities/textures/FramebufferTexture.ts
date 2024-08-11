@@ -1,19 +1,21 @@
-import { Texture } from './Texture.js';
+import { Texture, TextureParameters } from './Texture.js';
 import { MagnificationTextureFilter, MinificationTextureFilter } from '../../constants.js';
 
-export class FramebufferTexture extends Texture {
+export class FramebufferTexture extends Texture<{ width: number, height: number }> {
   declare isFramebufferTexture: true;
 
-  constructor(width: number, height: number) {
-    super({ width, height } as TexImageSource);
-
-    this.magFilter = MagnificationTextureFilter.Nearest;
-    this.minFilter = MinificationTextureFilter.Nearest;
-
-    this.generateMipmaps = false;
-
-    this.needsUpdate = true;
+  constructor(parameters: FramebufferTextureParameters) {
+    super({
+      ...parameters,
+      image: { width: parameters.width, height: parameters.height },
+      magFilter: MagnificationTextureFilter.Nearest,
+      minFilter: MinificationTextureFilter.Nearest,
+      generateMipmaps: false,
+      needsUpdate: true,
+    });
   }
 }
 
 FramebufferTexture.prototype.isFramebufferTexture = true;
+
+export type FramebufferTextureParameters = Omit<TextureParameters, 'image'> & { width: number; height: number; };
