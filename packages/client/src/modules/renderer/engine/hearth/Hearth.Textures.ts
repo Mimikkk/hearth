@@ -516,7 +516,7 @@ export class HearthTextures extends DataMap<any, any> {
 
     textureData.version = texture.version;
 
-    if (texture.onUpdate) texture.onUpdate(texture);
+    texture.onUpdate?.();
   }
 
   async copyTextureToBuffer(texture: Texture, x: number, y: number, width: number, height: number) {

@@ -27,7 +27,7 @@ export class Texture {
   channel: number;
   wrapS: Wrapping;
   wrapT: Wrapping;
-  declare wrapR: Wrapping;
+  wrapR: Wrapping;
   magFilter: MagnificationTextureFilter;
   minFilter: MinificationTextureFilter;
   anisotropy: number;
@@ -46,13 +46,13 @@ export class Texture {
   unpackAlignment: number;
   colorSpace?: ColorSpace | null;
   version: number;
-  onUpdate: any;
+  onUpdate?: () => void;
   isRenderTargetTexture: boolean;
   needsPMREMUpdate: boolean;
   userData: any;
 
   constructor(
-    image: TexImageSource | OffscreenCanvas,
+    image?: TexImageSource | OffscreenCanvas | TextureParameters,
     mapping: Mapping = Mapping.UV,
     wrapS: Wrapping = Wrapping.ClampToEdge,
     wrapT: Wrapping = Wrapping.ClampToEdge,
@@ -63,54 +63,39 @@ export class Texture {
     anisotropy: number = 1,
     colorSpace: ColorSpace | null = null,
   ) {
-    this.id = ++_textureId;
+    const config = configure({ mapping, wrapS, wrapT, magFilter, minFilter, format, anisotropy, type, colorSpace, image, ...image });
 
-    this.uuid = v4();
-
-    this.name = '';
-
-    this.source = new Source(image);
-    this.mipmaps = [];
-
-    this.mapping = mapping;
-    this.channel = 0;
-
-    this.wrapS = wrapS;
-    this.wrapT = wrapT;
-
-    this.magFilter = magFilter;
-    this.minFilter = minFilter;
-
-    this.anisotropy = anisotropy;
-
-    this.format = format;
-    this.internalFormat = null;
-    this.type = type;
-
-    this.offset = Vec2.new(0, 0);
-    this.repeat = Vec2.new(1, 1);
-    this.center = Vec2.new(0, 0);
-    this.rotation = 0;
-
-    this.matrixAutoUpdate = true;
-    this.matrix = new Mat3();
-
-    this.generateMipmaps = true;
-    this.premultiplyAlpha = false;
-    this.flipY = true;
-
-    this.unpackAlignment = 4;
-
-    this.colorSpace = colorSpace;
-
-    this.userData = {};
+    this.name = config.name;
+    this.mipmaps = config.mipmaps;
+    this.mapping = config.mapping;
+    this.channel = config.channel;
+    this.wrapS = config.wrapS;
+    this.wrapT = config.wrapT;
+    this.magFilter = config.magFilter;
+    this.minFilter = config.minFilter;
+    this.anisotropy = config.anisotropy;
+    this.format = config.format;
+    this.internalFormat = config.internalFormat;
+    this.type = config.type;
+    this.offset = config.offset;
+    this.repeat = config.repeat;
+    this.center = config.center;
+    this.rotation = config.rotation;
+    this.matrixAutoUpdate = config.matrixAutoUpdate;
+    this.generateMipmaps = config.generateMipmaps;
+    this.premultiplyAlpha = config.premultiplyAlpha;
+    this.flipY = config.flipY;
+    this.unpackAlignment = config.unpackAlignment;
+    this.colorSpace = config.colorSpace;
+    this.userData = config.userData;
+    this.isRenderTargetTexture = config.isRenderTargetTexture;
+    this.needsPMREMUpdate = config.needsPMREMUpdate;
 
     this.version = 0;
-    this.onUpdate = null;
-
-    this.isRenderTargetTexture = false;
-
-    this.needsPMREMUpdate = false;
+    this.id = ++_textureId;
+    this.uuid = v4();
+    this.source = new Source(config.image);
+    this.matrix = Mat3.new();
   }
 
   static is(texture: any): texture is Texture {
@@ -184,60 +169,6 @@ export class Texture {
     return this;
   }
 
-  transformUv(uv: Vec2): Vec2 {
-    if (this.mapping !== Mapping.UV) return uv;
-
-    uv.applyMat3(this.matrix);
-
-    if (uv.x < 0 || uv.x > 1) {
-      switch (this.wrapS) {
-        case Wrapping.Repeat:
-          uv.x = uv.x - Math.floor(uv.x);
-          break;
-
-        case Wrapping.ClampToEdge:
-          uv.x = uv.x < 0 ? 0 : 1;
-          break;
-
-        case Wrapping.MirroredRepeat:
-          if (Math.abs(Math.floor(uv.x) % 2) === 1) {
-            uv.x = Math.ceil(uv.x) - uv.x;
-          } else {
-            uv.x = uv.x - Math.floor(uv.x);
-          }
-
-          break;
-      }
-    }
-
-    if (uv.y < 0 || uv.y > 1) {
-      switch (this.wrapT) {
-        case Wrapping.Repeat:
-          uv.y = uv.y - Math.floor(uv.y);
-          break;
-
-        case Wrapping.ClampToEdge:
-          uv.y = uv.y < 0 ? 0 : 1;
-          break;
-
-        case Wrapping.MirroredRepeat:
-          if (Math.abs(Math.floor(uv.y) % 2) === 1) {
-            uv.y = Math.ceil(uv.y) - uv.y;
-          } else {
-            uv.y = uv.y - Math.floor(uv.y);
-          }
-
-          break;
-      }
-    }
-
-    if (this.flipY) {
-      uv.y = 1 - uv.y;
-    }
-
-    return uv;
-  }
-
   set needsUpdate(value: boolean) {
     if (value === true) {
       this.version++;
@@ -247,3 +178,96 @@ export class Texture {
 }
 
 Texture.prototype.isTexture = true;
+
+export interface TextureParameters {
+  image?: TexImageSource | OffscreenCanvas;
+  mapping?: Mapping;
+  wrapS?: Wrapping;
+  wrapT?: Wrapping;
+  magFilter?: MagnificationTextureFilter;
+  minFilter?: MinificationTextureFilter;
+  format?: TextureFormat;
+  type?: TextureDataType;
+  anisotropy?: number;
+  colorSpace?: ColorSpace | null;
+  mipmaps?: (ImageData | CubeTexture)[];
+  offset?: Vec2;
+  repeat?: Vec2;
+  center?: Vec2;
+  rotation?: number;
+  matrixAutoUpdate?: boolean;
+  generateMipmaps?: boolean;
+  premultiplyAlpha?: boolean;
+  flipY?: boolean;
+  unpackAlignment?: number;
+  userData?: any;
+  onUpdate?: () => void;
+  isRenderTargetTexture?: boolean;
+  needsPMREMUpdate?: boolean;
+  name?: string;
+  channel?: number;
+  internalFormat?: PixelFormat | null;
+
+}
+
+export interface TextureConfiguration {
+  image: TexImageSource | OffscreenCanvas;
+  mapping: Mapping;
+  wrapS: Wrapping;
+  wrapT: Wrapping;
+  magFilter: MagnificationTextureFilter;
+  minFilter: MinificationTextureFilter;
+  format: TextureFormat;
+  type: TextureDataType;
+  anisotropy: number;
+  colorSpace: ColorSpace | null;
+  mipmaps: (ImageData | CubeTexture)[];
+  offset: Vec2;
+  repeat: Vec2;
+  center: Vec2;
+  rotation: number;
+  matrixAutoUpdate: boolean;
+  generateMipmaps: boolean;
+  premultiplyAlpha: boolean;
+  flipY: boolean;
+  unpackAlignment: number;
+  userData: any;
+  onUpdate?: () => void;
+  isRenderTargetTexture: boolean;
+  needsPMREMUpdate: boolean;
+  name: string;
+  channel: number;
+  internalFormat: PixelFormat | null;
+}
+
+export const configure = (parameters?: TextureParameters): TextureConfiguration => {
+  return {
+    internalFormat: parameters?.internalFormat ?? null,
+    name: parameters?.name ?? '',
+    channel: parameters?.channel ?? 0,
+    image: parameters?.image ?? null!,
+    mapping: parameters?.mapping ?? Mapping.UV,
+    wrapS: parameters?.wrapS ?? Wrapping.ClampToEdge,
+    wrapT: parameters?.wrapT ?? Wrapping.ClampToEdge,
+    magFilter: parameters?.magFilter ?? MagnificationTextureFilter.Linear,
+    minFilter: parameters?.minFilter ?? MinificationTextureFilter.LinearMipmapLinear,
+    format: parameters?.format ?? TextureFormat.RGBA,
+    type: parameters?.type ?? TextureDataType.UnsignedByte,
+    anisotropy: parameters?.anisotropy ?? 1,
+    colorSpace: parameters?.colorSpace ?? null,
+    mipmaps: parameters?.mipmaps ?? [],
+    offset: parameters?.offset ?? Vec2.new(0, 0),
+    repeat: parameters?.repeat ?? Vec2.new(1, 1),
+    center: parameters?.center ?? Vec2.new(0, 0),
+    rotation: parameters?.rotation ?? 0,
+    matrixAutoUpdate: parameters?.matrixAutoUpdate ?? true,
+    generateMipmaps: parameters?.generateMipmaps ?? true,
+    premultiplyAlpha: parameters?.premultiplyAlpha ?? false,
+    flipY: parameters?.flipY ?? true,
+    unpackAlignment: parameters?.unpackAlignment ?? 4,
+    userData: parameters?.userData ?? {},
+    onUpdate: parameters?.onUpdate,
+    isRenderTargetTexture: parameters?.isRenderTargetTexture ?? false,
+    needsPMREMUpdate: parameters?.needsPMREMUpdate ?? false,
+  };
+};

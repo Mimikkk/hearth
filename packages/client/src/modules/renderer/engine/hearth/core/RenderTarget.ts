@@ -41,39 +41,30 @@ export class RenderTarget {
 
     const image = { width: width, height: height, depth: 1 };
 
-    const configuration = RenderTarget.configure(options);
-    this.configuration = configuration;
+    const config = RenderTarget.configure(options);
+    this.configuration = config;
+    config.image = image;
 
-    const texture = new Texture(
-      image,
-      configuration.mapping,
-      configuration.wrapS,
-      configuration.wrapT,
-      configuration.magFilter,
-      configuration.minFilter,
-      configuration.format,
-      configuration.type,
-      configuration.anisotropy,
-      configuration.colorSpace,
-    );
+
+    const texture = new Texture(config);
 
     texture.flipY = false;
-    texture.generateMipmaps = configuration.generateMipmaps;
-    texture.internalFormat = configuration.internalFormat;
+    texture.generateMipmaps = config.generateMipmaps;
+    texture.internalFormat = config.internalFormat;
 
     this.textures = [];
 
-    const count = configuration.count;
+    const count = config.count;
     for (let i = 0; i < count; i++) {
       this.textures[i] = texture.clone();
       this.textures[i].isRenderTargetTexture = true;
     }
 
     this.count = count;
-    this.depthBuffer = configuration.depthBuffer;
-    this.stencilBuffer = configuration.stencilBuffer;
-    this.depthTexture = configuration.depthTexture;
-    this.samples = configuration.samples;
+    this.depthBuffer = config.depthBuffer;
+    this.stencilBuffer = config.stencilBuffer;
+    this.depthTexture = config.depthTexture;
+    this.samples = config.samples;
   }
 
   get texture(): Texture {

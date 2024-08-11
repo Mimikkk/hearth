@@ -2326,7 +2326,7 @@ class Parser {
         const image = await loader.loadAsync(LoaderUtils.resolveUrl(sourceURI, options.path));
 
         if (loader instanceof ImageBitmapLoader) {
-          const texture = new Texture(image);
+          const texture = new Texture({ image });
           texture.needsUpdate = true;
           return texture;
         }

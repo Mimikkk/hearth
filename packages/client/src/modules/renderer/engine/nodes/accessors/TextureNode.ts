@@ -140,10 +140,6 @@ export class TextureNode extends UniformNode<Texture> {
 
     const texture = this.value;
 
-    if (!texture || texture.isTexture !== true) {
-      throw new Error('TextureNode: Need a engine.js texture.');
-    }
-
     const textureProperty = super.generate(builder, TypeName.property);
 
     if (output === TypeName.sampler) {
