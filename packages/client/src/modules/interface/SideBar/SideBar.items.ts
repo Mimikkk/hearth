@@ -51,6 +51,7 @@ export const SideBarItems: AccordionItem[] = [
       {
         id: Example.Controls.Drag,
         title: 'Controls Drag',
+        masterdisk: true,
       },
       {
         id: Example.Controls.Orbit,
@@ -61,6 +62,10 @@ export const SideBarItems: AccordionItem[] = [
         id: Example.Controls.Selection,
         title: 'Controls Selection',
         masterdisk: true,
+      },
+      {
+        id: Example.Controls.Transform,
+        title: 'Controls Transform',
       },
     ],
   },

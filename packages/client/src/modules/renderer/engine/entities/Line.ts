@@ -162,7 +162,8 @@ export class Line extends Entity {
 
   updateMorphTargets() {
     const geometry = this.geometry;
-
+    if (!geometry) return;
+    console.log(geometry);
     const morphAttributes = geometry.morphAttributes;
     const keys = Object.keys(morphAttributes);
 

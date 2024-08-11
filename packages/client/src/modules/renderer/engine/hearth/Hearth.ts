@@ -715,7 +715,8 @@ export class Hearth {
   }
 
   getInstanceCount({ object, geometry }: RenderObject) {
-    return Math.max(geometry.instanceCount, object.count, 1);
+    console.log(object.count, geometry.instanceCount);
+    return object.count || geometry.instanceCount || 1;
   }
 
   needsRenderUpdate(renderObject: RenderObject) {

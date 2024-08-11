@@ -73,6 +73,7 @@ export const Example = {
     Drag: 'categories/controls/controls_drag',
     Orbit: 'categories/controls/controls_orbit',
     Selection: 'categories/controls/controls_selection',
+    Transform: 'categories/controls/controls_transform',
   },
   Loaders: {
     Stl: 'loader_stl',
