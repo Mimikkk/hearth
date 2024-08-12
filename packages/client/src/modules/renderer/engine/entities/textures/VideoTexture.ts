@@ -14,7 +14,7 @@ export class VideoTexture extends Texture<HTMLVideoElement> {
     });
 
     const updateVideo = () => {
-      this.needsUpdate = true;
+      this.useUpdate = true;
       video.requestVideoFrameCallback(updateVideo);
     };
     video.requestVideoFrameCallback(updateVideo);

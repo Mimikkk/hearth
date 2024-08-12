@@ -71,9 +71,9 @@ export class Line extends Entity {
     const threshold = 1;
     const drawRange = geometry.drawRange;
 
-    if (geometry.boundingSphere === null) geometry.computeBoundingSphere();
+    if (geometry.boundSphere === null) geometry.calcBoundSphere();
 
-    _sphere.from(geometry.boundingSphere!);
+    _sphere.from(geometry.boundSphere!);
     _sphere.applyMat4(matrixWorld);
     _sphere.radius += threshold;
 

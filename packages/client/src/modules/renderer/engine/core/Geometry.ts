@@ -21,10 +21,10 @@ export class Geometry {
   morphAttributes: AttributeRecord;
   morphTargetsRelative: boolean;
   groups: { start: number; count: number; materialIndex?: number }[];
-  boundingBox: Box3 | null;
-  boundingSphere: Sphere | null;
+  boundBox: Box3 | null;
+  boundSphere: Sphere | null;
   drawRange: { start: number; count: number };
-  userData: Record<string, any>;
+  extra: Record<string, any>;
   animations: AnimationClip[];
   parameters?: Record<string, any>;
 
@@ -42,12 +42,12 @@ export class Geometry {
 
     this.groups = [];
 
-    this.boundingBox = null;
-    this.boundingSphere = null;
+    this.boundBox = null;
+    this.boundSphere = null;
 
     this.drawRange = { start: 0, count: Infinity };
 
-    this.userData = {};
+    this.extra = {};
 
     this.instanceCount = 1;
   }
@@ -129,7 +129,7 @@ export class Geometry {
     if (position !== undefined) {
       position.applyMat4(matrix);
 
-      position.needsUpdate = true;
+      position.useUpdate = true;
     }
 
     const normal = this.attributes.normal;
@@ -139,7 +139,7 @@ export class Geometry {
 
       normal.applyNMat3(normalMatrix);
 
-      normal.needsUpdate = true;
+      normal.useUpdate = true;
     }
 
     const tangent = this.attributes.tangent;
@@ -147,15 +147,15 @@ export class Geometry {
     if (tangent !== undefined) {
       tangent.transformDirection(matrix);
 
-      tangent.needsUpdate = true;
+      tangent.useUpdate = true;
     }
 
-    if (this.boundingBox !== null) {
-      this.computeBoundingBox();
+    if (this.boundBox !== null) {
+      this.calcBoundBox();
     }
 
-    if (this.boundingSphere !== null) {
-      this.computeBoundingSphere();
+    if (this.boundSphere !== null) {
+      this.calcBoundSphere();
     }
 
     return this;
@@ -220,9 +220,9 @@ export class Geometry {
   }
 
   center(): this {
-    this.computeBoundingBox();
+    this.calcBoundBox();
 
-    this.boundingBox!.center(_offset).negate();
+    this.boundBox!.center(_offset).negate();
 
     this.translate(_offset.x, _offset.y, _offset.z);
 
@@ -242,16 +242,16 @@ export class Geometry {
     return this;
   }
 
-  computeBoundingBox(): this {
-    if (this.boundingBox === null) {
-      this.boundingBox = Box3.new();
+  calcBoundBox(): this {
+    if (this.boundBox === null) {
+      this.boundBox = Box3.new();
     }
 
     const position = this.attributes.position as Attribute<Float32Array>;
     const morphAttributesPosition = this.morphAttributes.position;
 
     if (position !== undefined) {
-      this.boundingBox.fromAttribute(position);
+      this.boundBox.fromAttribute(position);
 
       if (morphAttributesPosition) {
         //@ts-expect-error
@@ -261,24 +261,24 @@ export class Geometry {
           _box.fromAttribute(morphAttribute);
 
           if (this.morphTargetsRelative) {
-            _vector.asAdd(this.boundingBox.min, _box.min);
-            this.boundingBox.expandCoord(_vector);
+            _vector.asAdd(this.boundBox.min, _box.min);
+            this.boundBox.expandCoord(_vector);
 
-            _vector.asAdd(this.boundingBox.max, _box.max);
-            this.boundingBox.expandCoord(_vector);
+            _vector.asAdd(this.boundBox.max, _box.max);
+            this.boundBox.expandCoord(_vector);
           } else {
-            this.boundingBox.expandCoord(_box.min);
-            this.boundingBox.expandCoord(_box.max);
+            this.boundBox.expandCoord(_box.min);
+            this.boundBox.expandCoord(_box.max);
           }
         }
       }
     } else {
-      this.boundingBox.clear();
+      this.boundBox.clear();
     }
 
-    if (isNaN(this.boundingBox.min.x) || isNaN(this.boundingBox.min.y) || isNaN(this.boundingBox.min.z)) {
+    if (isNaN(this.boundBox.min.x) || isNaN(this.boundBox.min.y) || isNaN(this.boundBox.min.z)) {
       console.error(
-        'Geometry.computeBoundingBox(): Computed min/max have NaN values. The "position" attribute is likely to have NaN values.',
+        'Geometry.calcBoundBox(): Computed min/max have NaN values. The "position" attribute is likely to have NaN values.',
         this,
       );
     }
@@ -286,16 +286,16 @@ export class Geometry {
     return this;
   }
 
-  computeBoundingSphere(): this {
-    if (this.boundingSphere === null) {
-      this.boundingSphere = new Sphere();
+  calcBoundSphere(): this {
+    if (this.boundSphere === null) {
+      this.boundSphere = new Sphere();
     }
 
     const position = this.attributes.position as Attribute<Float32Array>;
     const morphAttributesPosition = this.morphAttributes.position;
 
     if (position) {
-      const center = this.boundingSphere.center;
+      const center = this.boundSphere.center;
 
       _box.fromAttribute(position);
 
@@ -349,11 +349,11 @@ export class Geometry {
         }
       }
 
-      this.boundingSphere.radius = Math.sqrt(maxRadiusSq);
+      this.boundSphere.radius = Math.sqrt(maxRadiusSq);
 
-      if (isNaN(this.boundingSphere.radius)) {
+      if (isNaN(this.boundSphere.radius)) {
         console.error(
-          'Geometry.computeBoundingSphere(): Computed radius is NaN. The "position" attribute is likely to have NaN values.',
+          'Geometry.calcBoundSphere(): Computed radius is NaN. The "position" attribute is likely to have NaN values.',
           this,
         );
       }
@@ -562,7 +562,7 @@ export class Geometry {
 
       this.normalizeNormals();
 
-      normalAttribute.needsUpdate = true;
+      normalAttribute.useUpdate = true;
     }
 
     return this;
@@ -666,8 +666,8 @@ export class Geometry {
     this.attributes = {};
     this.morphAttributes = {};
     this.groups = [];
-    this.boundingBox = null;
-    this.boundingSphere = null;
+    this.boundBox = null;
+    this.boundSphere = null;
     this.instanceCount = Infinity;
 
     const data = {};
@@ -707,19 +707,19 @@ export class Geometry {
       this.addGroup(group.start, group.count, group.materialIndex);
     }
 
-    const boundingBox = source.boundingBox;
-    if (boundingBox !== null) {
-      this.boundingBox = boundingBox.clone();
+    const boundBox = source.boundBox;
+    if (boundBox !== null) {
+      this.boundBox = boundBox.clone();
     }
 
-    const boundingSphere = source.boundingSphere;
-    if (boundingSphere !== null) {
-      this.boundingSphere = boundingSphere.clone();
+    const boundSphere = source.boundSphere;
+    if (boundSphere !== null) {
+      this.boundSphere = boundSphere.clone();
     }
 
     this.drawRange.start = source.drawRange.start;
     this.drawRange.count = source.drawRange.count;
-    this.userData = source.userData;
+    this.extra = source.extra;
 
     return this;
   }

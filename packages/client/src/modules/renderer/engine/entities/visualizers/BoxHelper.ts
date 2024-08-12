@@ -21,7 +21,7 @@ export class BoxHelper extends LineSegments {
     super(geometry, new LineBasicMaterial({ color: color, toneMapped: false }));
 
     this.object = object;
-    this.matrixAutoUpdate = false;
+    this.useLocalAutoUpdate = false;
     this.update();
   }
 
@@ -77,9 +77,9 @@ export class BoxHelper extends LineSegments {
     array[22] = min.y;
     array[23] = min.z;
 
-    position.needsUpdate = true;
+    position.useUpdate = true;
 
-    this.geometry.computeBoundingSphere();
+    this.geometry.calcBoundSphere();
   }
 
   setFromObject(object: Entity) {

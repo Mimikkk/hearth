@@ -157,8 +157,6 @@ export class Box3 {
   }
 
   isEmpty(): boolean {
-
-
     return this.max.x < this.min.x || this.max.y < this.min.y || this.max.z < this.min.z;
   }
 
@@ -218,13 +216,13 @@ export class Box3 {
           this.expandCoord(_vec);
         }
       } else {
-        if (object.boundingBox !== undefined) {
-          if (object.boundingBox === null) object.computeBoundingBox!();
+        if (object.boundBox !== undefined) {
+          if (object.boundBox === null) object.calcBoundBox!();
 
-          _box1.from(object.boundingBox!);
+          _box1.from(object.boundBox!);
         } else {
-          if (geometry.boundingBox === null) geometry.computeBoundingBox();
-          _box1.from(geometry.boundingBox!);
+          if (geometry.boundBox === null) geometry.calcBoundBox();
+          _box1.from(geometry.boundBox!);
         }
 
         _box1.applyMat4(object!.matrixWorld!);
@@ -264,7 +262,6 @@ export class Box3 {
   }
 
   intersectsBox(box: Const<Box3>): boolean {
-
     return (
       box.max.x >= this.min.x &&
       box.min.x <= this.max.x &&
@@ -276,18 +273,13 @@ export class Box3 {
   }
 
   intersectsSphere(sphere: Const<Sphere>): boolean {
-
     const _vector = Vec3.new();
     this.clamp(sphere.center, _vector);
-
 
     return _vector.distanceSqTo(sphere.center) <= sphere.radius * sphere.radius;
   }
 
   intersectsPlane(plane: Const<Plane>): boolean {
-
-
-
     let min: number;
     let max: number;
     if (plane.normal.x > 0) {
@@ -323,18 +315,13 @@ export class Box3 {
     const _center = this.center(_v9);
     const _extents = _v7.from(this.max).sub(_center);
 
-
     _v0.from(triangle.a).sub(_center);
     _v1.from(triangle.b).sub(_center);
     _v2.from(triangle.c).sub(_center);
 
-
     _v3.from(_v1).sub(_v0);
     _v4.from(_v2).sub(_v1);
     _v5.from(_v0).sub(_v2);
-
-
-
 
     if (!validAxis(_axis.set(0, -_v3.z, _v3.y), _v0, _v1, _v2, _extents)) return false;
     if (!validAxis(_axis.set(0, -_v4.z, _v4.y), _v0, _v1, _v2, _extents)) return false;
@@ -421,7 +408,6 @@ function validAxis(
   v2: Const<Vec3>,
   extents: Const<Vec3>,
 ): boolean {
-
   const r = extents.x * Math.abs(axis.x) + extents.y * Math.abs(axis.y) + extents.z * Math.abs(axis.z);
 
   const p0 = v0.dot(axis);

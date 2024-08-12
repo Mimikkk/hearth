@@ -146,7 +146,7 @@ export class RenderObject {
     let cacheKey = material.customProgramCacheKey();
 
     for (const property in material) {
-      if (/^(is[A-Z])|^(visible|version|uuid|name|opacity|userData)$/.test(property)) continue;
+      if (/^(is[A-Z])|^(visible|version|uuid|name|opacity|extra)$/.test(property)) continue;
 
       let value = material[property];
 
@@ -173,7 +173,7 @@ export class RenderObject {
     return cacheKey;
   }
 
-  get needsUpdate() {
+  get useUpdate() {
     return this.initialNodesCacheKey !== this.getNodesCacheKey() || this.clippingNeedsUpdate;
   }
 

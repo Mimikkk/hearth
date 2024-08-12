@@ -74,7 +74,7 @@ export class Node {
     return node?.isNode === true;
   }
 
-  set needsUpdate(value: boolean) {
+  set useUpdate(value: boolean) {
     if (value) this.version++;
   }
 

@@ -228,7 +228,7 @@ export class HearthRenderer extends HearthComponent {
       } else if (object.isLight) {
         renderList.lights.push(object);
       } else if (object.isSprite) {
-        if (!object.frustumCulled || _frustum.intersectsSprite(object)) {
+        if (!object.useFrustumCull || _frustum.intersectsSprite(object)) {
           if (this.hearth.parameters.useSort) {
             _vec3.fromMat4Position(object.matrixWorld).applyMat4(_projection);
           }
@@ -241,14 +241,14 @@ export class HearthRenderer extends HearthComponent {
           }
         }
       } else if (object.isMesh || object.isLine || object.isPoints) {
-        if (!object.frustumCulled || _frustum.intersectsObject(object)) {
+        if (!object.useFrustumCull || _frustum.intersectsObject(object)) {
           const geometry = object.geometry;
           const material = object.material;
 
           if (this.hearth.parameters.useSort) {
-            if (geometry.boundingSphere === null) geometry.computeBoundingSphere();
+            if (geometry.boundSphere === null) geometry.calcBoundSphere();
 
-            _vec3.from(geometry.boundingSphere.center).applyMat4(object.matrixWorld).applyMat4(_projection);
+            _vec3.from(geometry.boundSphere.center).applyMat4(object.matrixWorld).applyMat4(_projection);
           }
 
           if (Array.isArray(material)) {

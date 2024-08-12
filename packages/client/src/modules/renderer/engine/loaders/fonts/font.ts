@@ -10,7 +10,7 @@ export interface Font {
   resolution: number;
   underlineThickness: number;
   underlinePosition: number;
-  boundingBox: {
+  boundBox: {
     xMin: number;
     xMax: number;
     yMin: number;

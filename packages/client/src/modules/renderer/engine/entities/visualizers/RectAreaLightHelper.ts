@@ -19,7 +19,7 @@ export class RectAreaLightHelper extends Line {
 
     const geometry = new Geometry();
     geometry.setAttribute('position', new Attribute(new Float32Array(positions), 3));
-    geometry.computeBoundingSphere();
+    geometry.calcBoundSphere();
 
     const material = new LineBasicMaterial({ fog: false });
 
@@ -33,7 +33,7 @@ export class RectAreaLightHelper extends Line {
 
     const geometry2 = new Geometry();
     geometry2.setAttribute('position', new Attribute(new Float32Array(positions2), 3));
-    geometry2.computeBoundingSphere();
+    geometry2.calcBoundSphere();
 
     this.add(new Mesh(geometry2, new MeshBasicMaterial({ side: Side.Back, fog: false })));
   }

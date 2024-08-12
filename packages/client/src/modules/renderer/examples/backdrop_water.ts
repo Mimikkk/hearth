@@ -53,7 +53,7 @@ const createScene = () => {
 };
 const createSunLight = () => {
   const light = new DirectionalLight(0xffe499, 5);
-  light.castShadow = true;
+  light.useShadowCast = true;
   light.shadow.camera.near = 0.1;
   light.shadow.camera.far = 5;
   light.shadow.camera.right = 2;
@@ -79,7 +79,7 @@ const createLights = () => {
 const loadMichelle = async () => {
   const gltf = await GLTFLoader.loadAsync('resources/models/gltf/Michelle.glb');
   const model = gltf.scene;
-  model.children[0].children[0].castShadow = true;
+  model.children[0].children[0].useShadowCast = true;
 
   const mixer = new AnimationMixer(model);
   const action = mixer.clipAction(gltf.animations[0]);
@@ -94,7 +94,6 @@ const loadIceTexture = async () => {
   iceDiffuse.colorSpace = null;
 
   return triplanarTexture(texture(iceDiffuse)).add(color(0x0066ff)).mul(0.8);
-
 };
 const createBuoys = (ice: Node) => {
   const geometry = new IcosahedronGeometry(1, 0);
@@ -198,7 +197,6 @@ const hearth = await Hearth.as({
 
     const delta = clock.tick();
 
-
     mixer.update(delta);
 
     for (const object of buoys.children) {
@@ -219,4 +217,3 @@ const controls = OrbitControls.attach(hearth, camera, {
   target: Vec3.new(0, 0.2, 0),
 });
 useWindowResizer(hearth, camera);
-

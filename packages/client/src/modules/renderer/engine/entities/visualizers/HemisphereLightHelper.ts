@@ -21,7 +21,7 @@ export class HemisphereLightHelper extends Entity {
 
     this.light = light;
     this.matrix = light.matrixWorld;
-    this.matrixAutoUpdate = false;
+    this.useLocalAutoUpdate = false;
     this.color = color;
 
     const geometry = new OctahedronGeometry(size);
@@ -57,7 +57,7 @@ export class HemisphereLightHelper extends Entity {
         colors.setXYZ(i, color.r, color.g, color.b);
       }
 
-      colors.needsUpdate = true;
+      colors.useUpdate = true;
     }
 
     this.light.updateWorldMatrix(true, false);

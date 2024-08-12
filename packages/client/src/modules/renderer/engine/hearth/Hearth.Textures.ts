@@ -79,7 +79,7 @@ export class HearthTextures extends DataMap<any, any> {
 
     if (renderTargetData.width !== size.x || size.y !== renderTargetData.height) {
       textureNeedsUpdate = true;
-      depthTexture.needsUpdate = true;
+      depthTexture.useUpdate = true;
 
       depthTexture.image.width = mipWidth;
       depthTexture.image.height = mipHeight;
@@ -95,7 +95,7 @@ export class HearthTextures extends DataMap<any, any> {
 
     if (renderTargetData.sampleCount !== sampleCount) {
       textureNeedsUpdate = true;
-      depthTexture.needsUpdate = true;
+      depthTexture.useUpdate = true;
 
       renderTargetData.sampleCount = sampleCount;
     }
@@ -105,7 +105,7 @@ export class HearthTextures extends DataMap<any, any> {
     for (let i = 0; i < textures.length; i++) {
       const texture = textures[i];
 
-      if (textureNeedsUpdate) texture.needsUpdate = true;
+      if (textureNeedsUpdate) texture.useUpdate = true;
 
       this.updateTexture(texture, options);
     }

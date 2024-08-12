@@ -17,7 +17,7 @@ export class SkinnedMesh extends Mesh {
   bindMode: BindMode;
   bindMatrix: Mat4;
   bindMatrixInverse: Mat4;
-  boundingSphere: Sphere | null;
+  boundSphere: Sphere | null;
   skeleton: Skeleton | null;
   declare geometry: Geometry;
   declare material: Material;
@@ -29,39 +29,39 @@ export class SkinnedMesh extends Mesh {
     this.bindMatrix = new Mat4();
     this.bindMatrixInverse = new Mat4();
 
-    this.boundingBox = null!;
-    this.boundingSphere = null;
+    this.boundBox = null!;
+    this.boundSphere = null;
   }
 
-  computeBoundingBox() {
+  calcBoundBox() {
     const geometry = this.geometry!;
 
-    if (this.boundingBox === null) this.boundingBox = Box3.new();
+    if (this.boundBox === null) this.boundBox = Box3.new();
 
-    this.boundingBox!.clear();
+    this.boundBox!.clear();
 
     const positionAttribute = geometry.attributes.position;
 
     for (let i = 0; i < positionAttribute.count; i++) {
       this.getVertexPosition(i, _vertex);
-      this.boundingBox!.expandCoord(_vertex);
+      this.boundBox!.expandCoord(_vertex);
     }
   }
 
-  computeBoundingSphere() {
+  calcBoundSphere() {
     const geometry = this.geometry!;
 
-    if (this.boundingSphere === null) {
-      this.boundingSphere = new Sphere();
+    if (this.boundSphere === null) {
+      this.boundSphere = new Sphere();
     }
 
-    this.boundingSphere.clear();
+    this.boundSphere.clear();
 
     const positionAttribute = geometry.attributes.position;
 
     for (let i = 0; i < positionAttribute.count; i++) {
       this.getVertexPosition(i, _vertex);
-      this.boundingSphere.expandCoord(_vertex);
+      this.boundSphere.expandCoord(_vertex);
     }
   }
 
@@ -74,8 +74,8 @@ export class SkinnedMesh extends Mesh {
 
     this.skeleton = source.skeleton;
 
-    if (source.boundingBox !== null) this.boundingBox = source.boundingBox.clone();
-    if (source.boundingSphere !== null) this.boundingSphere = source.boundingSphere.clone();
+    if (source.boundBox !== null) this.boundBox = source.boundBox.clone();
+    if (source.boundSphere !== null) this.boundSphere = source.boundSphere.clone();
 
     return this;
   }
@@ -86,9 +86,9 @@ export class SkinnedMesh extends Mesh {
 
     if (material === undefined) return;
 
-    if (this.boundingSphere === null) this.computeBoundingSphere();
+    if (this.boundSphere === null) this.calcBoundSphere();
 
-    _sphere.from(this.boundingSphere!);
+    _sphere.from(this.boundSphere!);
     _sphere.applyMat4(matrixWorld);
 
     if (raycaster.ray.intersectsSphere(_sphere) === false) return;
@@ -96,8 +96,8 @@ export class SkinnedMesh extends Mesh {
     _inverseMatrix.from(matrixWorld).invert();
     _ray.from(raycaster.ray).applyMat4(_inverseMatrix);
 
-    if (this.boundingBox !== null) {
-      if (_ray.intersectsBox(this.boundingBox) === false) return;
+    if (this.boundBox !== null) {
+      if (_ray.intersectsBox(this.boundBox) === false) return;
     }
 
     this._computeIntersections(raycaster, intersects, _ray);

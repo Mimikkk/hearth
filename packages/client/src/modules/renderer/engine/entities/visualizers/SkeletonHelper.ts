@@ -58,7 +58,7 @@ export class SkeletonHelper extends LineSegments {
     this.bones = bones;
 
     this.matrix = object.matrixWorld;
-    this.matrixAutoUpdate = false;
+    this.useLocalAutoUpdate = false;
   }
 
   updateMatrixWorld(force?: boolean): this {
@@ -85,7 +85,7 @@ export class SkeletonHelper extends LineSegments {
       }
     }
 
-    geometry.attributes.position.needsUpdate = true;
+    geometry.attributes.position.useUpdate = true;
     return super.updateMatrixWorld(force);
   }
 }

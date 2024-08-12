@@ -11,7 +11,7 @@ export class ImageBitmapLoader extends classLoader<{
   options => ({
     fileLoader: FileLoader.configureAs(ResponseType.Blob, options?.fileLoader),
     options: {
-      premultiplyAlpha: options?.options?.premultiplyAlpha ?? 'none',
+      usePremultiplyAlpha: options?.options?.usePremultiplyAlpha ?? 'none',
       imageOrientation: options?.options?.imageOrientation,
       resizeWidth: options?.options?.resizeWidth,
       resizeHeight: options?.options?.resizeHeight,

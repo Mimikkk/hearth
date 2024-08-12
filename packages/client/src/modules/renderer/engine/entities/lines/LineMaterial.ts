@@ -58,7 +58,7 @@ export class LineMaterial extends Material {
 
   set dashed(value: boolean) {
     if ((value === true) !== this.dashed) {
-      this.needsUpdate = true;
+      this.useUpdate = true;
     }
 
     if (value === true) {
@@ -125,7 +125,7 @@ export class LineMaterial extends Material {
     if (!this.defines) return;
 
     if ((value === true) !== this.alphaToCoverage) {
-      this.needsUpdate = true;
+      this.useUpdate = true;
     }
 
     if (value === true) {

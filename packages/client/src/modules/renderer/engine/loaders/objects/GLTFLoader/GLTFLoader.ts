@@ -83,7 +83,7 @@ export interface GLTF {
     extras?: any;
   };
   parser: Parser;
-  userData: Record<string, any>;
+  extra: Record<string, any>;
 }
 
 export type MeshoptDecoder = typeof MeshoptDecoder;
@@ -1441,7 +1441,7 @@ class GLTFTextureTransformExtension implements Plugin {
       texture.repeat.fromArray(transform.scale);
     }
 
-    texture.needsUpdate = true;
+    texture.useUpdate = true;
 
     return texture;
   }
@@ -1569,8 +1569,8 @@ function createDefaultMaterial(cache) {
 function addUnknownExtensionsToUserData(knownExtensions, object, objectDef) {
   for (const name in objectDef.extensions) {
     if (knownExtensions[name] === undefined) {
-      object.userData.gltfExtensions = object.userData.gltfExtensions || {};
-      object.userData.gltfExtensions[name] = objectDef.extensions[name];
+      object.extra.gltfExtensions = object.extra.gltfExtensions || {};
+      object.extra.gltfExtensions[name] = objectDef.extensions[name];
     }
   }
 }
@@ -1582,7 +1582,7 @@ function addUnknownExtensionsToUserData(knownExtensions, object, objectDef) {
 function assignExtrasToUserData(object, gltfDef) {
   if (gltfDef.extras !== undefined) {
     if (typeof gltfDef.extras === 'object') {
-      Object.assign(object.userData, gltfDef.extras);
+      Object.assign(object.extra, gltfDef.extras);
     } else {
       console.warn('THREE.GLTFLoader: Ignoring primitive type .extras, ' + gltfDef.extras);
     }
@@ -1844,7 +1844,7 @@ class Parser {
           cameras: dependencies[2],
           asset: json.asset,
           parser: parser,
-          userData: {},
+          extra: {},
         };
 
         addUnknownExtensionsToUserData(extensions, result, json);
@@ -2327,7 +2327,7 @@ class Parser {
 
         if (loader instanceof ImageBitmapLoader) {
           const texture = new Texture({ image });
-          texture.needsUpdate = true;
+          texture.useUpdate = true;
           return texture;
         }
 
@@ -2340,7 +2340,7 @@ class Parser {
 
         assignExtrasToUserData(texture, sourceDef);
 
-        texture.userData.mimeType = sourceDef.mimeType || getImageURIMimeType(sourceDef.uri);
+        texture.extra.mimeType = sourceDef.mimeType || getImageURIMimeType(sourceDef.uri);
 
         return texture;
       })
@@ -3061,7 +3061,7 @@ class Parser {
       }
 
       if (nodeDef.name) {
-        node.userData.name = nodeDef.name;
+        node.extra.name = nodeDef.name;
         node.name = nodeName;
       }
 
@@ -3310,14 +3310,14 @@ function computeBounds(geometry, primitiveDef, parser) {
     box.expandVec(maxDisplacement);
   }
 
-  geometry.boundingBox = box;
+  geometry.boundBox = box;
 
   const sphere = new Sphere();
 
   box.center(sphere.center);
   sphere.radius = box.min.distanceTo(box.max) / 2;
 
-  geometry.boundingSphere = sphere;
+  geometry.boundSphere = sphere;
 }
 
 /**

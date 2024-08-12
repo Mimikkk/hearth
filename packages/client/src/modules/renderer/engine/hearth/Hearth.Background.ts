@@ -66,7 +66,7 @@ export class HearthBackground extends DataMap<any, any> {
 
         sceneData.backgroundMeshNode = backgroundMeshNode;
         sceneData.backgroundMesh = backgroundMesh = new Mesh(new SphereGeometry(1, 32, 32), nodeMaterial);
-        backgroundMesh.frustumCulled = false;
+        backgroundMesh.useFrustumCull = false;
 
         backgroundMesh.onBeforeRender = function (hearth: Hearth, scene: Scene, camera: Camera) {
           this.matrixWorld.fromMat4Position(camera.matrixWorld);
@@ -78,7 +78,7 @@ export class HearthBackground extends DataMap<any, any> {
       if (sceneData.backgroundCacheKey !== backgroundCacheKey) {
         sceneData.backgroundMeshNode.node = vec4(backgroundNode);
 
-        backgroundMesh.material.needsUpdate = true;
+        backgroundMesh.material.useUpdate = true;
 
         sceneData.backgroundCacheKey = backgroundCacheKey;
       }

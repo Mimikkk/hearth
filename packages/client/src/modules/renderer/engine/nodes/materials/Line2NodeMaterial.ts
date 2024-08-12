@@ -302,7 +302,7 @@ export class Line2NodeMaterial extends NodeMaterial {
       return vec4(lineColorNode, alpha);
     })();
 
-    this.needsUpdate = true;
+    this.useUpdate = true;
   }
 
   get worldUnits() {

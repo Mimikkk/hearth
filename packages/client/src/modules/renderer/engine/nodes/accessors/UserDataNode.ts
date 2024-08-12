@@ -6,16 +6,15 @@ export class UserDataNode extends ReferenceNode {
   constructor(
     property: string,
     inputType: TypeName,
-    public userData?: any,
+    public extra?: any,
   ) {
-    super(property, inputType, userData);
+    super(property, inputType, extra);
   }
 
   update(frame: NodeFrame): void {
-    this.reference = this.userData ?? frame.object.userData;
+    this.reference = this.extra ?? frame.object.extra;
     super.update(frame);
   }
 }
 
-export const userData = (name: string, inputType: TypeName, userData: any) =>
-  new UserDataNode(name, inputType, userData);
+export const extra = (name: string, inputType: TypeName, extra: any) => new UserDataNode(name, inputType, extra);

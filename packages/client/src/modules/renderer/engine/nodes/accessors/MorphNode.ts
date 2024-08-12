@@ -68,7 +68,7 @@ function getEntry(geometry) {
       height,
       depth: morphTargetsCount,
       type: TextureDataType.Float,
-      needsUpdate: true,
+      useUpdate: true,
     });
 
     const vertexDataStride = vertexDataCount * 4;

@@ -44,7 +44,7 @@ export class AnalyticLightNode extends LightingNode {
   }
 
   getCacheKey(): string {
-    return super.getCacheKey() + '-' + (this.light.id + '-' + (this.light.castShadow ? '1' : '0'));
+    return super.getCacheKey() + '-' + (this.light.id + '-' + (this.light.useShadowCast ? '1' : '0'));
   }
 
   getHash(): string {
@@ -107,7 +107,7 @@ export class AnalyticLightNode extends LightingNode {
   }
 
   setup(builder: NodeBuilder) {
-    if (this.light.castShadow) this.setupShadow(builder);
+    if (this.light.useShadowCast) this.setupShadow(builder);
     else if (this.shadowNode !== null) this.disposeShadow();
   }
 
@@ -127,7 +127,7 @@ export class AnalyticLightNode extends LightingNode {
     const currentRenderObjectFunction = hearth._renderObjectFn;
 
     hearth._renderObjectFn = (object, ...params) => {
-      if (object.castShadow === true) {
+      if (object.useShadowCast === true) {
         hearth.renderObject(object, ...params);
       }
     };
@@ -150,7 +150,7 @@ export class AnalyticLightNode extends LightingNode {
   }
 
   updateBefore(frame: NodeFrame): void {
-    if (this.light.castShadow) this.updateShadow(frame);
+    if (this.light.useShadowCast) this.updateShadow(frame);
   }
 
   update(frame: NodeFrame): void {

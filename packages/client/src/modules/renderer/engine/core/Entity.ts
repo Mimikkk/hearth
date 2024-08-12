@@ -15,11 +15,7 @@ import type { Box3 } from '@modules/renderer/engine/math/Box3.js';
 import type { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 import type { Sphere } from '@modules/renderer/engine/math/Sphere.js';
 import { v4 } from 'uuid';
-import type { Skeleton } from '@modules/renderer/engine/entities/Skeleton.js';
 import { AnimationClip } from '@modules/renderer/engine/animation/AnimationClip.js';
-
-const isCamera = (object: any): object is Camera => object.isCamera;
-const isLight = (object: any): object is Light => object.isLight;
 
 export class Entity {
   declare isEntity: true;
@@ -27,81 +23,71 @@ export class Entity {
   static UseLocalAutoUpdate: boolean = true;
   static UseWorldAutoUpdate: boolean = true;
 
-  boundingSphere: Sphere | null;
+  boundSphere: Sphere | null;
+
+  calcBoundSphere(): void {}
+
+  boundBox: Box3 | null;
+
+  calcBoundBox(): void {}
+
+  declare workgroup?: number[];
   geometry: Geometry | null;
-
-  computeBoundingSphere(): void {}
-
-  computeBoundingBox(): void {}
-
-  declare material: Material | null;
-  declare skeleton: Skeleton | null;
-  declare workgroupSize?: [number, number, number] | [number, number] | [number];
-  useOcclusion: boolean;
-  boundingBox: Box3 | null;
+  material: Material | null;
+  animations: AnimationClip[] = [];
   id: number;
   uuid: string;
   name: string;
   parent: Entity | null;
   children: Entity[];
+
   up: Vec3;
   position: Vec3;
   quaternion: Quaternion;
   scale: Vec3;
+
   modelViewMatrix: Mat4;
   normalMatrix: Mat3;
   matrix: Mat4;
   matrixWorld: Mat4;
-  matrixAutoUpdate: boolean;
+
+  useLocalAutoUpdate: boolean;
   useWorldAutoUpdate: boolean;
-  matrixWorldNeedsUpdate: boolean;
+  useWorldUpdate: boolean;
+  useOcclusion: boolean;
+  useShadowCast: boolean;
+  useShadowReceive: boolean;
+  useFrustumCull: boolean;
+  renderOrder: number;
   layers: RaycastLayers;
   visible: boolean;
-  castShadow: boolean;
-  receiveShadow: boolean;
-  frustumCulled: boolean;
-  renderOrder: number;
-  animations: AnimationClip[];
-  userData: Record<string, any>;
   count: number = 1;
+  extra: Record<string, any> = {};
 
-  constructor() {
+  constructor(parameters?: EntityParameters) {
+    this.name = parameters?.name ?? '';
+    this.position = parameters?.position ?? Vec3.new();
+    this.quaternion = parameters?.quaternion ?? Quaternion.identity();
+    this.scale = parameters?.scale ?? Vec3.new(1, 1, 1);
+    this.useLocalAutoUpdate = Entity.UseLocalAutoUpdate;
+    this.useWorldAutoUpdate = Entity.UseWorldAutoUpdate;
+    this.useWorldUpdate = parameters?.useWorldUpdate ?? false;
+    this.layers = parameters?.layers ?? RaycastLayers.new();
+    this.visible = parameters?.visible ?? true;
+    this.useShadowReceive = parameters?.useShadowReceive ?? false;
+    this.useShadowCast = parameters?.useShadowCast ?? false;
+    this.useFrustumCull = parameters?.useFrustumCull ?? true;
+    this.renderOrder = parameters?.renderOrder ?? 0;
+
     this.id = _id++;
     this.uuid = v4();
-
-    this.name = '';
-
     this.parent = null;
     this.children = [];
-
     this.up = Entity.Up.clone();
-
-    this.position = Vec3.new();
-    this.quaternion = Quaternion.new().asIdentity();
-    this.scale = Vec3.new(1, 1, 1);
-    this.modelViewMatrix = new Mat4();
-    this.normalMatrix = new Mat3();
-
-    this.matrix = new Mat4();
-    this.matrixWorld = new Mat4();
-
-    this.matrixAutoUpdate = Entity.UseLocalAutoUpdate;
-
-    this.useWorldAutoUpdate = Entity.UseWorldAutoUpdate;
-    this.matrixWorldNeedsUpdate = false;
-
-    this.layers = RaycastLayers.new();
-    this.visible = true;
-
-    this.castShadow = false;
-    this.receiveShadow = false;
-
-    this.frustumCulled = true;
-    this.renderOrder = 0;
-
-    this.animations = [];
-
-    this.userData = {};
+    this.modelViewMatrix = Mat4.new();
+    this.normalMatrix = Mat3.new();
+    this.matrix = Mat4.new();
+    this.matrixWorld = Mat4.new();
   }
 
   static is(object: any): object is Entity {
@@ -145,7 +131,7 @@ export class Entity {
   ): void {}
 
   applyMat4(matrix: Mat4): this {
-    if (this.matrixAutoUpdate) this.updateMatrix();
+    if (this.useLocalAutoUpdate) this.updateMatrix();
 
     this.matrix.premul(matrix);
 
@@ -489,21 +475,21 @@ export class Entity {
   updateMatrix(): this {
     this.matrix.compose(this.position, this.quaternion, this.scale);
 
-    this.matrixWorldNeedsUpdate = true;
+    this.useWorldUpdate = true;
     return this;
   }
 
   updateMatrixWorld(force?: boolean): this {
-    if (this.matrixAutoUpdate) this.updateMatrix();
+    if (this.useLocalAutoUpdate) this.updateMatrix();
 
-    if (this.matrixWorldNeedsUpdate || force) {
+    if (this.useWorldUpdate || force) {
       if (this.parent === null) {
         this.matrixWorld.from(this.matrix);
       } else {
         this.matrixWorld.asMul(this.parent.matrixWorld, this.matrix);
       }
 
-      this.matrixWorldNeedsUpdate = false;
+      this.useWorldUpdate = false;
 
       force = true;
     }
@@ -527,7 +513,7 @@ export class Entity {
       parent.updateWorldMatrix(true, false);
     }
 
-    if (this.matrixAutoUpdate) this.updateMatrix();
+    if (this.useLocalAutoUpdate) this.updateMatrix();
 
     if (this.parent === null) {
       this.matrixWorld.from(this.matrix);
@@ -565,23 +551,23 @@ export class Entity {
     this.matrix.from(source.matrix);
     this.matrixWorld.from(source.matrixWorld);
 
-    this.matrixAutoUpdate = source.matrixAutoUpdate;
+    this.useLocalAutoUpdate = source.useLocalAutoUpdate;
 
     this.useWorldAutoUpdate = source.useWorldAutoUpdate;
-    this.matrixWorldNeedsUpdate = source.matrixWorldNeedsUpdate;
+    this.useWorldUpdate = source.useWorldUpdate;
 
     this.layers.mask = source.layers.mask;
     this.visible = source.visible;
 
-    this.castShadow = source.castShadow;
-    this.receiveShadow = source.receiveShadow;
+    this.useShadowCast = source.useShadowCast;
+    this.useShadowReceive = source.useShadowReceive;
 
-    this.frustumCulled = source.frustumCulled;
+    this.useFrustumCull = source.useFrustumCull;
     this.renderOrder = source.renderOrder;
 
     this.animations = source.animations.slice();
 
-    this.userData = JSON.parse(JSON.stringify(source.userData));
+    this.extra = JSON.parse(JSON.stringify(source.extra));
 
     if (recursive) {
       for (let i = 0; i < source.children.length; i++) {
@@ -596,10 +582,27 @@ export class Entity {
 
 Entity.prototype.isEntity = true;
 
+interface EntityParameters {
+  name?: string;
+  position?: Vec3;
+  quaternion?: Quaternion;
+  scale?: Vec3;
+  useLocalAutoUpdate?: boolean;
+  useWorldAutoUpdate?: boolean;
+  useWorldUpdate?: boolean;
+  useShadowReceive?: boolean;
+  useShadowCast?: boolean;
+  useFrustumCull?: boolean;
+  renderOrder?: number;
+  layers?: RaycastLayers;
+  visible?: boolean;
+}
+
+const isCamera = (object: any): object is Camera => object.isCamera;
+const isLight = (object: any): object is Light => object.isLight;
+
 const _euler = new Euler();
-
 let _id = 0;
-
 const _v1 = Vec3.new();
 const _q1 = Quaternion.new();
 const _m1 = new Mat4();

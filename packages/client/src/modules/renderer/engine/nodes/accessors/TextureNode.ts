@@ -245,7 +245,7 @@ export class TextureNode extends UniformNode<Texture> {
   update() {
     const texture = this.value;
 
-    if (texture.matrixAutoUpdate === true) {
+    if (texture.useLocalAutoUpdate === true) {
       texture.updateMatrix();
     }
   }

@@ -19,7 +19,7 @@ export class PointLightHelper extends Mesh {
     this.color = color;
 
     this.matrix = this.light.matrixWorld;
-    this.matrixAutoUpdate = false;
+    this.useLocalAutoUpdate = false;
 
     this.update();
   }

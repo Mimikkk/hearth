@@ -68,7 +68,7 @@ export class Attribute<T extends TypedArray = any> {
     return this.source.stride !== this.span;
   }
 
-  set needsUpdate(value: boolean) {
+  set useUpdate(value: boolean) {
     if (value) ++this.version;
   }
 

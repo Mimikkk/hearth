@@ -120,8 +120,8 @@ export class SelectionControls {
           }
         }
       } else {
-        if (object.geometry.boundingSphere === null) object.geometry.computeBoundingSphere();
-        _center.from(object.geometry!.boundingSphere!.center).applyMat4(object.matrixWorld);
+        if (object.geometry.boundSphere === null) object.geometry.calcBoundSphere();
+        _center.from(object.geometry!.boundSphere!.center).applyMat4(object.matrixWorld);
 
         if (frustum.contains(_center)) this.collection.push(object);
       }

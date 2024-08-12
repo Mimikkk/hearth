@@ -111,7 +111,7 @@ export class MarchingCubes extends Mesh {
         geometry.setAttribute('color', colorAttribute);
       }
 
-      geometry.boundingSphere = new Sphere(Vec3.new(), 1);
+      geometry.boundSphere = new Sphere(Vec3.new(), 1);
     };
 
     /////////////////////
@@ -690,11 +690,11 @@ export class MarchingCubes extends Mesh {
 
       this.geometry.setDrawRange(0, this.count);
 
-      geometry.attributes.position.needsUpdate = true;
-      geometry.attributes.normal.needsUpdate = true;
+      geometry.attributes.position.useUpdate = true;
+      geometry.attributes.normal.useUpdate = true;
 
-      if (this.enableUvs) geometry.attributes.uv.needsUpdate = true;
-      if (this.enableColors) geometry.attributes.color.needsUpdate = true;
+      if (this.enableUvs) geometry.attributes.uv.useUpdate = true;
+      if (this.enableColors) geometry.attributes.color.useUpdate = true;
 
       if (this.count / 3 > maxPolyCount)
         console.warn(

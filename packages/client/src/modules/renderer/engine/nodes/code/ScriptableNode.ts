@@ -76,11 +76,11 @@ export class ScriptableNode extends Node {
     return this.codeNode.code;
   }
 
-  get needsUpdate(): boolean {
+  get useUpdate(): boolean {
     return this.source !== this._source;
   }
 
-  set needsUpdate(value: boolean) {
+  set useUpdate(value: boolean) {
     if (value === true) this.dispose();
   }
 
@@ -176,7 +176,7 @@ export class ScriptableNode extends Node {
       this.deleteParameter(name);
     }
 
-    this.needsUpdate = true;
+    this.useUpdate = true;
 
     return this;
   }
@@ -212,7 +212,7 @@ export class ScriptableNode extends Node {
   }
 
   getObject() {
-    if (this.needsUpdate) this.dispose();
+    if (this.useUpdate) this.dispose();
     if (this._object !== null) return this._object;
 
     const refresh = () => this.refresh();
@@ -278,7 +278,7 @@ export class ScriptableNode extends Node {
   }
 
   getMethod() {
-    if (this.needsUpdate) this.dispose();
+    if (this.useUpdate) this.dispose();
     if (this._method !== null) return this._method;
 
     const parametersProps = ['parameters', 'local', 'global', 'refresh', 'setOutput', 'ENGINE', 'HSL'];
@@ -325,7 +325,7 @@ export class ScriptableNode extends Node {
   }
 
   _refresh() {
-    this.needsUpdate = true;
+    this.useUpdate = true;
 
     this._exec();
 

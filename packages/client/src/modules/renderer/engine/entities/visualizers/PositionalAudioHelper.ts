@@ -88,7 +88,7 @@ export class PositionalAudioHelper extends Line {
     generateSegment(-halfConeInnerAngle, halfConeInnerAngle, divisionsInnerAngle, 1);
     generateSegment(halfConeInnerAngle, halfConeOuterAngle, divisionsOuterAngle, 0);
 
-    positionAttribute.needsUpdate = true;
+    positionAttribute.useUpdate = true;
 
     if (coneInnerAngle === coneOuterAngle) (this.material as never as LineBasicMaterial[])[0].visible = false;
   }

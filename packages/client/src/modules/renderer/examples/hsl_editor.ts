@@ -62,7 +62,7 @@ let builder: NodeBuilder | null = null;
 const refreshEditorView = async () => {
   const code = editorView.getValue();
   material.fragmentNode = await resolveScript(code);
-  material.needsUpdate = true;
+  material.useUpdate = true;
 
   builder = new NodeBuilder(mesh, hearth, scene).build();
 

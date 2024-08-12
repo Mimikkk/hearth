@@ -31,14 +31,14 @@ scene.add(hemiLight);
 
 const dirLight = new DirectionalLight(0xffffff, 3);
 dirLight.position.set(5, 5, 5);
-dirLight.castShadow = false;
+dirLight.useShadowCast = false;
 dirLight.shadow.camera.zoom = 2;
 scene.add(dirLight);
 
 const floor = new Mesh(new BoxGeometry(10, 5, 10), new ShadowMaterial({ color: 0x444444 }));
 floor.position.y = -2.5;
-floor.receiveShadow = false;
-floor.userData.physics = { mass: 0 };
+floor.useShadowReceive = false;
+floor.extra.physics = { mass: 0 };
 scene.add(floor);
 
 const material = new MeshLambertMaterial();
@@ -50,7 +50,7 @@ const geometryBox = new BoxGeometry(0.075, 0.075, 0.075);
 const boxes = new InstancedMesh(geometryBox, material, 2);
 boxes.instanceMatrix.usage = BufferUse.DynamicDraw;
 
-boxes.userData.physics = { mass: 1 };
+boxes.extra.physics = { mass: 1 };
 scene.add(boxes);
 
 for (let i = 0; i < boxes.count; i++) {
@@ -63,9 +63,9 @@ const geometrySphere = new IcosahedronGeometry(0.05, 4);
 const spheres = new InstancedMesh(geometrySphere, material, 2);
 spheres.instanceMatrix.usage = BufferUse.DynamicDraw;
 
-spheres.castShadow = true;
-spheres.receiveShadow = true;
-spheres.userData.physics = { mass: 1 };
+spheres.useShadowCast = true;
+spheres.useShadowReceive = true;
+spheres.extra.physics = { mass: 1 };
 scene.add(spheres);
 
 for (let i = 0; i < spheres.count; i++) {

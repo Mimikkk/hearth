@@ -31,7 +31,7 @@ async function init() {
   const plane = new Mesh(new PlaneGeometry(8, 8), new MeshPhongMaterial({ color: 0xcbcbcb, specular: 0x101010 }));
   plane.setRotationX(-Math.PI / 2);
   plane.position.y = 0.03;
-  plane.receiveShadow = true;
+  plane.useShadowReceive = true;
   scene.add(plane);
 
   const hemiLight = new HemisphereLight(0x8d7c7c, 0x494966, 3);
@@ -41,7 +41,7 @@ async function init() {
   spotLight.intensity = 7;
   spotLight.angle = Math.PI / 16;
   spotLight.penumbra = 0.5;
-  spotLight.castShadow = true;
+  spotLight.useShadowCast = true;
   spotLight.position.set(-1, 1, 1);
   scene.add(spotLight);
 
@@ -50,8 +50,8 @@ async function init() {
 
     const material = new MeshStandardMaterial({ color: 0xa5a5a5 });
     const mesh = new Mesh(geometry, material);
-    mesh.castShadow = true;
-    mesh.receiveShadow = true;
+    mesh.useShadowCast = true;
+    mesh.useShadowReceive = true;
     scene.add(mesh);
 
     dracoLoader.dispose();

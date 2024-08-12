@@ -26,7 +26,7 @@ async function init() {
   spotLight.angle = Math.PI / 5;
   spotLight.penumbra = 0.3;
   spotLight.position.set(8, 10, 5);
-  spotLight.castShadow = true;
+  spotLight.useShadowCast = true;
   spotLight.shadow.camera.near = 8;
   spotLight.shadow.camera.far = 200;
   spotLight.shadow.mapSize.width = 2048;
@@ -37,7 +37,7 @@ async function init() {
 
   dirLight = new Engine.DirectionalLight(0x8888ff, 3);
   dirLight.position.set(3, 12, 17);
-  dirLight.castShadow = true;
+  dirLight.useShadowCast = true;
   dirLight.shadow.camera.near = 0.1;
   dirLight.shadow.camera.far = 500;
   dirLight.shadow.camera.right = 17;
@@ -82,16 +82,16 @@ async function init() {
   torusKnot = new Engine.Mesh(geometry, materialCustomShadow);
   torusKnot.scale.scale(1 / 18);
   torusKnot.position.y = 3;
-  torusKnot.castShadow = true;
-  torusKnot.receiveShadow = true;
+  torusKnot.useShadowCast = true;
+  torusKnot.useShadowReceive = true;
   scene.add(torusKnot);
 
   const cylinderGeometry = new Engine.CylinderGeometry(0.75, 0.75, 7, 32);
 
   const pillar1 = new Engine.Mesh(cylinderGeometry, material);
   pillar1.position.set(8, 3.5, 8);
-  pillar1.castShadow = true;
-  pillar1.receiveShadow = true;
+  pillar1.useShadowCast = true;
+  pillar1.useShadowReceive = true;
 
   const pillar2 = pillar1.clone();
   pillar2.position.set(8, 3.5, -8);
@@ -115,8 +115,8 @@ async function init() {
   const ground = new Engine.Mesh(planeGeometry, planeMaterial);
   ground.setRotationX(-Math.PI / 2);
   ground.scale.scale(3);
-  ground.castShadow = true;
-  ground.receiveShadow = true;
+  ground.useShadowCast = true;
+  ground.useShadowReceive = true;
   scene.add(ground);
 
   hearth = await Hearth.as();

@@ -22,6 +22,6 @@ export class CanvasTexture extends Texture {
   ) {
     super(canvas, mapping, wrapS, wrapT, magFilter, minFilter, format, type, anisotropy);
 
-    this.needsUpdate = true;
+    this.useUpdate = true;
   }
 }

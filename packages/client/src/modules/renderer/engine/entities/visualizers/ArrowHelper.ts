@@ -38,11 +38,11 @@ export class ArrowHelper extends Entity {
     this.position.from(origin);
 
     this.line = new Line(_lineGeometry, new LineBasicMaterial({ color: color, toneMapped: false }));
-    this.line.matrixAutoUpdate = false;
+    this.line.useLocalAutoUpdate = false;
     this.add(this.line);
 
     this.cone = new Mesh(_coneGeometry, new MeshBasicMaterial({ color: color, toneMapped: false }));
-    this.cone.matrixAutoUpdate = false;
+    this.cone.useLocalAutoUpdate = false;
     this.add(this.cone);
 
     this.setDirection(dir);

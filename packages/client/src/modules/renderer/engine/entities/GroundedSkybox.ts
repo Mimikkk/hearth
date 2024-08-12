@@ -33,7 +33,7 @@ export class GroundedSkybox extends Mesh {
       }
     }
 
-    pos.needsUpdate = true;
+    pos.useUpdate = true;
 
     super(geometry, new MeshBasicMaterial({ map, depthWrite: false }));
   }

@@ -1248,7 +1248,7 @@ export class NodeBuilder {
   }
 
   codeComputeSize(): string {
-    return this.object.workgroupSize?.join(', ') || '64';
+    return this.object.workgroup?.join(', ') || '64';
   }
 
   codeFragmentReturn(): string {

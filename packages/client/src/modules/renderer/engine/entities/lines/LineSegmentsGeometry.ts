@@ -35,15 +35,15 @@ export class LineSegmentsGeometry extends Geometry {
 
       end.applyMat4(matrix);
 
-      start.needsUpdate = true;
+      start.useUpdate = true;
     }
 
-    if (this.boundingBox !== null) {
-      this.computeBoundingBox();
+    if (this.boundBox !== null) {
+      this.calcBoundBox();
     }
 
-    if (this.boundingSphere !== null) {
-      this.computeBoundingSphere();
+    if (this.boundSphere !== null) {
+      this.calcBoundSphere();
     }
 
     return this;
@@ -56,8 +56,8 @@ export class LineSegmentsGeometry extends Geometry {
     this.setAttribute('instanceEnd', new Attribute(instanceBuffer, 3, 3, BufferStep.Instance));
     this.instanceCount = this.attributes.instanceStart.count;
 
-    this.computeBoundingBox();
-    this.computeBoundingSphere();
+    this.calcBoundBox();
+    this.calcBoundSphere();
 
     return this;
   }
@@ -97,38 +97,38 @@ export class LineSegmentsGeometry extends Geometry {
     return this;
   }
 
-  computeBoundingBox(): this {
-    if (this.boundingBox === null) {
-      this.boundingBox = Box3.new();
+  calcBoundBox(): this {
+    if (this.boundBox === null) {
+      this.boundBox = Box3.new();
     }
 
     const start = this.attributes.instanceStart;
     const end = this.attributes.instanceEnd;
 
     if (start !== undefined && end !== undefined) {
-      this.boundingBox.fromAttribute(start);
+      this.boundBox.fromAttribute(start);
 
       _box.fromAttribute(end);
 
-      this.boundingBox.union(_box);
+      this.boundBox.union(_box);
     }
     return this;
   }
 
-  computeBoundingSphere(): this {
-    if (this.boundingSphere === null) {
-      this.boundingSphere = new Sphere();
+  calcBoundSphere(): this {
+    if (this.boundSphere === null) {
+      this.boundSphere = new Sphere();
     }
 
-    if (this.boundingBox === null) this.computeBoundingBox();
+    if (this.boundBox === null) this.calcBoundBox();
 
     const start = this.attributes.instanceStart;
     const end = this.attributes.instanceEnd;
 
     if (start !== undefined && end !== undefined) {
-      const center = this.boundingSphere.center;
+      const center = this.boundSphere.center;
 
-      this.boundingBox!.center(center);
+      this.boundBox!.center(center);
 
       let maxRadiusSq = 0;
 
@@ -140,11 +140,11 @@ export class LineSegmentsGeometry extends Geometry {
         maxRadiusSq = Math.max(maxRadiusSq, center.distanceSqTo(_vector));
       }
 
-      this.boundingSphere.radius = Math.sqrt(maxRadiusSq);
+      this.boundSphere.radius = Math.sqrt(maxRadiusSq);
 
-      if (isNaN(this.boundingSphere.radius)) {
+      if (isNaN(this.boundSphere.radius)) {
         console.error(
-          'LineSegmentsGeometry.computeBoundingSphere(): Computed radius is NaN. The instanced position data is likely to have NaN values.',
+          'LineSegmentsGeometry.calcBoundSphere(): Computed radius is NaN. The instanced position data is likely to have NaN values.',
           this,
         );
       }

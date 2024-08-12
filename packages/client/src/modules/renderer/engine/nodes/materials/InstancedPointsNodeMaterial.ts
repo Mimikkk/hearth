@@ -108,7 +108,7 @@ export class InstancedPointsNodeMaterial extends NodeMaterial {
       return vec4(pointColorNode, alpha);
     })();
 
-    this.needsUpdate = true;
+    this.useUpdate = true;
   }
 
   get alphaToCoverage() {

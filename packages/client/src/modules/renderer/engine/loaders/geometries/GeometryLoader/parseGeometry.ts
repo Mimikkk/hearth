@@ -20,7 +20,7 @@ export interface JsonContent {
     groups: Record<string, any>[];
     drawcalls: Record<string, any>[];
     offsets: Record<string, any>[];
-    boundingSphere: {
+    boundSphere: {
       center: number[];
       radius: number;
     };
@@ -28,7 +28,7 @@ export interface JsonContent {
     arrayBuffers: Record<string, any>;
   };
   name: string;
-  userData: Record<string, any>;
+  extra: Record<string, any>;
 }
 
 export const parseGeometry = (json: JsonContent): Geometry => {
@@ -156,20 +156,20 @@ export const parseGeometry = (json: JsonContent): Geometry => {
     }
   }
 
-  const boundingSphere = json.data.boundingSphere;
+  const boundSphere = json.data.boundSphere;
 
-  if (boundingSphere !== undefined) {
+  if (boundSphere !== undefined) {
     const center = Vec3.new();
 
-    if (boundingSphere.center !== undefined) {
-      center.fromArray(boundingSphere.center);
+    if (boundSphere.center !== undefined) {
+      center.fromArray(boundSphere.center);
     }
 
-    geometry.boundingSphere = new Sphere(center, boundingSphere.radius);
+    geometry.boundSphere = new Sphere(center, boundSphere.radius);
   }
 
   if (json.name) geometry.name = json.name;
-  if (json.userData) geometry.userData = json.userData;
+  if (json.extra) geometry.extra = json.extra;
 
   return geometry as Geometry;
 };

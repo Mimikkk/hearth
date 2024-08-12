@@ -36,7 +36,7 @@ const createLight = () => {
   const light = new SpotLight(ColorMap.white, 10000);
   light.position.set(0, 25, 50);
   light.angle = Math.PI / 5;
-  light.castShadow = true;
+  light.useShadowCast = true;
   light.shadow.camera.near = 10;
   light.shadow.camera.far = 100;
   light.shadow.mapSize.x = 1024;

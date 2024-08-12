@@ -41,7 +41,7 @@ const createScene = () => {
 };
 const createLights = () => {
   const sunLight = new DirectionalLight(0xffe499, 5);
-  sunLight.castShadow = true;
+  sunLight.useShadowCast = true;
   sunLight.shadow.camera.near = 0.1;
   sunLight.shadow.camera.far = 5;
   sunLight.shadow.camera.right = 2;
@@ -61,7 +61,7 @@ const createLights = () => {
 const loadMichelle = async () => {
   const gltf = await GLTFLoader.loadAsync('resources/models/gltf/Michelle.glb');
   const model = gltf.scene;
-  model.children[0].children[0].castShadow = true;
+  model.children[0].children[0].useShadowCast = true;
 
   const mixer = new AnimationMixer(model);
   const action = mixer.clipAction(gltf.animations[0]);

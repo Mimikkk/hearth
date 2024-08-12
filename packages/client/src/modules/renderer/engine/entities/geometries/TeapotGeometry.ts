@@ -303,6 +303,6 @@ export class TeapotGeometry extends Geometry {
     this.setAttribute('normal', new Attribute(normals, 3));
     this.setAttribute('uv', new Attribute(uvs, 2));
 
-    this.computeBoundingSphere();
+    this.calcBoundSphere();
   }
 }

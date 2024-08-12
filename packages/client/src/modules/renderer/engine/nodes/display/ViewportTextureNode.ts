@@ -37,7 +37,7 @@ export class ViewportTextureNode extends TextureNode {
       texture.image.width = _size.width;
       texture.image.height = _size.height;
 
-      texture.needsUpdate = true;
+      texture.useUpdate = true;
     }
 
     const currentGenerateMipmaps = texture.useMipmap;

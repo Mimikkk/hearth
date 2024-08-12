@@ -349,7 +349,7 @@ export class Hearth {
       } else if (object.isLight) {
         renderList.lights.push(object);
       } else if (object.isSprite) {
-        if (!object.frustumCulled || _frustum.intersectsSprite(object)) {
+        if (!object.useFrustumCull || _frustum.intersectsSprite(object)) {
           if (this.parameters.useSort) {
             _vec3.fromMat4Position(object.matrixWorld).applyMat4(_projection);
           }
@@ -362,14 +362,14 @@ export class Hearth {
           }
         }
       } else if (object.isMesh || object.isLine || object.isPoints) {
-        if (!object.frustumCulled || _frustum.intersectsObject(object)) {
+        if (!object.useFrustumCull || _frustum.intersectsObject(object)) {
           const geometry = object.geometry;
           const material = object.material;
 
           if (this.parameters.useSort) {
-            if (geometry.boundingSphere === null) geometry.computeBoundingSphere();
+            if (geometry.boundSphere === null) geometry.calcBoundSphere();
 
-            _vec3.from(geometry.boundingSphere.center).applyMat4(object.matrixWorld).applyMat4(_projection);
+            _vec3.from(geometry.boundSphere.center).applyMat4(object.matrixWorld).applyMat4(_projection);
           }
 
           if (Array.isArray(material)) {
@@ -443,7 +443,7 @@ export class Hearth {
           if (material.clipShadows) {
             if (overrideMaterial.clippingPlanes !== material.clippingPlanes) {
               overrideMaterial.clippingPlanes = material.clippingPlanes;
-              overrideMaterial.needsUpdate = true;
+              overrideMaterial.useUpdate = true;
             }
 
             if (overrideMaterial.clipIntersection !== material.clipIntersection) {
@@ -451,7 +451,7 @@ export class Hearth {
             }
           } else if (Array.isArray(overrideMaterial.clippingPlanes)) {
             overrideMaterial.clippingPlanes = null;
-            overrideMaterial.needsUpdate = true;
+            overrideMaterial.useUpdate = true;
           }
         }
       }
@@ -673,7 +673,7 @@ export class Hearth {
     const depthStencilFormat = utils.getCurrentDepthStencilFormat(renderObject.context);
     const primitiveTopology = utils.getPrimitiveTopology(object, material);
 
-    let needsUpdate = false;
+    let useUpdate = false;
 
     if (
       data.material !== material ||
@@ -738,10 +738,10 @@ export class Hearth {
       data.primitiveTopology = primitiveTopology;
       data.clippingContextVersion = renderObject.clippingContextVersion;
 
-      needsUpdate = true;
+      useUpdate = true;
     }
 
-    return needsUpdate;
+    return useUpdate;
   }
 
   isOccluded(object: Entity) {

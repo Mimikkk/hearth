@@ -1250,7 +1250,7 @@
   "ascender": 1189,
   "underlinePosition": -100,
   "cssFontStyle": "normal",
-  "boundingBox": {
+  "boundBox": {
     "yMin": -334,
     "xMin": -111,
     "yMax": 1189,

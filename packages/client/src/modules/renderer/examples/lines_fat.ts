@@ -179,7 +179,7 @@ function initGui() {
 
   gui.add(param, 'world units').onChange(function (val) {
     matLine.worldUnits = val;
-    matLine.needsUpdate = true;
+    matLine.useUpdate = true;
   });
 
   gui.add(param, 'width', 1, 10).onChange(function (val) {

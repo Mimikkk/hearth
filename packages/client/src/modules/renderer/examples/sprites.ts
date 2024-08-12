@@ -1,5 +1,5 @@
 import * as Engine from '@modules/renderer/engine/engine.js';
-import { color, rangeFog, SpriteNodeMaterial, texture, userData, uv } from '@modules/renderer/engine/nodes/nodes.js';
+import { color, rangeFog, SpriteNodeMaterial, texture, extra, uv } from '@modules/renderer/engine/nodes/nodes.js';
 
 import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 import { TextureLoader } from '@modules/renderer/engine/loaders/textures/TextureLoader/TextureLoader.js';
@@ -42,7 +42,7 @@ async function init() {
   const material = new SpriteNodeMaterial();
   material.colorNode = textureNode.mul(uv()).mul(2);
   material.opacityNode = textureNode.a;
-  material.rotationNode = userData('rotation', 'f32');
+  material.rotationNode = extra('rotation', 'f32');
   material.transparent = true;
 
   for (let a = 0; a < amount; a++) {
@@ -56,7 +56,7 @@ async function init() {
     sprite.position.normalize();
     sprite.position.scale(radius);
 
-    sprite.userData.rotation = 0;
+    sprite.extra.rotation = 0;
 
     group.add(sprite);
   }
@@ -80,7 +80,7 @@ function render() {
     const sprite = group.children[i];
     const scale = Math.sin(time + sprite.position.x * 0.01) * 0.3 + 1.0;
 
-    sprite.userData.rotation += 0.1 * (i / l);
+    sprite.extra.rotation += 0.1 * (i / l);
     sprite.scale.set(scale * imageWidth, scale * imageHeight, 1.0);
   }
 

@@ -21,7 +21,7 @@ export class LightShadow<C extends Camera = Camera> {
   mapPass: RenderTarget | null;
   matrix: Mat4;
   autoUpdate: boolean;
-  needsUpdate: boolean;
+  useUpdate: boolean;
   _frustum: Frustum;
   _frameExtents: Vec2;
   _viewportCount: number;
@@ -40,7 +40,7 @@ export class LightShadow<C extends Camera = Camera> {
     this.matrix = new Mat4();
 
     this.autoUpdate = true;
-    this.needsUpdate = false;
+    this.useUpdate = false;
 
     this._frustum = new Frustum();
     this._frameExtents = Vec2.new(1, 1);

@@ -35,7 +35,7 @@ class AxesHelper extends LineSegments {
     color.intoArray(array, 12);
     color.intoArray(array, 15);
 
-    this.geometry.attributes.color.needsUpdate = true;
+    this.geometry.attributes.color.useUpdate = true;
 
     return this;
   }

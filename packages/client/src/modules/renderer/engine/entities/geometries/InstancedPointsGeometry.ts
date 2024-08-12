@@ -27,15 +27,15 @@ export class InstancedPointsGeometry extends Geometry {
     if (pos !== undefined) {
       pos.applyMat4(matrix);
 
-      pos.needsUpdate = true;
+      pos.useUpdate = true;
     }
 
-    if (this.boundingBox !== null) {
-      this.computeBoundingBox();
+    if (this.boundBox !== null) {
+      this.calcBoundBox();
     }
 
-    if (this.boundingSphere !== null) {
-      this.computeBoundingSphere();
+    if (this.boundSphere !== null) {
+      this.calcBoundSphere();
     }
 
     return this;
@@ -44,8 +44,8 @@ export class InstancedPointsGeometry extends Geometry {
   setPositions(array: Float32Array | number[]): this {
     this.setAttribute('instancePosition', new Attribute(new Float32Array(array), 3, 0, BufferStep.Instance));
 
-    this.computeBoundingBox();
-    this.computeBoundingSphere();
+    this.calcBoundBox();
+    this.calcBoundSphere();
     this.instanceCount = this.attributes.instancePosition.count;
 
     return this;
@@ -57,28 +57,28 @@ export class InstancedPointsGeometry extends Geometry {
     return this;
   }
 
-  computeBoundingBox(): this {
-    if (this.boundingBox === null) {
-      this.boundingBox = Box3.new();
+  calcBoundBox(): this {
+    if (this.boundBox === null) {
+      this.boundBox = Box3.new();
     }
 
     const position = this.attributes.instancePosition;
 
-    if (position) this.boundingBox.fromAttribute(position);
+    if (position) this.boundBox.fromAttribute(position);
 
     return this;
   }
 
-  computeBoundingSphere(): this {
-    if (this.boundingBox === null) this.computeBoundingBox();
+  calcBoundSphere(): this {
+    if (this.boundBox === null) this.calcBoundBox();
 
-    if (this.boundingSphere === null) this.boundingSphere = new Sphere();
+    if (this.boundSphere === null) this.boundSphere = new Sphere();
 
     const position = this.attributes.instancePosition;
 
     if (position) {
-      const center = this.boundingSphere.center;
-      this.boundingBox!.center(center);
+      const center = this.boundSphere.center;
+      this.boundBox!.center(center);
 
       let maxRadiusSq = 0;
       for (let i = 0, il = position.count; i < il; i++) {
@@ -86,7 +86,7 @@ export class InstancedPointsGeometry extends Geometry {
         maxRadiusSq = Math.max(maxRadiusSq, center.distanceSqTo(_vector));
       }
 
-      this.boundingSphere.radius = Math.sqrt(maxRadiusSq);
+      this.boundSphere.radius = Math.sqrt(maxRadiusSq);
     }
     return this;
   }

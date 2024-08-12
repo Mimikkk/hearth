@@ -19,7 +19,7 @@ export class SpotLightHelper extends Entity {
 
     this.light = light;
 
-    this.matrixAutoUpdate = false;
+    this.useLocalAutoUpdate = false;
 
     this.color = color;
 

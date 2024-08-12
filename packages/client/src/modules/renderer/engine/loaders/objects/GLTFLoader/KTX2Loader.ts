@@ -242,7 +242,7 @@ async function createRawTexture(container: KTX2Container) {
 
   texture.format = FORMAT_MAP[vkFormat];
   texture.colorSpace = parseColorSpace(container);
-  texture.needsUpdate = true;
+  texture.useUpdate = true;
 
   return Promise.resolve(texture);
 }
@@ -288,8 +288,8 @@ async function createTexture(
   texture.useMipmap = false;
 
   texture.colorSpace = parseColorSpace(container);
-  texture.premultiplyAlpha = !!(dfdFlags & KHR_DF_FLAG_ALPHA_PREMULTIPLIED);
-  texture.needsUpdate = true;
+  texture.usePremultiplyAlpha = !!(dfdFlags & KHR_DF_FLAG_ALPHA_PREMULTIPLIED);
+  texture.useUpdate = true;
 
   return texture;
 }

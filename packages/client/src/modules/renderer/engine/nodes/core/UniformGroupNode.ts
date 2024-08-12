@@ -10,7 +10,7 @@ export class UniformGroupNode extends Node {
     this.version = 0;
   }
 
-  set needsUpdate(value: boolean) {
+  set useUpdate(value: boolean) {
     if (value) this.version++;
   }
 }

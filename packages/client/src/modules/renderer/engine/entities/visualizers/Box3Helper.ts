@@ -23,7 +23,7 @@ export class Box3Helper extends LineSegments {
 
     this.box = box;
 
-    this.geometry.computeBoundingSphere();
+    this.geometry.calcBoundSphere();
   }
 
   updateMatrixWorld(force: boolean): this {

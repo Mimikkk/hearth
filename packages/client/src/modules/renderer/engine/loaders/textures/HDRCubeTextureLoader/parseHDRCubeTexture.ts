@@ -29,7 +29,7 @@ export const parseHDRCubeTexture = (buffers: ArrayBuffer[], type: SupportedHDRTy
     minFilter: MinificationTextureFilter.Linear,
     magFilter: MagnificationTextureFilter.Linear,
     useMipmap: false,
-    needsUpdate: true,
+    useUpdate: true,
   });
   texture.images = buffers.map(buffer => createDataTexture(parseRGBE(buffer, type), texture));
 

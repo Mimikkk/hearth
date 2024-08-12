@@ -36,7 +36,7 @@ export class HearthEntities {
     } else {
       renderObject.updateClipping(renderContext.clip);
 
-      if (renderObject.version !== material.version || renderObject.needsUpdate) {
+      if (renderObject.version !== material.version || renderObject.useUpdate) {
         if (renderObject.initialCacheKey !== renderObject.getCacheKey()) {
           renderObject.dispose();
 

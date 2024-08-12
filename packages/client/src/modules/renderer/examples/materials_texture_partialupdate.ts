@@ -66,5 +66,5 @@ function regenerateDataTexture(into: DataTexture): void {
     color.intoArray(data, offset);
   }
 
-  into.needsUpdate = true;
+  into.useUpdate = true;
 }

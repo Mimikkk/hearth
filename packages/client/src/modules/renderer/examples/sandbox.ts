@@ -176,7 +176,7 @@ function createDataTexture() {
   }
 
   const texture = new Engine.DataTexture(data, width, height, Engine.TextureFormat.RGBA);
-  texture.needsUpdate = true;
+  texture.useUpdate = true;
   return texture;
 }
 

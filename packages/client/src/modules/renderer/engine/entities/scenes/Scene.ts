@@ -60,7 +60,7 @@ export class Scene extends Entity {
 
     if (source.overrideMaterial !== null) this.overrideMaterial = source.overrideMaterial.clone();
 
-    this.matrixAutoUpdate = source.matrixAutoUpdate;
+    this.useLocalAutoUpdate = source.useLocalAutoUpdate;
 
     return this;
   }

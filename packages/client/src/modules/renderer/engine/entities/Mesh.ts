@@ -114,9 +114,9 @@ export class Mesh extends Entity {
 
     if (material === undefined) return;
 
-    if (geometry.boundingSphere === null) geometry.computeBoundingSphere();
+    if (geometry.boundSphere === null) geometry.calcBoundSphere();
 
-    _sphere.from(geometry.boundingSphere!);
+    _sphere.from(geometry.boundSphere!);
     _sphere.applyMat4(matrixWorld);
 
     _ray.from(raycaster.ray).recast(raycaster.near);
@@ -130,8 +130,8 @@ export class Mesh extends Entity {
     _inverseMatrix.from(matrixWorld).invert();
     _ray.from(raycaster.ray).applyMat4(_inverseMatrix);
 
-    if (geometry.boundingBox !== null) {
-      if (_ray.intersectsBox(geometry.boundingBox) === false) return;
+    if (geometry.boundBox !== null) {
+      if (_ray.intersectsBox(geometry.boundBox) === false) return;
     }
 
     this._computeIntersections(raycaster, intersects, _ray);

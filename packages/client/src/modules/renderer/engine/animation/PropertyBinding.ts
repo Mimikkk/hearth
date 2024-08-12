@@ -139,9 +139,9 @@ export class PropertyBinding implements IPropertyBinding {
     this.targetObject = object;
     let bindingType = BindType.Direct;
 
-    if (object.needsUpdate !== undefined) {
+    if (object.useUpdate !== undefined) {
       versioning = Version.NeedsUpdate;
-    } else if (object.matrixWorldNeedsUpdate !== undefined) {
+    } else if (object.useWorldUpdate !== undefined) {
       versioning = Version.MatrixWorldNeedsUpdate;
     }
     if (propertyIndex !== undefined) {
@@ -261,12 +261,12 @@ export class PropertyBinding implements IPropertyBinding {
 
   #setValue_direct_setNeedsUpdate(buffer: NumberArray, offset: number): void {
     this.targetObject[this.propertyName] = buffer[offset];
-    this.targetObject.needsUpdate = true;
+    this.targetObject.useUpdate = true;
   }
 
   #setValue_direct_setMatrixWorldNeedsUpdate(buffer: NumberArray, offset: number): void {
     this.targetObject[this.propertyName] = buffer[offset];
-    this.targetObject.matrixWorldNeedsUpdate = true;
+    this.targetObject.useWorldUpdate = true;
   }
 
   #setValue_array(buffer: NumberArray, offset: number): void {
@@ -284,7 +284,7 @@ export class PropertyBinding implements IPropertyBinding {
       dest[i] = buffer[offset++];
     }
 
-    this.targetObject.needsUpdate = true;
+    this.targetObject.useUpdate = true;
   }
 
   #setValue_array_setMatrixWorldNeedsUpdate(buffer: NumberArray, offset: number): void {
@@ -294,7 +294,7 @@ export class PropertyBinding implements IPropertyBinding {
       dest[i] = buffer[offset++];
     }
 
-    this.targetObject.matrixWorldNeedsUpdate = true;
+    this.targetObject.useWorldUpdate = true;
   }
 
   #setValue_arrayElement(buffer: NumberArray, offset: number): void {
@@ -303,12 +303,12 @@ export class PropertyBinding implements IPropertyBinding {
 
   #setValue_arrayElement_setNeedsUpdate(buffer: NumberArray, offset: number): void {
     this.resolvedProperty[this.propertyIndex] = buffer[offset];
-    this.targetObject.needsUpdate = true;
+    this.targetObject.useUpdate = true;
   }
 
   #setValue_arrayElement_setMatrixWorldNeedsUpdate(buffer: NumberArray, offset: number): void {
     this.resolvedProperty[this.propertyIndex] = buffer[offset];
-    this.targetObject.matrixWorldNeedsUpdate = true;
+    this.targetObject.useWorldUpdate = true;
   }
 
   #setValue_fromArray(buffer: NumberArray, offset: number): void {
@@ -317,12 +317,12 @@ export class PropertyBinding implements IPropertyBinding {
 
   #setValue_fromArray_setNeedsUpdate(buffer: NumberArray, offset: number): void {
     this.resolvedProperty.fromArray(buffer, offset);
-    this.targetObject.needsUpdate = true;
+    this.targetObject.useUpdate = true;
   }
 
   #setValue_fromArray_setMatrixWorldNeedsUpdate(buffer: NumberArray, offset: number): void {
     this.resolvedProperty.fromArray(buffer, offset);
-    this.targetObject.matrixWorldNeedsUpdate = true;
+    this.targetObject.useWorldUpdate = true;
   }
 
   #getValue_unbound(targetArray: NumberArray, offset: number): void {

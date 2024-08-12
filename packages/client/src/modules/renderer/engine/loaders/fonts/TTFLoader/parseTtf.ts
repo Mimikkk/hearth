@@ -60,7 +60,7 @@ export const parseTtf = (arraybuffer: ArrayBuffer, reversed: boolean): Font => {
       descender: round(font.descender * scale),
       underlinePosition: font.tables.post.underlinePosition,
       underlineThickness: font.tables.post.underlineThickness,
-      boundingBox: {
+      boundBox: {
         xMin: font.tables.head.xMin,
         xMax: font.tables.head.xMax,
         yMin: font.tables.head.yMin,

@@ -28,8 +28,8 @@ export class InstancedMesh extends Mesh {
   instanceColor: Attribute | null;
   morphTexture: DataTexture | null;
   count: number;
-  boundingBox: Box3 | null;
-  boundingSphere: Sphere | null;
+  boundBox: Box3 | null;
+  boundSphere: Sphere | null;
 
   constructor(geometry: Geometry, material: Material, count: number) {
     super(geometry, material);
@@ -40,8 +40,8 @@ export class InstancedMesh extends Mesh {
     this.morphTexture = null;
     this.count = count;
 
-    this.boundingBox = null;
-    this.boundingSphere = null;
+    this.boundBox = null;
+    this.boundSphere = null;
 
     for (let i = 0; i < count; i++) {
       this.setMatrixAt(i, _identity);
@@ -52,49 +52,49 @@ export class InstancedMesh extends Mesh {
     return value?.isInstancedMesh === true;
   }
 
-  computeBoundingBox() {
+  calcBoundBox() {
     const geometry = this.geometry;
     const count = this.count;
 
-    if (this.boundingBox === null) {
-      this.boundingBox = Box3.new();
+    if (this.boundBox === null) {
+      this.boundBox = Box3.new();
     }
 
-    if (geometry.boundingBox === null) {
-      geometry.computeBoundingBox();
+    if (geometry.boundBox === null) {
+      geometry.calcBoundBox();
     }
 
-    this.boundingBox.clear();
+    this.boundBox.clear();
 
     for (let i = 0; i < count; i++) {
       this.getMatrixAt(i, _instanceLocalMatrix);
 
-      _box3.from(geometry.boundingBox!).applyMat4(_instanceLocalMatrix);
+      _box3.from(geometry.boundBox!).applyMat4(_instanceLocalMatrix);
 
-      this.boundingBox.union(_box3);
+      this.boundBox.union(_box3);
     }
   }
 
-  computeBoundingSphere() {
+  calcBoundSphere() {
     const geometry = this.geometry;
     const count = this.count;
 
-    if (this.boundingSphere === null) {
-      this.boundingSphere = new Sphere();
+    if (this.boundSphere === null) {
+      this.boundSphere = new Sphere();
     }
 
-    if (geometry.boundingSphere === null) {
-      geometry.computeBoundingSphere();
+    if (geometry.boundSphere === null) {
+      geometry.calcBoundSphere();
     }
 
-    this.boundingSphere.clear();
+    this.boundSphere.clear();
 
     for (let i = 0; i < count; i++) {
       this.getMatrixAt(i, _instanceLocalMatrix);
 
-      _sphere.from(geometry.boundingSphere!).applyMat4(_instanceLocalMatrix);
+      _sphere.from(geometry.boundSphere!).applyMat4(_instanceLocalMatrix);
 
-      this.boundingSphere.union(_sphere);
+      this.boundSphere.union(_sphere);
     }
   }
 
@@ -107,8 +107,8 @@ export class InstancedMesh extends Mesh {
 
     this.count = source.count;
 
-    if (source.boundingBox !== null) this.boundingBox = source.boundingBox.clone();
-    if (source.boundingSphere !== null) this.boundingSphere = source.boundingSphere.clone();
+    if (source.boundBox !== null) this.boundBox = source.boundBox.clone();
+    if (source.boundSphere !== null) this.boundSphere = source.boundSphere.clone();
 
     return this;
   }
@@ -144,9 +144,9 @@ export class InstancedMesh extends Mesh {
 
     if (_mesh.material === undefined) return;
 
-    if (this.boundingSphere === null) this.computeBoundingSphere();
+    if (this.boundSphere === null) this.calcBoundSphere();
 
-    _sphere.from(this.boundingSphere!);
+    _sphere.from(this.boundSphere!);
     _sphere.applyMat4(matrixWorld);
 
     if (raycaster.ray.intersectsSphere(_sphere) === false) return;
@@ -189,15 +189,13 @@ export class InstancedMesh extends Mesh {
     const len = objectInfluences.length + 1;
 
     if (this.morphTexture === null) {
-      this.morphTexture = new DataTexture(
-        {
-          data: new Float32Array(len * this.count),
-          width: len,
-          height: this.count,
-          format: TextureFormat.Red,
-          type: TextureDataType.Float,
-        },
-      );
+      this.morphTexture = new DataTexture({
+        data: new Float32Array(len * this.count),
+        width: len,
+        height: this.count,
+        format: TextureFormat.Red,
+        type: TextureDataType.Float,
+      });
     }
 
     const array = this.morphTexture.source.data.data;
@@ -217,8 +215,7 @@ export class InstancedMesh extends Mesh {
     array.set(objectInfluences, dataIndex + 1);
   }
 
-  updateMorphTargets() {
-  }
+  updateMorphTargets() {}
 }
 
 InstancedMesh.prototype.isInstancedMesh = true;

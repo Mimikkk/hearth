@@ -3,10 +3,9 @@ import { Texture } from '@modules/renderer/engine/entities/textures/Texture.js';
 import { classLoader } from '@modules/renderer/engine/loaders/types.js';
 
 const createTexture = (image: HTMLImageElement) => {
-
   const texture = new Texture();
   texture.image = image;
-  texture.needsUpdate = true;
+  texture.useUpdate = true;
   return texture;
 };
 

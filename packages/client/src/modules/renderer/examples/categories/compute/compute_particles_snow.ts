@@ -80,9 +80,9 @@ const createCollisionCamera = () => {
 };
 const createDirectionalLight = () => {
   const light = new DirectionalLight(0xf9ff9b, 9);
-  light.castShadow = true;
+  light.useShadowCast = true;
   light.position.set(10, 10, 0);
-  light.castShadow = true;
+  light.useShadowCast = true;
   light.shadow.camera.near = 1;
   light.shadow.camera.far = 30;
   light.shadow.camera.right = 30;
@@ -132,7 +132,7 @@ const createParticles = (posBuffer: StorageBufferNode, layer: number) => {
   material.positionNode = positionLocal.mul(scaleBuffer.toAttribute()).add(posBuffer.toAttribute());
 
   const particles = new InstancedMesh(geometry, material, maxCount);
-  particles.castShadow = true;
+  particles.useShadowCast = true;
   particles.layers.disableAll();
   particles.layers.enable(layer);
 
@@ -164,7 +164,7 @@ const createTree = (count: number = 8): Group => {
     const geometry = new ConeGeometry(radius * 0.95, radius * 1.25, 32);
 
     const cone = new Mesh(geometry, material);
-    cone.castShadow = true;
+    cone.useShadowCast = true;
     cone.position.y = (count - i) * 1.5 + count * 0.6;
 
     cones.add(cone);

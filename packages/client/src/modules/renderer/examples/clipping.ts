@@ -26,7 +26,7 @@ async function init() {
   spotLight.angle = Math.PI / 5;
   spotLight.penumbra = 0.2;
   spotLight.position.set(2, 3, 3);
-  spotLight.castShadow = true;
+  spotLight.useShadowCast = true;
   spotLight.shadow.camera.near = 3;
   spotLight.shadow.camera.far = 10;
   spotLight.shadow.mapSize.width = 2048;
@@ -37,7 +37,7 @@ async function init() {
 
   const dirLight = new Engine.DirectionalLight(0x55505a, 3);
   dirLight.position.set(0, 3, 0);
-  dirLight.castShadow = true;
+  dirLight.useShadowCast = true;
   dirLight.shadow.camera.near = 1;
   dirLight.shadow.camera.far = 10;
 
@@ -68,7 +68,7 @@ async function init() {
   const geometry = new Engine.TorusKnotGeometry(0.4, 0.08, 95, 20);
 
   object = new Engine.Mesh(geometry, material);
-  object.castShadow = true;
+  object.useShadowCast = true;
   scene.add(object);
 
   const ground = new Engine.Mesh(
@@ -77,7 +77,7 @@ async function init() {
   );
 
   ground.setRotationX(-Math.PI / 2);
-  ground.receiveShadow = true;
+  ground.useShadowReceive = true;
   scene.add(ground);
 
   hearth = await Hearth.as();
@@ -151,10 +151,10 @@ async function init() {
 
   gui.add(props, 'alphaToCoverage').onChange(function (value) {
     ground.material.alphaToCoverage = value;
-    ground.material.needsUpdate = true;
+    ground.material.useUpdate = true;
 
     material.alphaToCoverage = value;
-    material.needsUpdate = true;
+    material.useUpdate = true;
   });
 
   folderLocal.add(propsLocal, 'Enabled');

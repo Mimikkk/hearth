@@ -35,7 +35,7 @@ async function init() {
   plane.position.y = -0.5;
   scene.add(plane);
 
-  plane.receiveShadow = true;
+  plane.useShadowReceive = true;
 
   const loader = new STLLoader();
   loader.loadAsync('resources/models/stl/ascii/slotted_disk.stl').then(function (geometry) {
@@ -46,8 +46,8 @@ async function init() {
     mesh.setRotation(0, -Math.PI / 2, 0);
     mesh.scale.set(0.5, 0.5, 0.5);
 
-    mesh.castShadow = true;
-    mesh.receiveShadow = true;
+    mesh.useShadowCast = true;
+    mesh.useShadowReceive = true;
 
     scene.add(mesh);
   });
@@ -61,8 +61,8 @@ async function init() {
     mesh.setRotation(-Math.PI / 2, 0, 0);
     mesh.scale.set(2, 2, 2);
 
-    mesh.castShadow = true;
-    mesh.receiveShadow = true;
+    mesh.useShadowCast = true;
+    mesh.useShadowReceive = true;
 
     scene.add(mesh);
   });
@@ -74,8 +74,8 @@ async function init() {
     mesh.setRotation(-Math.PI / 2, 0.3, 0);
     mesh.scale.set(2, 2, 2);
 
-    mesh.castShadow = true;
-    mesh.receiveShadow = true;
+    mesh.useShadowCast = true;
+    mesh.useShadowReceive = true;
 
     scene.add(mesh);
   });
@@ -93,8 +93,8 @@ async function init() {
     mesh.setRotation(-Math.PI / 2, Math.PI / 2, 0);
     mesh.scale.set(0.3, 0.3, 0.3);
 
-    mesh.castShadow = true;
-    mesh.receiveShadow = true;
+    mesh.useShadowCast = true;
+    mesh.useShadowReceive = true;
 
     scene.add(mesh);
   });
@@ -119,7 +119,7 @@ function addShadowedLight(x, y, z, color, intensity) {
   directionalLight.position.set(x, y, z);
   scene.add(directionalLight);
 
-  directionalLight.castShadow = true;
+  directionalLight.useShadowCast = true;
 
   const d = 1;
   directionalLight.shadow.camera.left = -d;

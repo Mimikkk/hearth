@@ -29,6 +29,6 @@ export const parseTiff = (buffer: ArrayBuffer): DataTexture => {
     magFilter: MagnificationTextureFilter.Linear,
     anisotropy: 1,
     flipY: true,
-    needsUpdate: true,
+    useUpdate: true,
   });
 };

@@ -25,7 +25,7 @@ const createDataTexture = (data: Uint8Array | Uint16Array | Float32Array, type: 
     type,
     minFilter: MinificationTextureFilter.Linear,
     magFilter: MagnificationTextureFilter.Linear,
-    needsUpdate: true,
+    useUpdate: true,
   });
 
 const readIes = <ST extends SupportedType>(iesLamp: IESLamp, type: SupportedType): SupportedMap[ST] => {
@@ -44,8 +44,6 @@ const readIes = <ST extends SupportedType>(iesLamp: IESLamp, type: SupportedType
     let endPhi = 0;
 
     for (let i = 0; i < iesLamp.numHorAngles - 1; ++i) {
-
-
       if (theta < iesLamp.horAngles[i + 1] || i == iesLamp.numHorAngles - 2) {
         thetaIndex = i;
         startTheta = iesLamp.horAngles[i];
@@ -68,9 +66,7 @@ const readIes = <ST extends SupportedType>(iesLamp: IESLamp, type: SupportedType
     const deltaTheta = endTheta - startTheta;
     const deltaPhi = endPhi - startPhi;
 
-    if (deltaPhi === 0)
-
-      return 0;
+    if (deltaPhi === 0) return 0;
 
     const t1 = deltaTheta === 0 ? 0 : (theta - startTheta) / deltaTheta;
     const t2 = (phi - startPhi) / deltaPhi;
@@ -96,8 +92,6 @@ const readIes = <ST extends SupportedType>(iesLamp: IESLamp, type: SupportedType
     const phi = Math.floor(i / width);
 
     if (endTheta - startTheta !== 0 && (theta < startTheta || theta >= endTheta)) {
-
-
       theta %= endTheta * 2;
 
       if (theta > endTheta) theta = endTheta * 2 - theta;
@@ -161,7 +155,6 @@ class IESLamp {
     _self.tiltData.mulFactors = [];
 
     function textToArray(text: string) {
-
       text = text.replace(/^\s+|\s+$/g, '');
 
       text = text.replace(/,/g, ' ');

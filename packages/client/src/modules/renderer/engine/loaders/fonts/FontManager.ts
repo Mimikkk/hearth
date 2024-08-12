@@ -38,7 +38,7 @@ export class FontManager {
   createPaths(text: string, size: number): ShapePath[] {
     const {
       font: {
-        boundingBox: { yMax, yMin },
+        boundBox: { yMax, yMin },
         glyphs,
         resolution,
         underlineThickness,

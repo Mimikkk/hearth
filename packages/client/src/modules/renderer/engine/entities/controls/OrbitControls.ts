@@ -565,7 +565,7 @@ export class OrbitControls {
     }
 
     function handleKeyDown(event: KeyboardEvent) {
-      let needsUpdate = false;
+      let useUpdate = false;
 
       switch (event.code) {
         case scope.keys.UP:
@@ -575,7 +575,7 @@ export class OrbitControls {
             pan(0, scope.keyPanSpeed);
           }
 
-          needsUpdate = true;
+          useUpdate = true;
           break;
 
         case scope.keys.BOTTOM:
@@ -585,7 +585,7 @@ export class OrbitControls {
             pan(0, -scope.keyPanSpeed);
           }
 
-          needsUpdate = true;
+          useUpdate = true;
           break;
 
         case scope.keys.LEFT:
@@ -595,7 +595,7 @@ export class OrbitControls {
             pan(scope.keyPanSpeed, 0);
           }
 
-          needsUpdate = true;
+          useUpdate = true;
           break;
 
         case scope.keys.RIGHT:
@@ -605,11 +605,11 @@ export class OrbitControls {
             pan(-scope.keyPanSpeed, 0);
           }
 
-          needsUpdate = true;
+          useUpdate = true;
           break;
       }
 
-      if (needsUpdate) {
+      if (useUpdate) {
         event.preventDefault();
 
         scope.update();

@@ -61,7 +61,7 @@ const createDataTexture = (result: ParseResult): DataTexture =>
     useMipmap: false,
     flipY: true,
     type: result.type,
-    needsUpdate: true,
+    useUpdate: true,
   });
 
 export const parseRGBE = (buffer: ArrayBuffer, type: SupportedRGBEType): DataTexture => {

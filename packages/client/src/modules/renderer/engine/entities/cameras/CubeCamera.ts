@@ -100,6 +100,6 @@ export class CubeCamera extends Entity {
 
     hearth.updateRenderTarget(currentRenderTarget, currentActiveCubeFace, currentActiveMipmapLevel);
 
-    renderTarget.texture.needsPMREMUpdate = true;
+    renderTarget.texture.usePmremUpdate = true;
   }
 }

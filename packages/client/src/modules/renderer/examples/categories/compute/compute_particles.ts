@@ -63,7 +63,7 @@ const createParticle = async () => {
   material.transparent = true;
 
   const particles = new InstancedMesh(new PlaneGeometry(1, 1), material, count);
-  particles.frustumCulled = false;
+  particles.useFrustumCull = false;
 
   return particles;
 };

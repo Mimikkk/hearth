@@ -5,7 +5,7 @@ import { Mat4 } from '../Mat4.js';
 
 export abstract class Curve<T extends Vec2 | Vec3> {
   arcLengthDivisions: number;
-  needsUpdate: boolean;
+  useUpdate: boolean;
 
   constructor() {
     this.arcLengthDivisions = 200;

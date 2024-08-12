@@ -65,7 +65,7 @@ export interface MaterialParameters {
   stencilFail?: StencilOperation;
   stencilZFail?: StencilOperation;
   stencilZPass?: StencilOperation;
-  userData?: Record<string, any>;
+  extra?: Record<string, any>;
 }
 
 export class Material {
@@ -112,7 +112,7 @@ export class Material {
   premultipliedAlpha: boolean;
   visible: boolean;
   toneMapped: boolean;
-  userData: Record<string, any>;
+  extra: Record<string, any>;
   version: number;
   _alphaTest: number;
 
@@ -172,7 +172,7 @@ export class Material {
 
     this.toneMapped = true;
 
-    this.userData = {};
+    this.extra = {};
 
     this.version = 0;
 
@@ -292,12 +292,12 @@ export class Material {
 
     this.toneMapped = source.toneMapped;
 
-    this.userData = JSON.parse(JSON.stringify(source.userData));
+    this.extra = JSON.parse(JSON.stringify(source.extra));
 
     return this;
   }
 
-  set needsUpdate(value: boolean) {
+  set useUpdate(value: boolean) {
     if (value) ++this.version;
   }
 }

@@ -56,9 +56,9 @@ const createCamera = () => {
 };
 const createDirectionalLight = () => {
   const light = new DirectionalLight(0xffffff, 0.5);
-  light.castShadow = true;
+  light.useShadowCast = true;
   light.position.set(3, 17, 17);
-  light.castShadow = true;
+  light.useShadowCast = true;
   light.shadow.camera.near = 1;
   light.shadow.camera.far = 50;
   light.shadow.camera.right = 25;
@@ -172,7 +172,7 @@ const createRoof = () => {
   roof.position.y = 12;
   roof.scale.x = 3.5;
   roof.layers.enable(1);
-  roof.castShadow = true;
+  roof.useShadowCast = true;
 
   return roof;
 };
@@ -181,7 +181,7 @@ const loadSuzanne = async () => {
   geometry.computeVertexNormals();
 
   const mesh = new Mesh(geometry, new MeshStandardMaterial({ roughness: 1, metalness: 0 }));
-  mesh.receiveShadow = true;
+  mesh.useShadowReceive = true;
   mesh.scale.setScalar(5);
   mesh.setRotationY(Math.PI / 2);
   mesh.position.y = 4.5;

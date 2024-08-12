@@ -30,7 +30,7 @@ async function init() {
 
       const map = new Engine.DataArrayTexture(array, 256, 256, 109);
       map.format = Engine.TextureFormat.Red;
-      map.needsUpdate = true;
+      map.useUpdate = true;
 
       let coord = uv();
       coord = coord.setY(coord.y.oneMinus());

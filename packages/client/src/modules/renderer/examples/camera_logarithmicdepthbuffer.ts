@@ -164,9 +164,9 @@ const createScene = (font: FontManager): Scene => {
       depth: descriptors[i].size / 2,
     });
 
-    labelgeo.computeBoundingSphere();
+    labelgeo.calcBoundSphere();
 
-    labelgeo.translate(-labelgeo.boundingSphere!.radius, 0, 0);
+    labelgeo.translate(-labelgeo.boundSphere!.radius, 0, 0);
 
     materialargs.color = new Engine.Color().setHSL(Math.random(), 0.5, 0.5);
 

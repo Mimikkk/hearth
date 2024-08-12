@@ -28,7 +28,7 @@ export class VertexNormalsHelper extends LineSegments {
     this.object = object;
     this.size = size;
 
-    this.matrixAutoUpdate = false;
+    this.useLocalAutoUpdate = false;
 
     this.update();
   }
@@ -68,6 +68,6 @@ export class VertexNormalsHelper extends LineSegments {
       }
     }
 
-    position.needsUpdate = true;
+    position.useUpdate = true;
   }
 }

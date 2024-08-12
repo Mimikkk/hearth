@@ -26,7 +26,7 @@ export class VertexTangentsHelper extends LineSegments {
     this.object = object;
     this.size = size;
 
-    this.matrixAutoUpdate = false;
+    this.useLocalAutoUpdate = false;
 
     this.update();
   }
@@ -62,6 +62,6 @@ export class VertexTangentsHelper extends LineSegments {
       idx = idx + 1;
     }
 
-    position.needsUpdate = true;
+    position.useUpdate = true;
   }
 }

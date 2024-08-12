@@ -102,7 +102,7 @@ export class Skeleton {
     }
 
     if (boneTexture !== null) {
-      boneTexture.needsUpdate = true;
+      boneTexture.useUpdate = true;
     }
   }
 
@@ -119,16 +119,14 @@ export class Skeleton {
     boneMatrices.set(this.boneMatrices);
 
     this.boneMatrices = boneMatrices;
-    this.boneTexture = new DataTexture(
-      {
-        data: boneMatrices,
-        width: size,
-        height: size,
-        format: TextureFormat.RGBA,
-        type: TextureDataType.Float,
-        needsUpdate: true,
-      },
-    );
+    this.boneTexture = new DataTexture({
+      data: boneMatrices,
+      width: size,
+      height: size,
+      format: TextureFormat.RGBA,
+      type: TextureDataType.Float,
+      useUpdate: true,
+    });
 
     return this;
   }

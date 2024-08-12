@@ -5,5 +5,5 @@ export const parseCubeTexture = (images: HTMLImageElement[]): CubeTexture =>
   new CubeTexture({
     images,
     colorSpace: ColorSpace.SRGB,
-    needsUpdate: true,
+    useUpdate: true,
   });

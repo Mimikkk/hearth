@@ -90,7 +90,7 @@ export class CameraVisualizer extends LineSegments {
     this.camera.updateProjectionMatrix();
 
     this.matrix = camera.matrixWorld;
-    this.matrixAutoUpdate = false;
+    this.useLocalAutoUpdate = false;
 
     this.pointMap = pointMap;
 
@@ -183,7 +183,7 @@ export class CameraVisualizer extends LineSegments {
     colorAttribute.setXYZ(48, cross.r, cross.g, cross.b);
     colorAttribute.setXYZ(49, cross.r, cross.g, cross.b); // cf3, cf4
 
-    colorAttribute.needsUpdate = true;
+    colorAttribute.useUpdate = true;
   }
 
   update() {
@@ -227,7 +227,7 @@ export class CameraVisualizer extends LineSegments {
     setPoint('cn3', pointMap, geometry, _camera, 0, -h, -1);
     setPoint('cn4', pointMap, geometry, _camera, 0, h, -1);
 
-    geometry.attributes.position.needsUpdate = true;
+    geometry.attributes.position.useUpdate = true;
   }
 }
 

@@ -31,20 +31,15 @@ const createGround = () => {
 
   mesh.setRotationX(-Math.PI / 2);
   mesh.scale.scale(3);
-  mesh.castShadow = true;
-  mesh.receiveShadow = true;
+  mesh.useShadowCast = true;
+  mesh.useShadowReceive = true;
 
   return mesh;
 };
 const createSkyScrappers = () => {
   const level = positionView.z.negate().smoothstep(0, camera.far - 300);
 
-  const windows = positionWorld.y
-    .mul(10)
-    .floor()
-    .mod(4)
-    .sign()
-    .mix(color(0x000066).add(level), color(0xffffff));
+  const windows = positionWorld.y.mul(10).floor().mod(4).sign().mix(color(0x000066).add(level), color(0xffffff));
 
   const geometry = new BoxGeometry(1, 1, 1);
   const material = new MeshPhongNodeMaterial({ colorNode: windows });

@@ -11,7 +11,7 @@ export class FramebufferTexture extends Texture<{ width: number; height: number 
       magFilter: MagnificationTextureFilter.Nearest,
       minFilter: MinificationTextureFilter.Nearest,
       useMipmap: false,
-      needsUpdate: true,
+      useUpdate: true,
     });
   }
 }

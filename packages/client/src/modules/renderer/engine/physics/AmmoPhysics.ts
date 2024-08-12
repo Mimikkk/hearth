@@ -59,7 +59,7 @@ export async function AmmoPhysics(): Promise<AmmoPhysicsObject> {
   function addScene(scene: Scene) {
     scene.traverse(child => {
       if (!Mesh.is(child)) return;
-      const physics = child.userData.physics;
+      const physics = child.extra.physics;
       if (physics) addMesh(child, physics.mass);
     });
   }
@@ -184,8 +184,8 @@ export async function AmmoPhysics(): Promise<AmmoPhysicsObject> {
             compose(position, quaternion, array, j * 16);
           }
 
-          mesh.instanceMatrix.needsUpdate = true;
-          mesh.computeBoundingSphere();
+          mesh.instanceMatrix.useUpdate = true;
+          mesh.calcBoundSphere();
         } else if (mesh.isMesh) {
           const body = meshMap.get(mesh);
 

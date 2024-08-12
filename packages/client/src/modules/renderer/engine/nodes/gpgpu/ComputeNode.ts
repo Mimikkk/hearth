@@ -28,7 +28,7 @@ export class ComputeNode extends Node {
     this.dispatchCount = Math.ceil(count.value / work);
   }
 
-  set needsUpdate(value: boolean) {
+  set useUpdate(value: boolean) {
     if (value === true) this.version++;
   }
 

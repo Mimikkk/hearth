@@ -38,18 +38,18 @@ export class Texture<T = any> {
   repeat: Vec2;
   center: Vec2;
   rotation: number;
-  matrixAutoUpdate: boolean;
+  useLocalAutoUpdate: boolean;
   matrix: Mat3;
   useMipmap: boolean;
-  premultiplyAlpha: boolean;
+  usePremultiplyAlpha: boolean;
   flipY: boolean;
   unpackAlignment: number;
   colorSpace?: ColorSpace | null;
   version: number;
   onUpdate?: () => void;
   isRenderTargetTexture: boolean;
-  needsPMREMUpdate: boolean;
-  userData: any;
+  usePmremUpdate: boolean;
+  extra: any;
 
   constructor(
     image?: TexImageSource | OffscreenCanvas | TextureParameters<T>,
@@ -93,22 +93,22 @@ export class Texture<T = any> {
     this.repeat = config.repeat;
     this.center = config.center;
     this.rotation = config.rotation;
-    this.matrixAutoUpdate = config.matrixAutoUpdate;
+    this.useLocalAutoUpdate = config.useLocalAutoUpdate;
     this.useMipmap = config.useMipmap;
-    this.premultiplyAlpha = config.premultiplyAlpha;
+    this.usePremultiplyAlpha = config.usePremultiplyAlpha;
     this.flipY = config.flipY;
     this.unpackAlignment = config.unpackAlignment;
     this.colorSpace = config.colorSpace;
-    this.userData = config.userData;
+    this.extra = config.extra;
     this.isRenderTargetTexture = config.isRenderTargetTexture;
-    this.needsPMREMUpdate = config.needsPMREMUpdate;
+    this.usePmremUpdate = config.usePmremUpdate;
 
     this.version = 0;
     this.id = ++_textureId;
     this.uuid = v4();
     this.source = new Source(config.image);
     this.matrix = Mat3.new();
-    if (config.needsUpdate) this.needsUpdate = true;
+    if (config.useUpdate) this.useUpdate = true;
   }
 
   static is(texture: any): texture is Texture {
@@ -166,26 +166,26 @@ export class Texture<T = any> {
     this.center.from(source.center);
     this.rotation = source.rotation;
 
-    this.matrixAutoUpdate = source.matrixAutoUpdate;
+    this.useLocalAutoUpdate = source.useLocalAutoUpdate;
     this.matrix.from(source.matrix);
 
     this.useMipmap = source.useMipmap;
-    this.premultiplyAlpha = source.premultiplyAlpha;
+    this.usePremultiplyAlpha = source.usePremultiplyAlpha;
     this.flipY = source.flipY;
     this.unpackAlignment = source.unpackAlignment;
     this.colorSpace = source.colorSpace;
 
-    this.userData = JSON.parse(JSON.stringify(source.userData));
+    this.extra = JSON.parse(JSON.stringify(source.extra));
 
-    this.needsUpdate = true;
+    this.useUpdate = true;
 
     return this;
   }
 
-  set needsUpdate(value: boolean) {
+  set useUpdate(value: boolean) {
     if (value === true) {
       this.version++;
-      this.source.needsUpdate = true;
+      this.source.useUpdate = true;
     }
   }
 }
@@ -193,6 +193,7 @@ export class Texture<T = any> {
 Texture.prototype.isTexture = true;
 
 export interface TextureParameters<T = any> {
+  isRenderTargetTexture?: boolean;
   image?: TexImageSource | OffscreenCanvas | T;
   mapping?: Mapping;
   wrapS?: Wrapping;
@@ -208,19 +209,18 @@ export interface TextureParameters<T = any> {
   repeat?: Vec2;
   center?: Vec2;
   rotation?: number;
-  matrixAutoUpdate?: boolean;
-  useMipmap?: boolean;
-  premultiplyAlpha?: boolean;
-  flipY?: boolean;
   unpackAlignment?: number;
-  userData?: any;
+  extra?: any;
   onUpdate?: () => void;
-  isRenderTargetTexture?: boolean;
-  needsPMREMUpdate?: boolean;
   name?: string;
   channel?: number;
   internalFormat?: PixelFormat | null;
-  needsUpdate?: boolean;
+  flipY?: boolean;
+  useLocalAutoUpdate?: boolean;
+  usePremultiplyAlpha?: boolean;
+  usePmremUpdate?: boolean;
+  useMipmap?: boolean;
+  useUpdate?: boolean;
 }
 
 export interface TextureConfiguration {
@@ -239,19 +239,19 @@ export interface TextureConfiguration {
   repeat: Vec2;
   center: Vec2;
   rotation: number;
-  matrixAutoUpdate: boolean;
+  useLocalAutoUpdate: boolean;
   useMipmap: boolean;
-  premultiplyAlpha: boolean;
+  usePremultiplyAlpha: boolean;
   flipY: boolean;
   unpackAlignment: number;
-  userData: any;
+  extra: any;
   onUpdate?: () => void;
   isRenderTargetTexture: boolean;
-  needsPMREMUpdate: boolean;
+  usePmremUpdate: boolean;
   name: string;
   channel: number;
   internalFormat: PixelFormat | null;
-  needsUpdate: boolean;
+  useUpdate: boolean;
 }
 
 export const configure = <T>(parameters?: TextureParameters<T>): TextureConfiguration => {
@@ -274,15 +274,15 @@ export const configure = <T>(parameters?: TextureParameters<T>): TextureConfigur
     repeat: parameters?.repeat ?? Vec2.new(1, 1),
     center: parameters?.center ?? Vec2.new(0, 0),
     rotation: parameters?.rotation ?? 0,
-    matrixAutoUpdate: parameters?.matrixAutoUpdate ?? true,
+    useLocalAutoUpdate: parameters?.useLocalAutoUpdate ?? true,
     useMipmap: parameters?.useMipmap ?? true,
-    premultiplyAlpha: parameters?.premultiplyAlpha ?? false,
+    usePremultiplyAlpha: parameters?.usePremultiplyAlpha ?? false,
     flipY: parameters?.flipY ?? true,
     unpackAlignment: parameters?.unpackAlignment ?? 4,
-    userData: parameters?.userData ?? {},
+    extra: parameters?.extra ?? {},
     onUpdate: parameters?.onUpdate,
     isRenderTargetTexture: parameters?.isRenderTargetTexture ?? false,
-    needsPMREMUpdate: parameters?.needsPMREMUpdate ?? false,
-    needsUpdate: parameters?.needsUpdate ?? false,
+    usePmremUpdate: parameters?.usePmremUpdate ?? false,
+    useUpdate: parameters?.useUpdate ?? false,
   };
 };

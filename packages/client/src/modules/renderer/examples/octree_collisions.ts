@@ -32,7 +32,7 @@ scene.add(fillLight1);
 
 const directionalLight = new DirectionalLight(0xffffff, 2.5);
 directionalLight.position.set(-5, 25, -1);
-directionalLight.castShadow = true;
+directionalLight.useShadowCast = true;
 directionalLight.shadow.camera.near = 0.01;
 directionalLight.shadow.camera.far = 500;
 directionalLight.shadow.camera.right = 30;
@@ -66,8 +66,8 @@ let sphereIdx = 0;
 
 for (let i = 0; i < NUM_SPHERES; i++) {
   const sphere = new Mesh(sphereGeometry, sphereMaterial);
-  sphere.castShadow = true;
-  sphere.receiveShadow = true;
+  sphere.useShadowCast = true;
+  sphere.useShadowReceive = true;
 
   scene.add(sphere);
 
@@ -321,8 +321,8 @@ worldOctree.fromGraphNode(gltf.scene);
 
 gltf.scene.traverse((child: any) => {
   if (child.isMesh) {
-    child.castShadow = true;
-    child.receiveShadow = true;
+    child.useShadowCast = true;
+    child.useShadowReceive = true;
 
     if (child.material.map) {
       child.material.map.anisotropy = 4;

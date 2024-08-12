@@ -132,10 +132,10 @@ function createText() {
     bevelEnabled: true,
   });
 
-  textGeo.computeBoundingBox();
+  textGeo.calcBoundBox();
   textGeo.computeVertexNormals();
 
-  const centerOffset = -0.5 * (textGeo.boundingBox.max.x - textGeo.boundingBox.min.x);
+  const centerOffset = -0.5 * (textGeo.boundBox.max.x - textGeo.boundBox.min.x);
 
   textMesh1 = new Engine.Mesh(textGeo, material);
 

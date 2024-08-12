@@ -13,9 +13,9 @@ export class BoundSphereVisualizer {
   bound: Mesh;
 
   constructor(object: Entity, parameters?: MeshLambertMaterialParameters) {
-    if (!object.boundingSphere) object.geometry!.computeBoundingSphere();
+    if (!object.boundSphere) object.geometry!.calcBoundSphere();
 
-    const sphere = object.geometry!.boundingSphere as Sphere;
+    const sphere = object.geometry!.boundSphere as Sphere;
 
     if (!parameters) parameters = {};
     parameters.color ??= Random.color();

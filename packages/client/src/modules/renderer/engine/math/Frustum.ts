@@ -105,15 +105,15 @@ export class Frustum {
   }
 
   intersectsObject(object: Const<Entity>): boolean {
-    if (object.boundingSphere !== undefined) {
-      if (object.boundingSphere === null) object.computeBoundingSphere!();
+    if (object.boundSphere !== undefined) {
+      if (object.boundSphere === null) object.calcBoundSphere!();
 
-      _sphere.from(object.boundingSphere!);
+      _sphere.from(object.boundSphere!);
     } else {
       const geometry = object.geometry;
-      if (geometry?.boundingSphere === null) geometry.computeBoundingSphere();
+      if (geometry?.boundSphere === null) geometry.calcBoundSphere();
 
-      _sphere.from(geometry!.boundingSphere!);
+      _sphere.from(geometry!.boundSphere!);
     }
 
     return this.intersectsSphere(_sphere.applyMat4(object.matrixWorld));

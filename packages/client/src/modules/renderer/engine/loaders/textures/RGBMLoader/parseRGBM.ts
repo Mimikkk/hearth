@@ -74,7 +74,7 @@ const parseDataTexture = (buffer: ArrayBuffer, type: SupportedRGBMType, maxRange
     magFilter: MagnificationTextureFilter.Linear,
     minFilter: MinificationTextureFilter.Linear,
     anisotropy: 1,
-    needsUpdate: true,
+    useUpdate: true,
   });
 };
 export const parseRGBM = (buffers: ArrayBuffer[], type: SupportedRGBMType, maxRange: number): CubeTexture => {
@@ -85,7 +85,7 @@ export const parseRGBM = (buffers: ArrayBuffer[], type: SupportedRGBMType, maxRa
   texture.format = TextureFormat.RGBA;
   texture.minFilter = MinificationTextureFilter.Linear;
   texture.useMipmap = false;
-  texture.needsUpdate = true;
+  texture.useUpdate = true;
 
   return texture;
 };

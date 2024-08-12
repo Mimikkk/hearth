@@ -31,8 +31,8 @@ export class ShadowMesh extends Mesh {
 
     this.meshMatrix = mesh.matrixWorld;
 
-    this.frustumCulled = false;
-    this.matrixAutoUpdate = false;
+    this.useFrustumCull = false;
+    this.useLocalAutoUpdate = false;
   }
 
   update(plane: Plane, lightPosition4D: Vec4) {

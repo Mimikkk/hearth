@@ -138,7 +138,7 @@ function render() {
   if (currentAnalyser) {
     currentAnalyser.getByteFrequencyData(analyserBuffer);
 
-    analyserTexture.needsUpdate = true;
+    analyserTexture.useUpdate = true;
   }
 
   hearth.render(scene, camera);

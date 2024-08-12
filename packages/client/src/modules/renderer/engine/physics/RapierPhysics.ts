@@ -70,7 +70,7 @@ export async function RapierPhysics(): Promise<RapierPhysicsObject> {
     scene.traverse(function (child) {
       //@ts-expect-error
       if (child.isMesh) {
-        const physics = child.userData.physics;
+        const physics = child.extra.physics;
 
         if (physics) {
           //@ts-expect-error
@@ -175,8 +175,8 @@ export async function RapierPhysics(): Promise<RapierPhysicsObject> {
         }
 
         //@ts-expect-error
-        mesh.instanceMatrix.needsUpdate = true;
-        mesh.computeBoundingSphere();
+        mesh.instanceMatrix.useUpdate = true;
+        mesh.calcBoundSphere();
       } else {
         const body = meshMap.get(mesh);
 

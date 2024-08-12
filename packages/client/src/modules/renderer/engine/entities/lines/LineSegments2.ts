@@ -234,11 +234,11 @@ export class LineSegments2 extends Mesh {
 
     _lineWidth = material.linewidth + threshold;
 
-    if (geometry.boundingSphere === null) {
-      geometry.computeBoundingSphere();
+    if (geometry.boundSphere === null) {
+      geometry.calcBoundSphere();
     }
 
-    _sphere.from(geometry.boundingSphere).applyMat4(matrixWorld);
+    _sphere.from(geometry.boundSphere).applyMat4(matrixWorld);
 
     let sphereMargin;
     if (worldUnits) {
@@ -254,11 +254,11 @@ export class LineSegments2 extends Mesh {
       return;
     }
 
-    if (geometry.boundingBox === null) {
-      geometry.computeBoundingBox();
+    if (geometry.boundBox === null) {
+      geometry.calcBoundBox();
     }
 
-    _box.from(geometry.boundingBox).applyMat4(matrixWorld);
+    _box.from(geometry.boundBox).applyMat4(matrixWorld);
 
     let boxMargin;
     if (worldUnits) {

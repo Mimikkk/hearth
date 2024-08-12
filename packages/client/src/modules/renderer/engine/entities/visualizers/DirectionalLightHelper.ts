@@ -23,7 +23,7 @@ export class DirectionalLightHelper extends Entity {
     this.light = light;
 
     this.matrix = light.matrixWorld;
-    this.matrixAutoUpdate = false;
+    this.useLocalAutoUpdate = false;
 
     this.color = color;
 

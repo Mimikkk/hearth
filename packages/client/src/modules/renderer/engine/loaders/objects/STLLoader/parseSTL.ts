@@ -189,7 +189,7 @@ function parseASCII(text: string) {
     const start = startVertex;
     const count = endVertex - startVertex;
 
-    geometry.userData.groupNames = groupNames;
+    geometry.extra.groupNames = groupNames;
 
     geometry.addGroup(start, count, groupCount);
     groupCount++;
