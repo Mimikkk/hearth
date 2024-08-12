@@ -11,126 +11,141 @@ import {
   viewportSharedTexture,
   viewportTopLeft,
 } from '@modules/renderer/engine/nodes/nodes.js';
-
-import { GUI } from 'lil-gui';
 import {
-  GLTFLoader,
-  Hearth,
-  OrbitControls,
   AnimationMixer,
   BoxGeometry,
-  Clock,
   Color,
+  GLTFLoader,
+  Hearth,
   Mesh,
+  MeshBasicMaterial,
+  OrbitControls,
   PerspectiveCamera,
   Scene,
   Side,
   ToneMapping,
+  Vec3,
 } from '@modules/renderer/engine/engine.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
+import { MiniUi } from '@mimi/mini-ui';
 
-const camera = new PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.25, 25);
-camera.position.set(3, 2, 3);
+const createMaterials = () => {
+  const depthDistance = depthTexture().distance(depth);
+  const depthAlpha = depthDistance.oneMinus().smoothstep(0.9, 2).mul(20).saturate();
 
-const scene = new Scene();
-scene.background = Color.new(0x333333);
-camera.lookAt(0, 1, 0);
+  const createMaterialBlur = () => {
+    const blur = viewportMipTexture()
+      .bicubic(
+        depthDistance
+          .smoothstep(0, 0.6)
+          .mul(40 * 5)
+          .clamp(0, 5),
+      )
+      .add(depthAlpha.mix(color(0x0066ff), 0));
 
-const clock = new Clock();
+    return new MeshBasicNodeMaterial({
+      backdropNode: blur,
+      transparent: true,
+      side: Side.Double,
+    });
+  };
+  const createMaterialVolume = () => {
+    return new MeshBasicNodeMaterial({
+      colorNode: color(0x0066ff),
+      backdropNode: viewportSharedTexture(),
+      backdropAlphaNode: depthAlpha,
+      transparent: true,
+      side: Side.Double,
+    });
+  };
+  const createMaterialDepth = () => {
+    return new MeshBasicNodeMaterial({
+      backdropNode: depthAlpha,
+      transparent: true,
+      side: Side.Double,
+    });
+  };
+  const createMaterialBicubic = () => {
+    return new MeshBasicNodeMaterial({
+      backdropNode: viewportMipTexture().bicubic(5),
+      backdropAlphaNode: checker(uv().mul(3).mul(modelScale.xy)),
+      opacityNode: depthAlpha,
+      transparent: true,
+      side: Side.Double,
+    });
+  };
+  const createMaterialPixel = () => {
+    return new MeshBasicNodeMaterial({
+      backdropNode: viewportSharedTexture(viewportTopLeft.mul(100).floor().div(100)),
+      transparent: true,
+    });
+  };
 
-let mixer: AnimationMixer;
-const loader = new GLTFLoader();
-loader.loadAsync('resources/models/gltf/Michelle.glb').then(function (gltf) {
-  const object = gltf.scene;
-  mixer = new AnimationMixer(object);
+  return {
+    blur: createMaterialBlur(),
+    volume: createMaterialVolume(),
+    depth: createMaterialDepth(),
+    bicubic: createMaterialBicubic(),
+    pixel: createMaterialPixel(),
+  };
+};
+
+const createScene = () => {
+  const scene = new Scene();
+  scene.background = Color.new(0x333333);
+  camera.lookAt(0, 1, 0);
+  return scene;
+};
+const loadMichelle = async () => {
+  const gltf = await GLTFLoader.loadAsync('resources/models/gltf/Michelle.glb');
+  const michelle = gltf.scene;
+  const mixer = new AnimationMixer(michelle);
 
   const action = mixer.clipAction(gltf.animations[0]);
   action.play();
 
-  scene.add(object);
-});
-
-const depthDistance = depthTexture().distance(depth);
-const depthAlphaNode = depthDistance.oneMinus().smoothstep(0.9, 2).mul(20).saturate();
-const depthBlurred = viewportMipTexture().bicubic(
-  depthDistance
-    .smoothstep(0, 0.6)
-    .mul(40 * 5)
-    .clamp(0, 5),
-);
-
-const blurredBlur = new MeshBasicNodeMaterial();
-blurredBlur.backdropNode = depthBlurred.add(depthAlphaNode.mix(color(0x0066ff), 0));
-blurredBlur.transparent = true;
-blurredBlur.side = Side.Double;
-
-const volumeMaterial = new MeshBasicNodeMaterial();
-volumeMaterial.colorNode = color(0x0066ff);
-volumeMaterial.backdropNode = viewportSharedTexture();
-volumeMaterial.backdropAlphaNode = depthAlphaNode;
-volumeMaterial.transparent = true;
-volumeMaterial.side = Side.Double;
-
-const depthMaterial = new MeshBasicNodeMaterial();
-depthMaterial.backdropNode = depthAlphaNode;
-depthMaterial.transparent = true;
-depthMaterial.side = Side.Double;
-
-const bicubicMaterial = new MeshBasicNodeMaterial();
-bicubicMaterial.backdropNode = viewportMipTexture().bicubic(5);
-bicubicMaterial.backdropAlphaNode = checker(uv().mul(3).mul(modelScale.xy));
-bicubicMaterial.opacityNode = bicubicMaterial.backdropAlphaNode;
-bicubicMaterial.transparent = true;
-bicubicMaterial.side = Side.Double;
-
-const pixelMaterial = new MeshBasicNodeMaterial();
-pixelMaterial.backdropNode = viewportSharedTexture(viewportTopLeft.mul(100).floor().div(100));
-pixelMaterial.transparent = true;
-
-const box = new Mesh(new BoxGeometry(2, 2, 2), volumeMaterial);
-box.position.set(0, 1, 0);
-scene.add(box);
-
-const floor = new Mesh(new BoxGeometry(1.99, 0.01, 1.99), new MeshBasicNodeMaterial({ color: 0x333333 }));
-floor.position.set(0, 0, 0);
-scene.add(floor);
-
-const hearth = await Hearth.as();
-hearth.setPixelRatio(window.devicePixelRatio);
-hearth.setSize(window.innerWidth, window.innerHeight);
-hearth.animation.loop = animate;
-hearth.parameters.toneMappingNode = toneMapping(ToneMapping.Linear, 0.15);
-document.body.appendChild(hearth.parameters.canvas);
-
-const controls = new OrbitControls(camera, hearth.parameters.canvas);
-controls.target.set(0, 1, 0);
-controls.update();
-
-useWindowResizer(hearth, camera);
-
-const materials = {
-  blurred: blurredBlur,
-  volume: volumeMaterial,
-  depth: depthMaterial,
-  bicubic: bicubicMaterial,
-  pixel: pixelMaterial,
+  return { michelle, mixer };
+};
+const createCamera = () => {
+  const camera = new PerspectiveCamera();
+  camera.position.set(3, 2, 3);
+  return camera;
+};
+const createBox = (material: MeshBasicMaterial) => {
+  const box = new Mesh(new BoxGeometry(2, 2, 2), material);
+  box.position.set(0, 1, 0);
+  return box;
+};
+const createFloor = () => {
+  const floor = new Mesh(new BoxGeometry(1.99, 0.01, 1.99), new MeshBasicNodeMaterial({ color: 0x333333 }));
+  floor.position.set(0, 0, 0);
+  return floor;
 };
 
-const gui = new GUI();
-const options = { material: 'blurred' };
+const camera = createCamera();
 
-box.material = materials[options.material];
+const { michelle, mixer } = await loadMichelle();
 
-gui.add(box.scale, 'x', 0.1, 2, 0.01);
-gui.add(box.scale, 'z', 0.1, 2, 0.01);
-gui.add(options, 'material', Object.keys(materials)).onChange(name => {
-  box.material = materials[name];
+const materials = createMaterials();
+
+const box = createBox(materials.pixel);
+const floor = createFloor();
+
+const scene = createScene().add(michelle, box, floor);
+const hearth = await Hearth.as({
+  animate() {
+    hearth.render(scene, camera);
+  },
+  toneMappingNode: toneMapping(ToneMapping.Linear, 0.15),
 });
 
-function animate() {
-  const delta = clock.tick();
+OrbitControls.attach(hearth, camera, { target: Vec3.new(0, 1, 0) });
+mixer.attach(hearth);
+useWindowResizer(hearth, camera);
 
-  if (mixer) mixer.update(delta);
-
-  hearth.render(scene, camera);
-}
+MiniUi.create('Controls', { box, material: 'pixel' as keyof typeof materials })
+  .number('box.scale.x', 'Box scale x', 0.1, 2, 0.01)
+  .number('box.scale.z', 'Box scale z', 0.1, 2, 0.01)
+  .option('material', 'Material', Object.keys(materials), name => {
+    box.material = materials[name];
+  });

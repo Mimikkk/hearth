@@ -178,3 +178,23 @@ export class PerspectiveCamera extends Camera {
 }
 
 PerspectiveCamera.prototype.isPerspectiveCamera = true;
+
+interface PerspectiveCameraParameters {
+  fov?: number;
+  aspect?: number;
+  near?: number;
+  far?: number;
+  zoom?: number;
+  focus?: number;
+  view?: {
+    enabled: boolean;
+    fullWidth: number;
+    fullHeight: number;
+    offsetX: number;
+    offsetY: number;
+    width: number;
+    height: number;
+  };
+  filmGaugeMM?: number;
+  filmOffsetMM?: number;
+}

@@ -15,7 +15,11 @@ export class ViewportTextureNode extends TextureNode {
   isOutputTextureNode: boolean;
   updateBeforeType: NodeUpdateStage;
 
-  constructor(uvNode = viewportTopLeft, levelNode = null, framebufferTexture: FramebufferTexture | null = null) {
+  constructor(
+    uvNode = viewportTopLeft,
+    levelNode: Node | null = null,
+    framebufferTexture: FramebufferTexture | null = null,
+  ) {
     if (framebufferTexture === null) {
       framebufferTexture = new FramebufferTexture({ width: 1, height: 1 });
       framebufferTexture.minFilter = MinificationTextureFilter.LinearMipmapLinear;
@@ -45,15 +49,11 @@ export class ViewportTextureNode extends TextureNode {
 
     framebufferTexture.generateMipmaps = currentGenerateMipmaps;
   }
-
-  clone() {
-    return new this.constructor(this.uvNode, this.levelNode, this.value);
-  }
 }
 
 export const viewportTexture = asCommand(ViewportTextureNode);
 
-export class ViewportMipTextureNode {
+export class ViewportMipTextureNode extends ViewportTextureNode {
   generateMipmaps = true;
 }
 
