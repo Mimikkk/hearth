@@ -172,7 +172,7 @@ export class HearthRenderer extends HearthComponent {
     data.descriptor = descriptor;
     data.encoder = encoder;
     data.pass = pass;
-    data.currentSets = { attributes: {} };
+    data.sets = { attributes: {} };
 
     if (context.useUpdateViewport) {
       this.passViewport(context);

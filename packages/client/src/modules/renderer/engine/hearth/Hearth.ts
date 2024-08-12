@@ -10,12 +10,7 @@ import { Camera } from '@modules/renderer/engine/entities/cameras/Camera.js';
 import { ClippingContext } from '@modules/renderer/engine/hearth/core/ClippingContext.js';
 import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
 import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
-import {
-  GPUFeature,
-  GPUIndexFormatType,
-  GPULoadOpType,
-  GPUTextureFormatType,
-} from '@modules/renderer/engine/hearth/constants.js';
+import { GPUFeature, GPUIndexFormatType, GPUTextureFormatType } from '@modules/renderer/engine/hearth/constants.js';
 import { Renderable, RenderQueue } from '@modules/renderer/engine/hearth/core/RenderQueue.js';
 import { ComputeNode } from '@modules/renderer/engine/nodes/gpgpu/ComputeNode.js';
 import { RenderContext } from '@modules/renderer/engine/hearth/core/RenderContext.js';
@@ -49,11 +44,11 @@ import { Geometry } from '@modules/renderer/engine/core/Geometry.js';
 import { Material } from '@modules/renderer/engine/entities/materials/Material.js';
 import { Group } from '@modules/renderer/engine/entities/Group.js';
 import { Texture } from '@modules/renderer/engine/entities/textures/Texture.js';
-import { DepthTexture } from '@modules/renderer/engine/entities/textures/DepthTexture.js';
 import { Attribute } from '@modules/renderer/engine/core/Attribute.js';
 import { Plane } from '@modules/renderer/engine/math/Plane.js';
 import { Frustum } from '@modules/renderer/engine/math/Frustum.js';
 import { Mat4 } from '@modules/renderer/engine/math/Mat4.js';
+import { HearthFramebuffer } from '@modules/renderer/engine/hearth/Hearth.Framebuffer.js';
 
 export class Hearth {
   stats: HearthStatistics;
@@ -87,6 +82,7 @@ export class Hearth {
   textures: HearthTextures;
   background: HearthBackground;
   utilities: HearthUtilities;
+  framebuffer: HearthFramebuffer;
 
   memo: WeakMemo<any, any> = new WeakMemo(() => ({}));
   device: GPUDevice;
@@ -170,6 +166,7 @@ export class Hearth {
     this.computer = new HearthComputer(this);
     this.timestamp = new HearthTimestamp(this);
     this.occlusion = new HearthOcclusion(this);
+    this.framebuffer = new HearthFramebuffer(this);
     this.renderLists = new HearthQueues();
     this.renderContexts = new HearthContexts();
     this.context = null;
@@ -588,62 +585,7 @@ export class Hearth {
   }
 
   readFramebuffer(into: Texture): void {
-    this.textures.updateTexture(into);
-
-    const context = this.context!;
-    const data = this.memo.get(context);
-
-    const { encoder, descriptor } = data;
-
-    let sourceGPU = null;
-
-    if (context.target) {
-      if (DepthTexture.is(into)) {
-        sourceGPU = this.memo.get(context.depthTexture).texture;
-      } else {
-        sourceGPU = this.memo.get(context.textures[0]).texture;
-      }
-    } else {
-      if (DepthTexture.is(into)) {
-        sourceGPU = this.textures.getDepthBuffer(context.useDepth, context.useStencil);
-      } else {
-        sourceGPU = this.parameters.context.getCurrentTexture();
-      }
-    }
-
-    const destinationGPU = this.memo.get(into).texture;
-
-    if (sourceGPU.format !== destinationGPU.format) {
-      console.error(
-        'Hearth: readFramebuffer: Source and destination formats do not match.',
-        sourceGPU.format,
-        destinationGPU.format,
-      );
-
-      return;
-    }
-
-    data.pass.end();
-
-    encoder.copyTextureToTexture(
-      {
-        texture: sourceGPU,
-        origin: { x: 0, y: 0, z: 0 },
-      },
-      {
-        texture: destinationGPU,
-      },
-      [into.image.width, into.image.height],
-    );
-
-    if (into.generateMipmaps) this.textures.generateMipmaps(into);
-
-    descriptor.colorAttachments[0].loadOp = GPULoadOpType.Load;
-    if (context.useDepth) descriptor.depthStencilAttachment.depthLoadOp = GPULoadOpType.Load;
-    if (context.useStencil) descriptor.depthStencilAttachment.stencilLoadOp = GPULoadOpType.Load;
-
-    data.pass = encoder.beginRenderPass(descriptor);
-    data.currentSets = { attributes: {} };
+    this.framebuffer.read(into);
   }
 
   getMaxAnisotropy() {
@@ -823,14 +765,14 @@ export class Hearth {
     const bindingsData = this.memo.get(renderObject.getBindings());
     const contextData = this.memo.get(context);
     const pipelineGPU = this.memo.get(pipeline).pipeline;
-    const currentSets = contextData.currentSets;
+    const sets = contextData.sets;
 
     const pass = contextData.pass;
 
-    if (currentSets.pipeline !== pipelineGPU) {
+    if (sets.pipeline !== pipelineGPU) {
       pass.setPipeline(pipelineGPU);
 
-      currentSets.pipeline = pipelineGPU;
+      sets.pipeline = pipelineGPU;
     }
 
     const bindGroupGPU = bindingsData.group;
@@ -841,13 +783,13 @@ export class Hearth {
     const hasIndex = index !== null;
 
     if (hasIndex === true) {
-      if (currentSets.index !== index) {
+      if (sets.index !== index) {
         const buffer = this.memo.get(index).buffer;
         const indexFormat = index.array instanceof Uint16Array ? GPUIndexFormatType.Uint16 : GPUIndexFormatType.Uint32;
 
         pass.setIndexBuffer(buffer, indexFormat);
 
-        currentSets.index = index;
+        sets.index = index;
       }
     }
 
@@ -856,11 +798,11 @@ export class Hearth {
     for (let i = 0, l = vertexBuffers.length; i < l; i++) {
       const vertexBuffer = vertexBuffers[i];
 
-      if (currentSets.attributes[i] !== vertexBuffer) {
+      if (sets.attributes[i] !== vertexBuffer) {
         const buffer = this.memo.get(vertexBuffer).buffer;
         pass.setVertexBuffer(i, buffer);
 
-        currentSets.attributes[i] = vertexBuffer;
+        sets.attributes[i] = vertexBuffer;
       }
     }
 
