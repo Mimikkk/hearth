@@ -16,13 +16,7 @@ export class HearthFramebuffer extends HearthComponent {
     const destination = this.hearth.memo.get(into).texture;
 
     if (source.format !== destination.format) {
-      console.error(
-        'Hearth: readFramebuffer: Source and destination formats do not match.',
-        source.format,
-        destination.format,
-      );
-
-      return;
+      throw new Error('Hearth:Framebuffer: Source and destination format mismatch.', source.format, destination.format);
     }
 
     data.pass.end();
