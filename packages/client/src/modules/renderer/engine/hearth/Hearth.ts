@@ -648,8 +648,8 @@ export class Hearth {
     this.textures.updateTextureTex(texture, options);
   }
 
-  generateMipmaps(texture: Texture) {
-    this.textures.generateMipmaps(texture);
+  useMipmap(texture: Texture) {
+    this.textures.useMipmap(texture);
   }
 
   destroyTexture(texture: Texture) {

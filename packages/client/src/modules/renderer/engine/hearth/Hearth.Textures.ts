@@ -183,7 +183,7 @@ export class HearthTextures extends DataMap<any, any> {
 
           if (texture.source.dataReady === true) this.hearth.updateTexture(texture, options);
 
-          if (options.needsMipmaps && texture.mipmaps.length === 0) this.hearth.generateMipmaps(texture);
+          if (options.needsMipmaps && texture.mipmaps.length === 0) this.hearth.useMipmap(texture);
         }
       } else {
         this.hearth.createDefaultTexture(texture);
@@ -412,15 +412,15 @@ export class HearthTextures extends DataMap<any, any> {
     delete textureData.sampler;
   }
 
-  generateMipmaps(texture: Texture) {
+  useMipmap(texture: Texture) {
     const textureData = this.hearth.memo.get(texture);
 
     if (isCubeTexture(texture)) {
       for (let i = 0; i < 6; i++) {
-        this._generateMipmaps(textureData.texture, textureData.textureDescriptorGPU, i);
+        this._useMipmap(textureData.texture, textureData.textureDescriptorGPU, i);
       }
     } else {
-      this._generateMipmaps(textureData.texture, textureData.textureDescriptorGPU);
+      this._useMipmap(textureData.texture, textureData.textureDescriptorGPU);
     }
   }
 
@@ -657,8 +657,8 @@ export class HearthTextures extends DataMap<any, any> {
     return passUtils;
   }
 
-  _generateMipmaps(textureGPU: GPUTexture, textureDescriptorGPU: GPUTextureDescriptor, baseArrayLayer = 0) {
-    this._getPassUtils().generateMipmaps(textureGPU, textureDescriptorGPU, baseArrayLayer);
+  _useMipmap(textureGPU: GPUTexture, textureDescriptorGPU: GPUTextureDescriptor, baseArrayLayer = 0) {
+    this._getPassUtils().useMipmap(textureGPU, textureDescriptorGPU, baseArrayLayer);
   }
 
   _flipY(textureGPU: GPUTexture, textureDescriptorGPU: GPUTextureDescriptor, originDepth = 0) {

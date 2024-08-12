@@ -11,7 +11,7 @@ import { MinificationTextureFilter } from '@modules/renderer/engine/constants.js
 const _size = Vec2.new();
 
 export class ViewportTextureNode extends TextureNode {
-  generateMipmaps: boolean = false;
+  useMipmap: boolean = false;
   updateBeforeType: NodeUpdateStage;
 
   constructor(
@@ -40,17 +40,17 @@ export class ViewportTextureNode extends TextureNode {
       texture.needsUpdate = true;
     }
 
-    const currentGenerateMipmaps = texture.generateMipmaps;
-    texture.generateMipmaps = this.generateMipmaps;
+    const currentGenerateMipmaps = texture.useMipmap;
+    texture.useMipmap = this.useMipmap;
 
     hearth.readFramebuffer(texture);
 
-    texture.generateMipmaps = currentGenerateMipmaps;
+    texture.useMipmap = currentGenerateMipmaps;
   }
 }
 
 export class ViewportMipTextureNode extends ViewportTextureNode {
-  generateMipmaps = true;
+  useMipmap = true;
 }
 
 export const viewportTexture = asCommand(ViewportTextureNode);

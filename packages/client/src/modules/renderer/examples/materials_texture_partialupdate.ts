@@ -28,7 +28,7 @@ const clock = new Clock();
 const diffuseMap = await TextureLoader.loadAsync('resources/textures/carbon/Carbon.png');
 diffuseMap.colorSpace = ColorSpace.SRGB;
 diffuseMap.minFilter = MinificationTextureFilter.Linear;
-diffuseMap.generateMipmaps = false;
+diffuseMap.useMipmap = false;
 
 const mesh = new Mesh(new PlaneGeometry(2, 2), new MeshBasicMaterial({ map: diffuseMap }));
 scene.add(mesh);

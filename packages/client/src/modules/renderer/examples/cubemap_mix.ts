@@ -31,7 +31,7 @@ async function init() {
     'resources/textures/cube/pisaRGBM16/pz.png',
     'resources/textures/cube/pisaRGBM16/nz.png',
   ]);
-  cube1Texture.generateMipmaps = true;
+  cube1Texture.useMipmap = true;
   cube1Texture.minFilter = Engine.MinificationTextureFilter.LinearMipmapLinear;
 
   const cube2Texture = await new CubeTextureLoader().loadAsync([
@@ -43,7 +43,7 @@ async function init() {
     'resources/textures/cube/MilkyWay/dark-s_nz.jpg',
   ]);
 
-  cube2Texture.generateMipmaps = true;
+  cube2Texture.useMipmap = true;
   cube2Texture.minFilter = Engine.MinificationTextureFilter.LinearMipmapLinear;
 
   scene.environmentNode = mix(pmremTexture(cube2Texture), pmremTexture(cube1Texture), oscSine(timerLocal(0.1)));

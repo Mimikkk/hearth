@@ -37,14 +37,14 @@ let _inReflector = false;
 interface Parameters {
   target?: Entity;
   resolution?: number;
-  generateMipmaps?: boolean;
+  useMipmap?: boolean;
   bounces?: boolean;
 }
 
 export class ReflectorNode extends TextureNode {
   target: Entity;
   resolution: number;
-  generateMipmaps: boolean;
+  useMipmap: boolean;
   bounces: boolean;
   virtualCameras: WeakMap<ICamera, ICamera>;
   renderTargets: WeakMap<ICamera, RenderTarget>;
@@ -54,7 +54,7 @@ export class ReflectorNode extends TextureNode {
 
     this.target = parameters?.target ?? new Entity();
     this.resolution = parameters?.resolution ?? 1;
-    this.generateMipmaps = parameters?.generateMipmaps ?? false;
+    this.useMipmap = parameters?.useMipmap ?? false;
     this.bounces = parameters?.bounces ?? true;
 
     this.updateBeforeType = this.bounces ? NodeUpdateStage.Render : NodeUpdateStage.Frame;
@@ -77,7 +77,6 @@ export class ReflectorNode extends TextureNode {
     return super.setup(builder);
   }
 
-
   getVirtualCamera(camera: ICamera): ICamera {
     let virtualCamera = this.virtualCameras.get(camera);
 
@@ -96,9 +95,9 @@ export class ReflectorNode extends TextureNode {
     if (renderTarget === undefined) {
       renderTarget = new RenderTarget(0, 0, { type: TextureDataType.HalfFloat });
 
-      if (this.generateMipmaps) {
+      if (this.useMipmap) {
         renderTarget.texture.minFilter = MinificationTextureFilter.LinearMipmapLinear;
-        renderTarget.texture.generateMipmaps = true;
+        renderTarget.texture.useMipmap = true;
       }
 
       this.renderTargets.set(camera, renderTarget);

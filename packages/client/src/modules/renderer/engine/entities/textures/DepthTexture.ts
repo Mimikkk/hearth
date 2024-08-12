@@ -44,7 +44,7 @@ export class DepthTexture extends Texture {
     this.minFilter = minFilter ?? MinificationTextureFilter.Nearest;
 
     this.flipY = false;
-    this.generateMipmaps = false;
+    this.useMipmap = false;
 
     this.compare = null;
   }

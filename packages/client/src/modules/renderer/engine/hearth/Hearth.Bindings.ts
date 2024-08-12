@@ -118,11 +118,11 @@ export class HearthBindings extends DataMap<any, any> {
           if (binding.store === true) {
             textureData.needsMipmap = true;
           } else if (
-            texture.generateMipmaps === true &&
+            texture.useMipmap === true &&
             this.hearth.textures.needsMipmaps(texture) &&
             textureData.needsMipmap === true
           ) {
-            this.hearth.generateMipmaps(texture);
+            this.hearth.useMipmap(texture);
 
             textureData.needsMipmap = false;
           }

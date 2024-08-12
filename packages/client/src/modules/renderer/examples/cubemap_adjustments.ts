@@ -47,7 +47,7 @@ async function init() {
     'resources/textures/cube/pisaRGBM16/nz.png',
   ]);
 
-  cube1Texture.generateMipmaps = true;
+  cube1Texture.useMipmap = true;
   cube1Texture.minFilter = Engine.MinificationTextureFilter.LinearMipmapLinear;
 
   const cube2Texture = await new CubeTextureLoader().loadAsync([
@@ -59,7 +59,7 @@ async function init() {
     'resources/textures/cube/Park2/negz.jpg',
   ]);
 
-  cube2Texture.generateMipmaps = true;
+  cube2Texture.useMipmap = true;
   cube2Texture.minFilter = Engine.MinificationTextureFilter.LinearMipmapLinear;
 
   const adjustments = {

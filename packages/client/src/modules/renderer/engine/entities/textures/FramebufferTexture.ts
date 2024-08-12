@@ -1,7 +1,7 @@
 import { Texture, TextureParameters } from './Texture.js';
 import { MagnificationTextureFilter, MinificationTextureFilter } from '../../constants.js';
 
-export class FramebufferTexture extends Texture<{ width: number, height: number }> {
+export class FramebufferTexture extends Texture<{ width: number; height: number }> {
   declare isFramebufferTexture: true;
 
   constructor(parameters: FramebufferTextureParameters) {
@@ -10,7 +10,7 @@ export class FramebufferTexture extends Texture<{ width: number, height: number 
       image: { width: parameters.width, height: parameters.height },
       magFilter: MagnificationTextureFilter.Nearest,
       minFilter: MinificationTextureFilter.Nearest,
-      generateMipmaps: false,
+      useMipmap: false,
       needsUpdate: true,
     });
   }
@@ -18,4 +18,4 @@ export class FramebufferTexture extends Texture<{ width: number, height: number 
 
 FramebufferTexture.prototype.isFramebufferTexture = true;
 
-export type FramebufferTextureParameters = Omit<TextureParameters, 'image'> & { width: number; height: number; };
+export type FramebufferTextureParameters = Omit<TextureParameters, 'image'> & { width: number; height: number };

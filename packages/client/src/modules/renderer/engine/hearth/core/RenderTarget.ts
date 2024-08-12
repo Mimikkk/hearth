@@ -45,11 +45,10 @@ export class RenderTarget {
     this.configuration = config;
     config.image = image;
 
-
     const texture = new Texture(config);
 
     texture.flipY = false;
-    texture.generateMipmaps = config.generateMipmaps;
+    texture.useMipmap = config.useMipmap;
     texture.internalFormat = config.internalFormat;
 
     this.textures = [];
@@ -130,7 +129,7 @@ export class RenderTarget {
 
 export namespace RenderTarget {
   export interface Configuration {
-    generateMipmaps: boolean;
+    useMipmap: boolean;
     internalFormat: PixelFormat | null;
     minFilter: number;
     depthBuffer: boolean;
@@ -152,7 +151,7 @@ export namespace RenderTarget {
   export interface Options extends Partial<Configuration> {}
 
   export const initial: Configuration = {
-    generateMipmaps: false,
+    useMipmap: false,
     internalFormat: null,
     minFilter: Filter.Linear,
     depthBuffer: true,
@@ -171,7 +170,7 @@ export namespace RenderTarget {
     colorSpace: null,
   };
   export const configure = (options?: Options): Configuration => ({
-    generateMipmaps: options?.generateMipmaps ?? initial.generateMipmaps,
+    useMipmap: options?.useMipmap ?? initial.useMipmap,
     internalFormat: options?.internalFormat ?? initial.internalFormat,
     minFilter: options?.minFilter ?? initial.minFilter,
     depthBuffer: options?.depthBuffer ?? initial.depthBuffer,

@@ -12,15 +12,14 @@ export class HearthFramebuffer extends HearthComponent {
 
     const { encoder, descriptor } = data;
 
-    let sourceGPU = this.#source(into);
+    const source = this.#source(into);
+    const destination = this.hearth.memo.get(into).texture;
 
-    const destinationGPU = this.hearth.memo.get(into).texture;
-
-    if (sourceGPU.format !== destinationGPU.format) {
+    if (source.format !== destination.format) {
       console.error(
         'Hearth: readFramebuffer: Source and destination formats do not match.',
-        sourceGPU.format,
-        destinationGPU.format,
+        source.format,
+        destination.format,
       );
 
       return;
@@ -30,16 +29,16 @@ export class HearthFramebuffer extends HearthComponent {
 
     encoder.copyTextureToTexture(
       {
-        texture: sourceGPU,
+        texture: source,
         origin: { x: 0, y: 0, z: 0 },
       },
       {
-        texture: destinationGPU,
+        texture: destination,
       },
       [into.image.width, into.image.height],
     );
 
-    if (into.generateMipmaps) this.hearth.textures.generateMipmaps(into);
+    if (into.useMipmap) this.hearth.textures.useMipmap(into);
 
     descriptor.colorAttachments[0].loadOp = GPULoadOpType.Load;
     if (context.useDepth) descriptor.depthStencilAttachment.depthLoadOp = GPULoadOpType.Load;
@@ -50,7 +49,7 @@ export class HearthFramebuffer extends HearthComponent {
   }
 
   #source(value: Texture) {
-    const context = this.hearth.context;
+    const context = this.hearth.context!;
 
     if (context.target) {
       if (DepthTexture.is(value)) {

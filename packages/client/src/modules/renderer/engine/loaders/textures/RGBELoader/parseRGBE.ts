@@ -58,7 +58,7 @@ const createDataTexture = (result: ParseResult): DataTexture =>
     magFilter: MagnificationTextureFilter.Linear,
     anisotropy: 1,
     colorSpace: ColorSpace.LinearSRGB,
-    generateMipmaps: false,
+    useMipmap: false,
     flipY: true,
     type: result.type,
     needsUpdate: true,

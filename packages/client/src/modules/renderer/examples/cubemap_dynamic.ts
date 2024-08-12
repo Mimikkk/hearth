@@ -54,7 +54,7 @@ async function init() {
   cubeRenderTarget.texture.type = Engine.TextureDataType.HalfFloat;
   cubeRenderTarget.texture.minFilter = Engine.MinificationTextureFilter.LinearMipmapLinear;
   cubeRenderTarget.texture.magFilter = Engine.MagnificationTextureFilter.Linear;
-  cubeRenderTarget.texture.generateMipmaps = true;
+  cubeRenderTarget.texture.useMipmap = true;
 
   cubeCamera = new Engine.CubeCamera(1, 1000, cubeRenderTarget);
 

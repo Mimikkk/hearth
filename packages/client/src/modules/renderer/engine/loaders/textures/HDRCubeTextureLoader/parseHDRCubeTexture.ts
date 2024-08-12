@@ -18,7 +18,7 @@ const createDataTexture = ({ image: { data, width, height } }: DataTexture, cube
     format: cube.format,
     minFilter: cube.minFilter,
     magFilter: cube.magFilter,
-    generateMipmaps: cube.generateMipmaps,
+    useMipmap: cube.useMipmap,
   });
 
 export type SupportedHDRType = TextureDataType.Float | TextureDataType.HalfFloat;
@@ -28,7 +28,7 @@ export const parseHDRCubeTexture = (buffers: ArrayBuffer[], type: SupportedHDRTy
     colorSpace: ColorSpace.LinearSRGB,
     minFilter: MinificationTextureFilter.Linear,
     magFilter: MagnificationTextureFilter.Linear,
-    generateMipmaps: false,
+    useMipmap: false,
     needsUpdate: true,
   });
   texture.images = buffers.map(buffer => createDataTexture(parseRGBE(buffer, type), texture));

@@ -4,15 +4,13 @@ import { MagnificationTextureFilter, MinificationTextureFilter } from '../../con
 export class VideoTexture extends Texture<HTMLVideoElement> {
   declare isVideoTexture: true;
 
-  constructor(
-    { video, ...params }: VideoTextureParameters,
-  ) {
+  constructor({ video, ...params }: VideoTextureParameters) {
     super({
       image: video,
       magFilter: MagnificationTextureFilter.Linear,
       minFilter: MinificationTextureFilter.Linear,
       ...params,
-      generateMipmaps: false,
+      useMipmap: false,
     });
 
     const updateVideo = () => {

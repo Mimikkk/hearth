@@ -196,7 +196,7 @@ export class HearthTexturesTexturePass {
     this.hearth.resources.textures.delete('mipmap-temporary-texture');
   }
 
-  generateMipmaps(texture: GPUTexture, descriptor: GPUTextureDescriptor, layer: number): void {
+  useMipmap(texture: GPUTexture, descriptor: GPUTextureDescriptor, layer: number): void {
     const pipeline = this.transferPipelines.get(descriptor.format);
     const { commandEncoders, bindGroups } = this.hearth.resources;
 

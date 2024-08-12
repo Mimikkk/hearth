@@ -5,12 +5,11 @@ export class DataTexture extends Texture {
   declare isDataTexture: true;
 
   constructor({ data = null, width = 1, height = 1, ...params }: DataTextureParameters) {
-
     super({
       image: { data, width, height },
       magFilter: MagnificationTextureFilter.Nearest,
       minFilter: MinificationTextureFilter.Nearest,
-      generateMipmaps: false,
+      useMipmap: false,
       flipY: false,
       unpackAlignment: 1,
       ...params,

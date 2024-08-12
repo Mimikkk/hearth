@@ -199,8 +199,8 @@ export class HearthRenderer extends HearthComponent {
 
     if (context.textures) {
       for (const texture of context.textures) {
-        if (!texture.generateMipmaps) continue;
-        this.hearth.textures.generateMipmaps(texture);
+        if (!texture.useMipmap) continue;
+        this.hearth.textures.useMipmap(texture);
       }
     }
 

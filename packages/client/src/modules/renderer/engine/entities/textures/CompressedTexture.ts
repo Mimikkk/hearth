@@ -45,7 +45,7 @@ export class CompressedTexture extends Texture {
 
     this.flipY = false;
 
-    this.generateMipmaps = false;
+    this.useMipmap = false;
   }
 }
 

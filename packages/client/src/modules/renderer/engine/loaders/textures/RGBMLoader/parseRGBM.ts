@@ -84,7 +84,7 @@ export const parseRGBM = (buffers: ArrayBuffer[], type: SupportedRGBMType, maxRa
   texture.type = type;
   texture.format = TextureFormat.RGBA;
   texture.minFilter = MinificationTextureFilter.Linear;
-  texture.generateMipmaps = false;
+  texture.useMipmap = false;
   texture.needsUpdate = true;
 
   return texture;

@@ -285,7 +285,7 @@ async function createTexture(
   texture.minFilter =
     faces[0].mipmaps.length === 1 ? MinificationTextureFilter.Linear : MinificationTextureFilter.LinearMipmapLinear;
   texture.magFilter = MagnificationTextureFilter.Linear;
-  texture.generateMipmaps = false;
+  texture.useMipmap = false;
 
   texture.colorSpace = parseColorSpace(container);
   texture.premultiplyAlpha = !!(dfdFlags & KHR_DF_FLAG_ALPHA_PREMULTIPLIED);

@@ -40,7 +40,7 @@ export class Texture<T = any> {
   rotation: number;
   matrixAutoUpdate: boolean;
   matrix: Mat3;
-  generateMipmaps: boolean;
+  useMipmap: boolean;
   premultiplyAlpha: boolean;
   flipY: boolean;
   unpackAlignment: number;
@@ -73,7 +73,8 @@ export class Texture<T = any> {
       anisotropy,
       type,
       colorSpace,
-      image, ...image,
+      image,
+      ...image,
     });
 
     this.name = config.name;
@@ -93,7 +94,7 @@ export class Texture<T = any> {
     this.center = config.center;
     this.rotation = config.rotation;
     this.matrixAutoUpdate = config.matrixAutoUpdate;
-    this.generateMipmaps = config.generateMipmaps;
+    this.useMipmap = config.useMipmap;
     this.premultiplyAlpha = config.premultiplyAlpha;
     this.flipY = config.flipY;
     this.unpackAlignment = config.unpackAlignment;
@@ -101,7 +102,6 @@ export class Texture<T = any> {
     this.userData = config.userData;
     this.isRenderTargetTexture = config.isRenderTargetTexture;
     this.needsPMREMUpdate = config.needsPMREMUpdate;
-
 
     this.version = 0;
     this.id = ++_textureId;
@@ -169,7 +169,7 @@ export class Texture<T = any> {
     this.matrixAutoUpdate = source.matrixAutoUpdate;
     this.matrix.from(source.matrix);
 
-    this.generateMipmaps = source.generateMipmaps;
+    this.useMipmap = source.useMipmap;
     this.premultiplyAlpha = source.premultiplyAlpha;
     this.flipY = source.flipY;
     this.unpackAlignment = source.unpackAlignment;
@@ -209,7 +209,7 @@ export interface TextureParameters<T = any> {
   center?: Vec2;
   rotation?: number;
   matrixAutoUpdate?: boolean;
-  generateMipmaps?: boolean;
+  useMipmap?: boolean;
   premultiplyAlpha?: boolean;
   flipY?: boolean;
   unpackAlignment?: number;
@@ -220,7 +220,7 @@ export interface TextureParameters<T = any> {
   name?: string;
   channel?: number;
   internalFormat?: PixelFormat | null;
-needsUpdate?: boolean;
+  needsUpdate?: boolean;
 }
 
 export interface TextureConfiguration {
@@ -240,7 +240,7 @@ export interface TextureConfiguration {
   center: Vec2;
   rotation: number;
   matrixAutoUpdate: boolean;
-  generateMipmaps: boolean;
+  useMipmap: boolean;
   premultiplyAlpha: boolean;
   flipY: boolean;
   unpackAlignment: number;
@@ -254,7 +254,7 @@ export interface TextureConfiguration {
   needsUpdate: boolean;
 }
 
-export const configure = <T, >(parameters?: TextureParameters<T>): TextureConfiguration => {
+export const configure = <T>(parameters?: TextureParameters<T>): TextureConfiguration => {
   return {
     internalFormat: parameters?.internalFormat ?? null,
     name: parameters?.name ?? '',
@@ -275,7 +275,7 @@ export const configure = <T, >(parameters?: TextureParameters<T>): TextureConfig
     center: parameters?.center ?? Vec2.new(0, 0),
     rotation: parameters?.rotation ?? 0,
     matrixAutoUpdate: parameters?.matrixAutoUpdate ?? true,
-    generateMipmaps: parameters?.generateMipmaps ?? true,
+    useMipmap: parameters?.useMipmap ?? true,
     premultiplyAlpha: parameters?.premultiplyAlpha ?? false,
     flipY: parameters?.flipY ?? true,
     unpackAlignment: parameters?.unpackAlignment ?? 4,

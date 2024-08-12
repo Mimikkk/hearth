@@ -207,7 +207,7 @@ export class PMREMGenerator {
     const params = {
       magFilter: Filter.Linear,
       minFilter: Filter.Linear,
-      generateMipmaps: false,
+      useMipmap: false,
       type: TextureDataType.HalfFloat,
       format: TextureFormat.RGBA,
       colorSpace: ColorSpace.LinearSRGB,

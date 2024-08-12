@@ -10,7 +10,7 @@ export class DataArrayTexture extends Texture {
       image: { data, width, height, depth },
       magFilter: MagnificationTextureFilter.Nearest,
       minFilter: MinificationTextureFilter.Nearest,
-      generateMipmaps: false,
+      useMipmap: false,
       flipY: false,
       unpackAlignment: 1,
       ...parameters,

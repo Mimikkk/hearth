@@ -73,9 +73,9 @@ export class CubeCamera extends Entity {
     const currentActiveCubeFace = hearth.activeCubeFace;
     const currentActiveMipmapLevel = hearth.activeMipmapLevel;
 
-    const generateMipmaps = renderTarget.texture.generateMipmaps;
+    const useMipmap = renderTarget.texture.useMipmap;
 
-    renderTarget.texture.generateMipmaps = false;
+    renderTarget.texture.useMipmap = false;
 
     hearth.updateRenderTarget(renderTarget, 0, activeMipmapLevel);
     hearth.render(scene, cameraPX);
@@ -92,7 +92,7 @@ export class CubeCamera extends Entity {
     hearth.updateRenderTarget(renderTarget, 4, activeMipmapLevel);
     hearth.render(scene, cameraPZ);
 
-    renderTarget.texture.generateMipmaps = generateMipmaps;
+    renderTarget.texture.useMipmap = useMipmap;
 
     hearth.updateRenderTarget(renderTarget, 5, activeMipmapLevel);
 
