@@ -22,7 +22,7 @@ import { f32, vec3, vec4 } from '../shadernode/ShaderNode.primitves.ts';
 import { AONode } from '../lighting/AONode.js';
 import { lightingContext } from '../lighting/LightingContextNode.js';
 import { EnvironmentNode } from '../lighting/EnvironmentNode.js';
-import { depthPixel } from '../display/ViewportDepthNode.js';
+import { depth, depthPixel } from '../display/ViewportDepthNode.js';
 import { cameraLogDepth } from '../accessors/CameraNode.js';
 import { clipping, clippingAlpha } from '../accessors/ClippingNode.js';
 import { faceDirection } from '../display/FrontFacingNode.js';
@@ -176,9 +176,7 @@ export class NodeMaterial extends ShaderMaterial {
       depthNode = fragDepth.log2().mul(cameraLogDepth).mul(0.5);
     }
 
-    if (depthNode !== null) {
-      depthPixel(depthNode).append();
-    }
+    if (depthNode) depth.assign(depthNode).append();
   }
 
   setupPosition(builder: NodeBuilder): Node | void {

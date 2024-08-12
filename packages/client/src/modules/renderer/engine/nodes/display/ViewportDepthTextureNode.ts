@@ -3,16 +3,13 @@ import { asCommand } from '../shadernode/ShaderNode.primitves.ts';
 import { viewportTopLeft } from './ViewportNode.js';
 import { implCommand } from '@modules/renderer/engine/nodes/core/Node.commands.js';
 import { DepthTexture } from '@modules/renderer/engine/entities/textures/DepthTexture.js';
+import { Node } from '@modules/renderer/engine/nodes/core/Node.js';
 
-let sharedDepthbuffer = null;
+const buffer = new DepthTexture();
 
 export class ViewportDepthTextureNode extends ViewportTextureNode {
-  constructor(uvNode = viewportTopLeft, levelNode = null) {
-    if (sharedDepthbuffer === null) {
-      sharedDepthbuffer = new DepthTexture();
-    }
-
-    super(uvNode, levelNode, sharedDepthbuffer);
+  constructor(uvNode: Node = viewportTopLeft, levelNode?: Node) {
+    super(uvNode, levelNode, buffer);
   }
 }
 

@@ -1,12 +1,12 @@
 import {
   checker,
   color,
-  depth,
-  depthTexture,
+  linearDepth,
   MeshBasicNodeMaterial,
   modelScale,
   toneMapping,
   uv,
+  viewportLinearDepth,
   viewportMipTexture,
   viewportSharedTexture,
   viewportTopLeft,
@@ -30,7 +30,7 @@ import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindow
 import { MiniUi } from '@mimi/mini-ui';
 
 const createMaterials = () => {
-  const depthDistance = depthTexture().distance(depth);
+  const depthDistance = viewportLinearDepth.distance(linearDepth());
   const depthAlpha = depthDistance.oneMinus().smoothstep(0.9, 2).mul(20).saturate();
 
   const createMaterialBlur = () => {
@@ -146,6 +146,17 @@ useWindowResizer(hearth, camera);
 MiniUi.create('Controls', { box, material: 'pixel' as keyof typeof materials })
   .number('box.scale.x', 'Box scale x', 0.1, 2, 0.01)
   .number('box.scale.z', 'Box scale z', 0.1, 2, 0.01)
-  .option('material', 'Material', Object.keys(materials), name => {
-    box.material = materials[name];
-  });
+  .option(
+    'material',
+    'Material',
+    {
+      blur: 'Blur',
+      volume: 'Volume',
+      depth: 'Depth',
+      bicubic: 'Bicubic',
+      pixel: 'Pixel',
+    },
+    name => {
+      box.material = materials[name];
+    },
+  );

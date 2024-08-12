@@ -1,71 +1,75 @@
 import { Node } from '../core/Node.js';
-import { f32, asCommand } from '../shadernode/ShaderNode.primitves.ts';
+import { asCommand } from '../shadernode/ShaderNode.primitves.ts';
 import { cameraFar, cameraNear } from '../accessors/CameraNode.js';
 import { positionView } from '../accessors/PositionNode.js';
 import { viewportDepthTexture } from './ViewportDepthTextureNode.js';
-import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
+import { NodeVal } from '@modules/renderer/engine/nodes/core/ConstNode.js';
 import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
+import type { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
+import { PerspectiveCamera } from '@modules/renderer/engine/entities/cameras/PerspectiveCamera.js';
 
-export class ViewportDepthNode extends Node {
-  declare isViewportDepthNode: true;
-  mode: NodeVariant;
-
-  constructor(public valueNode: Node) {
+export class ViewportBaseDepthNode extends Node {
+  constructor(public value?: Node) {
     super(TypeName.f32);
   }
 
   generate(builder: NodeBuilder): string {
-    if (this.mode === NodeVariant.DepthPixel) return builder.useFragDepth();
-    return super.generate(builder);
+    return builder.useFragDepth();
   }
 
-  setup(): Node {
-    switch (this.mode) {
-      case NodeVariant.Depth:
-        return viewZToOrthographicDepth(positionView.z, cameraNear, cameraFar);
-      case NodeVariant.DepthTexture:
-        const texture = this.valueNode || viewportDepthTexture();
-        const viewZ = perspectiveDepthToViewZ(texture, cameraNear, cameraFar);
+  setup({ camera }: NodeBuilder) {
+    const value = this.value;
 
-        return viewZToOrthographicDepth(viewZ, cameraNear, cameraFar);
-      case NodeVariant.DepthPixel:
-        return depthPixelBase()(this.valueNode);
+    if (value) return base().assign(value);
+    return null;
+  }
+}
+
+export class ViewportDepthNode extends Node {
+  constructor() {
+    super(TypeName.f32);
+  }
+
+  setup({ camera }: NodeBuilder) {
+    if (PerspectiveCamera.is(camera)) {
+      return viewZToPerspectiveDepth(positionView.z, cameraNear, cameraFar);
     }
+    return viewZToOrthographicDepth(positionView.z, cameraNear, cameraFar);
   }
 }
 
-ViewportDepthNode.prototype.isViewportDepthNode = true;
+export class ViewportLinearDepthNode extends Node {
+  constructor() {
+    super(TypeName.f32);
+  }
 
-enum NodeVariant {
-  Depth = 'depth',
-  DepthTexture = 'depthTexture',
-  DepthPixel = 'depthPixel',
+  setup({ camera }: NodeBuilder) {
+    if (!value) {
+      return viewZToOrthographicDepth(positionView.z, cameraNear, cameraFar);
+    }
+
+    if (PerspectiveCamera.is(camera)) {
+      const viewZ = perspectiveDepthToViewZ(value, cameraNear, cameraFar);
+
+      return viewZToOrthographicDepth(viewZ, cameraNear, cameraFar);
+    }
+
+    return value;
+  }
 }
 
-export const viewZToOrthographicDepth = (viewZ: number, near: number, far: number) =>
+export const viewZToOrthographicDepth = (viewZ: NodeVal<number>, near: NodeVal<number>, far: NodeVal<number>) =>
   viewZ.add(near).div(near.sub(far));
-export const orthographicDepthToViewZ = (depth: number, near: number, far: number) =>
+export const orthographicDepthToViewZ = (depth: NodeVal<number>, near: NodeVal<number>, far: NodeVal<number>) =>
   near.sub(far).mul(depth).sub(near);
-export const viewZToPerspectiveDepth = (viewZ: number, near: number, far: number) =>
-  near.add(viewZ).mul(far).div(near.sub(far).mul(viewZ));
-export const perspectiveDepthToViewZ = (depth: number, near: number, far: number) =>
+export const viewZToPerspectiveDepth = (viewZ: NodeVal<number>, near: NodeVal<number>, far: NodeVal<number>) =>
+  near.add(viewZ).mul(far).div(far.sub(near).mul(viewZ));
+export const perspectiveDepthToViewZ = (depth: NodeVal<number>, near: NodeVal<number>, far: NodeVal<number>) =>
   near.mul(far).div(far.sub(near).mul(depth).sub(far));
 
-const depthPixelBase = asCommand(
-  class extends ViewportDepthNode {
-    mode = NodeVariant.DepthPixel;
-  },
-);
-export const depth = new ViewportDepthNode(f32(0));
-depth.mode = NodeVariant.Depth;
+const base = asCommand(ViewportBaseDepthNode);
+export const depth = new ViewportDepthNode();
+depth.assign = base;
 
-export const depthTexture = asCommand(
-  class extends ViewportDepthNode {
-    mode = NodeVariant.DepthTexture;
-  },
-);
-export const depthPixel = asCommand(
-  class extends ViewportDepthNode {
-    mode = NodeVariant.DepthPixel;
-  },
-);
+export const linearDepth = asCommand(ViewportLinearDepthNode);
+export const viewportLinearDepth = linearDepth(viewportDepthTexture());
