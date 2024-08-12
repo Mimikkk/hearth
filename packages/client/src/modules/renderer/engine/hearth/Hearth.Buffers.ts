@@ -9,46 +9,6 @@ export class HearthBuffers extends HearthComponent {
   depth?: GPUTexture;
   #depth = new DepthTexture({ name: 'depth-buffer' });
 
-  readFramebuffer(into: Texture): void {
-    this.hearth.textures.updateTexture(into);
-
-    const context = this.hearth.context!;
-    const data = this.hearth.memo.get(context);
-
-    const { encoder, descriptor } = data;
-
-    const source = this.#readFramebufferSource(into);
-    const destination = this.hearth.memo.get(into).texture as Texture;
-
-    if (source.format !== destination.format) {
-      throw new Error(
-        `Hearth:Framebuffer: Source and destination format mismatch. source:${source.format} - destination:${destination.format}`,
-      );
-    }
-
-    data.pass.end();
-
-    encoder.copyTextureToTexture(
-      {
-        texture: source,
-        origin: { x: 0, y: 0, z: 0 },
-      },
-      {
-        texture: destination,
-      },
-      [into.image.width, into.image.height],
-    );
-
-    if (into.useMipmap) this.hearth.textures.useMipmap(into);
-
-    descriptor.colorAttachments[0].loadOp = GPULoadOpType.Load;
-    if (context.useDepth) descriptor.depthStencilAttachment.depthLoadOp = GPULoadOpType.Load;
-    if (context.useStencil) descriptor.depthStencilAttachment.stencilLoadOp = GPULoadOpType.Load;
-
-    data.pass = encoder.beginRenderPass(descriptor);
-    data.sets = { attributes: {} };
-  }
-
   useColor(): GPUTexture {
     if (this.color) this.color.destroy();
 
@@ -107,6 +67,46 @@ export class HearthBuffers extends HearthComponent {
     this.depth = this.hearth.memo.get(cpuTexture).texture;
 
     return this.depth!;
+  }
+
+  readFramebuffer(into: Texture): void {
+    this.hearth.textures.updateTexture(into);
+
+    const context = this.hearth.context!;
+    const data = this.hearth.memo.get(context);
+
+    const { encoder, descriptor } = data;
+
+    const source = this.#readFramebufferSource(into);
+    const destination = this.hearth.memo.get(into).texture as Texture;
+
+    if (source.format !== destination.format) {
+      throw new Error(
+        `Hearth:Framebuffer: Source and destination format mismatch. source:${source.format} - destination:${destination.format}`,
+      );
+    }
+
+    data.pass.end();
+
+    encoder.copyTextureToTexture(
+      {
+        texture: source,
+        origin: { x: 0, y: 0, z: 0 },
+      },
+      {
+        texture: destination,
+      },
+      [into.image.width, into.image.height],
+    );
+
+    if (into.useMipmap) this.hearth.textures.useMipmap(into);
+
+    descriptor.colorAttachments[0].loadOp = GPULoadOpType.Load;
+    if (context.useDepth) descriptor.depthStencilAttachment.depthLoadOp = GPULoadOpType.Load;
+    if (context.useStencil) descriptor.depthStencilAttachment.stencilLoadOp = GPULoadOpType.Load;
+
+    data.pass = encoder.beginRenderPass(descriptor);
+    data.sets = { attributes: {} };
   }
 
   #readFramebufferSource(value: Texture) {
