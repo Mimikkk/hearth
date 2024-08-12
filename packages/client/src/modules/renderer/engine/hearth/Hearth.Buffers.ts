@@ -3,7 +3,6 @@ import { Texture } from '@modules/renderer/engine/entities/textures/Texture.js';
 import { DepthTexture } from '@modules/renderer/engine/entities/textures/DepthTexture.js';
 import { GPULoadOpType, GPUTextureFormatType } from '@modules/renderer/engine/hearth/constants.js';
 import { TextureDataType, TextureFormat } from '@modules/renderer/engine/constants.js';
-import { RenderContext } from '@modules/renderer/engine/hearth/core/RenderContext.js';
 
 export class HearthBuffers extends HearthComponent {
   color?: GPUTexture;
@@ -69,7 +68,7 @@ export class HearthBuffers extends HearthComponent {
     const { width, height } = this.hearth.getDrawSize();
 
     const cpuTexture = this.#depth;
-    const gpuTexture = this.hearth.memo.get(cpuTexture).texture;
+    const gpuTexture = this.depth;
 
     let format!: TextureFormat;
     let type!: TextureDataType;
@@ -105,8 +104,9 @@ export class HearthBuffers extends HearthComponent {
       width,
       height,
     });
+    this.depth = this.hearth.memo.get(cpuTexture).texture;
 
-    return this.hearth.memo.get(cpuTexture).texture;
+    return this.depth!;
   }
 
   #readFramebufferSource(value: Texture) {
@@ -117,7 +117,7 @@ export class HearthBuffers extends HearthComponent {
         return this.hearth.memo.get(context.depthTexture).texture;
       }
 
-      return this.hearth.memo.get(context.textures[0]).texture;
+      return this.hearth.memo.get(context.textures![0]).texture;
     }
 
     if (DepthTexture.is(value)) {

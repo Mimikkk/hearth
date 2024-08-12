@@ -42,9 +42,6 @@ export class HearthTextures extends DataMap<any, any> {
     this._passUtils = null;
     this.defaultTexture = null;
     this.defaultCubeTexture = null;
-
-    this.depthTexture = new DepthTexture();
-    this.depthTexture.name = 'depthBuffer';
   }
 
   updateRenderTarget(renderTarget: RenderTarget, activeMipmapLevel: number = this.hearth.activeMipmapLevel) {
@@ -258,7 +255,6 @@ export class HearthTextures extends DataMap<any, any> {
   _passUtils: HearthTexturesTexturePass | null;
   defaultTexture: Texture | null;
   defaultCubeTexture: CubeTexture | null;
-  depthTexture: DepthTexture;
 
   createSampler(texture: Texture) {
     const { device, memo } = this.hearth;
