@@ -30,8 +30,8 @@ import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindow
 import { MiniUi } from '@mimi/mini-ui';
 
 const createMaterials = () => {
-  const depthDistance = viewportLinearDepth.distance(linearDepth());
-  const depthAlpha = depthDistance.oneMinus().smoothstep(0.9, 2).mul(20).saturate();
+  const depthDistance = viewportLinearDepth; //.distance(linearDepth());
+  const depthAlpha = depthDistance; //.oneMinus(); //.smoothstep(0.9, 2).mul(20).saturate();
 
   const createMaterialBlur = () => {
     const blur = viewportMipTexture()
@@ -128,7 +128,7 @@ const { michelle, mixer } = await loadMichelle();
 
 const materials = createMaterials();
 
-const box = createBox(materials.pixel);
+const box = createBox(materials.depth);
 const floor = createFloor();
 
 const scene = createScene().add(michelle, box, floor);

@@ -9,7 +9,7 @@ import type { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBui
 import { PerspectiveCamera } from '@modules/renderer/engine/entities/cameras/PerspectiveCamera.js';
 
 export class ViewportBaseDepthNode extends Node {
-  constructor(public value?: Node) {
+  constructor(public value: Node | null = null) {
     super(TypeName.f32);
   }
 
@@ -39,11 +39,13 @@ export class ViewportDepthNode extends Node {
 }
 
 export class ViewportLinearDepthNode extends Node {
-  constructor() {
+  constructor(public value: Node | null = null) {
     super(TypeName.f32);
   }
 
   setup({ camera }: NodeBuilder) {
+    const value = this.value;
+
     if (!value) {
       return viewZToOrthographicDepth(positionView.z, cameraNear, cameraFar);
     }

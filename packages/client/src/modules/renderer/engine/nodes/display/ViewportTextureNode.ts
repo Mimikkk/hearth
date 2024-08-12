@@ -12,51 +12,48 @@ const _size = Vec2.new();
 
 export class ViewportTextureNode extends TextureNode {
   generateMipmaps: boolean = false;
-  isOutputTextureNode: boolean;
   updateBeforeType: NodeUpdateStage;
 
   constructor(
-    uvNode = viewportTopLeft,
-    levelNode: Node | null = null,
-    framebufferTexture: FramebufferTexture | null = null,
+    uv: Node = viewportTopLeft,
+    level: Node | null = null,
+    framebuffer: FramebufferTexture = new FramebufferTexture({
+      width: 1,
+      height: 1,
+      minFilter: MinificationTextureFilter.LinearMipmapLinear,
+    }),
   ) {
-    if (framebufferTexture === null) {
-      framebufferTexture = new FramebufferTexture({ width: 1, height: 1 });
-      framebufferTexture.minFilter = MinificationTextureFilter.LinearMipmapLinear;
-    }
+    super(framebuffer, uv, level);
 
-    super(framebufferTexture, uvNode, levelNode);
-
-    this.isOutputTextureNode = true;
     this.updateBeforeType = NodeUpdateStage.Frame;
   }
 
   updateBefore(frame: NodeFrame): void {
     const hearth = frame.hearth;
     hearth.getDrawSize(_size);
-    ``;
-    const framebufferTexture = this.value;
-    if (framebufferTexture.image.width !== _size.width || framebufferTexture.image.height !== _size.height) {
-      framebufferTexture.image.width = _size.width;
-      framebufferTexture.image.height = _size.height;
-      framebufferTexture.needsUpdate = true;
+
+    const texture = this.value;
+    if (texture.image.width !== _size.width || texture.image.height !== _size.height) {
+      texture.image.width = _size.width;
+      texture.image.height = _size.height;
+
+      texture.needsUpdate = true;
     }
 
-    const currentGenerateMipmaps = framebufferTexture.generateMipmaps;
-    framebufferTexture.generateMipmaps = this.generateMipmaps;
+    const currentGenerateMipmaps = texture.generateMipmaps;
+    texture.generateMipmaps = this.generateMipmaps;
 
-    hearth.readFramebuffer(framebufferTexture);
+    hearth.readFramebuffer(texture);
 
-    framebufferTexture.generateMipmaps = currentGenerateMipmaps;
+    texture.generateMipmaps = currentGenerateMipmaps;
   }
 }
-
-export const viewportTexture = asCommand(ViewportTextureNode);
 
 export class ViewportMipTextureNode extends ViewportTextureNode {
   generateMipmaps = true;
 }
 
+export const viewportTexture = asCommand(ViewportTextureNode);
 export const viewportMipTexture = asCommand(ViewportMipTextureNode);
 
 implCommand('viewportTexture', ViewportTextureNode);
