@@ -418,7 +418,7 @@ export class HearthRenderer extends HearthComponent {
       const colorAttachment = descriptor.colorAttachments[0];
 
       if (antialias === true) {
-        colorAttachment.view = this.hearth.colorBuffer.createView();
+        colorAttachment.view = this.hearth.buffers.color!.createView();
       } else {
         colorAttachment.resolveTarget = undefined;
       }

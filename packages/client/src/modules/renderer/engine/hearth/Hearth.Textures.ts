@@ -424,21 +424,6 @@ export class HearthTextures extends DataMap<any, any> {
     }
   }
 
-  getColorBuffer() {
-    if (this.colorBuffer) this.colorBuffer.destroy();
-
-    const { width, height } = this.hearth.getDrawSize();
-    this.colorBuffer = this.hearth.device.createTexture({
-      label: 'colorBuffer',
-      size: { width, height, depthOrArrayLayers: 1 },
-      sampleCount: this.hearth.parameters.sampleCount,
-      format: GPUTextureFormatType.BGRA8Unorm,
-      usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.COPY_SRC,
-    });
-
-    return this.colorBuffer;
-  }
-
   getDepthBuffer(depth: boolean = true, stencil: boolean = false) {
     const { memo } = this.hearth;
     const { width, height } = this.hearth.getDrawSize();

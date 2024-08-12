@@ -1,10 +1,10 @@
 import { HearthComponent } from '@modules/renderer/engine/hearth/Hearth.Component.js';
 import { Texture } from '@modules/renderer/engine/entities/textures/Texture.js';
 import { DepthTexture } from '@modules/renderer/engine/entities/textures/DepthTexture.js';
-import { GPULoadOpType } from '@modules/renderer/engine/hearth/constants.js';
+import { GPULoadOpType, GPUTextureFormatType } from '@modules/renderer/engine/hearth/constants.js';
 
-export class HearthFramebuffer extends HearthComponent {
-  read(into: Texture): void {
+export class HearthBuffers extends HearthComponent {
+  readFramebuffer(into: Texture): void {
     this.hearth.textures.updateTexture(into);
 
     const context = this.hearth.context!;
@@ -13,10 +13,12 @@ export class HearthFramebuffer extends HearthComponent {
     const { encoder, descriptor } = data;
 
     const source = this.#source(into);
-    const destination = this.hearth.memo.get(into).texture;
+    const destination = this.hearth.memo.get(into).texture as Texture;
 
     if (source.format !== destination.format) {
-      throw new Error('Hearth:Framebuffer: Source and destination format mismatch.', source.format, destination.format);
+      throw new Error(
+        `Hearth:Framebuffer: Source and destination format mismatch. source:${source.format} - destination:${destination.format}`,
+      );
     }
 
     data.pass.end();
@@ -40,6 +42,23 @@ export class HearthFramebuffer extends HearthComponent {
 
     data.pass = encoder.beginRenderPass(descriptor);
     data.sets = { attributes: {} };
+  }
+
+  color?: GPUTexture;
+
+  useColor(): GPUTexture {
+    if (this.color) this.color.destroy();
+
+    const { width, height } = this.hearth.getDrawSize();
+    this.color = this.hearth.device.createTexture({
+      label: 'HearthBuffers: color',
+      size: { width, height, depthOrArrayLayers: 1 },
+      sampleCount: this.hearth.parameters.sampleCount,
+      format: GPUTextureFormatType.BGRA8Unorm,
+      usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.COPY_SRC,
+    });
+
+    return this.color;
   }
 
   #source(value: Texture) {

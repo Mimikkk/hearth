@@ -48,7 +48,7 @@ import { Attribute } from '@modules/renderer/engine/core/Attribute.js';
 import { Plane } from '@modules/renderer/engine/math/Plane.js';
 import { Frustum } from '@modules/renderer/engine/math/Frustum.js';
 import { Mat4 } from '@modules/renderer/engine/math/Mat4.js';
-import { HearthFramebuffer } from '@modules/renderer/engine/hearth/Hearth.Framebuffer.js';
+import { HearthBuffers } from '@modules/renderer/engine/hearth/Hearth.Buffers.js';
 
 export class Hearth {
   stats: HearthStatistics;
@@ -82,12 +82,11 @@ export class Hearth {
   textures: HearthTextures;
   background: HearthBackground;
   utilities: HearthUtilities;
-  framebuffer: HearthFramebuffer;
+  buffers: HearthBuffers;
 
   memo: WeakMemo<any, any> = new WeakMemo(() => ({}));
   device: GPUDevice;
   adapter: GPUAdapter;
-  colorBuffer: GPUTexture;
 
   context: RenderContext | null;
   target: RenderTarget | null;
@@ -166,7 +165,7 @@ export class Hearth {
     this.computer = new HearthComputer(this);
     this.timestamp = new HearthTimestamp(this);
     this.occlusion = new HearthOcclusion(this);
-    this.framebuffer = new HearthFramebuffer(this);
+    this.buffers = new HearthBuffers(this);
     this.renderLists = new HearthQueues();
     this.renderContexts = new HearthContexts();
     this.context = null;
@@ -197,7 +196,7 @@ export class Hearth {
 
     hearth.device = device;
     hearth.adapter = adapter;
-    hearth.colorBuffer = hearth.textures.getColorBuffer();
+    hearth.buffers.useColor();
 
     hearth.parameters.context.configure({
       device,
@@ -585,7 +584,7 @@ export class Hearth {
   }
 
   readFramebuffer(into: Texture): void {
-    this.framebuffer.read(into);
+    this.buffers.readFramebuffer(into);
   }
 
   getMaxAnisotropy() {
@@ -593,7 +592,7 @@ export class Hearth {
   }
 
   updateSize() {
-    this.colorBuffer = this.textures.getColorBuffer();
+    this.buffers.useColor();
     this.renderer.renderPassDescriptor = null;
   }
 
