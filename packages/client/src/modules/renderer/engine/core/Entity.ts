@@ -61,8 +61,8 @@ export class Entity {
   renderOrder: number;
   layers: RaycastLayers;
   visible: boolean;
-  count: number = 1;
-  extra: Record<string, any> = {};
+  count: number;
+  extra: Record<string, any>;
 
   constructor(parameters?: EntityParameters) {
     this.name = parameters?.name ?? '';
@@ -78,6 +78,8 @@ export class Entity {
     this.useShadowCast = parameters?.useShadowCast ?? false;
     this.useFrustumCull = parameters?.useFrustumCull ?? true;
     this.renderOrder = parameters?.renderOrder ?? 0;
+    this.count = parameters?.count ?? 1;
+    this.extra = parameters?.extra ?? {};
 
     this.id = _id++;
     this.uuid = v4();
@@ -596,6 +598,8 @@ interface EntityParameters {
   renderOrder?: number;
   layers?: RaycastLayers;
   visible?: boolean;
+  extra?: Record<string, any>;
+  count?: number;
 }
 
 const isCamera = (object: any): object is Camera => object.isCamera;
