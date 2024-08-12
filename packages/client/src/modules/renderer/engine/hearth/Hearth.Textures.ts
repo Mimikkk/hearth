@@ -43,8 +43,6 @@ export class HearthTextures extends DataMap<any, any> {
     this.defaultTexture = null;
     this.defaultCubeTexture = null;
 
-    this.colorBuffer = null;
-
     this.depthTexture = new DepthTexture();
     this.depthTexture.name = 'depthBuffer';
   }
@@ -260,7 +258,6 @@ export class HearthTextures extends DataMap<any, any> {
   _passUtils: HearthTexturesTexturePass | null;
   defaultTexture: Texture | null;
   defaultCubeTexture: CubeTexture | null;
-  colorBuffer: GPUTexture | null;
   depthTexture: DepthTexture;
 
   createSampler(texture: Texture) {
@@ -278,7 +275,7 @@ export class HearthTextures extends DataMap<any, any> {
       maxAnisotropy: texture.anisotropy,
     };
 
-    if (isDepthTexture(texture) && texture.compare !== null) {
+    if (isDepthTexture(texture) && texture.compare) {
       samplerDescriptorGPU.compare = _compareToWebGPU[texture.compare];
     }
 
@@ -422,48 +419,6 @@ export class HearthTextures extends DataMap<any, any> {
     } else {
       this._useMipmap(textureData.texture, textureData.textureDescriptorGPU);
     }
-  }
-
-  getDepthBuffer(depth: boolean = true, stencil: boolean = false) {
-    const { memo } = this.hearth;
-    const { width, height } = this.hearth.getDrawSize();
-
-    const depthTexture = this.depthTexture;
-    const depthTextureGPU = memo.get(depthTexture).texture;
-
-    let format!: TextureFormat;
-    let type!: TextureDataType;
-
-    if (stencil) {
-      format = TextureFormat.DepthStencil;
-      type = TextureDataType.UnsignedInt248;
-    } else if (depth) {
-      format = TextureFormat.Depth;
-      type = TextureDataType.UnsignedInt;
-    }
-
-    if (depthTextureGPU !== undefined) {
-      if (
-        depthTexture.image.width === width &&
-        depthTexture.image.height === height &&
-        depthTexture.format === format &&
-        depthTexture.type === type
-      ) {
-        return depthTextureGPU;
-      }
-
-      this.destroyTexture(depthTexture);
-    }
-
-    depthTexture.name = 'depthBuffer';
-    depthTexture.format = format;
-    depthTexture.type = type;
-    depthTexture.image.width = width;
-    depthTexture.image.height = height;
-
-    this.createTexture(depthTexture, { sampleCount: this.hearth.parameters.sampleCount, width, height });
-
-    return memo.get(depthTexture).texture;
   }
 
   updateTextureTex(

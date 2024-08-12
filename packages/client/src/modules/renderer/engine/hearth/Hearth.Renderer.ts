@@ -409,8 +409,8 @@ export class HearthRenderer extends HearthComponent {
           },
         ],
         depthStencilAttachment: {
-          view: this.hearth.textures
-            .getDepthBuffer(this.hearth.parameters.useDepth, this.hearth.parameters.useStencil)
+          view: this.hearth.buffers
+            .useDepthStencil(this.hearth.parameters.useDepth, this.hearth.parameters.useStencil)
             .createView(),
         },
       };

@@ -1,52 +1,29 @@
-import { Texture } from './Texture.js';
+import { Texture, TextureParameters } from './Texture.js';
 import {
   DepthComparison,
   MagnificationTextureFilter,
-  Mapping,
   MinificationTextureFilter,
   TextureDataType,
   TextureFormat,
-  Wrapping,
 } from '../../constants.js';
 
 export class DepthTexture extends Texture {
   declare isDepthTexture: true;
-  compare: DepthComparison | null;
+  compare?: DepthComparison;
 
-  constructor(
-    width: number,
-    height: number,
-    type: TextureDataType,
-    mapping: Mapping,
-    wrapS: Wrapping,
-    wrapT: Wrapping,
-    magFilter: MagnificationTextureFilter,
-    minFilter: MinificationTextureFilter,
-    anisotropy: number,
-    format: TextureFormat,
-  ) {
-    format = format !== undefined ? format : TextureFormat.Depth;
-
-    if (format !== TextureFormat.Depth && format !== TextureFormat.DepthStencil) {
-      throw new Error(
-        'DepthTexture format must be either engine.TextureFormat.Depth or engine.TextureFormat.DepthStencil',
-      );
-    }
-
-    if (type === undefined && format === TextureFormat.Depth) type = TextureDataType.UnsignedInt;
-    if (type === undefined && format === TextureFormat.DepthStencil) type = TextureDataType.UnsignedInt248;
-
-    super(null as never, mapping, wrapS, wrapT, magFilter, minFilter, format, type, anisotropy);
-
-    this.image = { width: width, height: height };
-
-    this.magFilter = magFilter ?? MagnificationTextureFilter.Nearest;
-    this.minFilter = minFilter ?? MinificationTextureFilter.Nearest;
-
-    this.flipY = false;
-    this.useMipmap = false;
-
-    this.compare = null;
+  constructor({
+    width,
+    height,
+    format = TextureFormat.Depth,
+    type = format === TextureFormat.Depth ? TextureDataType.UnsignedInt : TextureDataType.UnsignedInt248,
+    magFilter = MagnificationTextureFilter.Nearest,
+    minFilter = MinificationTextureFilter.Nearest,
+    flipY = false,
+    useMipmap = false,
+    ...parameters
+  }: DepthTextureParameters = {}) {
+    super({ ...parameters, image: { width, height }, magFilter, minFilter, format, type });
+    this.compare = parameters.compare;
   }
 
   static is(value: any): value is DepthTexture {
@@ -63,3 +40,11 @@ export class DepthTexture extends Texture {
 }
 
 DepthTexture.prototype.isDepthTexture = true;
+
+export interface DepthTextureParameters extends Omit<TextureParameters, 'image'> {
+  width?: number;
+  height?: number;
+  type?: TextureDataType;
+  format?: TextureFormat.Depth | TextureFormat.DepthStencil;
+  compare?: DepthComparison;
+}

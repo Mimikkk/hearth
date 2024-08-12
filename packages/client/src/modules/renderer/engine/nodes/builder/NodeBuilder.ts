@@ -1178,7 +1178,7 @@ export class NodeBuilder {
           this.isUnfilterable(texture) === false &&
           uniform.node.isStoreTextureNode !== true
         ) {
-          if (texture.isDepthTexture === true && texture.compare !== null) {
+          if (texture.isDepthTexture === true && texture.compare) {
             bindingSnippets.push(`@binding(${index++}) @group(0) var ${uniform.name}_sampler: sampler_comparison;`);
           } else {
             bindingSnippets.push(`@binding(${index++}) @group(0) var ${uniform.name}_sampler: sampler;`);

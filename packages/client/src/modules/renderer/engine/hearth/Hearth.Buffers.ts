@@ -2,8 +2,14 @@ import { HearthComponent } from '@modules/renderer/engine/hearth/Hearth.Componen
 import { Texture } from '@modules/renderer/engine/entities/textures/Texture.js';
 import { DepthTexture } from '@modules/renderer/engine/entities/textures/DepthTexture.js';
 import { GPULoadOpType, GPUTextureFormatType } from '@modules/renderer/engine/hearth/constants.js';
+import { TextureDataType, TextureFormat } from '@modules/renderer/engine/constants.js';
+import { RenderContext } from '@modules/renderer/engine/hearth/core/RenderContext.js';
 
 export class HearthBuffers extends HearthComponent {
+  color?: GPUTexture;
+  depth?: GPUTexture;
+  #depth = new DepthTexture({ name: 'depth-buffer' });
+
   readFramebuffer(into: Texture): void {
     this.hearth.textures.updateTexture(into);
 
@@ -12,7 +18,7 @@ export class HearthBuffers extends HearthComponent {
 
     const { encoder, descriptor } = data;
 
-    const source = this.#source(into);
+    const source = this.#readFramebufferSource(into);
     const destination = this.hearth.memo.get(into).texture as Texture;
 
     if (source.format !== destination.format) {
@@ -44,8 +50,6 @@ export class HearthBuffers extends HearthComponent {
     data.sets = { attributes: {} };
   }
 
-  color?: GPUTexture;
-
   useColor(): GPUTexture {
     if (this.color) this.color.destroy();
 
@@ -61,7 +65,51 @@ export class HearthBuffers extends HearthComponent {
     return this.color;
   }
 
-  #source(value: Texture) {
+  useDepthStencil(useDepth: boolean, useStencil: boolean): GPUTexture {
+    const { width, height } = this.hearth.getDrawSize();
+
+    const cpuTexture = this.#depth;
+    const gpuTexture = this.hearth.memo.get(cpuTexture).texture;
+
+    let format!: TextureFormat;
+    let type!: TextureDataType;
+
+    if (useStencil) {
+      format = TextureFormat.DepthStencil;
+      type = TextureDataType.UnsignedInt248;
+    } else if (useDepth) {
+      format = TextureFormat.Depth;
+      type = TextureDataType.UnsignedInt;
+    }
+
+    if (gpuTexture) {
+      if (
+        cpuTexture.image.width === width &&
+        cpuTexture.image.height === height &&
+        cpuTexture.format === format &&
+        cpuTexture.type === type
+      ) {
+        return gpuTexture;
+      }
+
+      this.hearth.textures.destroyTexture(cpuTexture);
+    }
+
+    cpuTexture.format = format;
+    cpuTexture.type = type;
+    cpuTexture.image.width = width;
+    cpuTexture.image.height = height;
+
+    this.hearth.textures.createTexture(cpuTexture, {
+      sampleCount: this.hearth.parameters.sampleCount,
+      width,
+      height,
+    });
+
+    return this.hearth.memo.get(cpuTexture).texture;
+  }
+
+  #readFramebufferSource(value: Texture) {
     const context = this.hearth.context!;
 
     if (context.target) {
@@ -73,7 +121,7 @@ export class HearthBuffers extends HearthComponent {
     }
 
     if (DepthTexture.is(value)) {
-      return this.hearth.textures.getDepthBuffer(context.useDepth, context.useStencil);
+      return this.useDepthStencil(context.useDepth, context.useStencil);
     }
 
     return this.hearth.parameters.context.getCurrentTexture();
