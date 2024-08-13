@@ -535,37 +535,6 @@ export class HearthPipelines extends DataMap<any, any> {
     }
   }
 
-  _getBlendOperation(blendEquation: BlendingEquation): GPUBlendOperation {
-    let blendOperation: GPUBlendOperation = GPUBlendOperationType.Add;
-
-    switch (blendEquation) {
-      case BlendingEquation.Add:
-        blendOperation = GPUBlendOperationType.Add;
-        break;
-
-      case BlendingEquation.Subtract:
-        blendOperation = GPUBlendOperationType.Subtract;
-        break;
-
-      case BlendingEquation.ReverseSubtract:
-        blendOperation = GPUBlendOperationType.ReverseSubtract;
-        break;
-
-      case BlendingEquation.Min:
-        blendOperation = GPUBlendOperationType.Min;
-        break;
-
-      case BlendingEquation.Max:
-        blendOperation = GPUBlendOperationType.Max;
-        break;
-
-      default:
-        console.error('PipelineUtils: Blend equation not supported.', blendEquation);
-    }
-
-    return blendOperation;
-  }
-
   _getPrimitiveState(object: Entity, geometry: Geometry, material: Material): GPUPrimitiveState {
     const descriptor: GPUPrimitiveState = {};
     const utils = this.hearth.utilities;
