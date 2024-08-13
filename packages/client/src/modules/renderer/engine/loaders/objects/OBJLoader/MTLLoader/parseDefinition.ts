@@ -1,10 +1,11 @@
-import { ColorSpace, Side, Wrapping } from '@modules/renderer/engine/constants.js';
+import { ColorSpace, Side } from '@modules/renderer/engine/constants.js';
 import { MeshPhongMaterial } from '@modules/renderer/engine/entities/materials/MeshPhongMaterial.js';
 import { TextureLoader } from '@modules/renderer/engine/loaders/textures/TextureLoader/TextureLoader.js';
 import { Color } from '@modules/renderer/engine/math/Color.js';
 import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
 import { MaterialDefinition, Token } from '@modules/renderer/engine/loaders/objects/OBJLoader/MTLLoader/parseMTL.js';
 import { LoaderUtils } from '@modules/renderer/engine/loaders/LoaderUtils.js';
+import { GPUAddressModeType } from '@modules/renderer/engine/hearth/constants.js';
 
 const delimiterRe = /\s+/;
 
@@ -51,7 +52,7 @@ const loadMap = async (
   baseUrl: string,
   value: string,
   materialParameters: Record<string, any>,
-  wrap: Wrapping,
+  wrap: GPUAddressModeType,
   useColorspace?: boolean,
 ) => {
   const textureParams = parseParams(value, materialParameters);
@@ -71,7 +72,7 @@ export async function parseDefinition(
   name: string,
   definition: MaterialDefinition,
   side: Side,
-  wrap: Wrapping,
+  wrap: GPUAddressModeType,
 ): Promise<MeshPhongMaterial> {
   const materialParameters: Record<string, any> = {
     name,

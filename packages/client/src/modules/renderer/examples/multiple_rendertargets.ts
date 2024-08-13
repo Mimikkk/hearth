@@ -22,6 +22,7 @@ import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 import { QuadMesh } from '@modules/renderer/engine/entities/QuadMesh.js';
 import { TextureLoader } from '@modules/renderer/engine/loaders/textures/TextureLoader/TextureLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
+import { GPUAddressModeType } from '@modules/renderer/engine/engine.js';
 
 let camera, scene, hearth, torus;
 let quadMesh, renderTarget;
@@ -108,8 +109,8 @@ async function init() {
 
   const diffuse = await loader.loadAsync('resources/textures/hardwood2_diffuse.jpg', render);
   diffuse.colorSpace = Engine.ColorSpace.SRGB;
-  diffuse.wrapS = Engine.Wrapping.Repeat;
-  diffuse.wrapT = Engine.Wrapping.Repeat;
+  diffuse.wrapS = GPUAddressModeType.Repeat;
+  diffuse.wrapT = GPUAddressModeType.Repeat;
 
   torus = new Engine.Mesh(new Engine.TorusKnotGeometry(1, 0.3, 128, 32), new WriteGBufferMaterial(diffuse));
 

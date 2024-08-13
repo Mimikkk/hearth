@@ -16,6 +16,7 @@ import {
   DirectionalLight,
   Fog,
   GLTFLoader,
+  GPUAddressModeType,
   Hearth,
   HemisphereLight,
   Mesh,
@@ -24,7 +25,6 @@ import {
   Scene,
   TextureLoader,
   Vec3,
-  Wrapping,
 } from '@modules/renderer/engine/engine.js';
 
 const createCamera = () => {
@@ -73,13 +73,13 @@ const loadFloor = async () => {
   const textureLoader = new TextureLoader();
 
   const floorColor = await textureLoader.loadAsync('resources/textures/floors/FloorsCheckerboard_S_Diffuse.jpg');
-  floorColor.wrapS = Wrapping.Repeat;
-  floorColor.wrapT = Wrapping.Repeat;
+  floorColor.wrapS = GPUAddressModeType.Repeat;
+  floorColor.wrapT = GPUAddressModeType.Repeat;
   floorColor.colorSpace = ColorSpace.SRGB;
 
   const floorNormal = await textureLoader.loadAsync('resources/textures/floors/FloorsCheckerboard_S_Normal.jpg');
-  floorNormal.wrapS = Wrapping.Repeat;
-  floorNormal.wrapT = Wrapping.Repeat;
+  floorNormal.wrapS = GPUAddressModeType.Repeat;
+  floorNormal.wrapT = GPUAddressModeType.Repeat;
 
   const floorUV = uv().mul(15);
   const floorNormalOffset = texture(floorNormal, floorUV).xy.mul(2).sub(1).mul(0.02);

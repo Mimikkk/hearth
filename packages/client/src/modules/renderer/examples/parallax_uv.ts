@@ -7,6 +7,7 @@ import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitControls.js';
 import { CubeTextureLoader } from '@modules/renderer/engine/loaders/textures/CubeTextureLoader/CubeTextureLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
+import { GPUAddressModeType } from '@modules/renderer/engine/engine.js';
 
 let camera, scene, hearth;
 
@@ -48,8 +49,8 @@ async function init() {
 
   const bottomTexture = await loader.loadAsync('resources/textures/ambientcg/Ice003_1K-JPG_Color.jpg');
   bottomTexture.colorSpace = Engine.ColorSpace.SRGB;
-  bottomTexture.wrapS = Engine.Wrapping.Repeat;
-  bottomTexture.wrapT = Engine.Wrapping.Repeat;
+  bottomTexture.wrapS = GPUAddressModeType.Repeat;
+  bottomTexture.wrapT = GPUAddressModeType.Repeat;
 
   const parallaxScale = 0.3;
   const offsetUV = texture(displaceTexture).mul(parallaxScale);

@@ -1,9 +1,10 @@
 import { classLoader } from '@modules/renderer/engine/loaders/types.js';
-import { Side, Wrapping } from '@modules/renderer/engine/constants.js';
+import { Side } from '@modules/renderer/engine/constants.js';
 import { MeshPhongMaterial } from '@modules/renderer/engine/entities/materials/MeshPhongMaterial.js';
 import { MaterialDefinitionRecord } from '@modules/renderer/engine/loaders/objects/OBJLoader/MTLLoader/parseMTL.js';
 import { parseDefinition } from '@modules/renderer/engine/loaders/objects/OBJLoader/MTLLoader/parseDefinition.js';
 import { convertDefinitions } from '@modules/renderer/engine/loaders/objects/OBJLoader/MTLLoader/convertDefinitions.js';
+import { GPUAddressModeType } from '@modules/renderer/engine/hearth/constants.js';
 
 export class MTLMaterialCreator extends classLoader<{
   This: MTLMaterialCreator;
@@ -16,7 +17,7 @@ export class MTLMaterialCreator extends classLoader<{
     normalizeRGB: options?.normalizeRGB ?? false,
     ignoreZeroRGBs: options?.ignoreZeroRGBs ?? false,
     side: options?.side ?? Side.Front,
-    wrap: options?.wrap ?? Wrapping.Repeat,
+    wrap: options?.wrap ?? GPUAddressModeType.Repeat,
     invertTrProperty: options?.invertTrProperty ?? false,
     definitions: options?.definitions
       ? convertDefinitions(options.definitions, options?.normalizeRGB ?? false, options?.ignoreZeroRGBs ?? false)
@@ -55,7 +56,7 @@ export namespace MTLMaterialCreator {
     normalizeRGB?: boolean;
     ignoreZeroRGBs?: boolean;
     side?: Side;
-    wrap?: Wrapping;
+    wrap?: GPUAddressModeType;
     invertTrProperty?: boolean;
     definitions?: MaterialDefinitionRecord;
   }
@@ -64,7 +65,7 @@ export namespace MTLMaterialCreator {
     normalizeRGB: boolean;
     ignoreZeroRGBs: boolean;
     side: Side;
-    wrap: Wrapping;
+    wrap: GPUAddressModeType;
     definitions: MaterialDefinitionRecord;
   }
 }

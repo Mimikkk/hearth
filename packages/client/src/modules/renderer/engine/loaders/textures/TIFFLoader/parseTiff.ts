@@ -1,7 +1,6 @@
 import * as UTIF from 'utif';
 import { DataTexture } from '@modules/renderer/engine/entities/textures/DataTexture.js';
-import { Wrapping } from '@modules/renderer/engine/constants.js';
-import { GPUFilterModeType } from '@modules/renderer/engine/hearth/constants.js';
+import { GPUAddressModeType, GPUFilterModeType } from '@modules/renderer/engine/hearth/constants.js';
 
 interface ParseResult {
   data: Uint8Array;
@@ -24,8 +23,8 @@ export const parseTiff = (buffer: ArrayBuffer): DataTexture => {
     data: image.data,
     width: image.width,
     height: image.height,
-    wrapS: Wrapping.ClampToEdge,
-    wrapT: Wrapping.ClampToEdge,
+    wrapS: GPUAddressModeType.ClampToEdge,
+    wrapT: GPUAddressModeType.ClampToEdge,
     minFilter: GPUFilterModeType.Linear,
     magFilter: GPUFilterModeType.Linear,
     anisotropy: 1,

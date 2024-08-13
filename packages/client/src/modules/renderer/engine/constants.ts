@@ -1,5 +1,3 @@
-import { GPUFilterModeType } from '@modules/renderer/engine/hearth/constants.js';
-
 export const Revision = '001dev';
 
 export enum Mouse {
@@ -105,12 +103,6 @@ export enum CubeMapping {
   Reflection = Mapping.CubeReflection,
   Refraction = Mapping.CubeRefraction,
   UVReflection = Mapping.CubeUVReflection,
-}
-
-export enum Wrapping {
-  Repeat = 1000,
-  ClampToEdge = 1001,
-  MirroredRepeat = 1002,
 }
 
 export enum TextureDataType {

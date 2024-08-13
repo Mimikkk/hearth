@@ -25,6 +25,7 @@ import {
   CylinderGeometry,
   DirectionalLight,
   Fog,
+  GPUAddressModeType,
   Group,
   HemisphereLight,
   IcosahedronGeometry,
@@ -32,7 +33,6 @@ import {
   PerspectiveCamera,
   Scene,
   Vec3,
-  Wrapping,
 } from '@modules/renderer/engine/engine.js';
 import { GLTFLoader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/GLTFLoader.js';
 import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
@@ -89,8 +89,8 @@ const loadMichelle = async () => {
 };
 const loadIceTexture = async () => {
   const iceDiffuse = await TextureLoader.loadAsync('resources/textures/water/water.jpg');
-  iceDiffuse.wrapS = Wrapping.Repeat;
-  iceDiffuse.wrapT = Wrapping.Repeat;
+  iceDiffuse.wrapS = GPUAddressModeType.Repeat;
+  iceDiffuse.wrapT = GPUAddressModeType.Repeat;
   iceDiffuse.colorSpace = null;
 
   return triplanarTexture(texture(iceDiffuse)).add(color(0x0066ff)).mul(0.8);

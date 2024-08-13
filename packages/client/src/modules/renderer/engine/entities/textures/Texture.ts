@@ -1,10 +1,10 @@
-import { ColorSpace, Mapping, PixelFormat, TextureDataType, TextureFormat, Wrapping } from '../../constants.js';
+import { ColorSpace, Mapping, PixelFormat, TextureDataType, TextureFormat } from '../../constants.js';
 import { Vec2 } from '../../math/Vec2.js';
 import { Mat3 } from '../../math/Mat3.js';
 import { Source } from './Source.js';
 import type { CubeTexture } from './CubeTexture.js';
 import { v4 } from 'uuid';
-import { GPUFilterModeType } from '@modules/renderer/engine/hearth/constants.js';
+import { GPUAddressModeType, GPUFilterModeType } from '@modules/renderer/engine/hearth/constants.js';
 
 let _textureId = 0;
 
@@ -17,9 +17,9 @@ export class Texture<T = any> {
   mipmaps: (ImageData | CubeTexture)[];
   mapping: Mapping;
   channel: number;
-  wrapS: Wrapping;
-  wrapT: Wrapping;
-  wrapR: Wrapping;
+  wrapS: GPUAddressModeType;
+  wrapT: GPUAddressModeType;
+  wrapR: GPUAddressModeType;
   magFilter: GPUFilterModeType;
   minFilter: GPUFilterModeType;
   anisotropy: number;
@@ -46,8 +46,8 @@ export class Texture<T = any> {
   constructor(
     image?: TexImageSource | OffscreenCanvas | TextureParameters<T>,
     mapping: Mapping = Mapping.UV,
-    wrapS: Wrapping = Wrapping.ClampToEdge,
-    wrapT: Wrapping = Wrapping.ClampToEdge,
+    wrapS: GPUAddressModeType = GPUAddressModeType.ClampToEdge,
+    wrapT: GPUAddressModeType = GPUAddressModeType.ClampToEdge,
     magFilter: GPUFilterModeType = GPUFilterModeType.Linear,
     minFilter: GPUFilterModeType = GPUFilterModeType.Linear,
     format: TextureFormat = TextureFormat.RGBA,
@@ -188,8 +188,8 @@ export interface TextureParameters<T = any> {
   isRenderTargetTexture?: boolean;
   image?: TexImageSource | OffscreenCanvas | T;
   mapping?: Mapping;
-  wrapS?: Wrapping;
-  wrapT?: Wrapping;
+  wrapS?: GPUAddressModeType;
+  wrapT?: GPUAddressModeType;
   magFilter?: GPUFilterModeType;
   minFilter?: GPUFilterModeType;
   format?: TextureFormat;
@@ -218,8 +218,8 @@ export interface TextureParameters<T = any> {
 export interface TextureConfiguration {
   image: TexImageSource | OffscreenCanvas;
   mapping: Mapping;
-  wrapS: Wrapping;
-  wrapT: Wrapping;
+  wrapS: GPUAddressModeType;
+  wrapT: GPUAddressModeType;
   magFilter: GPUFilterModeType;
   minFilter: GPUFilterModeType;
   format: TextureFormat;
@@ -253,8 +253,8 @@ export const configure = <T>(parameters?: TextureParameters<T>): TextureConfigur
     channel: parameters?.channel ?? 0,
     image: parameters?.image ?? null!,
     mapping: parameters?.mapping ?? Mapping.UV,
-    wrapS: parameters?.wrapS ?? Wrapping.ClampToEdge,
-    wrapT: parameters?.wrapT ?? Wrapping.ClampToEdge,
+    wrapS: parameters?.wrapS ?? GPUAddressModeType.ClampToEdge,
+    wrapT: parameters?.wrapT ?? GPUAddressModeType.ClampToEdge,
     magFilter: parameters?.magFilter ?? GPUFilterModeType.Linear,
     minFilter: parameters?.minFilter ?? GPUFilterModeType.Linear,
     format: parameters?.format ?? TextureFormat.RGBA,

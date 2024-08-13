@@ -1,8 +1,8 @@
 import { Texture } from '@modules/renderer/engine/entities/textures/Texture.js';
-import { ColorSpace, Mapping, PixelFormat, TextureDataType, TextureFormat, Wrapping } from '../../constants.js';
+import { ColorSpace, Mapping, PixelFormat, TextureDataType, TextureFormat } from '../../constants.js';
 import { Vec4 } from '../../math/Vec4.js';
 import { Source } from '@modules/renderer/engine/entities/textures/Source.js';
-import { GPUFilterModeType } from '@modules/renderer/engine/hearth/constants.js';
+import { GPUAddressModeType, GPUFilterModeType } from '@modules/renderer/engine/hearth/constants.js';
 
 export class RenderTarget {
   declare isRenderTarget: true;
@@ -131,8 +131,8 @@ export namespace RenderTarget {
     count: number;
     image: any | null;
     mapping: Mapping;
-    wrapS: Wrapping;
-    wrapT: Wrapping;
+    wrapS: GPUAddressModeType;
+    wrapT: GPUAddressModeType;
     magFilter: GPUFilterModeType;
     format: TextureFormat;
     type: TextureDataType;
@@ -153,8 +153,8 @@ export namespace RenderTarget {
     count: 1,
     image: null,
     mapping: Mapping.UV,
-    wrapS: Wrapping.ClampToEdge,
-    wrapT: Wrapping.ClampToEdge,
+    wrapS: GPUAddressModeType.ClampToEdge,
+    wrapT: GPUAddressModeType.ClampToEdge,
     magFilter: GPUFilterModeType.Linear,
     format: TextureFormat.RGBA,
     type: TextureDataType.UnsignedByte,

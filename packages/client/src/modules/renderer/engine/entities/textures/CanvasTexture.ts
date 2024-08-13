@@ -1,13 +1,13 @@
 import { Texture } from './Texture.js';
-import { Mapping, TextureDataType, TextureFormat, Wrapping } from '../../constants.js';
-import { GPUFilterModeType } from '@modules/renderer/engine/hearth/constants.js';
+import { Mapping, TextureDataType, TextureFormat } from '../../constants.js';
+import { GPUAddressModeType, GPUFilterModeType } from '@modules/renderer/engine/hearth/constants.js';
 
 export class CanvasTexture extends Texture {
   constructor(
     canvas: TexImageSource | OffscreenCanvas,
     mapping?: Mapping,
-    wrapS?: Wrapping,
-    wrapT?: Wrapping,
+    wrapS?: GPUAddressModeType,
+    wrapT?: GPUAddressModeType,
     magFilter?: GPUFilterModeType,
     minFilter?: GPUFilterModeType,
     format?: TextureFormat,

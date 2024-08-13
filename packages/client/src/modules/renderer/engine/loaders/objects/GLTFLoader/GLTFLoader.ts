@@ -6,7 +6,7 @@ import { KTX2Loader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/
 import { MeshoptDecoder } from 'meshoptimizer';
 import { DRACOLoader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/DRACOLoader.js';
 import { classLoader } from '@modules/renderer/engine/loaders/types.js';
-import { BufferStep, GPUFilterModeType } from '@modules/renderer/engine/hearth/constants.js';
+import { BufferStep, GPUAddressModeType, GPUFilterModeType } from '@modules/renderer/engine/hearth/constants.js';
 import { CubicSplineInterpolant } from '@modules/renderer/engine/math/interpolants/CubicSplineInterpolant.js';
 import { CubicSplineQuaternionInterpolant } from '@modules/renderer/engine/math/interpolants/CubicSplineQuaternionInterpolant.js';
 import { Entity } from '@modules/renderer/engine/core/Entity.js';
@@ -19,7 +19,7 @@ import { AnimationClip } from '@modules/renderer/engine/animation/AnimationClip.
 import { Camera } from '@modules/renderer/engine/entities/cameras/Camera.js';
 import { LoaderUtils } from '@modules/renderer/engine/loaders/LoaderUtils.js';
 import { Color } from '@modules/renderer/engine/math/Color.js';
-import { ColorSpace, InterpolationMode, Side, Wrapping } from '@modules/renderer/engine/constants.js';
+import { ColorSpace, InterpolationMode, Side } from '@modules/renderer/engine/constants.js';
 import { DirectionalLight } from '@modules/renderer/engine/entities/lights/DirectionalLight.js';
 import { PointLight } from '@modules/renderer/engine/entities/lights/PointLight.js';
 import { SpotLight } from '@modules/renderer/engine/entities/lights/SpotLight.js';
@@ -1499,9 +1499,9 @@ const WEBGL_FILTERS = {
 };
 
 const WEBGL_WRAPPINGS = {
-  33071: Wrapping.ClampToEdge,
-  33648: Wrapping.MirroredRepeat,
-  10497: Wrapping.Repeat,
+  33071: GPUAddressModeType.ClampToEdge,
+  33648: GPUAddressModeType.MirrorRepeat,
+  10497: GPUAddressModeType.Repeat,
 };
 
 const WEBGL_TYPE_SIZES = {
@@ -2278,8 +2278,8 @@ class Parser {
 
         texture.magFilter = WEBGL_FILTERS[sampler.magFilter] || GPUFilterModeType.Linear;
         texture.minFilter = WEBGL_FILTERS[sampler.minFilter] || GPUFilterModeType.Linear;
-        texture.wrapS = WEBGL_WRAPPINGS[sampler.wrapS] || Wrapping.Repeat;
-        texture.wrapT = WEBGL_WRAPPINGS[sampler.wrapT] || Wrapping.Repeat;
+        texture.wrapS = WEBGL_WRAPPINGS[sampler.wrapS] || GPUAddressModeType.Repeat;
+        texture.wrapT = WEBGL_WRAPPINGS[sampler.wrapT] || GPUAddressModeType.Repeat;
 
         parser.associations.set(texture, { textures: textureIndex });
 

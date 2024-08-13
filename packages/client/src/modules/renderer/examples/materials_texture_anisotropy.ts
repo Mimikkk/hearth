@@ -3,6 +3,7 @@ import * as Engine from '@modules/renderer/engine/engine.js';
 import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 import { TextureLoader } from '@modules/renderer/engine/loaders/textures/TextureLoader/TextureLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
+import { GPUAddressModeType } from '@modules/renderer/engine/engine.js';
 
 let container;
 
@@ -59,7 +60,7 @@ async function init() {
 
   texture1.colorSpace = Engine.ColorSpace.SRGB;
   texture1.anisotropy = hearth.getMaxAnisotropy();
-  texture1.wrapS = texture1.wrapT = Engine.Wrapping.Repeat;
+  texture1.wrapS = texture1.wrapT = GPUAddressModeType.Repeat;
   texture1.repeat.set(512, 512);
 
   const texture2 = await textureLoader.loadAsync('resources/textures/crate.gif');
@@ -67,7 +68,7 @@ async function init() {
 
   texture2.colorSpace = Engine.ColorSpace.SRGB;
   texture2.anisotropy = 1;
-  texture2.wrapS = texture2.wrapT = Engine.Wrapping.Repeat;
+  texture2.wrapS = texture2.wrapT = GPUAddressModeType.Repeat;
   texture2.repeat.set(512, 512);
 
   if (maxAnisotropy > 0) {

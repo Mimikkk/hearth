@@ -17,6 +17,7 @@ import { TeapotGeometry } from '@modules/renderer/engine/entities/geometries/Tea
 import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 import { TextureLoader } from '@modules/renderer/engine/loaders/textures/TextureLoader/TextureLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
+import { GPUAddressModeType } from '@modules/renderer/engine/engine.js';
 
 let camera, scene, hearth, light1, light2, light3, light4, controls;
 
@@ -34,12 +35,12 @@ async function init() {
   const textureLoader = new TextureLoader();
 
   const normalMapTexture = await textureLoader.loadAsync('resources/textures/water/Water_1_M_Normal.jpg');
-  normalMapTexture.wrapS = Engine.Wrapping.Repeat;
-  normalMapTexture.wrapT = Engine.Wrapping.Repeat;
+  normalMapTexture.wrapS = GPUAddressModeType.Repeat;
+  normalMapTexture.wrapT = GPUAddressModeType.Repeat;
 
   const alphaTexture = await textureLoader.loadAsync('resources/textures/roughness_map.jpg');
-  alphaTexture.wrapS = Engine.Wrapping.Repeat;
-  alphaTexture.wrapT = Engine.Wrapping.Repeat;
+  alphaTexture.wrapS = GPUAddressModeType.Repeat;
+  alphaTexture.wrapT = GPUAddressModeType.Repeat;
 
   const addLight = (hexColor, power = 1700, distance = 100) => {
     const material = new MeshPhongNodeMaterial();

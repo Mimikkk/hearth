@@ -1,12 +1,10 @@
 import * as Engine from '@modules/renderer/engine/engine.js';
-import { createFlakesCanvas } from '@modules/renderer/engine/engine.js';
+import { createFlakesCanvas, GPUAddressModeType } from '@modules/renderer/engine/engine.js';
 
 import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 
 import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitControls.js';
-import {
-  HDRCubeTextureLoader,
-} from '@modules/renderer/engine/loaders/textures/HDRCubeTextureLoader/HDRCubeTextureLoader.js';
+import { HDRCubeTextureLoader } from '@modules/renderer/engine/loaders/textures/HDRCubeTextureLoader/HDRCubeTextureLoader.js';
 
 import { TextureLoader } from '@modules/renderer/engine/loaders/textures/TextureLoader/TextureLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
@@ -48,22 +46,22 @@ async function init() {
 
       const diffuse = await textureLoader.loadAsync('resources/textures/carbon/Carbon.png');
       diffuse.colorSpace = Engine.ColorSpace.SRGB;
-      diffuse.wrapS = Engine.Wrapping.Repeat;
-      diffuse.wrapT = Engine.Wrapping.Repeat;
+      diffuse.wrapS = GPUAddressModeType.Repeat;
+      diffuse.wrapT = GPUAddressModeType.Repeat;
       diffuse.repeat.x = 10;
       diffuse.repeat.y = 10;
 
       const normalMap = await textureLoader.loadAsync('resources/textures/carbon/Carbon_Normal.png');
-      normalMap.wrapS = Engine.Wrapping.Repeat;
-      normalMap.wrapT = Engine.Wrapping.Repeat;
+      normalMap.wrapS = GPUAddressModeType.Repeat;
+      normalMap.wrapT = GPUAddressModeType.Repeat;
       normalMap.repeat.x = 10;
       normalMap.repeat.y = 10;
 
       const normalMap2 = await textureLoader.loadAsync('resources/textures/water/Water_1_M_Normal.jpg');
 
       const normalMap3 = new Engine.CanvasTexture(createFlakesCanvas());
-      normalMap3.wrapS = Engine.Wrapping.Repeat;
-      normalMap3.wrapT = Engine.Wrapping.Repeat;
+      normalMap3.wrapS = GPUAddressModeType.Repeat;
+      normalMap3.wrapT = GPUAddressModeType.Repeat;
       normalMap3.repeat.x = 10;
       normalMap3.repeat.y = 6;
       normalMap3.anisotropy = 16;

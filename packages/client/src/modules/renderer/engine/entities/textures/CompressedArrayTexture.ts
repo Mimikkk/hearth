@@ -1,8 +1,9 @@
-import { CompressedPixelFormat, TextureDataType, Wrapping } from '../../constants.js';
+import { CompressedPixelFormat, TextureDataType } from '../../constants.js';
 import { CompressedTexture } from './CompressedTexture.js';
+import { GPUAddressModeType } from '@modules/renderer/engine/hearth/constants.js';
 
 export class CompressedArrayTexture extends CompressedTexture {
-  wrapR: Wrapping;
+  wrapR: GPUAddressModeType;
 
   constructor(
     mipmaps: ImageData[],
@@ -15,6 +16,6 @@ export class CompressedArrayTexture extends CompressedTexture {
     super(mipmaps, width, height, format, type);
 
     this.image.depth = depth;
-    this.wrapR = Wrapping.ClampToEdge;
+    this.wrapR = GPUAddressModeType.ClampToEdge;
   }
 }

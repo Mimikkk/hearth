@@ -6,6 +6,7 @@ import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitControls.js';
 import { TextureLoader } from '@modules/renderer/engine/loaders/textures/TextureLoader/TextureLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
+import { GPUAddressModeType } from '@modules/renderer/engine/engine.js';
 
 let camera, scene, hearth;
 
@@ -49,8 +50,8 @@ async function init() {
   const textureLoader = new TextureLoader();
 
   const floorNormal = await textureLoader.loadAsync('resources/textures/floors/FloorsCheckerboard_S_Normal.jpg');
-  floorNormal.wrapS = Engine.Wrapping.Repeat;
-  floorNormal.wrapT = Engine.Wrapping.Repeat;
+  floorNormal.wrapS = GPUAddressModeType.Repeat;
+  floorNormal.wrapT = GPUAddressModeType.Repeat;
 
   const decalDiffuse = await textureLoader.loadAsync('resources/textures/decal/decal-diffuse.png');
   decalDiffuse.colorSpace = Engine.ColorSpace.SRGB;

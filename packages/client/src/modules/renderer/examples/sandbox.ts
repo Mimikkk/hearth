@@ -19,7 +19,7 @@ import {
 import { KTX2Loader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/KTX2Loader.js';
 
 import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
-import { TextureFormat } from '@modules/renderer/engine/engine.js';
+import { GPUAddressModeType, TextureFormat } from '@modules/renderer/engine/engine.js';
 import { TextureLoader } from '@modules/renderer/engine/loaders/textures/TextureLoader/TextureLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 import { Random } from '@modules/renderer/engine/math/random.js';
@@ -45,13 +45,13 @@ async function init() {
 
   const textureLoader = new TextureLoader();
   const uvTexture = await textureLoader.loadAsync('resources/textures/uv_grid_opengl.jpg');
-  uvTexture.wrapS = Engine.Wrapping.Repeat;
-  uvTexture.wrapT = Engine.Wrapping.Repeat;
+  uvTexture.wrapS = GPUAddressModeType.Repeat;
+  uvTexture.wrapT = GPUAddressModeType.Repeat;
   uvTexture.name = 'uv_grid';
 
   const textureDisplace = await textureLoader.loadAsync('resources/textures/transition/transition1.png');
-  textureDisplace.wrapS = Engine.Wrapping.Repeat;
-  textureDisplace.wrapT = Engine.Wrapping.Repeat;
+  textureDisplace.wrapS = GPUAddressModeType.Repeat;
+  textureDisplace.wrapT = GPUAddressModeType.Repeat;
 
   const ktxLoader = await new KTX2Loader().detectSupportAsync(hearth);
 

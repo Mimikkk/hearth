@@ -19,7 +19,6 @@ import {
   Mapping,
   TextureDataType,
   TextureFormat,
-  Wrapping,
 } from '@modules/renderer/engine/constants.js';
 import { Texture } from '@modules/renderer/engine/entities/textures/Texture.js';
 import { CubeTexture } from '@modules/renderer/engine/entities/textures/CubeTexture.js';
@@ -250,9 +249,9 @@ export class HearthTextures extends DataMap<any, any> {
     const textureGPU = memo.get(texture);
 
     const samplerDescriptorGPU: GPUSamplerDescriptor = {
-      addressModeU: this._convertAddressMode(texture.wrapS),
-      addressModeV: this._convertAddressMode(texture.wrapT),
-      addressModeW: this._convertAddressMode(texture.wrapR),
+      addressModeU: texture.wrapS,
+      addressModeV: texture.wrapT,
+      addressModeW: texture.wrapR,
       magFilter: texture.magFilter,
       minFilter: texture.minFilter,
       mipmapFilter: texture.minFilter,
@@ -647,12 +646,6 @@ export class HearthTextures extends DataMap<any, any> {
         },
       );
     }
-  }
-
-  _convertAddressMode(value: Wrapping): GPUAddressMode {
-    if (value === Wrapping.Repeat) return GPUAddressModeType.Repeat;
-    if (value === Wrapping.MirroredRepeat) return GPUAddressModeType.MirrorRepeat;
-    return GPUAddressModeType.ClampToEdge;
   }
 }
 

@@ -1,10 +1,9 @@
 import { Texture, TextureParameters } from './Texture.js';
-import { Wrapping } from '../../constants.js';
-import { GPUFilterModeType } from '@modules/renderer/engine/hearth/constants.js';
+import { GPUAddressModeType, GPUFilterModeType } from '@modules/renderer/engine/hearth/constants.js';
 
 export class DataArrayTexture extends Texture {
   declare isDataArrayTexture: true;
-  wrapR: Wrapping;
+  wrapR: GPUAddressModeType;
 
   constructor({ data, width, height, depth, ...parameters }: DataArrayTextureParameters) {
     super({
@@ -17,7 +16,7 @@ export class DataArrayTexture extends Texture {
       ...parameters,
     });
 
-    this.wrapR = parameters?.wrapR ?? Wrapping.ClampToEdge;
+    this.wrapR = parameters?.wrapR ?? GPUAddressModeType.ClampToEdge;
   }
 
   static is(value: any): value is DataArrayTexture {
@@ -32,5 +31,5 @@ export interface DataArrayTextureParameters extends Omit<TextureParameters, 'ima
   width: number;
   height: number;
   depth: number;
-  wrapR?: Wrapping;
+  wrapR?: GPUAddressModeType;
 }

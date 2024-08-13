@@ -1,13 +1,6 @@
 import { Texture } from './Texture.js';
-import {
-  ColorSpace,
-  CompressedPixelFormat,
-  Mapping,
-  TextureDataType,
-  TextureFormat,
-  Wrapping,
-} from '../../constants.js';
-import { GPUFilterModeType } from '@modules/renderer/engine/hearth/constants.js';
+import { ColorSpace, CompressedPixelFormat, Mapping, TextureDataType, TextureFormat } from '../../constants.js';
+import { GPUAddressModeType, GPUFilterModeType } from '@modules/renderer/engine/hearth/constants.js';
 
 export class CompressedTexture extends Texture {
   declare isCompressedTexture: true;
@@ -19,8 +12,8 @@ export class CompressedTexture extends Texture {
     format: CompressedPixelFormat,
     type?: TextureDataType,
     mapping?: Mapping,
-    wrapS?: Wrapping,
-    wrapT?: Wrapping,
+    wrapS?: GPUAddressModeType,
+    wrapT?: GPUAddressModeType,
     magFilter?: GPUFilterModeType,
     minFilter?: GPUFilterModeType,
     anisotropy?: number,
