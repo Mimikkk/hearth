@@ -90,8 +90,8 @@ export const SideBarItems: AccordionItem[] = [
       { id: Example.MaterialsVideo, title: 'Materials Video' },
       {
         id: Example.LinesFat,
-
         title: 'Lines Fat',
+        masterdisk: true,
       },
     ],
   },
