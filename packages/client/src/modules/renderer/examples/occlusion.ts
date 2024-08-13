@@ -1,84 +1,59 @@
-import * as Engine from '@modules/renderer/engine/engine.js';
-import { Camera, Scene } from '@modules/renderer/engine/engine.js';
-import { MeshPhongNodeMaterial, Node, NodeUpdateStage, uniform } from '@modules/renderer/engine/nodes/nodes.js';
+import {
+  AmbientLight,
+  DirectionalLight,
+  Hearth,
+  Mesh,
+  OrbitControls,
+  PerspectiveCamera,
+  PlaneGeometry,
+  Scene,
+  SphereGeometry,
+} from '@modules/renderer/engine/engine.js';
+import { color, MeshPhongNodeMaterial, occlude } from '@modules/renderer/engine/nodes/nodes.js';
+import { WindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
-import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitControls.js';
-
-import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
-import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
-import NodeFrame from '@modules/renderer/engine/nodes/core/NodeFrame.js';
-
-let camera: Camera, scene: Scene, hearth: Hearth, controls: OrbitControls;
-
-export class OcclusionNode extends Node {
-  constructor(testObject: Engine.Entity, normalColor: Engine.Color, occludedColor: Engine.Color) {
-    super('vec3');
-
-    this.stage = NodeUpdateStage.Object;
-
-    this.uniformNode = uniform(new Engine.Color());
-
-    this.testObject = testObject;
-    this.normalColor = normalColor;
-    this.occludedColor = occludedColor;
-  }
-
-  async update(frame: NodeFrame): void {
-    const isOccluded = frame.hearth.isOccluded(this.testObject);
-    this.uniformNode.value.from(isOccluded ? this.occludedColor : this.normalColor);
-  }
-
-  setup() {
-    return this.uniformNode;
-  }
-}
-
-init();
-
-async function init() {
-  camera = new Engine.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.01, 100);
+const createCamera = () => {
+  const camera = new PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.01, 100);
   camera.position.z = 7;
+  return camera;
+};
+const createAmbientLight = () => {
+  return new AmbientLight(0xb0b0b0);
+};
+const createDirectionalLight = () => {
+  const light = new DirectionalLight(0xffffff, 7);
+  light.position.set(0.5, 1, 1).normalize();
+  return light;
+};
+const attachOcclusion = (item: Mesh, to: Mesh) => {
+  item.material.colorNode = occlude(to, color(0x00ff00), color(0x0000ff));
+  to.position.z = -1;
+  to.useOcclusion = true;
+};
+const createPlane = () => {
+  const geometry = new PlaneGeometry(2, 2);
+  const material = new MeshPhongNodeMaterial({ color: 0x00ff00 });
+  return new Mesh(geometry, material);
+};
+const createSphere = () => {
+  const geometry = new SphereGeometry(0.5);
+  const material = new MeshPhongNodeMaterial({ color: 0xffff00 });
+  return new Mesh(geometry, material);
+};
 
-  scene = new Engine.Scene();
+const camera = createCamera();
 
-  const ambientLight = new Engine.AmbientLight(0xb0b0b0);
+const plane = createPlane();
+const sphere = createSphere();
 
-  const light = new Engine.DirectionalLight(0xffffff, 1.0);
-  light.position.set(0.32, 0.39, 0.7);
+attachOcclusion(plane, sphere);
 
-  scene.add(ambientLight);
-  scene.add(light);
-
-  const planeGeometry = new Engine.PlaneGeometry(2, 2);
-  const sphereGeometry = new Engine.SphereGeometry(0.5);
-
-  const plane = new Engine.Mesh(planeGeometry, new MeshPhongNodeMaterial({ color: 0x00ff00 }));
-  const sphere = new Engine.Mesh(sphereGeometry, new MeshPhongNodeMaterial({ color: 0xffff00 }));
-
-  plane.material.colorNode = new OcclusionNode(sphere, new Engine.Color(0x00ff00), new Engine.Color(0x0000ff));
-
-  sphere.position.z = -1;
-  sphere.useOcclusion = true;
-
-  scene.add(plane);
-  scene.add(sphere);
-
-  hearth = await Hearth.as();
-  hearth.setPixelRatio(window.devicePixelRatio);
-  hearth.setSize(window.innerWidth, window.innerHeight);
-
-  await hearth.compile(scene, camera);
-
-  hearth.animation.loop = render;
-  document.body.appendChild(hearth.parameters.canvas);
-
-  controls = new OrbitControls(camera, hearth.parameters.canvas);
-  controls.minDistance = 3;
-  controls.maxDistance = 25;
-
-  useWindowResizer(hearth, camera);
-}
-
-function render() {
-  hearth.render(scene, camera);
-}
+const scene = Scene.of(createAmbientLight(), createDirectionalLight(), plane, sphere);
+const hearth = await Hearth.as({
+  animate() {
+    hearth.render(scene, camera);
+  },
+});
+await hearth.compile(scene, camera);
+OrbitControls.attach(hearth, camera);
+WindowResizer.attach(hearth, camera);

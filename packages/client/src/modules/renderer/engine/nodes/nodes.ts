@@ -150,6 +150,7 @@ export * from './fog/FogRangeNode.js';
 export * from './fog/FogExp2Node.js';
 // /display
 export * from './display/BlendModeNode.js';
+export * from './display/OcclusionNode.js';
 export * from './display/BumpMapNode.js';
 export * from './display/ColorAdjustmentNode.js';
 export * from './display/ColorSpaceNode.js';

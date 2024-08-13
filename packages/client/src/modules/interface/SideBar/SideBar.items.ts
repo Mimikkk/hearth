@@ -172,7 +172,7 @@ export const SideBarItems: AccordionItem[] = [
       { id: Example.CubemapAdjustments, title: 'Cubemap Adjustments' },
       { id: Example.CubemapDynamic, title: 'Cubemap Dynamic', maintenance: true },
       { id: Example.CubemapMix, title: 'Cubemap Mix' },
-      { id: Example.Occlusion, title: 'Occlusion' },
+      { id: Example.Occlusion, title: 'Occlusion', masterdisk: true },
       { id: Example.ParallaxUv, title: 'Parallax Uv', maintenance: true },
       { id: Example.Particles, title: 'Particles' },
       { id: Example.PmRemCubemap, title: 'Pm Rem Cubemap' },

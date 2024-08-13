@@ -1,7 +1,5 @@
 import * as Engine from '@modules/renderer/engine/engine.js';
-
 import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
-import { ColorSpace } from '@modules/renderer/engine/engine.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let camera, scene, hearth;
