@@ -41,24 +41,6 @@ export enum BlendingEquation {
   Max = 104,
 }
 
-export enum BlendingFactor {
-  Zero = 200,
-  One = 201,
-  SrcColor = 202,
-  OneMinusSrcColor = 203,
-  SrcAlpha = 204,
-  OneMinusSrcAlpha = 205,
-  DstAlpha = 206,
-  OneMinusDstAlpha = 207,
-  DstColor = 208,
-  OneMinusDstColor = 209,
-  SrcAlphaSaturate = 210,
-  ConstantColor = 211,
-  OneMinusConstantColor = 212,
-  ConstantAlpha = 213,
-  OneMinusConstantAlpha = 214,
-}
-
 export enum Depth {
   Never = 0,
   Always = 1,

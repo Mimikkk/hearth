@@ -8,7 +8,7 @@ import { Binding } from '@modules/renderer/engine/hearth/bindings/Binding.js';
 import { RenderObject } from '@modules/renderer/engine/hearth/core/RenderObject.js';
 import { Pipeline } from '@modules/renderer/engine/hearth/core/Pipeline.js';
 import { ShaderStage } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
-import { Blending, BlendingEquation, BlendingFactor, Depth, Side } from '@modules/renderer/engine/constants.js';
+import { Blending, BlendingEquation, Depth, Side } from '@modules/renderer/engine/constants.js';
 import { Material } from '@modules/renderer/engine/entities/materials/Material.js';
 import {
   GPUBlendFactorType,
@@ -422,14 +422,14 @@ export class HearthPipelines extends DataMap<any, any> {
       const blendEquationAlpha = (material.blendEquationAlpha ?? GPUBlendOperationType.Add) as number;
 
       color = {
-        srcFactor: this._getBlendFactor(material.blendSrc),
-        dstFactor: this._getBlendFactor(material.blendDst),
+        srcFactor: material.blendSrc,
+        dstFactor: material.blendDst,
         operation: this._getBlendOperation(material.blendEquation),
       };
 
       alpha = {
-        srcFactor: this._getBlendFactor(blendSrcAlpha),
-        dstFactor: this._getBlendFactor(blendDstAlpha),
+        srcFactor: blendSrcAlpha,
+        dstFactor: blendDstAlpha,
         operation: this._getBlendOperation(blendEquationAlpha),
       };
     } else {
@@ -533,71 +533,6 @@ export class HearthPipelines extends DataMap<any, any> {
     } else {
       console.error('Hearth: Invalid blending: ', blending);
     }
-  }
-
-  _getBlendFactor(blend: number) {
-    let blendFactor;
-
-    switch (blend) {
-      case BlendingFactor.Zero:
-        blendFactor = GPUBlendFactorType.Zero;
-        break;
-
-      case BlendingFactor.One:
-        blendFactor = GPUBlendFactorType.One;
-        break;
-
-      case BlendingFactor.SrcColor:
-        blendFactor = GPUBlendFactorType.Src;
-        break;
-
-      case BlendingFactor.OneMinusSrcColor:
-        blendFactor = GPUBlendFactorType.OneMinusSrc;
-        break;
-
-      case BlendingFactor.SrcAlpha:
-        blendFactor = GPUBlendFactorType.SrcAlpha;
-        break;
-
-      case BlendingFactor.OneMinusSrcAlpha:
-        blendFactor = GPUBlendFactorType.OneMinusSrcAlpha;
-        break;
-
-      case BlendingFactor.DstColor:
-        blendFactor = GPUBlendFactorType.Dst;
-        break;
-
-      case BlendingFactor.OneMinusDstColor:
-        blendFactor = GPUBlendFactorType.OneMinusDstColor;
-        break;
-
-      case BlendingFactor.DstAlpha:
-        blendFactor = GPUBlendFactorType.DstAlpha;
-        break;
-
-      case BlendingFactor.OneMinusDstAlpha:
-        blendFactor = GPUBlendFactorType.OneMinusDstAlpha;
-        break;
-
-      case BlendingFactor.SrcAlphaSaturate:
-        blendFactor = GPUBlendFactorType.SrcAlphaSaturated;
-        break;
-
-      //@ts-expect-error
-      case BlendingFactor.BlendColor:
-        blendFactor = GPUBlendFactorType.Constant;
-        break;
-
-      //@ts-expect-error
-      case BlendingFactor.OneMinusBlendColor:
-        blendFactor = GPUBlendFactorType.OneMinusConstant;
-        break;
-
-      default:
-        console.error('Hearth: Blend factor not supported.', blend);
-    }
-
-    return blendFactor;
   }
 
   _getBlendOperation(blendEquation: BlendingEquation): GPUBlendOperation {

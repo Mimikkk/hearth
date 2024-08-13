@@ -1,5 +1,5 @@
 import { Color, ColorRepresentation } from '../../math/Color.js';
-import { Blending, BlendingEquation, BlendingFactor, Depth, PixelFormat, Side } from '../../constants.js';
+import { Blending, BlendingEquation, Depth, PixelFormat, Side } from '../../constants.js';
 import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
 import { Plane } from '@modules/renderer/engine/math/Plane.js';
 import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
@@ -9,7 +9,11 @@ import { Geometry } from '@modules/renderer/engine/core/Geometry.js';
 import { Entity } from '@modules/renderer/engine/core/Entity.js';
 import { Group } from '@modules/renderer/engine/entities/Group.js';
 import { v4 } from 'uuid';
-import { GPUCompareFunctionType, GPUStencilOperationType } from '@modules/renderer/engine/hearth/constants.js';
+import {
+  GPUBlendFactorType,
+  GPUCompareFunctionType,
+  GPUStencilOperationType,
+} from '@modules/renderer/engine/hearth/constants.js';
 
 let _materialId = 0;
 
@@ -19,12 +23,12 @@ export interface MaterialParameters {
   alphaToCoverage?: boolean;
   blendAlpha?: number;
   blendColor?: ColorRepresentation;
-  blendDst?: BlendingFactor;
+  blendDst?: GPUBlendFactorType;
   blendDstAlpha?: number;
   blendEquation?: BlendingEquation;
   blendEquationAlpha?: number;
   blending?: Blending;
-  blendSrc?: BlendingFactor;
+  blendSrc?: GPUBlendFactorType;
   blendSrcAlpha?: number;
   clipIntersection?: boolean;
   clippingPlanes?: Plane[];
@@ -71,8 +75,8 @@ export class Material {
   opacity: number;
   transparent: boolean;
   alphaHash: boolean;
-  blendSrc: BlendingFactor;
-  blendDst: BlendingFactor;
+  blendSrc: GPUBlendFactorType;
+  blendDst: GPUBlendFactorType;
   blendEquation: BlendingEquation;
   blendSrcAlpha: number | null;
   blendDstAlpha: number | null;
@@ -120,8 +124,8 @@ export class Material {
     this.transparent = false;
     this.alphaHash = false;
 
-    this.blendSrc = BlendingFactor.SrcAlpha;
-    this.blendDst = BlendingFactor.OneMinusSrcAlpha;
+    this.blendSrc = GPUBlendFactorType.SrcAlpha;
+    this.blendDst = GPUBlendFactorType.OneMinusSrcAlpha;
     this.blendEquation = BlendingEquation.Add;
     this.blendSrcAlpha = null;
     this.blendDstAlpha = null;
