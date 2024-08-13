@@ -60,12 +60,12 @@ const createLine1 = () => {
     alphaToCoverage: true,
   });
 
-  const line = new Line2(geometry, material);
-  line.computeLineDistances();
-  line.scale.set(1, 1, 1);
-  line.count = positions.length / 3 - 1;
+  const mesh = new Line2(geometry, material);
+  mesh.computeLineDistances();
+  mesh.scale.set(1, 1, 1);
+  mesh.count = positions.length / 3 - 1;
 
-  return [line, material];
+  return { mesh, material };
 };
 const createLine2 = () => {
   const geometry = new Geometry();
@@ -75,18 +75,18 @@ const createLine2 = () => {
   const normal = new LineBasicNodeMaterial({ vertexColors: true });
   const dashed = new LineDashedNodeMaterial({ vertexColors: true, scale: 2, dashSize: 1, gapSize: 1 });
 
-  const line = new Line(geometry, normal);
-  line.computeLineDistances();
-  line.visible = false;
+  const mesh = new Line(geometry, normal);
+  mesh.computeLineDistances();
+  mesh.visible = false;
 
-  return [line, normal, dashed];
+  return { mesh, normal, dashed };
 };
 
 const [positions, colors] = createBuffers();
-const [line1, matLine] = createLine1();
-const [line2, matLineBasic, matLineDashed] = createLine2();
+const line1 = createLine1();
+const line2 = createLine2();
 
-const scene = Scene.of(line1, line2);
+const scene = Scene.of(line1.mesh, line2.mesh);
 const camera = createCamera();
 
 const hearth = await Hearth.as({
@@ -107,53 +107,40 @@ MiniUi.create('Controls', {
     offset: 0,
     scale: 1,
     gap: 1,
+    size: 1,
   },
 })
   .option('lineType', 'Line type', { LineGeometry: 'LineGeometry', 'line-strip': 'LineStrip' }, type => {
-    line1.visible = type === 'LineGeometry';
-    line2.visible = type === 'line-strip';
+    line1.mesh.visible = type === 'LineGeometry';
+    line2.mesh.visible = type === 'line-strip';
   })
-  .boolean('useWorldUnits', 'World units', value => {
-    matLine.worldUnits = value;
-    matLine.useUpdate = true;
+  .boolean('useWorldUnits', '(geo) World units', value => {
+    line1.material.worldUnits = value;
+    line1.material.useUpdate = true;
   })
-  .number('width', 'Width', 1, 10, 0.1, width => {
-    matLine.linewidth = width;
+  .number('width', '(geo) Width', 1, 10, 0.1, width => {
+    line1.material.linewidth = width;
   })
-  .boolean('alphaToCoverage', 'Alpha to coverage', value => {
-    matLine.alphaToCoverage = value;
+  .boolean('alphaToCoverage', '(geo) Alpha to coverage', value => {
+    line1.material.alphaToCoverage = value;
   })
   .boolean('dash.enabled', 'Dashed', enabled => {
-    matLine.dashed = enabled;
-    line2.material = enabled ? matLineDashed : matLineBasic;
+    line1.material.dashed = enabled;
+    line2.mesh.material = enabled ? line2.dashed : line2.normal;
   })
   .number('dash.scale', 'Dash scale', 0.5, 2, 0.1, val => {
-    matLine.scale = val;
-    matLineDashed.scale = val;
+    line1.material.scale = val;
+    line2.dashed.scale = val;
   })
   .number('dash.offset', 'Dash offset', 0, 5, 0.1, val => {
-    matLine.dashOffset = val;
-    matLineDashed.dashOffset = val;
+    line1.material.dashOffset = val;
+    line2.dashed.dashOffset = val;
   })
-  .option('dash.gap', 'Dash / gap', { 0: '2 : 1', 1: '1 : 1', 2: '1 : 2' }, val => {
-    switch (val) {
-      case 0:
-        matLine.dashSize = 2;
-        matLine.gapSize = 1;
-        matLineDashed.dashSize = 2;
-        matLineDashed.gapSize = 1;
-        break;
-      case 1:
-        matLine.dashSize = 1;
-        matLine.gapSize = 1;
-        matLineDashed.dashSize = 1;
-        matLineDashed.gapSize = 1;
-        break;
-      case 2:
-        matLine.dashSize = 1;
-        matLine.gapSize = 2;
-        matLineDashed.dashSize = 1;
-        matLineDashed.gapSize = 2;
-        break;
-    }
+  .number('dash.gap', 'Dash gap', 0, 5, 0.1, val => {
+    line1.material.gapSize = val;
+    line2.dashed.gapSize = val;
+  })
+  .number('dash.size', 'Dash size', 0, 2, 0.1, val => {
+    line1.material.dashSize = val;
+    line2.dashed.dashSize = val;
   });

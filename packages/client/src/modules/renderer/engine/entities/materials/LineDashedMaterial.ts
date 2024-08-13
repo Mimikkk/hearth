@@ -7,18 +7,12 @@ export interface LineDashedMaterialParameters extends LineBasicMaterialParameter
 }
 
 export class LineDashedMaterial extends LineBasicMaterial {
-  declare isLineDashedMaterial: true;
-
   scale: number;
   dashSize: number;
   gapSize: number;
 
   constructor(parameters?: LineDashedMaterialParameters) {
     super(parameters);
-
-    this.isLineDashedMaterial = true;
-
-    this.type = 'LineDashedMaterial';
 
     this.scale = 1;
     this.dashSize = 3;
@@ -38,5 +32,3 @@ export class LineDashedMaterial extends LineBasicMaterial {
     return this;
   }
 }
-
-LineDashedMaterial.prototype.isLineDashedMaterial = true;

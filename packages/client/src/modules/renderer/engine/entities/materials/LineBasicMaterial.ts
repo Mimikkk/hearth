@@ -11,7 +11,6 @@ export interface LineBasicMaterialParameters extends MaterialParameters {
 }
 
 export class LineBasicMaterial extends Material {
-  declare isLineBasicMaterial: true;
   color: Color;
   fog: boolean;
   linewidth: number;
@@ -49,5 +48,3 @@ export class LineBasicMaterial extends Material {
     return this;
   }
 }
-
-LineBasicMaterial.prototype.isLineBasicMaterial = true;
