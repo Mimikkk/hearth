@@ -2,39 +2,34 @@ import { GPUPrimitiveTopologyType, GPUTextureFormatType } from './constants.js';
 import { RenderContext } from '@modules/renderer/engine/hearth/core/RenderContext.js';
 import { Entity } from '@modules/renderer/engine/core/Entity.js';
 import { Material } from '@modules/renderer/engine/entities/materials/Material.js';
-import { Texture } from '@modules/renderer/engine/entities/textures/Texture.js';
 import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 
 export class HearthUtilities {
   constructor(public hearth: Hearth) {}
 
-  getCurrentDepthStencilFormat(renderContext: RenderContext) {
-    if (renderContext.depthTexture) return this.getTextureFormatGPU(renderContext.depthTexture);
-    if (renderContext.useDepth && renderContext.useStencil) return GPUTextureFormatType.Depth24PlusStencil8;
-    if (renderContext.useDepth) return GPUTextureFormatType.Depth24Plus;
+  getCurrentDepthStencilFormat(context: RenderContext) {
+    if (context.depthTexture) return this.hearth.memo.get(context.depthTexture).texture.format;
+    if (context.useDepth && context.useStencil) return GPUTextureFormatType.Depth24PlusStencil8;
+    if (context.useDepth) return GPUTextureFormatType.Depth24Plus;
     return undefined;
   }
 
-  getTextureFormatGPU(texture: Texture) {
-    return this.hearth.memo.get(texture).texture.format;
-  }
-
-  getCurrentColorFormat(renderContext: RenderContext) {
-    return renderContext.textures
-      ? this.getTextureFormatGPU(renderContext.textures[0])
+  getCurrentColorFormat(context: RenderContext) {
+    return context.textures
+      ? this.hearth.memo.get(context.textures[0]).texture.format
       : GPUTextureFormatType.BGRA8Unorm;
   }
 
-  getCurrentColorSpace(renderContext: RenderContext) {
-    return renderContext.textures ? renderContext.textures[0].colorSpace : this.hearth.parameters.outputColorSpace;
+  getCurrentColorSpace(context: RenderContext) {
+    return context.textures ? context.textures[0].colorSpace : this.hearth.parameters.outputColorSpace;
   }
 
-  getPrimitiveTopology(object: Entity, material: Material) {
-    if (isPointsTopology(object)) return GPUPrimitiveTopologyType.PointList;
-    if (isLineSegmentsTopology(object, material)) return GPUPrimitiveTopologyType.LineList;
-    if (isLineTopology(object)) return GPUPrimitiveTopologyType.LineStrip;
-    if (isMeshTopology(object)) return GPUPrimitiveTopologyType.TriangleList;
-    return undefined;
+  getPrimitiveTopology(entity: Entity, material: Material) {
+    if (isPointsTopology(entity)) return GPUPrimitiveTopologyType.PointList;
+    if (isLineSegmentsTopology(entity, material)) return GPUPrimitiveTopologyType.LineList;
+    if (isLineTopology(entity)) return GPUPrimitiveTopologyType.LineStrip;
+    if (isMeshTopology(entity)) return GPUPrimitiveTopologyType.TriangleList;
+    throw new Error('No supported primitive topology');
   }
 
   getSampleCount(context: RenderContext): number {

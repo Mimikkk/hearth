@@ -336,7 +336,7 @@ export class HearthPipelines extends DataMap<any, any> {
       const textures = renderObject.context.textures;
 
       for (let i = 0; i < textures.length; i++) {
-        const colorFormat = utils.getTextureFormatGPU(textures[i]);
+        const colorFormat = this.hearth.memo.get(textures[i]).texture.format;
 
         targets.push({
           format: colorFormat,
@@ -535,13 +535,13 @@ export class HearthPipelines extends DataMap<any, any> {
     }
   }
 
-  _getPrimitiveState(object: Entity, geometry: Geometry, material: Material): GPUPrimitiveState {
+  _getPrimitiveState(entity: Entity, geometry: Geometry, material: Material): GPUPrimitiveState {
     const descriptor: GPUPrimitiveState = {};
     const utils = this.hearth.utilities;
 
-    descriptor.topology = utils.getPrimitiveTopology(object, material);
+    descriptor.topology = utils.getPrimitiveTopology(entity, material);
 
-    if (hasIndex(geometry) && isLine(object) && isLineSegments(object) !== true) {
+    if (hasIndex(geometry) && isLine(entity) && isLineSegments(entity) !== true) {
       descriptor.stripIndexFormat =
         geometry.index.array instanceof Uint16Array ? GPUIndexFormatType.Uint16 : GPUIndexFormatType.Uint32;
     }
@@ -576,5 +576,5 @@ export class HearthPipelines extends DataMap<any, any> {
 }
 
 const hasIndex = (geometry: any): geometry is { index: { array: TypedArray } } => geometry.index !== null;
-const isLine = (object: any): object is Line => object.isLine;
-const isLineSegments = (object: any): object is LineSegments => object.isLineSegments;
+const isLine = (entity: any): entity is Line => entity.isLine;
+const isLineSegments = (entity: any): entity is LineSegments => entity.isLineSegments;

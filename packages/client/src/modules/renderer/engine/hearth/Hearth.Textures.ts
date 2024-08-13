@@ -14,7 +14,6 @@ import { RenderTarget } from '@modules/renderer/engine/hearth/core/RenderTarget.
 import {
   ColorSpace,
   CompressedPixelFormat,
-  Mapping,
   TextureDataType,
   TextureFormat,
 } from '@modules/renderer/engine/constants.js';
@@ -225,43 +224,17 @@ export class HearthTextures extends DataMap<any, any> {
   }
 
   getMipLevels(texture: Texture, width: number, height: number): number {
-    let mipLevelCount;
-
-    if (texture.isCompressedTexture) {
-      mipLevelCount = texture.mipmaps.length;
-    } else {
-      mipLevelCount = Math.floor(Math.log2(Math.max(width, height))) + 1;
-    }
-
-    return mipLevelCount;
+    if (CompressedTexture.is(texture)) return texture.mipmaps.length;
+    return Math.floor(Math.log2(Math.max(width, height))) + 1;
   }
 
   needsMipmaps(texture: Texture): boolean {
-    if (this.isEnvironmentTexture(texture)) return true;
-
-    return (
-      texture.isCompressedTexture === true ||
-      (texture.minFilter !== GPUFilterModeType.Nearest && texture.minFilter !== GPUFilterModeType.Linear)
-    );
+    if (texture.isEnvironment()) return true;
+    return CompressedTexture.is(texture);
   }
 
-  isEnvironmentTexture(texture: Texture): boolean {
-    const mapping = texture.mapping;
-
-    return (
-      mapping === Mapping.EquirectangularReflection ||
-      mapping === Mapping.EquirectangularRefraction ||
-      mapping === Mapping.CubeReflection ||
-      mapping === Mapping.CubeRefraction
-    );
-  }
-
-  createSampler(texture: Texture) {
-    const { device, memo } = this.hearth;
-
-    const textureGPU = memo.get(texture);
-
-    const samplerDescriptorGPU: GPUSamplerDescriptor = {
+  createSampler(texture: Texture): GPUSampler {
+    const sampler = this.hearth.device.createSampler({
       addressModeU: texture.wrapS,
       addressModeV: texture.wrapT,
       addressModeW: texture.wrapR,
@@ -269,17 +242,14 @@ export class HearthTextures extends DataMap<any, any> {
       minFilter: texture.minFilter,
       mipmapFilter: texture.minFilter,
       maxAnisotropy: texture.anisotropy,
-    };
-
-    if (isDepthTexture(texture) && texture.compare) {
-      samplerDescriptorGPU.compare = texture.compare;
-    }
-
-    textureGPU.sampler = device.createSampler(samplerDescriptorGPU);
+      compare: texture.compare,
+    });
+    this.hearth.memo.get(texture).sampler = sampler;
+    return sampler;
   }
 
-  createDefaultTexture(texture: Texture) {
-    let gpu;
+  createDefaultTexture(texture: Texture): GPUTexture {
+    let gpu: GPUTexture;
 
     if (isCubeTexture(texture)) {
       gpu = this.#cubeTexture();
@@ -288,12 +258,18 @@ export class HearthTextures extends DataMap<any, any> {
     }
 
     this.hearth.memo.get(texture).texture = gpu;
+    return gpu;
   }
 
   createTexture(
     texture: Texture,
-    options: {
-      useMipmap?: boolean;
+    {
+      depth = 1,
+      levels = 1,
+      height,
+      sampleCount = 1,
+      width,
+    }: {
       levels?: number;
       depth?: number;
       sampleCount?: number;
@@ -301,30 +277,15 @@ export class HearthTextures extends DataMap<any, any> {
       height: number;
     },
   ): GPUTexture {
-    const { device } = this.hearth;
     const data = this.hearth.memo.get(texture);
-
-    if (data.initialized) {
-      throw new Error('WebGPUTextureUtils: Texture already initialized.');
-    }
-
-    if (options.useMipmap === undefined) options.useMipmap = false;
-    if (options.levels === undefined) options.levels = 1;
-    if (options.depth === undefined) options.depth = 1;
-
-    const { width, height, depth, levels } = options;
+    if (data.initialized) throw new Error('HearthTextures: Texture already initialized.');
 
     const dimension = GPUTextureDimensionType.dim(texture);
-    const format = (texture.internalFormat || getFormat(texture, device)) as GPUTextureFormat;
-
-    let sampleCount = options.sampleCount !== undefined ? options.sampleCount : 1;
+    const format = texture.internalFormat || getFormat(texture, this.hearth.device);
 
     if (sampleCount > 1) {
       sampleCount = Math.pow(2, Math.floor(Math.log2(sampleCount)));
-
-      if (sampleCount === 2) {
-        sampleCount = 4;
-      }
+      if (sampleCount === 2) sampleCount = 4;
     }
 
     const primarySampleCount = texture.isRenderTargetTexture ? 1 : sampleCount;
@@ -369,7 +330,7 @@ export class HearthTextures extends DataMap<any, any> {
         this.createDefaultTexture(texture);
       }
 
-      data.texture = device.createTexture(descriptor);
+      data.texture = this.hearth.device.createTexture(descriptor);
     }
 
     if (isRenderTargetTexture(texture) && sampleCount > 1) {
@@ -379,7 +340,7 @@ export class HearthTextures extends DataMap<any, any> {
         sampleCount: sampleCount,
       };
 
-      data.msaaTexture = device.createTexture(msaa);
+      data.msaaTexture = this.hearth.device.createTexture(msaa);
     }
 
     data.initialized = true;

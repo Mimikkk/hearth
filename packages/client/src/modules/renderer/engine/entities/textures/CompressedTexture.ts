@@ -39,6 +39,10 @@ export class CompressedTexture extends Texture {
 
     this.useMipmap = false;
   }
+
+  static is(value: any): value is CompressedTexture {
+    return value?.isCompressedTexture === true;
+  }
 }
 
 CompressedTexture.prototype.isCompressedTexture = true;

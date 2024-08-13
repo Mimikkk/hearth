@@ -9,10 +9,10 @@ export class HearthPostprocess {
     public outputNode: Node,
   ) {}
 
-  render() {
+  async render(): Promise<void> {
     (mesh.material as NodeMaterial).fragmentNode = this.outputNode;
 
-    mesh.render(this.hearth);
+    await mesh.render(this.hearth);
   }
 }
 

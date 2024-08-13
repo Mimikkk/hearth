@@ -107,6 +107,15 @@ export class Texture<T = any> {
     return texture?.isTexture === true;
   }
 
+  isEnvironment(): boolean {
+    return (
+      this.mapping === Mapping.EquirectangularReflection ||
+      this.mapping === Mapping.EquirectangularRefraction ||
+      this.mapping === Mapping.CubeReflection ||
+      this.mapping === Mapping.CubeRefraction
+    );
+  }
+
   get image() {
     return this.source.data;
   }
