@@ -1,5 +1,5 @@
 import { Color, ColorRepresentation } from '../../math/Color.js';
-import { Blending, BlendingEquation, Depth, PixelFormat, Side } from '../../constants.js';
+import { Blending, BlendingEquation, PixelFormat, Side } from '../../constants.js';
 import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
 import { Plane } from '@modules/renderer/engine/math/Plane.js';
 import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
@@ -35,7 +35,7 @@ export interface MaterialParameters {
   clipShadows?: boolean;
   colorWrite?: boolean;
   defines?: any;
-  depthFunc?: Depth;
+  depthFunc?: GPUCompareFunctionType;
   depthTest?: boolean;
   depthWrite?: boolean;
   name?: string;
@@ -83,7 +83,7 @@ export class Material {
   blendEquationAlpha: number | null;
   blendColor: Color;
   blendAlpha: number;
-  depthFunc: Depth;
+  depthFunc: GPUCompareFunctionType;
   depthTest: boolean;
   depthWrite: boolean;
   stencilWriteMask: number;
@@ -133,7 +133,7 @@ export class Material {
     this.blendColor = Color.new(0, 0, 0);
     this.blendAlpha = 0;
 
-    this.depthFunc = Depth.LessEqual;
+    this.depthFunc = GPUCompareFunctionType.LessEqual;
     this.depthTest = true;
     this.depthWrite = true;
 

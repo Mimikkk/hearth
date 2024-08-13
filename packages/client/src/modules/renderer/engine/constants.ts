@@ -41,17 +41,6 @@ export enum BlendingEquation {
   Max = 104,
 }
 
-export enum Depth {
-  Never = 0,
-  Always = 1,
-  Less = 2,
-  LessEqual = 3,
-  Equal = 4,
-  GreaterEqual = 5,
-  Greater = 6,
-  NotEqual = 7,
-}
-
 export enum Operation {
   Multiply = 0,
   Mix = 1,

@@ -8,7 +8,7 @@ import { Binding } from '@modules/renderer/engine/hearth/bindings/Binding.js';
 import { RenderObject } from '@modules/renderer/engine/hearth/core/RenderObject.js';
 import { Pipeline } from '@modules/renderer/engine/hearth/core/Pipeline.js';
 import { ShaderStage } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
-import { Blending, BlendingEquation, Depth, Side } from '@modules/renderer/engine/constants.js';
+import { Blending, BlendingEquation, Side } from '@modules/renderer/engine/constants.js';
 import { Material } from '@modules/renderer/engine/entities/materials/Material.js';
 import {
   GPUBlendFactorType,
@@ -358,7 +358,7 @@ export class HearthPipelines extends DataMap<any, any> {
     const fragmentModule = memo.get(fragment).module;
 
     const primitiveState = this._getPrimitiveState(object, geometry, material);
-    const depthCompare = this._getDepthCompare(material);
+    const depthCompare = material.depthTest ? material.depthFunc : GPUCompareFunctionType.Always;
     const depthStencilFormat = utils.getCurrentDepthStencilFormat(renderObject.context);
     let sampleCount = utils.getSampleCount(renderObject.context);
 
@@ -602,56 +602,7 @@ export class HearthPipelines extends DataMap<any, any> {
   }
 
   _getColorWriteMask(material: Material) {
-    return material.colorWrite === true ? GPUColorWriteFlagsType.All : GPUColorWriteFlagsType.None;
-  }
-
-  _getDepthCompare(material: Material) {
-    let depthCompare;
-
-    if (material.depthTest === false) {
-      depthCompare = GPUCompareFunctionType.Always;
-    } else {
-      const depthFunc = material.depthFunc;
-
-      switch (depthFunc) {
-        case Depth.Never:
-          depthCompare = GPUCompareFunctionType.Never;
-          break;
-
-        case Depth.Always:
-          depthCompare = GPUCompareFunctionType.Always;
-          break;
-
-        case Depth.Less:
-          depthCompare = GPUCompareFunctionType.Less;
-          break;
-
-        case Depth.LessEqual:
-          depthCompare = GPUCompareFunctionType.LessEqual;
-          break;
-
-        case Depth.Equal:
-          depthCompare = GPUCompareFunctionType.Equal;
-          break;
-
-        case Depth.GreaterEqual:
-          depthCompare = GPUCompareFunctionType.GreaterEqual;
-          break;
-
-        case Depth.Greater:
-          depthCompare = GPUCompareFunctionType.Greater;
-          break;
-
-        case Depth.NotEqual:
-          depthCompare = GPUCompareFunctionType.NotEqual;
-          break;
-
-        default:
-          console.error('PipelineUtils: Invalid depth function.', depthFunc);
-      }
-    }
-
-    return depthCompare;
+    return material.colorWrite ? GPUColorWriteFlagsType.All : GPUColorWriteFlagsType.None;
   }
 }
 
