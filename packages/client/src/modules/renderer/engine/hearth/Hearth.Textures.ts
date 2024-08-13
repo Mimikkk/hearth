@@ -3,7 +3,6 @@ import DataMap from './memo/DataMap.js';
 import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 import { HearthTexturesTexturePass } from '@modules/renderer/engine/hearth/Hearth.Textures.TexturePass.js';
 import {
-  GPUAddressModeType,
   GPUFeature,
   GPUFilterModeType,
   GPUTextureDimensionType,
@@ -29,69 +28,84 @@ import { Data3DTexture } from '@modules/renderer/engine/entities/textures/Data3D
 import { DataArrayTexture } from '@modules/renderer/engine/entities/textures/DataArrayTexture.js';
 import { CompressedTexture } from '@modules/renderer/engine/entities/textures/CompressedTexture.js';
 import { VideoTexture } from '@modules/renderer/engine/entities/textures/VideoTexture.js';
+import { lazy } from '@modules/renderer/engine/math/types.js';
 
 export class HearthTextures extends DataMap<any, any> {
   utils: HearthTexturesTexturePass;
-  defaultTexture: Texture | null;
-  defaultCubeTexture: CubeTexture | null;
+  #flatTexture = lazy(() =>
+    this.createTexture(
+      new Texture({
+        minFilter: GPUFilterModeType.Nearest,
+        magFilter: GPUFilterModeType.Nearest,
+      }),
+      { width: 1, height: 1 },
+    ),
+  );
+  #cubeTexture = lazy(() =>
+    this.createTexture(
+      new CubeTexture({
+        minFilter: GPUFilterModeType.Nearest,
+        magFilter: GPUFilterModeType.Nearest,
+      }),
+      { width: 1, height: 1, depth: 6 },
+    ),
+  );
 
   constructor(public hearth: Hearth) {
     super();
 
     this.utils = new HearthTexturesTexturePass(hearth);
-    this.defaultTexture = null;
-    this.defaultCubeTexture = null;
   }
 
-  updateRenderTarget(renderTarget: RenderTarget, activeMipmapLevel: number = this.hearth.activeMipmapLevel) {
-    const renderTargetData = this.get(renderTarget);
+  updateRenderTarget(target: RenderTarget, activeMipmapLevel: number = this.hearth.activeMipmapLevel) {
+    const data = this.get(target);
 
-    const sampleCount = renderTarget.samples === 0 ? 1 : renderTarget.samples;
-    const depthTextureMips = renderTargetData.depthTextureMips || (renderTargetData.depthTextureMips = {});
+    const sampleCount = target.samples === 0 ? 1 : target.samples;
+    const depthTextureMips = data.depthTextureMips || (data.depthTextureMips = {});
 
-    const texture = renderTarget.texture;
-    const textures = renderTarget.textures;
+    const texture = target.texture;
+    const textures = target.textures;
 
     const size = this.getSize(texture);
 
     const mipWidth = size.x >> activeMipmapLevel;
     const mipHeight = size.y >> activeMipmapLevel;
 
-    let depthTexture = renderTarget.depthTexture || depthTextureMips[activeMipmapLevel];
+    let depthTexture = target.depthTexture || depthTextureMips[activeMipmapLevel];
     let textureNeedsUpdate = false;
 
     if (depthTexture === undefined) {
-      //@ts-expect-error
-      depthTexture = new DepthTexture();
-      depthTexture.format = renderTarget.stencilBuffer ? TextureFormat.DepthStencil : TextureFormat.Depth;
-      depthTexture.type = renderTarget.stencilBuffer ? TextureDataType.UnsignedInt248 : TextureDataType.UnsignedInt;
-      depthTexture.image.width = mipWidth;
-      depthTexture.image.height = mipHeight;
+      depthTexture = new DepthTexture({
+        width: mipWidth,
+        height: mipHeight,
+        format: target.stencilBuffer ? TextureFormat.DepthStencil : TextureFormat.Depth,
+        type: target.stencilBuffer ? TextureDataType.UnsignedInt248 : TextureDataType.UnsignedInt,
+      });
 
       depthTextureMips[activeMipmapLevel] = depthTexture;
     }
 
-    if (renderTargetData.width !== size.x || size.y !== renderTargetData.height) {
+    if (data.width !== size.x || size.y !== data.height) {
       textureNeedsUpdate = true;
-      depthTexture.useUpdate = true;
 
+      depthTexture.useUpdate = true;
       depthTexture.image.width = mipWidth;
       depthTexture.image.height = mipHeight;
     }
 
-    renderTargetData.width = size.x;
-    renderTargetData.height = size.y;
-    renderTargetData.textures = textures;
-    renderTargetData.depthTexture = depthTexture;
-    renderTargetData.depth = renderTarget.depthBuffer;
-    renderTargetData.stencil = renderTarget.stencilBuffer;
-    renderTargetData.renderTarget = renderTarget;
+    data.width = size.x;
+    data.height = size.y;
+    data.textures = textures;
+    data.depthTexture = depthTexture;
+    data.depth = target.depthBuffer;
+    data.stencil = target.stencilBuffer;
+    data.renderTarget = target;
 
-    if (renderTargetData.sampleCount !== sampleCount) {
+    if (data.sampleCount !== sampleCount) {
       textureNeedsUpdate = true;
       depthTexture.useUpdate = true;
 
-      renderTargetData.sampleCount = sampleCount;
+      data.sampleCount = sampleCount;
     }
 
     const options = { sampleCount };
@@ -106,18 +120,18 @@ export class HearthTextures extends DataMap<any, any> {
 
     this.updateTexture(depthTexture, options);
 
-    if (renderTargetData.initialized !== true) {
-      renderTargetData.initialized = true;
+    if (data.initialized !== true) {
+      data.initialized = true;
     }
   }
 
   updateTexture(texture: Texture, options: Record<string, any> = {}) {
-    const textureData = this.get(texture);
-    if (textureData.initialized === true && textureData.version === texture.version) return;
+    const data = this.get(texture);
+    if (data.initialized === true && data.version === texture.version) return;
 
     const isRenderTarget = texture.isRenderTargetTexture || texture.isDepthTexture || texture.isFramebufferTexture;
 
-    if (isRenderTarget && textureData.initialized === true) {
+    if (isRenderTarget && data.initialized === true) {
       this.hearth.destroySampler(texture);
       this.hearth.destroyTexture(texture);
     }
@@ -145,7 +159,7 @@ export class HearthTextures extends DataMap<any, any> {
       this.hearth.createSampler(texture);
       this.hearth.createTexture(texture, options);
     } else {
-      const needsCreate = textureData.initialized !== true;
+      const needsCreate = data.initialized !== true;
 
       if (needsCreate) this.hearth.createSampler(texture);
 
@@ -169,10 +183,10 @@ export class HearthTextures extends DataMap<any, any> {
             options.image = image;
           }
 
-          if (textureData.isDefaultTexture === undefined || textureData.isDefaultTexture === true) {
+          if (data.isDefaultTexture === undefined || data.isDefaultTexture === true) {
             this.hearth.createTexture(texture, options);
 
-            textureData.isDefaultTexture = false;
+            data.isDefaultTexture = false;
           }
 
           if (texture.source.dataReady === true) this.hearth.updateTexture(texture, options);
@@ -182,33 +196,33 @@ export class HearthTextures extends DataMap<any, any> {
       } else {
         this.hearth.createDefaultTexture(texture);
 
-        textureData.isDefaultTexture = true;
+        data.isDefaultTexture = true;
       }
     }
 
-    if (textureData.initialized !== true) {
-      textureData.initialized = true;
+    if (data.initialized !== true) {
+      data.initialized = true;
 
       this.hearth.stats.memory.textures++;
     }
 
-    textureData.version = texture.version;
+    data.version = texture.version;
   }
 
-  getSize(texture: Texture, target = _size) {
+  getSize(texture: Texture, into: Vec3 = _size) {
     let image = texture.images ? texture.images[0] : texture.image;
 
     if (image) {
       if (image.image !== undefined) image = image.image;
 
-      target.x = image.width;
-      target.y = image.height;
-      target.z = texture.isCubeTexture ? 6 : image.depth || 1;
+      into.x = image.width;
+      into.y = image.height;
+      into.z = texture.isCubeTexture ? 6 : image.depth || 1;
     } else {
-      target.x = target.y = target.z = 1;
+      into.x = into.y = into.z = 1;
     }
 
-    return target;
+    return into;
   }
 
   getMipLevels(texture: Texture, width: number, height: number): number {
@@ -266,15 +280,15 @@ export class HearthTextures extends DataMap<any, any> {
   }
 
   createDefaultTexture(texture: Texture) {
-    let textureGPU;
+    let gpu;
 
     if (isCubeTexture(texture)) {
-      textureGPU = this._getDefaultCubeTextureGPU();
+      gpu = this.#cubeTexture();
     } else {
-      textureGPU = this._getDefaultTextureGPU();
+      gpu = this.#flatTexture();
     }
 
-    this.hearth.memo.get(texture).texture = textureGPU;
+    this.hearth.memo.get(texture).texture = gpu;
   }
 
   createTexture(
@@ -287,11 +301,11 @@ export class HearthTextures extends DataMap<any, any> {
       width: number;
       height: number;
     },
-  ) {
-    const { memo, device } = this.hearth;
-    const textureData = memo.get(texture);
+  ): GPUTexture {
+    const { device } = this.hearth;
+    const data = this.hearth.memo.get(texture);
 
-    if (textureData.initialized) {
+    if (data.initialized) {
       throw new Error('WebGPUTextureUtils: Texture already initialized.');
     }
 
@@ -326,7 +340,7 @@ export class HearthTextures extends DataMap<any, any> {
       usage |= GPUTextureUsage.RENDER_ATTACHMENT;
     }
 
-    const textureDescriptorGPU: GPUTextureDescriptor = {
+    const descriptor: GPUTextureDescriptor = {
       label: texture.name,
       size: {
         width: width,
@@ -344,63 +358,62 @@ export class HearthTextures extends DataMap<any, any> {
       const video = texture.source.data;
       const videoFrame = new VideoFrame(video);
 
-      (textureDescriptorGPU.size as GPUExtent3DDictStrict).width = videoFrame.displayWidth;
-      (textureDescriptorGPU.size as GPUExtent3DDictStrict).height = videoFrame.displayHeight;
+      (descriptor.size as GPUExtent3DDictStrict).width = videoFrame.displayWidth;
+      (descriptor.size as GPUExtent3DDictStrict).height = videoFrame.displayHeight;
 
       videoFrame.close();
 
-      textureData.externalTexture = video;
+      data.externalTexture = video;
     } else {
       if (format === undefined) {
         console.warn('WebGPURenderer: Texture format not supported.');
-
         this.createDefaultTexture(texture);
       }
 
-      textureData.texture = device.createTexture(textureDescriptorGPU);
+      data.texture = device.createTexture(descriptor);
     }
 
     if (isRenderTargetTexture(texture) && sampleCount > 1) {
-      const msaaTextureDescriptorGPU = {
-        ...textureDescriptorGPU,
-        label: textureDescriptorGPU.label + '-msaa',
+      const msaa = {
+        ...descriptor,
+        label: descriptor.label + '-msaa',
         sampleCount: sampleCount,
       };
 
-      textureData.msaaTexture = device.createTexture(msaaTextureDescriptorGPU);
+      data.msaaTexture = device.createTexture(msaa);
     }
 
-    textureData.initialized = true;
-
-    textureData.textureDescriptorGPU = textureDescriptorGPU;
+    data.initialized = true;
+    data.textureDescriptorGPU = descriptor;
+    return data.texture;
   }
 
   destroyTexture(texture: Texture) {
     const { memo } = this.hearth;
-    const textureData = memo.get(texture);
+    const data = memo.get(texture);
 
-    textureData.texture.destroy();
+    data.texture.destroy();
 
-    if (textureData.msaaTexture !== undefined) textureData.msaaTexture.destroy();
+    if (data.msaaTexture !== undefined) data.msaaTexture.destroy();
 
     memo.delete(texture);
   }
 
   destroySampler(texture: Texture) {
-    const textureData = this.hearth.memo.get(texture);
+    const data = this.hearth.memo.get(texture);
 
-    delete textureData.sampler;
+    delete data.sampler;
   }
 
   useMipmap(texture: Texture) {
-    const textureData = this.hearth.memo.get(texture);
+    const data = this.hearth.memo.get(texture);
 
     if (isCubeTexture(texture)) {
       for (let i = 0; i < 6; i++) {
-        this._useMipmap(textureData.texture, textureData.textureDescriptorGPU, i);
+        this.utils.useMipmap(data.texture, data.textureDescriptorGPU, i);
       }
     } else {
-      this._useMipmap(textureData.texture, textureData.textureDescriptorGPU);
+      this.utils.useMipmap(data.texture, data.textureDescriptorGPU, 0);
     }
   }
 
@@ -413,31 +426,31 @@ export class HearthTextures extends DataMap<any, any> {
         }
       | any,
   ) {
-    const textureData = this.hearth.memo.get(texture);
+    const data = this.hearth.memo.get(texture);
 
-    const { textureDescriptorGPU } = textureData;
+    const { textureDescriptorGPU } = data;
 
     if (texture.isRenderTargetTexture || textureDescriptorGPU === undefined) return;
 
     if (isDataTexture(texture) || isData3DTexture(texture)) {
-      this._copyBufferToTexture(options.image, textureData.texture, textureDescriptorGPU, 0, texture.flipY);
+      this._copyBufferToTexture(options.image, data.texture, textureDescriptorGPU, 0, texture.flipY);
     } else if (isDataArrayTexture(texture)) {
       for (let i = 0; i < options.image.depth; i++) {
-        this._copyBufferToTexture(options.image, textureData.texture, textureDescriptorGPU, i, texture.flipY, i);
+        this._copyBufferToTexture(options.image, data.texture, textureDescriptorGPU, i, texture.flipY, i);
       }
     } else if (isCompressedTexture(texture)) {
-      this._copyCompressedBufferToTexture(texture.mipmaps as ImageData[], textureData.texture, textureDescriptorGPU);
+      this._copyCompressedBufferToTexture(texture.mipmaps as ImageData[], data.texture, textureDescriptorGPU);
     } else if (isCubeTexture(texture)) {
-      this._copyCubeMapToTexture(options.images, textureData.texture, textureDescriptorGPU, texture.flipY);
+      this._copyCubeToTexture(options.images, data.texture, textureDescriptorGPU, texture.flipY);
     } else if (isVideoTexture(texture)) {
       const video = texture.source.data;
 
-      textureData.externalTexture = video;
+      data.externalTexture = video;
     } else {
-      this._copyImageToTexture(options.image, textureData.texture, textureDescriptorGPU, 0, texture.flipY);
+      this._copyFlatToTexture(options.image, data.texture, textureDescriptorGPU, 0, texture.flipY);
     }
 
-    textureData.version = texture.version;
+    data.version = texture.version;
 
     texture.onUpdate?.();
   }
@@ -445,9 +458,9 @@ export class HearthTextures extends DataMap<any, any> {
   async copyTextureToBuffer(texture: Texture, x: number, y: number, width: number, height: number) {
     const device = this.hearth.device;
 
-    const textureData = this.hearth.memo.get(texture);
-    const textureGPU = textureData.texture;
-    const format = textureData.textureDescriptorGPU.format;
+    const data = this.hearth.memo.get(texture);
+    const gpuTexture = data.texture;
+    const format = data.textureDescriptorGPU.format;
     const bytesPerTexel = GPUTextureFormatType.bytes(format);
 
     let bytesPerRow = width * bytesPerTexel;
@@ -462,7 +475,7 @@ export class HearthTextures extends DataMap<any, any> {
 
     encoder.copyTextureToBuffer(
       {
-        texture: textureGPU,
+        texture: gpuTexture,
         origin: { x, y },
       },
       {
@@ -483,76 +496,34 @@ export class HearthTextures extends DataMap<any, any> {
     return new TypedArray(buffer);
   }
 
-  _getDefaultTextureGPU() {
-    let defaultTexture = this.defaultTexture;
-
-    if (defaultTexture === null) {
-      const texture = new Texture();
-      texture.minFilter = GPUFilterModeType.Nearest;
-      texture.magFilter = GPUFilterModeType.Nearest;
-
-      this.createTexture(texture, { width: 1, height: 1 });
-
-      this.defaultTexture = defaultTexture = texture;
-    }
-
-    return this.hearth.memo.get(defaultTexture).texture;
-  }
-
-  _getDefaultCubeTextureGPU() {
-    let defaultCubeTexture = this.defaultTexture;
-
-    if (defaultCubeTexture === null) {
-      const texture = new CubeTexture({
-        minFilter: GPUFilterModeType.Nearest,
-        magFilter: GPUFilterModeType.Nearest,
-      });
-
-      this.createTexture(texture, { width: 1, height: 1, depth: 6 });
-
-      this.defaultCubeTexture = defaultCubeTexture = texture;
-    }
-
-    return this.hearth.memo.get(defaultCubeTexture).texture;
-  }
-
-  _copyCubeMapToTexture(
-    images: ImageData[],
-    textureGPU: GPUTexture,
-    textureDescriptorGPU: GPUTextureDescriptor,
-    flipY: boolean,
-  ) {
+  _copyCubeToTexture(images: ImageData[], texture: GPUTexture, descriptor: GPUTextureDescriptor, useFlip: boolean) {
     for (let i = 0; i < 6; i++) {
       const image = images[i];
+      const flipAt = useFlip ? _flipMap[i] : i;
 
-      const flipIndex = flipY === true ? _flipMap[i] : i;
-
-      if (isDataTexture(image)) {
-        //@ts-expect-error
-        this._copyBufferToTexture(image.image, textureGPU, textureDescriptorGPU, flipIndex, flipY);
+      if (DataTexture.is(image)) {
+        this._copyBufferToTexture(image.image, texture, descriptor, flipAt, useFlip);
       } else {
-        this._copyImageToTexture(image, textureGPU, textureDescriptorGPU, flipIndex, flipY);
+        this._copyFlatToTexture(image, texture, descriptor, flipAt, useFlip);
       }
     }
   }
 
-  _copyImageToTexture(
+  _copyFlatToTexture(
     image: ImageData,
-    textureGPU: GPUTexture,
-    textureDescriptorGPU: GPUTextureDescriptor,
-    originDepth: number,
-    flipY: boolean,
+    texture: GPUTexture,
+    descriptor: GPUTextureDescriptor,
+    depth: number,
+    useFlip: boolean,
   ) {
-    const device = this.hearth.device;
-
-    device.queue.copyExternalImageToTexture(
+    this.hearth.device.queue.copyExternalImageToTexture(
       {
         source: image,
       },
       {
-        texture: textureGPU,
+        texture: texture,
         mipLevel: 0,
-        origin: { x: 0, y: 0, z: originDepth },
+        origin: { x: 0, y: 0, z: depth },
       },
       {
         width: image.width,
@@ -561,74 +532,53 @@ export class HearthTextures extends DataMap<any, any> {
       },
     );
 
-    if (flipY === true) {
-      this._useFlipY(textureGPU, textureDescriptorGPU, originDepth);
-    }
-  }
-
-  _useMipmap(textureGPU: GPUTexture, textureDescriptorGPU: GPUTextureDescriptor, baseArrayLayer = 0) {
-    this.utils.useMipmap(textureGPU, textureDescriptorGPU, baseArrayLayer);
-  }
-
-  _useFlipY(textureGPU: GPUTexture, textureDescriptorGPU: GPUTextureDescriptor, originDepth = 0) {
-    this.utils.useFlipY(textureGPU, textureDescriptorGPU, originDepth);
+    if (useFlip) this.utils.useFlipY(texture, descriptor, depth);
   }
 
   _copyBufferToTexture(
-    image: ImageData,
-    textureGPU: GPUTexture,
-    textureDescriptorGPU: GPUTextureDescriptor,
+    { data, width, height }: ImageData,
+    texture: GPUTexture,
+    descriptor: GPUTextureDescriptor,
     originDepth: number,
-    flipY: boolean,
+    useFlip: boolean,
     depth: number = 0,
   ) {
-    const device = this.hearth.device;
+    const bytesPerTexel = GPUTextureFormatType.bytes(descriptor.format);
 
-    const data = image.data;
-
-    const bytesPerTexel = GPUTextureFormatType.bytes(textureDescriptorGPU.format);
-    const bytesPerRow = image.width * bytesPerTexel;
-
-    device.queue.writeTexture(
+    this.hearth.device.queue.writeTexture(
       {
-        texture: textureGPU,
+        texture: texture,
         mipLevel: 0,
         origin: { x: 0, y: 0, z: originDepth },
       },
       data,
       {
-        offset: image.width * image.height * bytesPerTexel * depth,
-        bytesPerRow,
+        offset: width * height * bytesPerTexel * depth,
+        bytesPerRow: width * bytesPerTexel,
       },
       {
-        width: image.width,
-        height: image.height,
+        width: width,
+        height: height,
         depthOrArrayLayers: 1,
       },
     );
 
-    if (flipY === true) {
-      this._useFlipY(textureGPU, textureDescriptorGPU, originDepth);
-    }
+    if (useFlip) this.utils.useFlipY(texture, descriptor, originDepth);
   }
 
-  _copyCompressedBufferToTexture(
-    mipmaps: ImageData[],
-    textureGPU: GPUTexture,
-    textureDescriptorGPU: GPUTextureDescriptor,
-  ) {
-    const device = this.hearth.device;
-    const size = GPUTextureFormatType.chunksize(textureDescriptorGPU.format);
+  _copyCompressedBufferToTexture(mipmaps: ImageData[], texture: GPUTexture, descriptor: GPUTextureDescriptor) {
+    const size = GPUTextureFormatType.chunksize(descriptor.format);
 
-    for (let i = 0; i < mipmaps.length; ++i) {
-      const { width, height, data } = mipmaps[i];
+    for (let mipLevel = 0; mipLevel < mipmaps.length; ++mipLevel) {
+      const { width, height, data } = mipmaps[mipLevel];
 
-      const stride = Math.ceil(width / size.width) * size.byteLength;
-
-      device.queue.writeTexture(
-        { texture: textureGPU, mipLevel: i },
+      this.hearth.device.queue.writeTexture(
+        { texture, mipLevel },
         data,
-        { offset: 0, bytesPerRow: stride },
+        {
+          offset: 0,
+          bytesPerRow: Math.ceil(width / size.width) * size.byteLength,
+        },
         {
           width: Math.ceil(width / size.width) * size.width,
           height: Math.ceil(height / size.width) * size.width,
