@@ -31,10 +31,14 @@ import { CompressedTexture } from '@modules/renderer/engine/entities/textures/Co
 import { VideoTexture } from '@modules/renderer/engine/entities/textures/VideoTexture.js';
 
 export class HearthTextures extends DataMap<any, any> {
+  utils: HearthTexturesTexturePass;
+  defaultTexture: Texture | null;
+  defaultCubeTexture: CubeTexture | null;
+
   constructor(public hearth: Hearth) {
     super();
 
-    this.utils = null;
+    this.utils = new HearthTexturesTexturePass(hearth);
     this.defaultTexture = null;
     this.defaultCubeTexture = null;
   }
@@ -238,10 +242,6 @@ export class HearthTextures extends DataMap<any, any> {
       mapping === Mapping.CubeRefraction
     );
   }
-
-  utils: HearthTexturesTexturePass | null;
-  defaultTexture: Texture | null;
-  defaultCubeTexture: CubeTexture | null;
 
   createSampler(texture: Texture) {
     const { device, memo } = this.hearth;
@@ -562,26 +562,16 @@ export class HearthTextures extends DataMap<any, any> {
     );
 
     if (flipY === true) {
-      this._flipY(textureGPU, textureDescriptorGPU, originDepth);
+      this._useFlipY(textureGPU, textureDescriptorGPU, originDepth);
     }
-  }
-
-  _getPassUtils() {
-    let passUtils = this.utils;
-
-    if (passUtils === null) {
-      this.utils = passUtils = new HearthTexturesTexturePass(this.hearth);
-    }
-
-    return passUtils;
   }
 
   _useMipmap(textureGPU: GPUTexture, textureDescriptorGPU: GPUTextureDescriptor, baseArrayLayer = 0) {
-    this._getPassUtils().useMipmap(textureGPU, textureDescriptorGPU, baseArrayLayer);
+    this.utils.useMipmap(textureGPU, textureDescriptorGPU, baseArrayLayer);
   }
 
-  _flipY(textureGPU: GPUTexture, textureDescriptorGPU: GPUTextureDescriptor, originDepth = 0) {
-    this._getPassUtils().flipY(textureGPU, textureDescriptorGPU, originDepth);
+  _useFlipY(textureGPU: GPUTexture, textureDescriptorGPU: GPUTextureDescriptor, originDepth = 0) {
+    this.utils.useFlipY(textureGPU, textureDescriptorGPU, originDepth);
   }
 
   _copyBufferToTexture(
@@ -618,7 +608,7 @@ export class HearthTextures extends DataMap<any, any> {
     );
 
     if (flipY === true) {
-      this._flipY(textureGPU, textureDescriptorGPU, originDepth);
+      this._useFlipY(textureGPU, textureDescriptorGPU, originDepth);
     }
   }
 

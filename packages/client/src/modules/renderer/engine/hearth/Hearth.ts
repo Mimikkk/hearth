@@ -149,6 +149,7 @@ export class Hearth {
     this.useViewport = true;
     this.useScissor = false;
 
+    this.resources = new HearthResources(this);
     this.stats = new HearthStatistics();
     this.nodes = new HearthNodes(this);
     this.animation = new HearthAnimation(this);
@@ -158,7 +159,6 @@ export class Hearth {
     this.textures = new HearthTextures(this);
     this.utilities = new HearthUtilities(this);
     this.pipelines = new HearthPipelines(this);
-    this.resources = new HearthResources(this);
     this.bindings = new HearthBindings(this);
     this.objects = new HearthEntities(this);
     this.renderer = new HearthRenderer(this);

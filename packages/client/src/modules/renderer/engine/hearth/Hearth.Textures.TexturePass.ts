@@ -148,7 +148,7 @@ export class HearthTexturesTexturePass {
     this.mipmap = new HearthTexturesTexturePassMipmapShader(hearth);
   }
 
-  flipY(texture: GPUTexture, descriptor: GPUTextureDescriptor, layer: number): void {
+  useFlipY(texture: GPUTexture, descriptor: GPUTextureDescriptor, layer: number): void {
     const format = descriptor.format;
     const { width, height } = descriptor.size as GPUExtent3DDictStrict;
 
