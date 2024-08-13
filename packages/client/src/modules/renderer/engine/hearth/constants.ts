@@ -1,3 +1,6 @@
+import { Texture } from '@modules/renderer/engine/entities/textures/Texture.js';
+import { Data3DTexture } from '@modules/renderer/engine/entities/textures/Data3DTexture.js';
+
 export enum GPUPrimitiveTopologyType {
   PointList = 'point-list',
   LineList = 'line-list',
@@ -77,15 +80,12 @@ export enum GPUVertexFormatType {
 }
 
 export enum GPUTextureFormatType {
-
-
+  // 8bit
   R8Unorm = 'r8unorm',
   R8Snorm = 'r8snorm',
   R8Uint = 'r8uint',
   R8Sint = 'r8sint',
-
-
-
+  // 16bit
   R16Uint = 'r16uint',
   R16Sint = 'r16sint',
   R16Float = 'r16float',
@@ -93,9 +93,7 @@ export enum GPUTextureFormatType {
   RG8Snorm = 'rg8snorm',
   RG8Uint = 'rg8uint',
   RG8Sint = 'rg8sint',
-
-
-
+  // 32-bit formats
   R32Uint = 'r32uint',
   R32Sint = 'r32sint',
   R32Float = 'r32float',
@@ -109,40 +107,30 @@ export enum GPUTextureFormatType {
   RGBA8Sint = 'rgba8sint',
   BGRA8Unorm = 'bgra8unorm',
   BGRA8UnormSRGB = 'bgra8unorm-srgb',
-
+  // Packed 32-bit formats
   RGB9E5UFloat = 'rgb9e5ufloat',
+  RGB10A2uInt = 'rgb10a2uint',
   RGB10A2Unorm = 'rgb10a2unorm',
-  RG11B10uFloat = 'rgb10a2unorm',
-
-
-
+  RG11B10uFloat = 'rg11b10ufloat',
+  // 64-bit formats
   RG32Uint = 'rg32uint',
   RG32Sint = 'rg32sint',
   RG32Float = 'rg32float',
   RGBA16Uint = 'rgba16uint',
   RGBA16Sint = 'rgba16sint',
   RGBA16Float = 'rgba16float',
-
-
-
+  // 128-bit formats
   RGBA32Uint = 'rgba32uint',
   RGBA32Sint = 'rgba32sint',
   RGBA32Float = 'rgba32float',
-
-
-
+  // Depth/stencil formats
   Stencil8 = 'stencil8',
   Depth16Unorm = 'depth16unorm',
   Depth24Plus = 'depth24plus',
   Depth24PlusStencil8 = 'depth24plus-stencil8',
   Depth32Float = 'depth32float',
-
-
-
+  // "depth32float-stencil8" feature
   Depth32FloatStencil8 = 'depth32float-stencil8',
-
-
-
 
   BC1RGBAUnorm = 'bc1-rgba-unorm',
   BC1RGBAUnormSRGB = 'bc1-rgba-unorm-srgb',
@@ -157,10 +145,7 @@ export enum GPUTextureFormatType {
   BC6HRGBUFloat = 'bc6h-rgb-ufloat',
   BC6HRGBFloat = 'bc6h-rgb-float',
   BC7RGBAUnorm = 'bc7-rgba-unorm',
-  BC7RGBAUnormSRGB = 'bc7-rgba-srgb',
-
-
-
+  BC7RGBAUnormSRGB = 'bc7-rgba-unorm-srgb',
 
   ETC2RGB8Unorm = 'etc2-rgb8unorm',
   ETC2RGB8UnormSRGB = 'etc2-rgb8unorm-srgb',
@@ -172,9 +157,6 @@ export enum GPUTextureFormatType {
   EACR11Snorm = 'eac-r11snorm',
   EACRG11Unorm = 'eac-rg11unorm',
   EACRG11Snorm = 'eac-rg11snorm',
-
-
-
 
   ASTC4x4Unorm = 'astc-4x4-unorm',
   ASTC4x4UnormSRGB = 'astc-4x4-unorm-srgb',
@@ -204,6 +186,194 @@ export enum GPUTextureFormatType {
   ASTC12x10UnormSRGB = 'astc-12x10-unorm-srgb',
   ASTC12x12Unorm = 'astc-12x12-unorm',
   ASTC12x12UnormSRGB = 'astc-12x12-unorm-srgb',
+}
+
+export namespace GPUTextureFormatType {
+  export const bytes = (format: GPUTextureFormat | GPUTextureFormatType) => {
+    switch (format) {
+      case GPUTextureFormatType.R8Unorm:
+      case GPUTextureFormatType.R8Snorm:
+      case GPUTextureFormatType.R8Uint:
+      case GPUTextureFormatType.R8Sint:
+        return 1;
+      case GPUTextureFormatType.R16Uint:
+      case GPUTextureFormatType.R16Sint:
+      case GPUTextureFormatType.R16Float:
+      case GPUTextureFormatType.RG8Unorm:
+      case GPUTextureFormatType.RG8Snorm:
+      case GPUTextureFormatType.RG8Uint:
+      case GPUTextureFormatType.RG8Sint:
+        return 2;
+      case GPUTextureFormatType.R32Uint:
+      case GPUTextureFormatType.R32Sint:
+      case GPUTextureFormatType.R32Float:
+      case GPUTextureFormatType.RG16Uint:
+      case GPUTextureFormatType.RG16Sint:
+      case GPUTextureFormatType.RG16Float:
+      case GPUTextureFormatType.RGBA8Unorm:
+      case GPUTextureFormatType.RGBA8UnormSRGB:
+      case GPUTextureFormatType.RGBA8Snorm:
+      case GPUTextureFormatType.RGBA8Uint:
+      case GPUTextureFormatType.RGBA8Sint:
+      case GPUTextureFormatType.BGRA8Unorm:
+      case GPUTextureFormatType.BGRA8UnormSRGB:
+      case GPUTextureFormatType.RGB9E5UFloat:
+      case GPUTextureFormatType.RGB10A2Unorm:
+      case GPUTextureFormatType.RGB10A2uInt:
+      case GPUTextureFormatType.RG11B10uFloat:
+      case GPUTextureFormatType.Depth32Float:
+      case GPUTextureFormatType.Depth24Plus:
+      case GPUTextureFormatType.Depth24PlusStencil8:
+      case GPUTextureFormatType.Depth32FloatStencil8:
+        return 4;
+      case GPUTextureFormatType.RG32Uint:
+      case GPUTextureFormatType.RG32Sint:
+      case GPUTextureFormatType.RG32Float:
+      case GPUTextureFormatType.RGBA16Uint:
+      case GPUTextureFormatType.RGBA16Sint:
+      case GPUTextureFormatType.RGBA16Float:
+        return 8;
+      case GPUTextureFormatType.RGBA32Uint:
+      case GPUTextureFormatType.RGBA32Sint:
+      case GPUTextureFormatType.RGBA32Float:
+        return 16;
+      default:
+        throw new Error('GPUTextureFormatType: Unsupported texture format.');
+    }
+  };
+
+  export const array = (format: GPUTextureFormat | GPUTextureFormatType) => {
+    switch (format) {
+      case GPUTextureFormatType.R8Sint:
+      case GPUTextureFormatType.R8Snorm:
+      case GPUTextureFormatType.RG8Sint:
+      case GPUTextureFormatType.RG8Snorm:
+      case GPUTextureFormatType.RGBA8Sint:
+      case GPUTextureFormatType.RGBA8Snorm:
+        return Int8Array;
+      case GPUTextureFormatType.R8Uint:
+      case GPUTextureFormatType.R8Unorm:
+      case GPUTextureFormatType.RG8Uint:
+      case GPUTextureFormatType.RG8Unorm:
+      case GPUTextureFormatType.RGBA8Uint:
+      case GPUTextureFormatType.RGBA8Unorm:
+      case GPUTextureFormatType.BGRA8Unorm:
+      case GPUTextureFormatType.BGRA8UnormSRGB:
+        return Uint8Array;
+      case GPUTextureFormatType.R16Sint:
+      case GPUTextureFormatType.RG16Sint:
+      case GPUTextureFormatType.RGBA16Sint:
+        return Int16Array;
+      case GPUTextureFormatType.R16Uint:
+      case GPUTextureFormatType.RG16Uint:
+      case GPUTextureFormatType.RGBA16Uint:
+        return Uint16Array;
+      case GPUTextureFormatType.R16Float:
+      case GPUTextureFormatType.RG16Float:
+      case GPUTextureFormatType.RGBA16Float:
+      case GPUTextureFormatType.R32Float:
+      case GPUTextureFormatType.RG32Float:
+      case GPUTextureFormatType.RGBA32Float:
+      case GPUTextureFormatType.Depth32Float:
+      case GPUTextureFormatType.Depth32FloatStencil8:
+        return Float32Array;
+      case GPUTextureFormatType.R32Sint:
+      case GPUTextureFormatType.RG32Sint:
+      case GPUTextureFormatType.RGBA32Sint:
+        return Int32Array;
+      case GPUTextureFormatType.R32Uint:
+      case GPUTextureFormatType.RG32Uint:
+      case GPUTextureFormatType.RGBA32Uint:
+      case GPUTextureFormatType.RGB10A2Unorm:
+      case GPUTextureFormatType.RGB9E5UFloat:
+      case GPUTextureFormatType.RG11B10uFloat:
+      case GPUTextureFormatType.Depth24Plus:
+      case GPUTextureFormatType.Depth24PlusStencil8:
+        return Uint32Array;
+      default:
+        throw new Error(`GPUTextureFormatType: Unsupported texture format '${format}'.`);
+    }
+  };
+
+  export const chunksize = (
+    format: GPUTextureFormat | GPUTextureFormatType,
+  ): {
+    byteLength: number;
+    width: number;
+    height: number;
+  } => {
+    switch (format) {
+      case GPUTextureFormatType.BC1RGBAUnorm:
+      case GPUTextureFormatType.BC1RGBAUnormSRGB:
+      case GPUTextureFormatType.BC4RUnorm:
+      case GPUTextureFormatType.BC4RSnorm:
+      case GPUTextureFormatType.ETC2RGB8Unorm:
+      case GPUTextureFormatType.ETC2RGB8UnormSRGB:
+      case GPUTextureFormatType.ETC2RGB8A1Unorm:
+      case GPUTextureFormatType.ETC2RGB8A1UnormSRGB:
+      case GPUTextureFormatType.EACR11Unorm:
+      case GPUTextureFormatType.EACR11Snorm:
+        return { byteLength: 8, width: 4, height: 4 };
+      case GPUTextureFormatType.BC2RGBAUnorm:
+      case GPUTextureFormatType.BC2RGBAUnormSRGB:
+      case GPUTextureFormatType.BC3RGBAUnorm:
+      case GPUTextureFormatType.BC3RGBAUnormSRGB:
+      case GPUTextureFormatType.BC5RGUnorm:
+      case GPUTextureFormatType.BC5RGSnorm:
+      case GPUTextureFormatType.BC6HRGBUFloat:
+      case GPUTextureFormatType.BC6HRGBFloat:
+      case GPUTextureFormatType.BC7RGBAUnorm:
+      case GPUTextureFormatType.BC7RGBAUnormSRGB:
+      case GPUTextureFormatType.ETC2RGBA8Unorm:
+      case GPUTextureFormatType.ETC2RGBA8UnormSRGB:
+      case GPUTextureFormatType.EACRG11Unorm:
+      case GPUTextureFormatType.EACRG11Snorm:
+      case GPUTextureFormatType.ASTC4x4Unorm:
+      case GPUTextureFormatType.ASTC4x4UnormSRGB:
+        return { byteLength: 16, width: 4, height: 4 };
+      case GPUTextureFormatType.ASTC5x4Unorm:
+      case GPUTextureFormatType.ASTC5x4UnormSRGB:
+        return { byteLength: 16, width: 5, height: 4 };
+      case GPUTextureFormatType.ASTC5x5Unorm:
+      case GPUTextureFormatType.ASTC5x5UnormSRGB:
+        return { byteLength: 16, width: 5, height: 5 };
+      case GPUTextureFormatType.ASTC6x5Unorm:
+      case GPUTextureFormatType.ASTC6x5UnormSRGB:
+        return { byteLength: 16, width: 6, height: 5 };
+      case GPUTextureFormatType.ASTC6x6Unorm:
+      case GPUTextureFormatType.ASTC6x6UnormSRGB:
+        return { byteLength: 16, width: 6, height: 6 };
+      case GPUTextureFormatType.ASTC8x5Unorm:
+      case GPUTextureFormatType.ASTC8x5UnormSRGB:
+        return { byteLength: 16, width: 8, height: 5 };
+      case GPUTextureFormatType.ASTC8x6Unorm:
+      case GPUTextureFormatType.ASTC8x6UnormSRGB:
+        return { byteLength: 16, width: 8, height: 6 };
+      case GPUTextureFormatType.ASTC8x8Unorm:
+      case GPUTextureFormatType.ASTC8x8UnormSRGB:
+        return { byteLength: 16, width: 8, height: 8 };
+      case GPUTextureFormatType.ASTC10x5Unorm:
+      case GPUTextureFormatType.ASTC10x5UnormSRGB:
+        return { byteLength: 16, width: 10, height: 5 };
+      case GPUTextureFormatType.ASTC10x6Unorm:
+      case GPUTextureFormatType.ASTC10x6UnormSRGB:
+        return { byteLength: 16, width: 10, height: 6 };
+      case GPUTextureFormatType.ASTC10x8Unorm:
+      case GPUTextureFormatType.ASTC10x8UnormSRGB:
+        return { byteLength: 16, width: 10, height: 8 };
+      case GPUTextureFormatType.ASTC10x10Unorm:
+      case GPUTextureFormatType.ASTC10x10UnormSRGB:
+        return { byteLength: 16, width: 10, height: 10 };
+      case GPUTextureFormatType.ASTC12x10Unorm:
+      case GPUTextureFormatType.ASTC12x10UnormSRGB:
+        return { byteLength: 16, width: 12, height: 10 };
+      case GPUTextureFormatType.ASTC12x12Unorm:
+      case GPUTextureFormatType.ASTC12x12UnormSRGB:
+        return { byteLength: 16, width: 12, height: 12 };
+      default:
+        throw new Error('GPUTextureFormatType: Unsupported compressed texture format.');
+    }
+  };
 }
 
 export enum GPUAddressModeType {
@@ -285,6 +455,11 @@ export enum GPUTextureDimensionType {
   OneD = '1d',
   TwoD = '2d',
   ThreeD = '3d',
+}
+
+export namespace GPUTextureDimensionType {
+  export const dim = (texture: Texture) =>
+    Data3DTexture.is(texture) ? GPUTextureDimensionType.ThreeD : GPUTextureDimensionType.TwoD;
 }
 
 export enum GPUTextureViewDimensionType {

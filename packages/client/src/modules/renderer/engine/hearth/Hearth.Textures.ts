@@ -9,7 +9,6 @@ import {
   GPUTextureDimensionType,
   GPUTextureFormatType,
 } from '@modules/renderer/engine/hearth/constants.js';
-import { TypedArrayConstructor } from '@modules/renderer/engine/math/MathUtils.js';
 import { StorageTexture } from '@modules/renderer/engine/entities/textures/StorageTexture.js';
 import { DepthTexture } from '@modules/renderer/engine/entities/textures/DepthTexture.js';
 import { RenderTarget } from '@modules/renderer/engine/hearth/core/RenderTarget.js';
@@ -39,7 +38,7 @@ export class HearthTextures extends DataMap<any, any> {
   constructor(public hearth: Hearth) {
     super();
 
-    this._passUtils = null;
+    this.utils = null;
     this.defaultTexture = null;
     this.defaultCubeTexture = null;
   }
@@ -245,14 +244,7 @@ export class HearthTextures extends DataMap<any, any> {
     );
   }
 
-  _destroyTexture(texture: Texture): void {
-    this.hearth.destroySampler(texture);
-    this.hearth.destroyTexture(texture);
-
-    this.delete(texture);
-  }
-
-  _passUtils: HearthTexturesTexturePass | null;
+  utils: HearthTexturesTexturePass | null;
   defaultTexture: Texture | null;
   defaultCubeTexture: CubeTexture | null;
 
@@ -293,7 +285,7 @@ export class HearthTextures extends DataMap<any, any> {
   createTexture(
     texture: Texture,
     options: {
-      needsMipmaps?: boolean;
+      useMipmap?: boolean;
       levels?: number;
       depth?: number;
       sampleCount?: number;
@@ -308,13 +300,13 @@ export class HearthTextures extends DataMap<any, any> {
       throw new Error('WebGPUTextureUtils: Texture already initialized.');
     }
 
-    if (options.needsMipmaps === undefined) options.needsMipmaps = false;
+    if (options.useMipmap === undefined) options.useMipmap = false;
     if (options.levels === undefined) options.levels = 1;
     if (options.depth === undefined) options.depth = 1;
 
     const { width, height, depth, levels } = options;
 
-    const dimension = this._getDimension(texture);
+    const dimension = GPUTextureDimensionType.dim(texture);
     const format = (texture.internalFormat || getFormat(texture, device)) as GPUTextureFormat;
 
     let sampleCount = options.sampleCount !== undefined ? options.sampleCount : 1;
@@ -367,7 +359,7 @@ export class HearthTextures extends DataMap<any, any> {
       if (format === undefined) {
         console.warn('WebGPURenderer: Texture format not supported.');
 
-        return this.createDefaultTexture(texture);
+        this.createDefaultTexture(texture);
       }
 
       textureData.texture = device.createTexture(textureDescriptorGPU);
@@ -461,7 +453,7 @@ export class HearthTextures extends DataMap<any, any> {
     const textureData = this.hearth.memo.get(texture);
     const textureGPU = textureData.texture;
     const format = textureData.textureDescriptorGPU.format;
-    const bytesPerTexel = this._getBytesPerTexel(format);
+    const bytesPerTexel = GPUTextureFormatType.bytes(format);
 
     let bytesPerRow = width * bytesPerTexel;
     bytesPerRow = Math.ceil(bytesPerRow / 256) * 256;
@@ -488,15 +480,12 @@ export class HearthTextures extends DataMap<any, any> {
       },
     );
 
-    const typedArrayType = this._getTypedArrayType(format);
-
     device.queue.submit([encoder.finish()]);
-
     await readBuffer.mapAsync(GPUMapMode.READ);
-
     const buffer = readBuffer.getMappedRange();
 
-    return new typedArrayType(buffer);
+    const TypedArray = GPUTextureFormatType.array(format);
+    return new TypedArray(buffer);
   }
 
   _getDefaultTextureGPU() {
@@ -584,10 +573,10 @@ export class HearthTextures extends DataMap<any, any> {
   }
 
   _getPassUtils() {
-    let passUtils = this._passUtils;
+    let passUtils = this.utils;
 
     if (passUtils === null) {
-      this._passUtils = passUtils = new HearthTexturesTexturePass(this.hearth);
+      this.utils = passUtils = new HearthTexturesTexturePass(this.hearth);
     }
 
     return passUtils;
@@ -613,7 +602,7 @@ export class HearthTextures extends DataMap<any, any> {
 
     const data = image.data;
 
-    const bytesPerTexel = this._getBytesPerTexel(textureDescriptorGPU.format);
+    const bytesPerTexel = GPUTextureFormatType.bytes(textureDescriptorGPU.format);
     const bytesPerRow = image.width * bytesPerTexel;
 
     device.queue.writeTexture(
@@ -645,93 +634,24 @@ export class HearthTextures extends DataMap<any, any> {
     textureDescriptorGPU: GPUTextureDescriptor,
   ) {
     const device = this.hearth.device;
+    const size = GPUTextureFormatType.chunksize(textureDescriptorGPU.format);
 
-    const blockData = this._getBlockData(textureDescriptorGPU.format);
+    for (let i = 0; i < mipmaps.length; ++i) {
+      const { width, height, data } = mipmaps[i];
 
-    for (let i = 0; i < mipmaps.length; i++) {
-      const mipmap = mipmaps[i];
-
-      const width = mipmap.width;
-      const height = mipmap.height;
-
-      const bytesPerRow = Math.ceil(width / blockData.width) * blockData.byteLength;
+      const stride = Math.ceil(width / size.width) * size.byteLength;
 
       device.queue.writeTexture(
+        { texture: textureGPU, mipLevel: i },
+        data,
+        { offset: 0, bytesPerRow: stride },
         {
-          texture: textureGPU,
-          mipLevel: i,
-        },
-        mipmap.data,
-        {
-          offset: 0,
-          bytesPerRow,
-        },
-        {
-          width: Math.ceil(width / blockData.width) * blockData.width,
-          height: Math.ceil(height / blockData.width) * blockData.width,
+          width: Math.ceil(width / size.width) * size.width,
+          height: Math.ceil(height / size.width) * size.width,
           depthOrArrayLayers: 1,
         },
       );
     }
-  }
-
-  _getBlockData(format: GPUTextureFormat): { byteLength: number; width: number; height: number } {
-    if (format === GPUTextureFormatType.BC1RGBAUnorm || format === GPUTextureFormatType.BC1RGBAUnormSRGB)
-      return { byteLength: 8, width: 4, height: 4 };
-    if (format === GPUTextureFormatType.BC2RGBAUnorm || format === GPUTextureFormatType.BC2RGBAUnormSRGB)
-      return { byteLength: 16, width: 4, height: 4 };
-    if (format === GPUTextureFormatType.BC3RGBAUnorm || format === GPUTextureFormatType.BC3RGBAUnormSRGB)
-      return { byteLength: 16, width: 4, height: 4 };
-    if (format === GPUTextureFormatType.BC4RUnorm || format === GPUTextureFormatType.BC4RSnorm)
-      return { byteLength: 8, width: 4, height: 4 };
-    if (format === GPUTextureFormatType.BC5RGUnorm || format === GPUTextureFormatType.BC5RGSnorm)
-      return { byteLength: 16, width: 4, height: 4 };
-    if (format === GPUTextureFormatType.BC6HRGBUFloat || format === GPUTextureFormatType.BC6HRGBFloat)
-      return { byteLength: 16, width: 4, height: 4 };
-    //@ts-expect-error
-    if (format === GPUTextureFormatType.BC7RGBAUnorm || format === GPUTextureFormatType.BC7RGBAUnormSRGB)
-      return { byteLength: 16, width: 4, height: 4 };
-
-    if (format === GPUTextureFormatType.ETC2RGB8Unorm || format === GPUTextureFormatType.ETC2RGB8UnormSRGB)
-      return { byteLength: 8, width: 4, height: 4 };
-    if (format === GPUTextureFormatType.ETC2RGB8A1Unorm || format === GPUTextureFormatType.ETC2RGB8A1UnormSRGB)
-      return { byteLength: 8, width: 4, height: 4 };
-    if (format === GPUTextureFormatType.ETC2RGBA8Unorm || format === GPUTextureFormatType.ETC2RGBA8UnormSRGB)
-      return { byteLength: 16, width: 4, height: 4 };
-    if (format === GPUTextureFormatType.EACR11Unorm) return { byteLength: 8, width: 4, height: 4 };
-    if (format === GPUTextureFormatType.EACR11Snorm) return { byteLength: 8, width: 4, height: 4 };
-    if (format === GPUTextureFormatType.EACRG11Unorm) return { byteLength: 16, width: 4, height: 4 };
-    if (format === GPUTextureFormatType.EACRG11Snorm) return { byteLength: 16, width: 4, height: 4 };
-
-    if (format === GPUTextureFormatType.ASTC4x4Unorm || format === GPUTextureFormatType.ASTC4x4UnormSRGB)
-      return { byteLength: 16, width: 4, height: 4 };
-    if (format === GPUTextureFormatType.ASTC5x4Unorm || format === GPUTextureFormatType.ASTC5x4UnormSRGB)
-      return { byteLength: 16, width: 5, height: 4 };
-    if (format === GPUTextureFormatType.ASTC5x5Unorm || format === GPUTextureFormatType.ASTC5x5UnormSRGB)
-      return { byteLength: 16, width: 5, height: 5 };
-    if (format === GPUTextureFormatType.ASTC6x5Unorm || format === GPUTextureFormatType.ASTC6x5UnormSRGB)
-      return { byteLength: 16, width: 6, height: 5 };
-    if (format === GPUTextureFormatType.ASTC6x6Unorm || format === GPUTextureFormatType.ASTC6x6UnormSRGB)
-      return { byteLength: 16, width: 6, height: 6 };
-    if (format === GPUTextureFormatType.ASTC8x5Unorm || format === GPUTextureFormatType.ASTC8x5UnormSRGB)
-      return { byteLength: 16, width: 8, height: 5 };
-    if (format === GPUTextureFormatType.ASTC8x6Unorm || format === GPUTextureFormatType.ASTC8x6UnormSRGB)
-      return { byteLength: 16, width: 8, height: 6 };
-    if (format === GPUTextureFormatType.ASTC8x8Unorm || format === GPUTextureFormatType.ASTC8x8UnormSRGB)
-      return { byteLength: 16, width: 8, height: 8 };
-    if (format === GPUTextureFormatType.ASTC10x5Unorm || format === GPUTextureFormatType.ASTC10x5UnormSRGB)
-      return { byteLength: 16, width: 10, height: 5 };
-    if (format === GPUTextureFormatType.ASTC10x6Unorm || format === GPUTextureFormatType.ASTC10x6UnormSRGB)
-      return { byteLength: 16, width: 10, height: 6 };
-    if (format === GPUTextureFormatType.ASTC10x8Unorm || format === GPUTextureFormatType.ASTC10x8UnormSRGB)
-      return { byteLength: 16, width: 10, height: 8 };
-    if (format === GPUTextureFormatType.ASTC10x10Unorm || format === GPUTextureFormatType.ASTC10x10UnormSRGB)
-      return { byteLength: 16, width: 10, height: 10 };
-    if (format === GPUTextureFormatType.ASTC12x10Unorm || format === GPUTextureFormatType.ASTC12x10UnormSRGB)
-      return { byteLength: 16, width: 12, height: 10 };
-    if (format === GPUTextureFormatType.ASTC12x12Unorm || format === GPUTextureFormatType.ASTC12x12UnormSRGB)
-      return { byteLength: 16, width: 12, height: 12 };
-    throw new Error('WebGPUTextureUtils: Unsupported compressed texture format.');
   }
 
   _convertAddressMode(value: Wrapping): GPUAddressMode {
@@ -746,123 +666,6 @@ export class HearthTextures extends DataMap<any, any> {
     }
 
     return GPUFilterModeType.Linear;
-  }
-
-  _getBytesPerTexel(format: GPUTextureFormat): 1 | 2 | 4 | 8 | 16 {
-    if (
-      format === GPUTextureFormatType.R8Unorm ||
-      format === GPUTextureFormatType.R8Snorm ||
-      format === GPUTextureFormatType.R8Uint ||
-      format === GPUTextureFormatType.R8Sint
-    )
-      return 1;
-
-    if (
-      format === GPUTextureFormatType.R16Uint ||
-      format === GPUTextureFormatType.R16Sint ||
-      format === GPUTextureFormatType.R16Float ||
-      format === GPUTextureFormatType.RG8Unorm ||
-      format === GPUTextureFormatType.RG8Snorm ||
-      format === GPUTextureFormatType.RG8Uint ||
-      format === GPUTextureFormatType.RG8Sint
-    )
-      return 2;
-
-    if (
-      format === GPUTextureFormatType.R32Uint ||
-      format === GPUTextureFormatType.R32Sint ||
-      format === GPUTextureFormatType.R32Float ||
-      format === GPUTextureFormatType.RG16Uint ||
-      format === GPUTextureFormatType.RG16Sint ||
-      format === GPUTextureFormatType.RG16Float ||
-      format === GPUTextureFormatType.RGBA8Unorm ||
-      format === GPUTextureFormatType.RGBA8UnormSRGB ||
-      format === GPUTextureFormatType.RGBA8Snorm ||
-      format === GPUTextureFormatType.RGBA8Uint ||
-      format === GPUTextureFormatType.RGBA8Sint ||
-      format === GPUTextureFormatType.BGRA8Unorm ||
-      format === GPUTextureFormatType.BGRA8UnormSRGB ||
-      format === GPUTextureFormatType.RGB9E5UFloat ||
-      format === GPUTextureFormatType.RGB10A2Unorm ||
-      //@ts-expect-error
-      format === GPUTextureFormatType.RG11B10uFloat ||
-      format === GPUTextureFormatType.Depth32Float ||
-      format === GPUTextureFormatType.Depth24Plus ||
-      format === GPUTextureFormatType.Depth24PlusStencil8 ||
-      format === GPUTextureFormatType.Depth32FloatStencil8
-    )
-      return 4;
-
-    if (
-      format === GPUTextureFormatType.RG32Uint ||
-      format === GPUTextureFormatType.RG32Sint ||
-      format === GPUTextureFormatType.RG32Float ||
-      format === GPUTextureFormatType.RGBA16Uint ||
-      format === GPUTextureFormatType.RGBA16Sint ||
-      format === GPUTextureFormatType.RGBA16Float
-    )
-      return 8;
-
-    if (
-      format === GPUTextureFormatType.RGBA32Uint ||
-      format === GPUTextureFormatType.RGBA32Sint ||
-      format === GPUTextureFormatType.RGBA32Float
-    )
-      return 16;
-    throw new Error('WebGPUTextureUtils: Unsupported texture format.');
-  }
-
-  _getTypedArrayType(format: GPUTextureFormat): TypedArrayConstructor {
-    if (format === GPUTextureFormatType.R8Uint) return Uint8Array;
-    if (format === GPUTextureFormatType.R8Sint) return Int8Array;
-    if (format === GPUTextureFormatType.R8Unorm) return Uint8Array;
-    if (format === GPUTextureFormatType.R8Snorm) return Int8Array;
-    if (format === GPUTextureFormatType.RG8Uint) return Uint8Array;
-    if (format === GPUTextureFormatType.RG8Sint) return Int8Array;
-    if (format === GPUTextureFormatType.RG8Unorm) return Uint8Array;
-    if (format === GPUTextureFormatType.RG8Snorm) return Int8Array;
-    if (format === GPUTextureFormatType.RGBA8Uint) return Uint8Array;
-    if (format === GPUTextureFormatType.RGBA8Sint) return Int8Array;
-    if (format === GPUTextureFormatType.RGBA8Unorm) return Uint8Array;
-    if (format === GPUTextureFormatType.RGBA8Snorm) return Int8Array;
-
-    if (format === GPUTextureFormatType.R16Uint) return Uint16Array;
-    if (format === GPUTextureFormatType.R16Sint) return Int16Array;
-    if (format === GPUTextureFormatType.RG16Uint) return Uint16Array;
-    if (format === GPUTextureFormatType.RG16Sint) return Int16Array;
-    if (format === GPUTextureFormatType.RGBA16Uint) return Uint16Array;
-    if (format === GPUTextureFormatType.RGBA16Sint) return Int16Array;
-    if (format === GPUTextureFormatType.R16Float) return Float32Array;
-    if (format === GPUTextureFormatType.RG16Float) return Float32Array;
-    if (format === GPUTextureFormatType.RGBA16Float) return Float32Array;
-
-    if (format === GPUTextureFormatType.R32Uint) return Uint32Array;
-    if (format === GPUTextureFormatType.R32Sint) return Int32Array;
-    if (format === GPUTextureFormatType.R32Float) return Float32Array;
-    if (format === GPUTextureFormatType.RG32Uint) return Uint32Array;
-    if (format === GPUTextureFormatType.RG32Sint) return Int32Array;
-    if (format === GPUTextureFormatType.RG32Float) return Float32Array;
-    if (format === GPUTextureFormatType.RGBA32Uint) return Uint32Array;
-    if (format === GPUTextureFormatType.RGBA32Sint) return Int32Array;
-    if (format === GPUTextureFormatType.RGBA32Float) return Float32Array;
-
-    if (format === GPUTextureFormatType.BGRA8Unorm) return Uint8Array;
-    if (format === GPUTextureFormatType.BGRA8UnormSRGB) return Uint8Array;
-    if (format === GPUTextureFormatType.RGB10A2Unorm) return Uint32Array;
-    if (format === GPUTextureFormatType.RGB9E5UFloat) return Uint32Array;
-    //@ts-expect-error
-    if (format === GPUTextureFormatType.RG11B10uFloat) return Uint32Array;
-
-    if (format === GPUTextureFormatType.Depth32Float) return Float32Array;
-    if (format === GPUTextureFormatType.Depth24Plus) return Uint32Array;
-    if (format === GPUTextureFormatType.Depth24PlusStencil8) return Uint32Array;
-    if (format === GPUTextureFormatType.Depth32FloatStencil8) return Float32Array;
-    throw new Error('WebGPUTextureUtils: Unsupported texture format.');
-  }
-
-  _getDimension(texture: Texture): GPUTextureDimension {
-    if (isData3DTexture(texture)) return GPUTextureDimensionType.ThreeD;
-    return GPUTextureDimensionType.TwoD;
   }
 }
 
