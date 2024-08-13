@@ -48,8 +48,6 @@ export * from './animation/AnimationAction.js';
 export * from './animation/AnimationClip.js';
 export * from './animation/AnimationMixer.js';
 export * from './animation/AnimationObjectGroup.js';
-// TODO - use TypedArray from /math/types.js
-export * as AnimationUtils from './animation/AnimationUtils.js';
 export * from './animation/KeyframeTrack.js';
 export * from './animation/PropertyBinding.js';
 export * from './animation/PropertyMixer.js';

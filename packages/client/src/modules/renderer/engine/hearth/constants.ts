@@ -459,7 +459,7 @@ export enum GPUTextureDimensionType {
 
 export namespace GPUTextureDimensionType {
   export const dim = (texture: Texture) =>
-    Data3DTexture.is(texture) ? GPUTextureDimensionType.ThreeD : GPUTextureDimensionType.TwoD;
+    texture.isData3DTexture ? GPUTextureDimensionType.ThreeD : GPUTextureDimensionType.TwoD;
 }
 
 export enum GPUTextureViewDimensionType {

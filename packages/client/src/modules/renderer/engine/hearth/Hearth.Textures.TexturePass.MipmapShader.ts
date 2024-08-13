@@ -10,14 +10,22 @@ const names = {
 };
 
 export class HearthTexturesTexturePassMipmapShader {
-  samplerLinear: GPUSampler;
-  samplerNearest: GPUSampler;
-  shader: GPUShaderModule;
+  constructor(public hearth: Hearth) {}
 
-  constructor(public hearth: Hearth) {
-    this.samplerLinear = { label: names.linear, minFilter: GPUFilterModeType.Linear };
-    this.samplerNearest = { label: names.nearest, minFilter: GPUFilterModeType.Nearest };
-    this.shader = { label: 'mipmap shader', code: mipmapSource };
+  get samplerLinear() {
+    return this.hearth.resources.samplers.get(names.linear, () => ({
+      minFilter: GPUFilterModeType.Linear,
+    }));
+  }
+
+  get samplerNearest() {
+    return this.hearth.resources.samplers.get(names.nearest, () => ({
+      minFilter: GPUFilterModeType.Nearest,
+    }));
+  }
+
+  get shader() {
+    return this.hearth.resources.shaders.get(names.shader, () => ({ code: mipmapSource }));
   }
 
   createVertexState(): GPUVertexState {

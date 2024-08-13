@@ -2,7 +2,6 @@ import { InterpolationMode } from '../constants.js';
 import { CubicInterpolant } from '../math/interpolants/CubicInterpolant.js';
 import { LinearInterpolant } from '../math/interpolants/LinearInterpolant.js';
 import { DiscreteInterpolant } from '../math/interpolants/DiscreteInterpolant.js';
-import * as AnimationUtils from './AnimationUtils.js';
 import { NumberArrayConstructor, TypedArray } from '../math/MathUtils.js';
 import { Interpolant } from '../math/interpolants/Interpolant.js';
 
@@ -25,8 +24,10 @@ export class KeyframeTrack<T extends TypedArray = Float32Array, V extends TypedA
     if (times === undefined || times.length === 0)
       throw new Error('KeyframeTrack: no keyframes in track named ' + name);
 
-    this.times = AnimationUtils.convertArray(times, this.TimeBufferType);
-    this.values = AnimationUtils.convertArray(values, this.ValueBufferType);
+    this.times = ('BYTES_PER_ELEMENT' in this.TimeBufferType ? new this.TimeBufferType(times) : Array.from(times)) as T;
+    this.values = (
+      'BYTES_PER_ELEMENT' in this.ValueBufferType ? new this.ValueBufferType(values) : Array.from(values)
+    ) as V;
 
     this.setInterpolation(interpolation || this.DefaultInterpolation);
   }
@@ -164,9 +165,8 @@ export class KeyframeTrack<T extends TypedArray = Float32Array, V extends TypedA
       valid = false;
     }
 
-    const times = this.times,
-      values = this.values,
-      nKeys = times.length;
+    const times = this.times;
+    const nKeys = times.length;
 
     if (nKeys === 0) {
       console.error('KeyframeTrack: Track is empty.', this);
@@ -191,20 +191,6 @@ export class KeyframeTrack<T extends TypedArray = Float32Array, V extends TypedA
       }
 
       prevTime = currTime;
-    }
-
-    if (values !== undefined) {
-      if (AnimationUtils.isTypedArray(values)) {
-        for (let i = 0, n = values.length; i !== n; ++i) {
-          const value = values[i];
-
-          if (isNaN(value)) {
-            console.error('KeyframeTrack: Value is not a valid number.', this, i, value);
-            valid = false;
-            break;
-          }
-        }
-      }
     }
 
     return valid;
