@@ -1,14 +1,5 @@
 import { Color, ColorRepresentation } from '../../math/Color.js';
-import {
-  Blending,
-  BlendingEquation,
-  BlendingFactor,
-  Depth,
-  PixelFormat,
-  Side,
-  StencilFunction,
-  StencilOperation,
-} from '../../constants.js';
+import { Blending, BlendingEquation, BlendingFactor, Depth, PixelFormat, Side } from '../../constants.js';
 import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
 import { Plane } from '@modules/renderer/engine/math/Plane.js';
 import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
@@ -17,8 +8,8 @@ import { Camera } from '@modules/renderer/engine/entities/cameras/Camera.js';
 import { Geometry } from '@modules/renderer/engine/core/Geometry.js';
 import { Entity } from '@modules/renderer/engine/core/Entity.js';
 import { Group } from '@modules/renderer/engine/entities/Group.js';
-import { Node } from '@modules/renderer/engine/nodes/core/Node.js';
 import { v4 } from 'uuid';
+import { GPUCompareFunctionType, GPUStencilOperationType } from '@modules/renderer/engine/hearth/constants.js';
 
 let _materialId = 0;
 
@@ -58,13 +49,13 @@ export interface MaterialParameters {
   visible?: boolean;
   format?: PixelFormat;
   stencilWrite?: boolean;
-  stencilFunc?: StencilFunction;
+  stencilFunc?: GPUCompareFunctionType;
   stencilRef?: number;
   stencilWriteMask?: number;
   stencilFuncMask?: number;
-  stencilFail?: StencilOperation;
-  stencilZFail?: StencilOperation;
-  stencilZPass?: StencilOperation;
+  stencilFail?: GPUStencilOperationType;
+  stencilZFail?: GPUStencilOperationType;
+  stencilZPass?: GPUStencilOperationType;
   extra?: Record<string, any>;
 }
 
@@ -92,12 +83,12 @@ export class Material {
   depthTest: boolean;
   depthWrite: boolean;
   stencilWriteMask: number;
-  stencilFunc: StencilFunction;
+  stencilFunc: GPUCompareFunctionType;
   stencilRef: number;
   stencilFuncMask: number;
-  stencilFail: StencilOperation;
-  stencilZFail: StencilOperation;
-  stencilZPass: StencilOperation;
+  stencilFail: GPUStencilOperationType;
+  stencilZFail: GPUStencilOperationType;
+  stencilZPass: GPUStencilOperationType;
   stencilWrite: boolean;
   clippingPlanes: Plane[] | null;
   clipIntersection: boolean;
@@ -143,12 +134,12 @@ export class Material {
     this.depthWrite = true;
 
     this.stencilWriteMask = 0xff;
-    this.stencilFunc = StencilFunction.Always;
+    this.stencilFunc = GPUCompareFunctionType.Always;
     this.stencilRef = 0;
     this.stencilFuncMask = 0xff;
-    this.stencilFail = StencilOperation.Keep;
-    this.stencilZFail = StencilOperation.Keep;
-    this.stencilZPass = StencilOperation.Keep;
+    this.stencilFail = GPUStencilOperationType.Keep;
+    this.stencilZFail = GPUStencilOperationType.Keep;
+    this.stencilZPass = GPUStencilOperationType.Keep;
     this.stencilWrite = false;
 
     this.clippingPlanes = null;

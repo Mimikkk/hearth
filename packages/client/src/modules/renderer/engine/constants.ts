@@ -1,3 +1,5 @@
+import { GPUStencilOperationType } from '@modules/renderer/engine/hearth/constants.js';
+
 export const Revision = '001dev';
 
 export enum Mouse {
@@ -227,28 +229,6 @@ export enum TransferFunction {
 export enum ColorPrimary {
   Rec709 = 'rec709',
   P3 = 'p3',
-}
-
-export enum StencilOperation {
-  Zero = 0,
-  Keep = 7680,
-  Replace = 7681,
-  Increment = 7682,
-  Decrement = 7683,
-  IncrementWrap = 34055,
-  DecrementWrap = 34056,
-  Invert = 5386,
-}
-
-export enum StencilFunction {
-  Never = 512,
-  Less = 513,
-  Equal = 514,
-  LessEqual = 515,
-  Greater = 516,
-  NotEqual = 517,
-  GreaterEqual = 518,
-  Always = 519,
 }
 
 export enum BufferUse {

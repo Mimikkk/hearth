@@ -8,15 +8,7 @@ import { Binding } from '@modules/renderer/engine/hearth/bindings/Binding.js';
 import { RenderObject } from '@modules/renderer/engine/hearth/core/RenderObject.js';
 import { Pipeline } from '@modules/renderer/engine/hearth/core/Pipeline.js';
 import { ShaderStage } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
-import {
-  Blending,
-  BlendingEquation,
-  BlendingFactor,
-  Depth,
-  Side,
-  StencilFunction,
-  StencilOperation,
-} from '@modules/renderer/engine/constants.js';
+import { Blending, BlendingEquation, BlendingFactor, Depth, Side } from '@modules/renderer/engine/constants.js';
 import { Material } from '@modules/renderer/engine/entities/materials/Material.js';
 import {
   GPUBlendFactorType,
@@ -26,7 +18,6 @@ import {
   GPUCullModeType,
   GPUFrontFaceType,
   GPUIndexFormatType,
-  GPUStencilOperationType,
 } from '@modules/renderer/engine/hearth/constants.js';
 import { Entity } from '@modules/renderer/engine/core/Entity.js';
 import { Geometry } from '@modules/renderer/engine/core/Geometry.js';
@@ -330,10 +321,10 @@ export class HearthPipelines extends DataMap<any, any> {
 
     if (material.stencilWrite === true) {
       stencilFront = {
-        compare: this._getStencilCompare(material),
-        failOp: this._getStencilOperation(material.stencilFail as StencilOperation),
-        depthFailOp: this._getStencilOperation(material.stencilZFail as StencilOperation),
-        passOp: this._getStencilOperation(material.stencilZPass as StencilOperation),
+        compare: material.stencilFunc,
+        failOp: material.stencilFail,
+        depthFailOp: material.stencilZFail,
+        passOp: material.stencilZPass,
       };
     }
 
@@ -607,94 +598,6 @@ export class HearthPipelines extends DataMap<any, any> {
     }
 
     return blendFactor;
-  }
-
-  _getStencilCompare(material: Material) {
-    let stencilCompare;
-
-    const stencilFunc = material.stencilFunc;
-
-    switch (stencilFunc) {
-      case StencilFunction.Never:
-        stencilCompare = GPUCompareFunctionType.Never;
-        break;
-
-      case StencilFunction.Always:
-        stencilCompare = GPUCompareFunctionType.Always;
-        break;
-
-      case StencilFunction.Less:
-        stencilCompare = GPUCompareFunctionType.Less;
-        break;
-
-      case StencilFunction.LessEqual:
-        stencilCompare = GPUCompareFunctionType.LessEqual;
-        break;
-
-      case StencilFunction.Equal:
-        stencilCompare = GPUCompareFunctionType.Equal;
-        break;
-
-      case StencilFunction.GreaterEqual:
-        stencilCompare = GPUCompareFunctionType.GreaterEqual;
-        break;
-
-      case StencilFunction.Greater:
-        stencilCompare = GPUCompareFunctionType.Greater;
-        break;
-
-      case StencilFunction.NotEqual:
-        stencilCompare = GPUCompareFunctionType.NotEqual;
-        break;
-
-      default:
-        console.error('Hearth: Invalid stencil function.', stencilFunc);
-    }
-
-    return stencilCompare;
-  }
-
-  _getStencilOperation(op: StencilOperation) {
-    let stencilOperation;
-
-    switch (op) {
-      case StencilOperation.Keep:
-        stencilOperation = GPUStencilOperationType.Keep;
-        break;
-
-      case StencilOperation.Zero:
-        stencilOperation = GPUStencilOperationType.Zero;
-        break;
-
-      case StencilOperation.Replace:
-        stencilOperation = GPUStencilOperationType.Replace;
-        break;
-
-      case StencilOperation.Invert:
-        stencilOperation = GPUStencilOperationType.Invert;
-        break;
-
-      case StencilOperation.Increment:
-        stencilOperation = GPUStencilOperationType.IncrementClamp;
-        break;
-
-      case StencilOperation.Decrement:
-        stencilOperation = GPUStencilOperationType.DecrementClamp;
-        break;
-
-      case StencilOperation.IncrementWrap:
-        stencilOperation = GPUStencilOperationType.IncrementWrap;
-        break;
-
-      case StencilOperation.DecrementWrap:
-        stencilOperation = GPUStencilOperationType.DecrementWrap;
-        break;
-
-      default:
-        console.error('Hearth: Invalid stencil operation.', stencilOperation);
-    }
-
-    return stencilOperation;
   }
 
   _getBlendOperation(blendEquation: BlendingEquation): GPUBlendOperation {

@@ -4,9 +4,9 @@
 import { Mat4 } from '@modules/renderer/engine/math/Mat4.js';
 import { Mesh } from '@modules/renderer/engine/entities/Mesh.js';
 import { MeshBasicMaterial } from '@modules/renderer/engine/entities/materials/MeshBasicMaterial.js';
-import { StencilFunction, StencilOperation } from '@modules/renderer/engine/constants.js';
 import { Plane } from '@modules/renderer/engine/math/Plane.js';
 import { Vec4 } from '@modules/renderer/engine/math/Vec4.js';
+import { GPUCompareFunctionType, GPUStencilOperationType } from '@modules/renderer/engine/hearth/constants.js';
 
 const _shadowMatrix = new Mat4();
 
@@ -22,9 +22,9 @@ export class ShadowMesh extends Mesh {
       opacity: 0.6,
       depthWrite: false,
       stencilWrite: true,
-      stencilFunc: StencilFunction.Equal,
+      stencilFunc: GPUCompareFunctionType.Equal,
       stencilRef: 0,
-      stencilZPass: StencilOperation.Increment,
+      stencilZPass: GPUStencilOperationType.IncrementClamp,
     });
 
     super(mesh.geometry!, shadowMaterial);
