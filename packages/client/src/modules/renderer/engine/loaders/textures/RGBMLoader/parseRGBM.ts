@@ -1,14 +1,9 @@
 import * as upng from 'upng-js';
-import {
-  MagnificationTextureFilter,
-  MinificationTextureFilter,
-  TextureDataType,
-  TextureFormat,
-  Wrapping,
-} from '@modules/renderer/engine/constants.js';
+import { TextureDataType, TextureFormat, Wrapping } from '@modules/renderer/engine/constants.js';
 import { DataUtils } from '@modules/renderer/engine/utils/DataUtils.js';
 import { DataTexture } from '@modules/renderer/engine/entities/textures/DataTexture.js';
 import { CubeTexture } from '@modules/renderer/engine/entities/textures/CubeTexture.js';
+import { GPUFilterModeType } from '@modules/renderer/engine/hearth/constants.js';
 
 export type SupportedRGBMType = TextureDataType.HalfFloat | TextureDataType.Float;
 
@@ -71,8 +66,8 @@ const parseDataTexture = (buffer: ArrayBuffer, type: SupportedRGBMType, maxRange
     type: details.type,
     wrapS: Wrapping.ClampToEdge,
     wrapT: Wrapping.ClampToEdge,
-    magFilter: MagnificationTextureFilter.Linear,
-    minFilter: MinificationTextureFilter.Linear,
+    magFilter: GPUFilterModeType.Linear,
+    minFilter: GPUFilterModeType.Linear,
     anisotropy: 1,
     useUpdate: true,
   });
@@ -83,7 +78,7 @@ export const parseRGBM = (buffers: ArrayBuffer[], type: SupportedRGBMType, maxRa
   texture.images = buffers.map(buffer => parseDataTexture(buffer, type, maxRange));
   texture.type = type;
   texture.format = TextureFormat.RGBA;
-  texture.minFilter = MinificationTextureFilter.Linear;
+  texture.minFilter = GPUFilterModeType.Linear;
   texture.useMipmap = false;
   texture.useUpdate = true;
 

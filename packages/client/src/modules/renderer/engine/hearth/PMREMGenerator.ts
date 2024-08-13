@@ -15,7 +15,6 @@ import { Color } from '../math/Color.ts';
 import {
   Blending,
   ColorSpace,
-  Filter,
   Mapping,
   Side,
   TextureDataType,
@@ -30,6 +29,7 @@ import { BoxGeometry } from '@modules/renderer/engine/entities/geometries/BoxGeo
 import { Geometry } from '@modules/renderer/engine/core/Geometry.js';
 import { Attribute } from '@modules/renderer/engine/core/Attribute.js';
 import { RenderTarget } from '@modules/renderer/engine/hearth/core/RenderTarget.js';
+import { GPUFilterModeType } from '@modules/renderer/engine/hearth/constants.js';
 
 const LOD_MIN = 4;
 
@@ -205,8 +205,8 @@ export class PMREMGenerator {
     const height = 4 * this._cubeSize;
 
     const params = {
-      magFilter: Filter.Linear,
-      minFilter: Filter.Linear,
+      magFilter: GPUFilterModeType.Linear,
+      minFilter: GPUFilterModeType.Linear,
       useMipmap: false,
       type: TextureDataType.HalfFloat,
       format: TextureFormat.RGBA,

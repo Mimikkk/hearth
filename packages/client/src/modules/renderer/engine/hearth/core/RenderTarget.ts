@@ -1,16 +1,8 @@
 import { Texture } from '@modules/renderer/engine/entities/textures/Texture.js';
-import {
-  ColorSpace,
-  Filter,
-  MagnificationTextureFilter,
-  Mapping,
-  PixelFormat,
-  TextureDataType,
-  TextureFormat,
-  Wrapping,
-} from '../../constants.js';
+import { ColorSpace, Mapping, PixelFormat, TextureDataType, TextureFormat, Wrapping } from '../../constants.js';
 import { Vec4 } from '../../math/Vec4.js';
 import { Source } from '@modules/renderer/engine/entities/textures/Source.js';
+import { GPUFilterModeType } from '@modules/renderer/engine/hearth/constants.js';
 
 export class RenderTarget {
   declare isRenderTarget: true;
@@ -141,7 +133,7 @@ export namespace RenderTarget {
     mapping: Mapping;
     wrapS: Wrapping;
     wrapT: Wrapping;
-    magFilter: MagnificationTextureFilter;
+    magFilter: GPUFilterModeType;
     format: TextureFormat;
     type: TextureDataType;
     anisotropy: number;
@@ -153,7 +145,7 @@ export namespace RenderTarget {
   export const initial: Configuration = {
     useMipmap: false,
     internalFormat: null,
-    minFilter: Filter.Linear,
+    minFilter: GPUFilterModeType.Linear,
     depthBuffer: true,
     stencilBuffer: false,
     depthTexture: null,
@@ -163,7 +155,7 @@ export namespace RenderTarget {
     mapping: Mapping.UV,
     wrapS: Wrapping.ClampToEdge,
     wrapT: Wrapping.ClampToEdge,
-    magFilter: MagnificationTextureFilter.Linear,
+    magFilter: GPUFilterModeType.Linear,
     format: TextureFormat.RGBA,
     type: TextureDataType.UnsignedByte,
     anisotropy: 1,

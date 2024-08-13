@@ -9,6 +9,7 @@ import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitC
 import { GLTFLoader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/GLTFLoader.js';
 import { CubeTextureLoader } from '@modules/renderer/engine/loaders/textures/CubeTextureLoader/CubeTextureLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
+import { GPUFilterModeType } from '@modules/renderer/engine/engine.js';
 
 let camera, scene, hearth;
 
@@ -32,7 +33,7 @@ async function init() {
     'resources/textures/cube/pisaRGBM16/nz.png',
   ]);
   cube1Texture.useMipmap = true;
-  cube1Texture.minFilter = Engine.MinificationTextureFilter.LinearMipmapLinear;
+  cube1Texture.minFilter = GPUFilterModeType.Linear;
 
   const cube2Texture = await new CubeTextureLoader().loadAsync([
     'resources/textures/cube/MilkyWay/dark-s_px.jpg',
@@ -44,7 +45,7 @@ async function init() {
   ]);
 
   cube2Texture.useMipmap = true;
-  cube2Texture.minFilter = Engine.MinificationTextureFilter.LinearMipmapLinear;
+  cube2Texture.minFilter = GPUFilterModeType.Linear;
 
   scene.environmentNode = mix(pmremTexture(cube2Texture), pmremTexture(cube1Texture), oscSine(timerLocal(0.1)));
 

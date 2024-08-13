@@ -1,12 +1,8 @@
 import { parseRGBE } from '@modules/renderer/engine/loaders/textures/RGBELoader/parseRGBE.js';
 import { DataTexture } from '@modules/renderer/engine/entities/textures/DataTexture.js';
 import { CubeTexture } from '@modules/renderer/engine/entities/textures/CubeTexture.js';
-import {
-  ColorSpace,
-  MagnificationTextureFilter,
-  MinificationTextureFilter,
-  TextureDataType,
-} from '@modules/renderer/engine/constants.js';
+import { ColorSpace, TextureDataType } from '@modules/renderer/engine/constants.js';
+import { GPUFilterModeType } from '@modules/renderer/engine/hearth/constants.js';
 
 const createDataTexture = ({ image: { data, width, height } }: DataTexture, cube: CubeTexture): DataTexture =>
   new DataTexture({
@@ -26,8 +22,8 @@ export const parseHDRCubeTexture = (buffers: ArrayBuffer[], type: SupportedHDRTy
   const texture = new CubeTexture({
     type,
     colorSpace: ColorSpace.LinearSRGB,
-    minFilter: MinificationTextureFilter.Linear,
-    magFilter: MagnificationTextureFilter.Linear,
+    minFilter: GPUFilterModeType.Linear,
+    magFilter: GPUFilterModeType.Linear,
     useMipmap: false,
     useUpdate: true,
   });

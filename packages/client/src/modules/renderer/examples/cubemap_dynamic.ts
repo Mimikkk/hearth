@@ -1,4 +1,5 @@
 import * as Engine from '@modules/renderer/engine/engine.js';
+import { GPUFilterModeType } from '@modules/renderer/engine/engine.js';
 import * as Nodes from '@modules/renderer/engine/nodes/nodes.js';
 
 import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
@@ -44,16 +45,16 @@ async function init() {
   ]);
 
   texture.name = 'pisaRGBM16';
-  texture.minFilter = Engine.MinificationTextureFilter.LinearMipmapLinear;
-  texture.magFilter = Engine.MagnificationTextureFilter.Linear;
+  texture.minFilter = GPUFilterModeType.Linear;
+  texture.magFilter = GPUFilterModeType.Linear;
 
   scene.background = texture;
   scene.environment = texture;
 
   cubeRenderTarget = new Engine.CubeRenderTarget(256);
   cubeRenderTarget.texture.type = Engine.TextureDataType.HalfFloat;
-  cubeRenderTarget.texture.minFilter = Engine.MinificationTextureFilter.LinearMipmapLinear;
-  cubeRenderTarget.texture.magFilter = Engine.MagnificationTextureFilter.Linear;
+  cubeRenderTarget.texture.minFilter = GPUFilterModeType.Linear;
+  cubeRenderTarget.texture.magFilter = GPUFilterModeType.Linear;
   cubeRenderTarget.texture.useMipmap = true;
 
   cubeCamera = new Engine.CubeCamera(1, 1000, cubeRenderTarget);

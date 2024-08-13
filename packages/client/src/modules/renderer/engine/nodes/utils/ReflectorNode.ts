@@ -9,11 +9,12 @@ import { Vec4 } from '@modules/renderer/engine/math/Vec4.js';
 import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
 import { RenderTarget } from '@modules/renderer/engine/hearth/core/RenderTarget.js';
 import { Entity } from '@modules/renderer/engine/core/Entity.js';
-import { MinificationTextureFilter, TextureDataType } from '@modules/renderer/engine/constants.js';
+import { TextureDataType } from '@modules/renderer/engine/constants.js';
 import { ICamera } from '@modules/renderer/engine/entities/cameras/Camera.js';
 import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 import NodeFrame from '@modules/renderer/engine/nodes/core/NodeFrame.js';
+import { GPUFilterModeType } from '@modules/renderer/engine/hearth/constants.js';
 
 const _reflectorPlane = new Plane();
 const _normal = Vec3.new();
@@ -96,7 +97,7 @@ export class ReflectorNode extends TextureNode {
       renderTarget = new RenderTarget(0, 0, { type: TextureDataType.HalfFloat });
 
       if (this.useMipmap) {
-        renderTarget.texture.minFilter = MinificationTextureFilter.LinearMipmapLinear;
+        renderTarget.texture.minFilter = GPUFilterModeType.Linear;
         renderTarget.texture.useMipmap = true;
       }
 

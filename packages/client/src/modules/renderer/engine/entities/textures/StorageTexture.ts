@@ -1,13 +1,13 @@
 import { Texture, TextureParameters } from '@modules/renderer/engine/entities/textures/Texture.js';
-import { MagnificationTextureFilter, MinificationTextureFilter } from '@modules/renderer/engine/constants.js';
+import { GPUFilterModeType } from '@modules/renderer/engine/hearth/constants.js';
 
-export class StorageTexture extends Texture<{ width: number, height: number }> {
+export class StorageTexture extends Texture<{ width: number; height: number }> {
   declare isStorageTexture: true;
 
   constructor(parameters: StorageTextureParameters) {
     super({
-      magFilter: MagnificationTextureFilter.Linear,
-      minFilter: MinificationTextureFilter.Linear,
+      magFilter: GPUFilterModeType.Linear,
+      minFilter: GPUFilterModeType.Linear,
       ...parameters,
       image: { width: parameters.width, height: parameters.height },
     });

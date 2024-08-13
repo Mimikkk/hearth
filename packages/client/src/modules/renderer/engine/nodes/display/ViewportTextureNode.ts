@@ -6,7 +6,7 @@ import { NodeFrame } from '@modules/renderer/engine/nodes/core/NodeFrame.js';
 import { implCommand } from '@modules/renderer/engine/nodes/core/Node.commands.js';
 import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
 import { FramebufferTexture } from '@modules/renderer/engine/entities/textures/FramebufferTexture.js';
-import { MinificationTextureFilter } from '@modules/renderer/engine/constants.js';
+import { GPUFilterModeType } from '@modules/renderer/engine/hearth/constants.js';
 
 const _size = Vec2.new();
 
@@ -20,7 +20,7 @@ export class ViewportTextureNode extends TextureNode {
     framebuffer: FramebufferTexture = new FramebufferTexture({
       width: 1,
       height: 1,
-      minFilter: MinificationTextureFilter.LinearMipmapLinear,
+      minFilter: GPUFilterModeType.Linear,
     }),
   ) {
     super(framebuffer, uv, level);

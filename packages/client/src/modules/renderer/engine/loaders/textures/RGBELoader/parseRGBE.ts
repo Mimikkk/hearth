@@ -1,13 +1,8 @@
-import {
-  ColorSpace,
-  MagnificationTextureFilter,
-  MinificationTextureFilter,
-  TextureDataType,
-  Wrapping,
-} from '../../../constants.js';
+import { ColorSpace, TextureDataType, Wrapping } from '../../../constants.js';
 import { DataUtils } from '@modules/renderer/engine/utils/DataUtils.js';
 import { DataTexture } from '@modules/renderer/engine/entities/textures/DataTexture.js';
 import { NumberArray } from '@modules/renderer/engine/math/MathUtils.js';
+import { GPUFilterModeType } from '@modules/renderer/engine/hearth/constants.js';
 
 export type SupportedRGBEType = TextureDataType.Float | TextureDataType.HalfFloat;
 
@@ -54,8 +49,8 @@ const createDataTexture = (result: ParseResult): DataTexture =>
     height: result.height,
     wrapS: Wrapping.ClampToEdge,
     wrapT: Wrapping.ClampToEdge,
-    minFilter: MinificationTextureFilter.Linear,
-    magFilter: MagnificationTextureFilter.Linear,
+    minFilter: GPUFilterModeType.Linear,
+    magFilter: GPUFilterModeType.Linear,
     anisotropy: 1,
     colorSpace: ColorSpace.LinearSRGB,
     useMipmap: false,

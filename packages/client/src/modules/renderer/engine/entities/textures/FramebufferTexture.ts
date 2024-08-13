@@ -1,5 +1,5 @@
 import { Texture, TextureParameters } from './Texture.js';
-import { MagnificationTextureFilter, MinificationTextureFilter } from '../../constants.js';
+import { GPUFilterModeType } from '@modules/renderer/engine/hearth/constants.js';
 
 export class FramebufferTexture extends Texture<{ width: number; height: number }> {
   declare isFramebufferTexture: true;
@@ -8,8 +8,8 @@ export class FramebufferTexture extends Texture<{ width: number; height: number 
     super({
       ...parameters,
       image: { width: parameters.width, height: parameters.height },
-      magFilter: MagnificationTextureFilter.Nearest,
-      minFilter: MinificationTextureFilter.Nearest,
+      magFilter: GPUFilterModeType.Nearest,
+      minFilter: GPUFilterModeType.Nearest,
       useMipmap: false,
       useUpdate: true,
     });

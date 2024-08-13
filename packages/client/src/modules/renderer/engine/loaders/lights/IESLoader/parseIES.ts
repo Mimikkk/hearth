@@ -1,12 +1,8 @@
-import {
-  MagnificationTextureFilter,
-  MinificationTextureFilter,
-  TextureDataType,
-  TextureFormat,
-} from '@modules/renderer/engine/constants.js';
+import { TextureDataType, TextureFormat } from '@modules/renderer/engine/constants.js';
 import { DataUtils } from '@modules/renderer/engine/utils/DataUtils.js';
 import { DataTexture } from '@modules/renderer/engine/entities/textures/DataTexture.js';
 import { lerp } from '../../../math/MathUtils.js';
+import { GPUFilterModeType } from '@modules/renderer/engine/hearth/constants.js';
 
 export type SupportedType = TextureDataType.Float | TextureDataType.HalfFloat | TextureDataType.UnsignedByte;
 
@@ -23,8 +19,8 @@ const createDataTexture = (data: Uint8Array | Uint16Array | Float32Array, type: 
     height: 1,
     format: TextureFormat.Red,
     type,
-    minFilter: MinificationTextureFilter.Linear,
-    magFilter: MagnificationTextureFilter.Linear,
+    minFilter: GPUFilterModeType.Linear,
+    magFilter: GPUFilterModeType.Linear,
     useUpdate: true,
   });
 

@@ -1,5 +1,5 @@
 import { Texture, TextureParameters } from './Texture.js';
-import { MagnificationTextureFilter, MinificationTextureFilter } from '../../constants.js';
+import { GPUFilterModeType } from '@modules/renderer/engine/hearth/constants.js';
 
 export class VideoTexture extends Texture<HTMLVideoElement> {
   declare isVideoTexture: true;
@@ -7,8 +7,8 @@ export class VideoTexture extends Texture<HTMLVideoElement> {
   constructor({ video, ...params }: VideoTextureParameters) {
     super({
       image: video,
-      magFilter: MagnificationTextureFilter.Linear,
-      minFilter: MinificationTextureFilter.Linear,
+      magFilter: GPUFilterModeType.Linear,
+      minFilter: GPUFilterModeType.Linear,
       ...params,
       useMipmap: false,
     });

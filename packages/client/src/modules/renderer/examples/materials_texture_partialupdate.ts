@@ -3,9 +3,9 @@ import {
   Color,
   ColorSpace,
   DataTexture,
+  GPUFilterModeType,
   Mesh,
   MeshBasicMaterial,
-  MinificationTextureFilter,
   PerspectiveCamera,
   PlaneGeometry,
   Scene,
@@ -27,7 +27,7 @@ const clock = new Clock();
 
 const diffuseMap = await TextureLoader.loadAsync('resources/textures/carbon/Carbon.png');
 diffuseMap.colorSpace = ColorSpace.SRGB;
-diffuseMap.minFilter = MinificationTextureFilter.Linear;
+diffuseMap.minFilter = GPUFilterModeType.Linear;
 diffuseMap.useMipmap = false;
 
 const mesh = new Mesh(new PlaneGeometry(2, 2), new MeshBasicMaterial({ map: diffuseMap }));

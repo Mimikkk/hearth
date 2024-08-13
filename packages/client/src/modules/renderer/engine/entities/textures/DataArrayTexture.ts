@@ -1,5 +1,6 @@
 import { Texture, TextureParameters } from './Texture.js';
-import { MagnificationTextureFilter, MinificationTextureFilter, Wrapping } from '../../constants.js';
+import { Wrapping } from '../../constants.js';
+import { GPUFilterModeType } from '@modules/renderer/engine/hearth/constants.js';
 
 export class DataArrayTexture extends Texture {
   declare isDataArrayTexture: true;
@@ -8,8 +9,8 @@ export class DataArrayTexture extends Texture {
   constructor({ data, width, height, depth, ...parameters }: DataArrayTextureParameters) {
     super({
       image: { data, width, height, depth },
-      magFilter: MagnificationTextureFilter.Nearest,
-      minFilter: MinificationTextureFilter.Nearest,
+      magFilter: GPUFilterModeType.Nearest,
+      minFilter: GPUFilterModeType.Nearest,
       useMipmap: false,
       flipY: false,
       unpackAlignment: 1,

@@ -5,13 +5,12 @@ import {
   CylinderGeometry,
   DirectionalLight,
   Fog,
+  GPUFilterModeType,
   Group,
   HemisphereLight,
   InstancedMesh,
-  MagnificationTextureFilter,
   Mesh,
   MeshStandardMaterial,
-  MinificationTextureFilter,
   OrthographicCamera,
   PerspectiveCamera,
   PlaneGeometry,
@@ -195,8 +194,8 @@ const createCollision = () => {
   const collisionCamera = createCollisionCamera();
   const collisionPostprocessTarget = new RenderTarget(1024, 1024);
   collisionPostprocessTarget.texture.type = TextureDataType.HalfFloat;
-  collisionPostprocessTarget.texture.magFilter = MagnificationTextureFilter.Nearest;
-  collisionPostprocessTarget.texture.minFilter = MinificationTextureFilter.Nearest;
+  collisionPostprocessTarget.texture.magFilter = GPUFilterModeType.Nearest;
+  collisionPostprocessTarget.texture.minFilter = GPUFilterModeType.Nearest;
   const collisionPostprocessMaterial = new MeshBasicNodeMaterial();
   collisionPostprocessMaterial.fog = false;
   collisionPostprocessMaterial.toneMapped = false;

@@ -39,11 +39,10 @@ import { DataTexture } from '@modules/renderer/engine/entities/textures/DataText
 import {
   ColorSpace,
   CompressedPixelFormat,
-  MagnificationTextureFilter,
-  MinificationTextureFilter,
   TextureDataType,
   TextureFormat,
 } from '@modules/renderer/engine/constants.js';
+import { GPUFilterModeType } from '@modules/renderer/engine/hearth/constants.js';
 
 let _activeLoaders = 0;
 
@@ -282,9 +281,8 @@ async function createTexture(
         : new CompressedTexture(mipmaps, width, height, format, TextureDataType.UnsignedByte);
   }
 
-  texture.minFilter =
-    faces[0].mipmaps.length === 1 ? MinificationTextureFilter.Linear : MinificationTextureFilter.LinearMipmapLinear;
-  texture.magFilter = MagnificationTextureFilter.Linear;
+  texture.minFilter = GPUFilterModeType.Linear;
+  texture.magFilter = GPUFilterModeType.Linear;
   texture.useMipmap = false;
 
   texture.colorSpace = parseColorSpace(container);

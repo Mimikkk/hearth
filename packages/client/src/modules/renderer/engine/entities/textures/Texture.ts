@@ -1,18 +1,10 @@
-import {
-  ColorSpace,
-  MagnificationTextureFilter,
-  Mapping,
-  MinificationTextureFilter,
-  PixelFormat,
-  TextureDataType,
-  TextureFormat,
-  Wrapping,
-} from '../../constants.js';
+import { ColorSpace, Mapping, PixelFormat, TextureDataType, TextureFormat, Wrapping } from '../../constants.js';
 import { Vec2 } from '../../math/Vec2.js';
 import { Mat3 } from '../../math/Mat3.js';
 import { Source } from './Source.js';
 import type { CubeTexture } from './CubeTexture.js';
 import { v4 } from 'uuid';
+import { GPUFilterModeType } from '@modules/renderer/engine/hearth/constants.js';
 
 let _textureId = 0;
 
@@ -28,8 +20,8 @@ export class Texture<T = any> {
   wrapS: Wrapping;
   wrapT: Wrapping;
   wrapR: Wrapping;
-  magFilter: MagnificationTextureFilter;
-  minFilter: MinificationTextureFilter;
+  magFilter: GPUFilterModeType;
+  minFilter: GPUFilterModeType;
   anisotropy: number;
   format: TextureFormat;
   internalFormat: PixelFormat | null;
@@ -56,8 +48,8 @@ export class Texture<T = any> {
     mapping: Mapping = Mapping.UV,
     wrapS: Wrapping = Wrapping.ClampToEdge,
     wrapT: Wrapping = Wrapping.ClampToEdge,
-    magFilter: MagnificationTextureFilter = MagnificationTextureFilter.Linear,
-    minFilter: MinificationTextureFilter = MinificationTextureFilter.LinearMipmapLinear,
+    magFilter: GPUFilterModeType = GPUFilterModeType.Linear,
+    minFilter: GPUFilterModeType = GPUFilterModeType.Linear,
     format: TextureFormat = TextureFormat.RGBA,
     type: TextureDataType = TextureDataType.UnsignedByte,
     anisotropy: number = 1,
@@ -198,8 +190,8 @@ export interface TextureParameters<T = any> {
   mapping?: Mapping;
   wrapS?: Wrapping;
   wrapT?: Wrapping;
-  magFilter?: MagnificationTextureFilter;
-  minFilter?: MinificationTextureFilter;
+  magFilter?: GPUFilterModeType;
+  minFilter?: GPUFilterModeType;
   format?: TextureFormat;
   type?: TextureDataType;
   anisotropy?: number;
@@ -228,8 +220,8 @@ export interface TextureConfiguration {
   mapping: Mapping;
   wrapS: Wrapping;
   wrapT: Wrapping;
-  magFilter: MagnificationTextureFilter;
-  minFilter: MinificationTextureFilter;
+  magFilter: GPUFilterModeType;
+  minFilter: GPUFilterModeType;
   format: TextureFormat;
   type: TextureDataType;
   anisotropy: number;
@@ -263,8 +255,8 @@ export const configure = <T>(parameters?: TextureParameters<T>): TextureConfigur
     mapping: parameters?.mapping ?? Mapping.UV,
     wrapS: parameters?.wrapS ?? Wrapping.ClampToEdge,
     wrapT: parameters?.wrapT ?? Wrapping.ClampToEdge,
-    magFilter: parameters?.magFilter ?? MagnificationTextureFilter.Linear,
-    minFilter: parameters?.minFilter ?? MinificationTextureFilter.LinearMipmapLinear,
+    magFilter: parameters?.magFilter ?? GPUFilterModeType.Linear,
+    minFilter: parameters?.minFilter ?? GPUFilterModeType.Linear,
     format: parameters?.format ?? TextureFormat.RGBA,
     type: parameters?.type ?? TextureDataType.UnsignedByte,
     anisotropy: parameters?.anisotropy ?? 1,

@@ -16,10 +16,7 @@ import {
   ColorSpace,
   CompressedPixelFormat,
   DepthComparison,
-  Filter,
-  MagnificationTextureFilter,
   Mapping,
-  MinificationTextureFilter,
   TextureDataType,
   TextureFormat,
   Wrapping,
@@ -228,8 +225,7 @@ export class HearthTextures extends DataMap<any, any> {
 
     return (
       texture.isCompressedTexture === true ||
-      (texture.minFilter !== MinificationTextureFilter.Nearest &&
-        texture.minFilter !== MinificationTextureFilter.Linear)
+      (texture.minFilter !== GPUFilterModeType.Nearest && texture.minFilter !== GPUFilterModeType.Linear)
     );
   }
 
@@ -257,9 +253,9 @@ export class HearthTextures extends DataMap<any, any> {
       addressModeU: this._convertAddressMode(texture.wrapS),
       addressModeV: this._convertAddressMode(texture.wrapT),
       addressModeW: this._convertAddressMode(texture.wrapR),
-      magFilter: this._convertFilterMode(texture.magFilter),
-      minFilter: this._convertFilterMode(texture.minFilter),
-      mipmapFilter: this._convertFilterMode(texture.minFilter),
+      magFilter: texture.magFilter,
+      minFilter: texture.minFilter,
+      mipmapFilter: texture.minFilter,
       maxAnisotropy: texture.anisotropy,
     };
 
@@ -492,10 +488,9 @@ export class HearthTextures extends DataMap<any, any> {
     let defaultTexture = this.defaultTexture;
 
     if (defaultTexture === null) {
-      //@ts-expect-error
       const texture = new Texture();
-      texture.minFilter = MinificationTextureFilter.Nearest;
-      texture.magFilter = MagnificationTextureFilter.Nearest;
+      texture.minFilter = GPUFilterModeType.Nearest;
+      texture.magFilter = GPUFilterModeType.Nearest;
 
       this.createTexture(texture, { width: 1, height: 1 });
 
@@ -510,8 +505,8 @@ export class HearthTextures extends DataMap<any, any> {
 
     if (defaultCubeTexture === null) {
       const texture = new CubeTexture({
-        minFilter: MinificationTextureFilter.Nearest,
-        magFilter: MagnificationTextureFilter.Nearest,
+        minFilter: GPUFilterModeType.Nearest,
+        magFilter: GPUFilterModeType.Nearest,
       });
 
       this.createTexture(texture, { width: 1, height: 1, depth: 6 });
@@ -658,14 +653,6 @@ export class HearthTextures extends DataMap<any, any> {
     if (value === Wrapping.Repeat) return GPUAddressModeType.Repeat;
     if (value === Wrapping.MirroredRepeat) return GPUAddressModeType.MirrorRepeat;
     return GPUAddressModeType.ClampToEdge;
-  }
-
-  _convertFilterMode(value: Filter | MagnificationTextureFilter | MinificationTextureFilter): GPUFilterMode {
-    if (value === Filter.Nearest || value === Filter.NearestMipmapNearest || value === Filter.NearestMipmapLinear) {
-      return GPUFilterModeType.Nearest;
-    }
-
-    return GPUFilterModeType.Linear;
   }
 }
 

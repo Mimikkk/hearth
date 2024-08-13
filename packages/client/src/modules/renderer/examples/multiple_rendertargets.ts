@@ -2,11 +2,10 @@ import * as Engine from '@modules/renderer/engine/engine.js';
 
 import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitControls.js';
 //import { GUI } from 'lil-gui';
-
 import {
-  NodeMaterial,
   mix,
   modelNormalMatrix,
+  NodeMaterial,
   normalGeometry,
   normalize,
   outputStruct,
@@ -21,7 +20,6 @@ import {
 import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 
 import { QuadMesh } from '@modules/renderer/engine/entities/QuadMesh.js';
-import { Filter } from '@modules/renderer/engine/engine.js';
 import { TextureLoader } from '@modules/renderer/engine/loaders/textures/TextureLoader/TextureLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
@@ -94,7 +92,7 @@ async function init() {
   renderTarget = new Engine.RenderTarget(
     window.innerWidth * window.devicePixelRatio,
     window.innerHeight * window.devicePixelRatio,
-    { count: 2, minFilter: Engine.Filter.Nearest, magFilter: Engine.Filter.Nearest },
+    { count: 2, minFilter: Engine.GPUFilterModeType.Nearest, magFilter: Engine.GPUFilterModeType.Nearest },
   );
 
   renderTarget.textures[0].name = 'diffuse';

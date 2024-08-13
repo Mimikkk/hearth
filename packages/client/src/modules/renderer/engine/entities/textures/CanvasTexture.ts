@@ -1,12 +1,6 @@
 import { Texture } from './Texture.js';
-import {
-  MagnificationTextureFilter,
-  Mapping,
-  MinificationTextureFilter,
-  TextureDataType,
-  TextureFormat,
-  Wrapping,
-} from '../../constants.js';
+import { Mapping, TextureDataType, TextureFormat, Wrapping } from '../../constants.js';
+import { GPUFilterModeType } from '@modules/renderer/engine/hearth/constants.js';
 
 export class CanvasTexture extends Texture {
   constructor(
@@ -14,8 +8,8 @@ export class CanvasTexture extends Texture {
     mapping?: Mapping,
     wrapS?: Wrapping,
     wrapT?: Wrapping,
-    magFilter?: MagnificationTextureFilter,
-    minFilter?: MinificationTextureFilter,
+    magFilter?: GPUFilterModeType,
+    minFilter?: GPUFilterModeType,
     format?: TextureFormat,
     type?: TextureDataType,
     anisotropy?: number,

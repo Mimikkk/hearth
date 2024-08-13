@@ -1,4 +1,5 @@
 import * as Engine from '@modules/renderer/engine/engine.js';
+import { GPUFilterModeType } from '@modules/renderer/engine/engine.js';
 import {
   mix,
   normalWorld,
@@ -48,7 +49,7 @@ async function init() {
   ]);
 
   cube1Texture.useMipmap = true;
-  cube1Texture.minFilter = Engine.MinificationTextureFilter.LinearMipmapLinear;
+  cube1Texture.minFilter = GPUFilterModeType.Linear;
 
   const cube2Texture = await new CubeTextureLoader().loadAsync([
     'resources/textures/cube/Park2/posx.jpg',
@@ -60,7 +61,7 @@ async function init() {
   ]);
 
   cube2Texture.useMipmap = true;
-  cube2Texture.minFilter = Engine.MinificationTextureFilter.LinearMipmapLinear;
+  cube2Texture.minFilter = GPUFilterModeType.Linear;
 
   const adjustments = {
     mix: 0,

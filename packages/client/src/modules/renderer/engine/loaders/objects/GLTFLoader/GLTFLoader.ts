@@ -6,7 +6,7 @@ import { KTX2Loader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/
 import { MeshoptDecoder } from 'meshoptimizer';
 import { DRACOLoader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/DRACOLoader.js';
 import { classLoader } from '@modules/renderer/engine/loaders/types.js';
-import { BufferStep } from '@modules/renderer/engine/hearth/constants.js';
+import { BufferStep, GPUFilterModeType } from '@modules/renderer/engine/hearth/constants.js';
 import { CubicSplineInterpolant } from '@modules/renderer/engine/math/interpolants/CubicSplineInterpolant.js';
 import { CubicSplineQuaternionInterpolant } from '@modules/renderer/engine/math/interpolants/CubicSplineQuaternionInterpolant.js';
 import { Entity } from '@modules/renderer/engine/core/Entity.js';
@@ -19,7 +19,7 @@ import { AnimationClip } from '@modules/renderer/engine/animation/AnimationClip.
 import { Camera } from '@modules/renderer/engine/entities/cameras/Camera.js';
 import { LoaderUtils } from '@modules/renderer/engine/loaders/LoaderUtils.js';
 import { Color } from '@modules/renderer/engine/math/Color.js';
-import { ColorSpace, Filter, InterpolationMode, Side, Wrapping } from '@modules/renderer/engine/constants.js';
+import { ColorSpace, InterpolationMode, Side, Wrapping } from '@modules/renderer/engine/constants.js';
 import { DirectionalLight } from '@modules/renderer/engine/entities/lights/DirectionalLight.js';
 import { PointLight } from '@modules/renderer/engine/entities/lights/PointLight.js';
 import { SpotLight } from '@modules/renderer/engine/entities/lights/SpotLight.js';
@@ -1490,12 +1490,12 @@ const WEBGL_COMPONENT_TYPES = {
 };
 
 const WEBGL_FILTERS = {
-  9728: Filter.Nearest,
-  9729: Filter.Linear,
-  9984: Filter.NearestMipmapNearest,
-  9985: Filter.LinearMipmapNearest,
-  9986: Filter.NearestMipmapLinear,
-  9987: Filter.LinearMipmapLinear,
+  9728: GPUFilterModeType.Nearest,
+  9729: GPUFilterModeType.Linear,
+  9984: GPUFilterModeType.Nearest,
+  9985: GPUFilterModeType.Linear,
+  9986: GPUFilterModeType.Nearest,
+  9987: GPUFilterModeType.Linear,
 };
 
 const WEBGL_WRAPPINGS = {
@@ -2276,8 +2276,8 @@ class Parser {
         const samplers = json.samplers || {};
         const sampler = samplers[textureDef.sampler] || {};
 
-        texture.magFilter = WEBGL_FILTERS[sampler.magFilter] || Filter.Linear;
-        texture.minFilter = WEBGL_FILTERS[sampler.minFilter] || Filter.LinearMipmapLinear;
+        texture.magFilter = WEBGL_FILTERS[sampler.magFilter] || GPUFilterModeType.Linear;
+        texture.minFilter = WEBGL_FILTERS[sampler.minFilter] || GPUFilterModeType.Linear;
         texture.wrapS = WEBGL_WRAPPINGS[sampler.wrapS] || Wrapping.Repeat;
         texture.wrapT = WEBGL_WRAPPINGS[sampler.wrapT] || Wrapping.Repeat;
 

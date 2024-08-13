@@ -1,11 +1,6 @@
 import { Texture, TextureParameters } from './Texture.js';
-import {
-  DepthComparison,
-  MagnificationTextureFilter,
-  MinificationTextureFilter,
-  TextureDataType,
-  TextureFormat,
-} from '../../constants.js';
+import { DepthComparison, TextureDataType, TextureFormat } from '../../constants.js';
+import { GPUFilterModeType } from '@modules/renderer/engine/hearth/constants.js';
 
 export class DepthTexture extends Texture {
   declare isDepthTexture: true;
@@ -16,8 +11,8 @@ export class DepthTexture extends Texture {
     height,
     format = TextureFormat.Depth,
     type = format === TextureFormat.Depth ? TextureDataType.UnsignedInt : TextureDataType.UnsignedInt248,
-    magFilter = MagnificationTextureFilter.Nearest,
-    minFilter = MinificationTextureFilter.Nearest,
+    magFilter = GPUFilterModeType.Nearest,
+    minFilter = GPUFilterModeType.Nearest,
     flipY = false,
     useMipmap = false,
     ...parameters

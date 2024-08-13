@@ -1,3 +1,5 @@
+import { GPUFilterModeType } from '@modules/renderer/engine/hearth/constants.js';
+
 export const Revision = '001dev';
 
 export enum Mouse {
@@ -109,29 +111,6 @@ export enum Wrapping {
   Repeat = 1000,
   ClampToEdge = 1001,
   MirroredRepeat = 1002,
-}
-
-export enum Filter {
-  Nearest = 1003,
-  NearestMipmapNearest = 1004,
-  NearestMipmapLinear = 1005,
-  Linear = 1006,
-  LinearMipmapNearest = 1007,
-  LinearMipmapLinear = 1008,
-}
-
-export enum MagnificationTextureFilter {
-  Nearest = Filter.Nearest,
-  Linear = Filter.Linear,
-}
-
-export enum MinificationTextureFilter {
-  Nearest = Filter.Nearest,
-  NearestMipmapNearest = Filter.NearestMipmapNearest,
-  NearestMipmapLinear = Filter.NearestMipmapLinear,
-  Linear = Filter.Linear,
-  LinearMipmapNearest = Filter.LinearMipmapNearest,
-  LinearMipmapLinear = Filter.LinearMipmapLinear,
 }
 
 export enum TextureDataType {

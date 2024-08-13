@@ -1,5 +1,5 @@
 import { Texture, TextureParameters } from './Texture.js';
-import { MagnificationTextureFilter, MinificationTextureFilter } from '../../constants.js';
+import { GPUFilterModeType } from '@modules/renderer/engine/hearth/constants.js';
 
 export class DataTexture extends Texture {
   declare isDataTexture: true;
@@ -7,8 +7,8 @@ export class DataTexture extends Texture {
   constructor({ data = null, width = 1, height = 1, ...params }: DataTextureParameters) {
     super({
       image: { data, width, height },
-      magFilter: MagnificationTextureFilter.Nearest,
-      minFilter: MinificationTextureFilter.Nearest,
+      magFilter: GPUFilterModeType.Nearest,
+      minFilter: GPUFilterModeType.Nearest,
       useMipmap: false,
       flipY: false,
       unpackAlignment: 1,
