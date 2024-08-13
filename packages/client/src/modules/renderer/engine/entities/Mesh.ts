@@ -10,20 +10,21 @@ import { Geometry } from '@modules/renderer/engine/core/Geometry.js';
 import { Material } from '@modules/renderer/engine/entities/materials/Material.js';
 import { Intersection, Raycaster } from '../core/Raycaster.js';
 import { Attribute } from '@modules/renderer/engine/core/Attribute.js';
+import { NodeMaterial } from '@modules/renderer/engine/nodes/materials/NodeMaterial.js';
 
-export class Mesh extends Entity {
+export class Mesh<G extends Geometry = any, M extends Material | NodeMaterial = any> extends Entity {
   declare isMesh: true;
 
-  geometry: Geometry;
-  material: Material;
+  geometry: G;
+  material: M;
   morphTargetInfluences: number[];
   morphTargetDictionary: Record<string, number>;
 
-  constructor(geometry: Geometry = new Geometry(), material?: Material) {
+  constructor(geometry: G, material: M) {
     super();
 
     this.geometry = geometry;
-    this.material = material!;
+    this.material = material;
 
     this.updateMorphTargets();
   }

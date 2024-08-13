@@ -23,7 +23,6 @@ export class MarchingCubes extends Mesh {
   field: Float32Array;
   normal_cache: Float32Array;
   palette: Float32Array;
-  count: number;
   positionArray: Float32Array;
   normalArray: Float32Array;
   uvArray: Float32Array;

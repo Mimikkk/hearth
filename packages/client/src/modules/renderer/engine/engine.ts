@@ -83,11 +83,9 @@ export * from './entities/Line.js';
 export * from './entities/LineSegments.js';
 export * from './entities/LOD.js';
 export * from './entities/Sprite.js';
-// TODO - merge as one
 export * from './entities/InstancedMesh.js';
 export * from './entities/InstancedPoints.js';
 export * from './entities/ShadowMesh.js';
-// TODO - merge mesh as one
 export * from './entities/Mesh.js';
 export * from './entities/QuadMesh.js';
 export * from './entities/SkinnedMesh.js';
