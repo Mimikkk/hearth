@@ -14,7 +14,6 @@ import { RenderTarget } from '@modules/renderer/engine/hearth/core/RenderTarget.
 import {
   ColorSpace,
   CompressedPixelFormat,
-  DepthComparison,
   Mapping,
   TextureDataType,
   TextureFormat,
@@ -273,7 +272,7 @@ export class HearthTextures extends DataMap<any, any> {
     };
 
     if (isDepthTexture(texture) && texture.compare) {
-      samplerDescriptorGPU.compare = _compareToWebGPU[texture.compare];
+      samplerDescriptorGPU.compare = texture.compare;
     }
 
     textureGPU.sampler = device.createSampler(samplerDescriptorGPU);
@@ -499,7 +498,7 @@ export class HearthTextures extends DataMap<any, any> {
   _copyCubeToTexture(images: ImageData[], texture: GPUTexture, descriptor: GPUTextureDescriptor, useFlip: boolean) {
     for (let i = 0; i < 6; i++) {
       const image = images[i];
-      const flipAt = useFlip ? _flipMap[i] : i;
+      const flipAt = useFlip ? _flipOrder[i] : i;
 
       if (DataTexture.is(image)) {
         this._copyBufferToTexture(image.image, texture, descriptor, flipAt, useFlip);
@@ -590,17 +589,7 @@ export class HearthTextures extends DataMap<any, any> {
 }
 
 const _size = Vec3.new();
-const _compareToWebGPU = {
-  [DepthComparison.Never]: 'never',
-  [DepthComparison.Less]: 'less',
-  [DepthComparison.Equal]: 'equal',
-  [DepthComparison.LessEqual]: 'less-equal',
-  [DepthComparison.Greater]: 'greater',
-  [DepthComparison.GreaterEqual]: 'greater-equal',
-  [DepthComparison.Always]: 'always',
-  [DepthComparison.NotEqual]: 'not-equal',
-} as const;
-const _flipMap = [0, 1, 3, 2, 4, 5] as const;
+const _flipOrder = [0, 1, 3, 2, 4, 5] as const;
 
 export function getFormat(texture: Texture, device: GPUDevice | null = null) {
   const format = texture.format;

@@ -13,8 +13,7 @@ import { RenderTarget } from '@modules/renderer/engine/hearth/core/RenderTarget.
 import { Color } from '@modules/renderer/engine/math/Color.js';
 import { Light } from '@modules/renderer/engine/entities/lights/Light.js';
 import { DepthTexture } from '@modules/renderer/engine/entities/textures/DepthTexture.js';
-import { DepthComparison } from '@modules/renderer/engine/constants.js';
-import { GPUFilterModeType } from '@modules/renderer/engine/hearth/constants.js';
+import { GPUCompareFunctionType, GPUFilterModeType } from '@modules/renderer/engine/hearth/constants.js';
 
 let overrideMaterial: any = null;
 
@@ -70,7 +69,7 @@ export class AnalyticLightNode extends LightingNode {
       depthTexture.magFilter = GPUFilterModeType.Nearest;
       depthTexture.image.width = shadow.mapSize.width;
       depthTexture.image.height = shadow.mapSize.height;
-      depthTexture.compare = DepthComparison.Less;
+      depthTexture.compare = GPUCompareFunctionType.Less;
 
       rtt.depthTexture = depthTexture;
 

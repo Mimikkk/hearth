@@ -1,10 +1,10 @@
 import { Texture, TextureParameters } from './Texture.js';
-import { DepthComparison, TextureDataType, TextureFormat } from '../../constants.js';
-import { GPUFilterModeType } from '@modules/renderer/engine/hearth/constants.js';
+import { TextureDataType, TextureFormat } from '../../constants.js';
+import { GPUCompareFunctionType, GPUFilterModeType } from '@modules/renderer/engine/hearth/constants.js';
 
 export class DepthTexture extends Texture {
   declare isDepthTexture: true;
-  compare?: DepthComparison;
+  compare?: GPUCompareFunctionType;
 
   constructor({
     width,
@@ -41,5 +41,5 @@ export interface DepthTextureParameters extends Omit<TextureParameters, 'image'>
   height?: number;
   type?: TextureDataType;
   format?: TextureFormat.Depth | TextureFormat.DepthStencil;
-  compare?: DepthComparison;
+  compare?: GPUCompareFunctionType;
 }
