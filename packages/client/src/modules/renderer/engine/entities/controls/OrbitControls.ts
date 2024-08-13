@@ -2,7 +2,6 @@ import { Ray } from '@modules/renderer/engine/math/Ray.js';
 import { Plane } from '@modules/renderer/engine/math/Plane.js';
 import { DegreeToRadian } from '@modules/renderer/engine/math/MathUtils.js';
 import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
-import { Mouse } from '@modules/renderer/engine/constants.js';
 import { OrthographicCamera } from '@modules/renderer/engine/entities/cameras/OrthographicCamera.js';
 import { PerspectiveCamera } from '@modules/renderer/engine/entities/cameras/PerspectiveCamera.js';
 import { Quaternion } from '@modules/renderer/engine/math/Quaternion.js';
@@ -48,7 +47,6 @@ export class OrbitControls {
   autoRotate: boolean;
   autoRotateSpeed: number;
   keys: { LEFT: string; UP: string; RIGHT: string; BOTTOM: string };
-  mouseButtons: { LEFT: Mouse; MIDDLE: Mouse; RIGHT: Mouse };
   target0: Vec3;
   position0: Vec3;
   zoom0: number;
@@ -99,8 +97,6 @@ export class OrbitControls {
     this.autoRotateSpeed = parameters?.autoRotateSpeed ?? 2.0;
 
     this.keys = { LEFT: 'ArrowLeft', UP: 'ArrowUp', RIGHT: 'ArrowRight', BOTTOM: 'ArrowDown' };
-
-    this.mouseButtons = { LEFT: Mouse.Rotate, MIDDLE: Mouse.Dolly, RIGHT: Mouse.Pan };
 
     this.target0 = this.target.clone();
     this.position0 = this.camera.position.clone();
@@ -664,64 +660,39 @@ export class OrbitControls {
     }
 
     function onMouseDown(event: MouseEvent) {
-      let mouseAction;
-
       switch (event.button) {
-        case 0:
-          mouseAction = scope.mouseButtons.LEFT;
-          break;
-
         case 1:
-          mouseAction = scope.mouseButtons.MIDDLE;
-          break;
-
-        case 2:
-          mouseAction = scope.mouseButtons.RIGHT;
-          break;
-
-        default:
-          mouseAction = -1;
-      }
-
-      switch (mouseAction) {
-        case Mouse.Dolly:
           if (scope.enableZoom === false) return;
 
           handleMouseDownDolly(event);
-
           state = STATE.DOLLY;
-
           break;
 
-        case Mouse.Rotate:
+        case 0:
           if (event.ctrlKey || event.metaKey || event.shiftKey) {
-            if (scope.enablePan === false) return;
+            if (!scope.enablePan) return;
 
             handleMouseDownPan(event);
-
             state = STATE.PAN;
           } else {
-            if (scope.enableRotate === false) return;
+            if (!scope.enableRotate) return;
 
             handleMouseDownRotate(event);
-
             state = STATE.ROTATE;
           }
 
           break;
 
-        case Mouse.Pan:
+        case 2:
           if (event.ctrlKey || event.metaKey || event.shiftKey) {
-            if (scope.enableRotate === false) return;
+            if (!scope.enableRotate) return;
 
             handleMouseDownRotate(event);
 
             state = STATE.ROTATE;
           } else {
-            if (scope.enablePan === false) return;
-
+            if (!scope.enablePan) return;
             handleMouseDownPan(event);
-
             state = STATE.PAN;
           }
 

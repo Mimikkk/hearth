@@ -1,5 +1,5 @@
 import { Color, ColorRepresentation } from '../../math/Color.js';
-import { Blending, BlendingEquation, PixelFormat, Side } from '../../constants.js';
+import { Blending, PixelFormat, Side } from '../../constants.js';
 import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
 import { Plane } from '@modules/renderer/engine/math/Plane.js';
 import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
@@ -11,6 +11,7 @@ import { Group } from '@modules/renderer/engine/entities/Group.js';
 import { v4 } from 'uuid';
 import {
   GPUBlendFactorType,
+  GPUBlendOperationType,
   GPUCompareFunctionType,
   GPUStencilOperationType,
 } from '@modules/renderer/engine/hearth/constants.js';
@@ -25,7 +26,7 @@ export interface MaterialParameters {
   blendColor?: ColorRepresentation;
   blendDst?: GPUBlendFactorType;
   blendDstAlpha?: number;
-  blendEquation?: BlendingEquation;
+  blendEquation?: GPUBlendOperationType;
   blendEquationAlpha?: number;
   blending?: Blending;
   blendSrc?: GPUBlendFactorType;
@@ -77,7 +78,7 @@ export class Material {
   alphaHash: boolean;
   blendSrc: GPUBlendFactorType;
   blendDst: GPUBlendFactorType;
-  blendEquation: BlendingEquation;
+  blendEquation: GPUBlendOperationType;
   blendSrcAlpha: number | null;
   blendDstAlpha: number | null;
   blendEquationAlpha: number | null;
@@ -126,7 +127,7 @@ export class Material {
 
     this.blendSrc = GPUBlendFactorType.SrcAlpha;
     this.blendDst = GPUBlendFactorType.OneMinusSrcAlpha;
-    this.blendEquation = BlendingEquation.Add;
+    this.blendEquation = GPUBlendOperationType.Add;
     this.blendSrcAlpha = null;
     this.blendDstAlpha = null;
     this.blendEquationAlpha = null;

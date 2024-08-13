@@ -8,7 +8,7 @@ import { Binding } from '@modules/renderer/engine/hearth/bindings/Binding.js';
 import { RenderObject } from '@modules/renderer/engine/hearth/core/RenderObject.js';
 import { Pipeline } from '@modules/renderer/engine/hearth/core/Pipeline.js';
 import { ShaderStage } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
-import { Blending, BlendingEquation, Side } from '@modules/renderer/engine/constants.js';
+import { Blending, Side } from '@modules/renderer/engine/constants.js';
 import { Material } from '@modules/renderer/engine/entities/materials/Material.js';
 import {
   GPUBlendFactorType,
@@ -424,13 +424,13 @@ export class HearthPipelines extends DataMap<any, any> {
       color = {
         srcFactor: material.blendSrc,
         dstFactor: material.blendDst,
-        operation: this._getBlendOperation(material.blendEquation),
+        operation: material.blendEquation,
       };
 
       alpha = {
         srcFactor: blendSrcAlpha,
         dstFactor: blendDstAlpha,
-        operation: this._getBlendOperation(blendEquationAlpha),
+        operation: blendEquationAlpha,
       };
     } else {
       const premultipliedAlpha = material.premultipliedAlpha;

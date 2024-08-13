@@ -1,22 +1,4 @@
-import { GPUStencilOperationType } from '@modules/renderer/engine/hearth/constants.js';
-
 export const Revision = '001dev';
-
-export enum Mouse {
-  Left = 0,
-  Middle = 1,
-  Right = 2,
-  Rotate = 0,
-  Dolly = 1,
-  Pan = 2,
-}
-
-export enum Touch {
-  Rotate = 0,
-  Pan = 1,
-  DollyPan = 2,
-  DollyRotate = 3,
-}
 
 export enum Side {
   Front = 0,
@@ -31,14 +13,6 @@ export enum Blending {
   Subtractive = 3,
   Multiply = 4,
   Custom = 5,
-}
-
-export enum BlendingEquation {
-  Add = 100,
-  Subtract = 101,
-  ReverseSubtract = 102,
-  Min = 103,
-  Max = 104,
 }
 
 export enum Operation {
