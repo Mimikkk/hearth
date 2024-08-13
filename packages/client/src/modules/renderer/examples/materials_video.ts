@@ -1,168 +1,115 @@
-import * as Engine from '@modules/renderer/engine/engine.js';
+import { WindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
+import {
+  BoxGeometry,
+  DirectionalLight,
+  Geometry,
+  Hearth,
+  Mesh,
+  MeshPhongMaterial,
+  OrbitControls,
+  PerspectiveCamera,
+  Scene,
+  VideoTexture,
+} from '@modules/renderer/engine/engine.js';
 
-import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
-import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
-
-let container;
-
-let camera, scene, hearth;
-
-let video, texture, material, mesh;
-
-let mouseX = 0;
-let mouseY = 0;
-
-let cube_count;
-
-const meshes = [],
-  materials = [],
-  xgrid = 20,
-  ygrid = 10;
-
-const startButton = document.getElementById('startButton');
-startButton.addEventListener('click', function() {
-  init();
-});
-
-async function init() {
-  const overlay = document.getElementById('overlay');
-  overlay.remove();
-
-  container = document.createElement('div');
-  document.body.appendChild(container);
-
-  camera = new Engine.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 1, 10000);
-  camera.position.z = 500;
-
-  scene = new Engine.Scene();
-
-  const light = new Engine.DirectionalLight(0xffffff, 7);
+const createLight = () => {
+  const light = new DirectionalLight(0xffffff, 7);
   light.position.set(0.5, 1, 1).normalize();
-  scene.add(light);
-
-  hearth = await Hearth.as();
-  hearth.setPixelRatio(window.devicePixelRatio);
-  hearth.setSize(window.innerWidth, window.innerHeight);
-  hearth.animation.loop = render;
-  container.appendChild(hearth.parameters.canvas);
-
-  video = document.getElementById('video');
+  return light;
+};
+const createCamera = () => {
+  const camera = new PerspectiveCamera(40, window.innerWidth / window.innerHeight, 1, 10000);
+  camera.position.z = 500;
+  return camera;
+};
+const createVideoTexture = () => {
+  const video = document.getElementById('video');
   video.play();
-  video.addEventListener('play', function() {
-    this.currentTime = 3;
-  });
+  video.muted = true;
 
-  texture = new Engine.VideoTexture({ video });
+  return new VideoTexture({ video });
+};
+const createBoxes = (texture: VideoTexture) => {
+  const materials = [];
+  const meshes = [];
 
-  let i, j, ox, oy, geometry;
-
+  const xgrid = 20;
+  const ygrid = 10;
   const ux = 1 / xgrid;
   const uy = 1 / ygrid;
-
   const xsize = 480 / xgrid;
   const ysize = 204 / ygrid;
 
-  const parameters = { color: 0xffffff, map: texture };
+  let index = 0;
+  for (let i = 0; i < xgrid; i++) {
+    for (let j = 0; j < ygrid; j++) {
+      const geometry = new BoxGeometry(xsize, ysize, xsize);
+      updateUV(geometry, ux, uy, i, j);
 
-  cube_count = 0;
-
-  for (i = 0; i < xgrid; i++) {
-    for (j = 0; j < ygrid; j++) {
-      ox = i;
-      oy = j;
-
-      geometry = new Engine.BoxGeometry(xsize, ysize, xsize);
-
-      change_uvs(geometry, ux, uy, ox, oy);
-
-      materials[cube_count] = new Engine.MeshPhongMaterial(parameters);
-
-      material = materials[cube_count];
-
+      const material = new MeshPhongMaterial({ color: 0xffffff, map: texture });
       material.hue = i / xgrid;
       material.saturation = 1 - j / ygrid;
-
       material.color.setHSL(material.hue, material.saturation, 0.5);
 
-      mesh = new Engine.Mesh(geometry, material);
-
+      const mesh = new Mesh(geometry, material);
       mesh.position.x = (i - xgrid / 2) * xsize;
       mesh.position.y = (j - ygrid / 2) * ysize;
       mesh.position.z = 0;
-
       mesh.scale.x = mesh.scale.y = mesh.scale.z = 1;
-
-      scene.add(mesh);
 
       mesh.dx = 0.001 * (0.5 - Math.random());
       mesh.dy = 0.001 * (0.5 - Math.random());
 
-      meshes[cube_count] = mesh;
-
-      cube_count += 1;
+      materials[index] = material;
+      meshes[index] = mesh;
+      ++index;
     }
   }
+  return [meshes, materials] as const;
+};
 
-  document.addEventListener('mousemove', onDocumentMouseMove);
+const texture = createVideoTexture();
+const [meshes, materials] = createBoxes(texture);
 
-  useWindowResizer(hearth, camera);
-}
+const camera = createCamera();
+const light = createLight();
+const scene = Scene.of(light, ...meshes);
 
-function change_uvs(geometry, unitx, unity, offsetx, offsety) {
+const hearth = await Hearth.as({
+  async animate(_, frame, clock) {
+    for (let material of materials) {
+      const hue = ((360 * (material.hue + clock.total)) % 360) / 360;
+      material.color.setHSL(hue, material.saturation, 0.5);
+    }
+
+    if (frame % 1000 > 200) {
+      for (const mesh of meshes) {
+        mesh.rotateX(10 * mesh.dx);
+        mesh.rotateY(10 * mesh.dy);
+        mesh.position.x -= 150 * mesh.dx;
+        mesh.position.y += 150 * mesh.dy;
+        mesh.position.z += 300 * mesh.dx;
+      }
+    }
+    if (frame % 1000 === 0) {
+      for (const mesh of meshes) {
+        mesh.dx *= -1;
+        mesh.dy *= -1;
+      }
+    }
+
+    await hearth.render(scene, camera);
+  },
+});
+
+OrbitControls.attach(hearth, camera);
+WindowResizer.attach(hearth, camera);
+
+function updateUV(geometry: Geometry, unitx: number, unity: number, offsetx: number, offsety: number): void {
   const uvs = geometry.attributes.uv.array;
 
   for (let i = 0; i < uvs.length; i += 2) {
     uvs[i] = (uvs[i] + offsetx) * unitx;
     uvs[i + 1] = (uvs[i + 1] + offsety) * unity;
   }
-}
-
-function onDocumentMouseMove(event) {
-  mouseX = event.clientX - window.innerWidth / 2;
-  mouseY = (event.clientY - window.innerHeight / 2) * 0.3;
-}
-
-let h,
-  counter = 1;
-
-function render() {
-  const time = Date.now() * 0.00005;
-
-  camera.position.x += (mouseX - camera.position.x) * 0.05;
-  camera.position.y += (-mouseY - camera.position.y) * 0.05;
-
-  camera.lookAt(scene.position);
-
-  for (let i = 0; i < cube_count; i++) {
-    material = materials[i];
-
-    h = ((360 * (material.hue + time)) % 360) / 360;
-    material.color.setHSL(h, material.saturation, 0.5);
-  }
-
-  if (counter % 1000 > 200) {
-    for (let i = 0; i < cube_count; i++) {
-      mesh = meshes[i];
-
-      mesh.rotateX(10 * mesh.dx);
-      mesh.rotateY(10 * mesh.dy);
-
-      mesh.position.x -= 150 * mesh.dx;
-      mesh.position.y += 150 * mesh.dy;
-      mesh.position.z += 300 * mesh.dx;
-    }
-  }
-
-  if (counter % 1000 === 0) {
-    for (let i = 0; i < cube_count; i++) {
-      mesh = meshes[i];
-
-      mesh.dx *= -1;
-      mesh.dy *= -1;
-    }
-  }
-
-  counter++;
-
-  hearth.render(scene, camera);
 }

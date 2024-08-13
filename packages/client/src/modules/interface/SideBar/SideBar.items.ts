@@ -87,7 +87,7 @@ export const SideBarItems: AccordionItem[] = [
       { id: Example.Materials, title: 'Materials' },
       { id: Example.MaterialsTextureAnisotropy, title: 'Materials Texture Anisotropy' },
       { id: Example.MaterialsTexturePartialUpdate, title: 'Materials Texture Partial Update', masterdisk: true },
-      { id: Example.MaterialsVideo, title: 'Materials Video' },
+      { id: Example.MaterialsVideo, title: 'Materials Video', masterdisk: true },
       {
         id: Example.LinesFat,
         title: 'Lines Fat',
