@@ -54,7 +54,7 @@ async function init() {
   const positions = [];
   const colors = [];
 
-  const spline = new Engine.CatmullRomCurve3(points);
+  const spline = new Engine.Curves.CatmullRomCurve3(points);
   const divisions = Math.round(12 * points.length);
   const point = new Engine.Vec3();
   const lineColor = new Engine.Color();
@@ -72,7 +72,6 @@ async function init() {
   const geometry = new LineGeometry();
   geometry.setPositions(positions);
   geometry.setColors(colors);
-  geometry.instanceCount = positions.length / 3 - 1;
 
   matLine = new Line2NodeMaterial({
     color: 0xffffff,
@@ -86,6 +85,7 @@ async function init() {
   line.computeLineDistances();
   line.scale.set(1, 1, 1);
   scene.add(line);
+  line.count = positions.length / 3 - 1;
 
   const geo = new Engine.Geometry();
   geo.setAttribute('position', new Attribute(new Float32Array(positions), 3));

@@ -15,7 +15,6 @@ export class Geometry {
   id: number;
   uuid: string;
   name: string;
-  instanceCount: number;
   index: Attribute<Uint32Array> | null;
   attributes: AttributeRecord;
   morphAttributes: AttributeRecord;
@@ -48,8 +47,6 @@ export class Geometry {
     this.drawRange = { start: 0, count: Infinity };
 
     this.extra = {};
-
-    this.instanceCount = 1;
   }
 
   static new(): Geometry {
@@ -668,7 +665,6 @@ export class Geometry {
     this.groups = [];
     this.boundBox = null;
     this.boundSphere = null;
-    this.instanceCount = Infinity;
 
     const data = {};
 

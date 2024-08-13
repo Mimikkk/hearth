@@ -9,6 +9,7 @@ import { EdgesGeometry } from '@modules/renderer/engine/entities/geometries/Edge
 import { Mesh } from '@modules/renderer/engine/entities/Mesh.js';
 import { LineSegments } from '@modules/renderer/engine/entities/LineSegments.js';
 import { Sphere } from '@modules/renderer/engine/math/Sphere.js';
+import { Buffer } from '@modules/renderer/engine/core/Buffer.js';
 
 const _box = Box3.new();
 const _vector = Vec3.new();
@@ -50,11 +51,10 @@ export class LineSegmentsGeometry extends Geometry {
   }
 
   setPositions(array: Float32Array): this {
-    const instanceBuffer = new Buffer(array, 6);
+    const instanceBuffer = Buffer.f32(array, 6);
 
     this.setAttribute('instanceStart', new Attribute(instanceBuffer, 3, 0, BufferStep.Instance));
     this.setAttribute('instanceEnd', new Attribute(instanceBuffer, 3, 3, BufferStep.Instance));
-    this.instanceCount = this.attributes.instanceStart.count;
 
     this.calcBoundBox();
     this.calcBoundSphere();
@@ -63,7 +63,7 @@ export class LineSegmentsGeometry extends Geometry {
   }
 
   setColors(array: Float32Array): this {
-    const instanceColorBuffer = new Buffer(array, 6);
+    const instanceColorBuffer = Buffer.f32(array, 6);
 
     this.setAttribute('instanceColorStart', new Attribute(instanceColorBuffer, 3, 0, BufferStep.Instance));
     this.setAttribute('instanceColorEnd', new Attribute(instanceColorBuffer, 3, 3, BufferStep.Instance));

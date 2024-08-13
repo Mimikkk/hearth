@@ -14,6 +14,7 @@ import { LineSegments } from '@modules/renderer/engine/entities/LineSegments.js'
 import { Mesh } from '@modules/renderer/engine/entities/Mesh.js';
 import { lerp } from '@modules/renderer/engine/math/MathUtils.js';
 import { Attribute } from '@modules/renderer/engine/core/Attribute.js';
+import { Buffer } from '@modules/renderer/engine/core/Buffer.js';
 
 const _start = Vec3.new();
 const _end = Vec3.new();
@@ -206,7 +207,7 @@ export class LineSegments2 extends Mesh {
       lineDistances[j + 1] = lineDistances[j] + _start.distanceTo(_end);
     }
 
-    const instanceDistanceBuffer = new Buffer(lineDistances, 2);
+    const instanceDistanceBuffer = Buffer.f32(lineDistances, 2);
 
     geometry.setAttribute('instanceDistanceStart', new Attribute(instanceDistanceBuffer, 1, 0, BufferStep.Instance));
     geometry.setAttribute('instanceDistanceEnd', new Attribute(instanceDistanceBuffer, 1, 1, BufferStep.Instance));

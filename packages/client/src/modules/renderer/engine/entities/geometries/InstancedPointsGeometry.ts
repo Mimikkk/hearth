@@ -46,7 +46,6 @@ export class InstancedPointsGeometry extends Geometry {
 
     this.calcBoundBox();
     this.calcBoundSphere();
-    this.instanceCount = this.attributes.instancePosition.count;
 
     return this;
   }

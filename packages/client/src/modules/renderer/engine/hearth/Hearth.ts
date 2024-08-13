@@ -655,10 +655,6 @@ export class Hearth {
     this.textures.destroyTexture(texture);
   }
 
-  getInstanceCount({ object, geometry }: RenderObject) {
-    return object.count || geometry.instanceCount || 1;
-  }
-
   needsRenderUpdate(renderObject: RenderObject) {
     const data = this.memo.get(renderObject);
 
@@ -810,7 +806,7 @@ export class Hearth {
     const drawRange = geometry.drawRange;
     const firstVertex = drawRange.start;
 
-    const instanceCount = this.getInstanceCount(renderObject);
+    const instanceCount = object.count;
     if (instanceCount === 0) return;
 
     if (hasIndex === true) {

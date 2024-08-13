@@ -9,24 +9,6 @@ import { CubicBezierCurve3 } from './CubicBezierCurve3.js';
 import { LineCurve3 } from './LineCurve3.js';
 import { QuadraticBezierCurve3 } from './QuadraticBezierCurve3.js';
 
-export const Curves = {
-  D2: {
-    ArcCurve,
-    CubicBezierCurve,
-    EllipseCurve,
-
-    LineCurve,
-    QuadraticBezierCurve,
-    SplineCurve,
-  },
-  D3: {
-    CatmullRomCurve3,
-    CubicBezierCurve3,
-    LineCurve3,
-    QuadraticBezierCurve3,
-  },
-};
-
 export {
   ArcCurve,
   CatmullRomCurve3,

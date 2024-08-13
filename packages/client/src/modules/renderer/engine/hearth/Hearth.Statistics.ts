@@ -62,7 +62,7 @@ export class HearthStatistics {
     };
   }
 
-  update(object: Entity, count: number, instanceCount: number = 1) {
+  update(object: Entity, count: number, instanceCount: number) {
     this.render.calls++;
 
     if (object instanceof Mesh || object instanceof Sprite) {
