@@ -10,6 +10,7 @@ import { GUI } from 'lil-gui';
 import { RGBMLoader } from '@modules/renderer/engine/loaders/textures/RGBMLoader/RGBMLoader.js';
 import { TextureLoader } from '@modules/renderer/engine/loaders/textures/TextureLoader/TextureLoader.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
+import { CubeRenderTarget } from '@modules/renderer/engine/hearth/core/CubeRenderTarget.js';
 
 let camera, scene, hearth;
 let cube, sphere, torus, material;
@@ -51,13 +52,13 @@ async function init() {
   scene.background = texture;
   scene.environment = texture;
 
-  cubeRenderTarget = new Engine.CubeRenderTarget(256);
+  cubeRenderTarget = new CubeRenderTarget(256);
   cubeRenderTarget.texture.type = Engine.TextureDataType.HalfFloat;
   cubeRenderTarget.texture.minFilter = GPUFilterModeType.Linear;
   cubeRenderTarget.texture.magFilter = GPUFilterModeType.Linear;
   cubeRenderTarget.texture.useMipmap = true;
 
-  cubeCamera = new Engine.CubeCamera(1, 1000, cubeRenderTarget);
+  cubeCamera = new Engine.CubeCamera({ near: 1, far: 1000, target: cubeRenderTarget });
 
   material = new Nodes.MeshStandardNodeMaterial({
     envMap: cubeRenderTarget.texture,

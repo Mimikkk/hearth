@@ -1,8 +1,7 @@
 import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
-import { Entity } from '../core/Entity.js';
+import { Entity, EntityParameters } from '../core/Entity.js';
 import { Intersection, Raycaster } from '../core/Raycaster.js';
-import { PerspectiveCamera } from '@modules/renderer/engine/entities/cameras/PerspectiveCamera.js';
-import { OrthographicCamera } from '@modules/renderer/engine/entities/cameras/OrthographicCamera.js';
+import { ICamera } from '@modules/renderer/engine/entities/cameras/Camera.js';
 
 const _v1 = Vec3.new();
 const _v2 = Vec3.new();
@@ -10,26 +9,20 @@ const _v2 = Vec3.new();
 export class LOD extends Entity {
   declare isLOD: true;
 
-  _currentLevel: number;
-  autoUpdate: boolean;
-  levels: { distance: number; hysteresis: number; object: Entity }[];
+  #level: number;
+  useAutoUpdate: boolean;
+  levels: LODLevel[];
 
-  constructor() {
-    super();
+  constructor(parameters?: LODParameters) {
+    super(parameters);
 
-    this._currentLevel = 0;
+    this.levels = parameters?.levels ?? [];
+    for (let i = 0; i < this.levels.length; ++i) {
+      this.addLevel(this.levels[i].entity);
+    }
 
-    Object.defineProperties(this, {
-      levels: {
-        enumerable: true,
-        value: [],
-      },
-      isLOD: {
-        value: true,
-      },
-    });
-
-    this.autoUpdate = true;
+    this.useAutoUpdate = parameters?.useAutoUpdate ?? true;
+    this.#level = 0;
   }
 
   addLevel(object: Entity, distance: number, hysteresis: number): this {
@@ -45,7 +38,7 @@ export class LOD extends Entity {
       }
     }
 
-    levels.splice(l, 0, { distance: distance, hysteresis: hysteresis, object: object });
+    levels.splice(l, 0, { distance: distance, hysteresis: hysteresis, entity: object });
 
     this.add(object);
 
@@ -61,7 +54,7 @@ export class LOD extends Entity {
       for (i = 1, l = levels.length; i < l; i++) {
         let levelDistance = levels[i].distance;
 
-        if (levels[i].object.visible) {
+        if (levels[i].entity.visible) {
           levelDistance -= levelDistance * levels[i].hysteresis;
         }
 
@@ -70,7 +63,7 @@ export class LOD extends Entity {
         }
       }
 
-      return levels[i - 1].object;
+      return levels[i - 1].entity;
     }
 
     return null;
@@ -88,41 +81,49 @@ export class LOD extends Entity {
     }
   }
 
-  update(camera: PerspectiveCamera | OrthographicCamera) {
-    const levels = this.levels;
-
-    if (levels.length > 1) {
+  update(camera: ICamera) {
+    if (this.levels.length > 1) {
       _v1.fromMat4Position(camera.matrixWorld);
       _v2.fromMat4Position(this.matrixWorld);
 
       const distance = _v1.distanceTo(_v2) / camera.zoom;
 
-      levels[0].object.visible = true;
+      this.levels[0].entity.visible = true;
 
       let i, l;
 
-      for (i = 1, l = levels.length; i < l; i++) {
-        let levelDistance = levels[i].distance;
+      for (i = 1, l = this.levels.length; i < l; i++) {
+        let levelDistance = this.levels[i].distance;
 
-        if (levels[i].object.visible) {
-          levelDistance -= levelDistance * levels[i].hysteresis;
+        if (this.levels[i].entity.visible) {
+          levelDistance -= levelDistance * this.levels[i].hysteresis;
         }
 
         if (distance >= levelDistance) {
-          levels[i - 1].object.visible = false;
-          levels[i].object.visible = true;
+          this.levels[i - 1].entity.visible = false;
+          this.levels[i].entity.visible = true;
         } else {
           break;
         }
       }
 
-      this._currentLevel = i - 1;
-
-      for (; i < l; i++) {
-        levels[i].object.visible = false;
+      this.#level = i - 1;
+      for (; i < l; ++i) {
+        this.levels[i].entity.visible = false;
       }
     }
   }
 }
 
 LOD.prototype.isLOD = true;
+
+export interface LODLevel {
+  distance: number;
+  hysteresis: number;
+  entity: Entity;
+}
+
+interface LODParameters extends EntityParameters {
+  levels?: LODLevel[];
+  useAutoUpdate?: boolean;
+}

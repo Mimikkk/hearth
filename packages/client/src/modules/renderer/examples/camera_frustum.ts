@@ -6,6 +6,7 @@ import {
   Clock,
   Color,
   Group,
+  ICamera,
   Mesh,
   OrthographicCamera,
   PerspectiveCamera,
@@ -56,7 +57,7 @@ const useOrbitControls = (canvas: HTMLCanvasElement) => {
 };
 
 const { perspectiveCamera, frustumCamera } = createCamera();
-const state = <{ camera: PerspectiveCamera | OrthographicCamera }>{ camera: perspectiveCamera };
+const state = <{ camera: ICamera }>{ camera: perspectiveCamera };
 
 const scene = createScene();
 const light = createLight();

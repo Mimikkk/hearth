@@ -76,7 +76,7 @@ for (let i = 0; i < spheres.count; i++) {
 
 physics.addScene(scene);
 
-const hearth = await Hearth.as({ antialias: true, alpha: true });
+const hearth = await Hearth.as({ useAntialias: true, alpha: true });
 hearth.setSize(window.innerWidth, window.innerHeight);
 hearth.animation.loop = animate;
 document.body.appendChild(hearth.parameters.canvas);

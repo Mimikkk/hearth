@@ -48,3 +48,19 @@ export interface CameraParameters extends EntityParameters {
   projectionMatrix?: Mat4;
   projectionMatrixInverse?: Mat4;
 }
+
+export class CameraView {
+  constructor(
+    public enabled: boolean,
+    public fullWidth: number,
+    public fullHeight: number,
+    public offsetX: number,
+    public offsetY: number,
+    public width: number,
+    public height: number,
+  ) {}
+
+  static new(): CameraView {
+    return new CameraView(true, 1, 1, 0, 0, 1, 1);
+  }
+}

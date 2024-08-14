@@ -399,7 +399,7 @@ export class HearthRenderer extends HearthComponent {
   _getDefaultRenderPassDescriptor(): GPURenderPassDescriptor {
     let descriptor = this.renderPassDescriptor;
 
-    const antialias = this.hearth.parameters.antialias;
+    const useAntialias = this.hearth.parameters.useAntialias;
 
     if (descriptor === null) {
       descriptor = {
@@ -415,23 +415,24 @@ export class HearthRenderer extends HearthComponent {
         },
       };
 
-      const colorAttachment = descriptor.colorAttachments[0];
+      const attachment = descriptor.colorAttachments[0];
 
-      if (antialias === true) {
-        colorAttachment.view = this.hearth.buffers.color!.createView();
+      if (useAntialias) {
+        attachment.view = this.hearth.buffers.color!.createView();
       } else {
-        colorAttachment.resolveTarget = undefined;
+        attachment.resolveTarget = undefined;
       }
 
       this.renderPassDescriptor = descriptor;
     }
 
-    const colorAttachment = descriptor.colorAttachments[0];
+    const attachment = descriptor.colorAttachments[0];
 
-    if (antialias === true) {
-      colorAttachment.resolveTarget = this.hearth.parameters.context.getCurrentTexture().createView();
+    const view = this.hearth.parameters.context.getCurrentTexture().createView();
+    if (useAntialias) {
+      attachment.resolveTarget = view;
     } else {
-      colorAttachment.view = this.hearth.parameters.context.getCurrentTexture().createView();
+      attachment.view = view;
     }
 
     return descriptor;

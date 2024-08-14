@@ -107,11 +107,11 @@ export class Hearth {
     const context = canvas.getContext('webgpu');
     if (context === null) throw Error('WebGPU not supported.');
 
-    const antialias = options?.antialias ?? true;
+    const useAntialias = options?.useAntialias ?? true;
     return {
       alpha: options?.alpha ?? true,
-      antialias,
-      sampleCount: antialias ? (options?.sampleCount ?? 4) : 1,
+      useAntialias,
+      sampleCount: useAntialias ? (options?.sampleCount ?? 4) : 1,
       autoClear: options?.autoClear ?? true,
       autoClearColor: options?.autoClearColor ?? true,
       autoClearDepth: options?.autoClearDepth ?? true,
@@ -829,7 +829,7 @@ export class Hearth {
 export namespace Hearth {
   export interface Options {
     alpha?: boolean;
-    antialias?: boolean;
+    useAntialias?: boolean;
     sampleCount?: number;
     autoClear?: boolean;
     autoClearColor?: boolean;
@@ -858,7 +858,7 @@ export namespace Hearth {
 
   export interface Configuration {
     alpha: boolean;
-    antialias: boolean;
+    useAntialias: boolean;
     sampleCount: number;
     autoClear: boolean;
     autoClearColor: boolean;

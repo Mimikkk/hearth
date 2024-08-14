@@ -136,7 +136,7 @@ const hearth = await Hearth.as({
   animate() {
     hearth.render(scene, camera);
   },
-  antialias: false,
+  useAntialias: false,
   toneMappingNode: toneMapping(ToneMapping.Linear, 0.15),
 });
 

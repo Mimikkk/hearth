@@ -1,5 +1,5 @@
 import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
-import { Camera } from '@modules/renderer/engine/entities/cameras/Camera.js';
+import { Camera, ICamera } from '@modules/renderer/engine/entities/cameras/Camera.js';
 import { LineSegments } from '@modules/renderer/engine/entities/LineSegments.js';
 import { PerspectiveCamera } from '@modules/renderer/engine/entities/cameras/PerspectiveCamera.js';
 import { OrthographicCamera } from '@modules/renderer/engine/entities/cameras/OrthographicCamera.js';
@@ -13,10 +13,10 @@ const _vector = new Vec3();
 const _camera = new Camera();
 
 export class CameraVisualizer extends LineSegments {
-  camera: PerspectiveCamera | OrthographicCamera;
+  camera: ICamera;
   pointMap: Record<string, number[]>;
 
-  constructor(camera: PerspectiveCamera | OrthographicCamera) {
+  constructor(camera: ICamera) {
     const geometry = new Geometry();
     const material = new LineBasicMaterial({ color: 0xffffff, vertexColors: true, toneMapped: false });
 

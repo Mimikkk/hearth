@@ -5,7 +5,7 @@ import { SpriteMaterial } from '@modules/renderer/engine/entities/materials/Spri
 import { CanvasTexture } from '@modules/renderer/engine/entities/textures/CanvasTexture.js';
 import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
 import { Quaternion } from '@modules/renderer/engine/math/Quaternion.js';
-import { Entity } from '@modules/renderer/engine/core/Entity.js';
+import { Entity, EntityParameters } from '@modules/renderer/engine/core/Entity.js';
 import { BoxGeometry } from '@modules/renderer/engine/entities/geometries/BoxGeometry.js';
 import { Sprite } from '@modules/renderer/engine/entities/Sprite.js';
 import { Mesh } from '@modules/renderer/engine/entities/Mesh.js';
@@ -81,8 +81,9 @@ export class WorldAxesControls extends Entity {
   constructor(
     public camera: Camera,
     public canvas: HTMLCanvasElement,
+    parameters?: EntityParameters,
   ) {
-    super();
+    super(parameters);
     const handleClick = this.handleClick.bind(this);
     this.canvas.addEventListener('click', handleClick);
     this.unsubscribeClick = () => this.canvas.removeEventListener('click', handleClick);

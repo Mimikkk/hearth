@@ -94,7 +94,7 @@ const vector1 = Vec3.new();
 const vec2 = Vec3.new();
 const vec3 = Vec3.new();
 
-const hearth = await Hearth.as({ antialias: true });
+const hearth = await Hearth.as({ useAntialias: true });
 hearth.animation.loop = animate;
 hearth.parameters.toneMapping = ToneMapping.ACESFilmic;
 container.appendChild(hearth.parameters.canvas);

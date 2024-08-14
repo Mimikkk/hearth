@@ -8,6 +8,7 @@ import type { Entity } from '../../core/Entity.js';
 import { PerspectiveCamera } from '@modules/renderer/engine/entities/cameras/PerspectiveCamera.js';
 import { OrthographicCamera } from '@modules/renderer/engine/entities/cameras/OrthographicCamera.js';
 import { Const } from '@modules/renderer/engine/math/types.js';
+import { ICamera } from '@modules/renderer/engine/entities/cameras/Camera.js';
 
 export class SelectionControls {
   start: Vec3 = Vec3.new();
@@ -16,7 +17,7 @@ export class SelectionControls {
   instances: Record<string, number[]> = {};
 
   constructor(
-    public camera: PerspectiveCamera | OrthographicCamera,
+    public camera: ICamera,
     public scene: Scene,
     public deep: number = Number.MAX_VALUE,
   ) {

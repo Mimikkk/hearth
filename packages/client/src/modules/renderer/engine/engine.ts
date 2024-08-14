@@ -89,7 +89,6 @@ export * from './entities/ShadowMesh.js';
 export * from './entities/Mesh.js';
 export * from './entities/QuadMesh.js';
 export * from './entities/SkinnedMesh.js';
-export * from './entities/GroundedSkybox.js';
 export * from './entities/Skeleton.js';
 export * from './entities/Bone.js';
 export * from './entities/MarchingCubes.js';
@@ -231,6 +230,7 @@ export * from './hearth/core/RenderObject.js';
 export * from './hearth/core/RenderPipeline.js';
 export * from './hearth/core/RenderQueue.js';
 export * from './hearth/core/RenderTarget.js';
+export * from './hearth/core/CubeRenderTarget.js';
 // /memo
 export * from './hearth/memo/Memo.js';
 export * from './hearth/memo/WeakMemo.js';

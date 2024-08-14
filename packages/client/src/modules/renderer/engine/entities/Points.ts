@@ -1,29 +1,30 @@
 import { Sphere } from '../math/Sphere.js';
 import { Ray } from '../math/Ray.js';
 import { Mat4 } from '../math/Mat4.js';
-import { Entity } from '../core/Entity.js';
+import { Entity, EntityParameters } from '../core/Entity.js';
 import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
 import { PointsMaterial } from '@modules/renderer/engine/entities/materials/PointsMaterial.js';
 import { Geometry } from '@modules/renderer/engine/core/Geometry.js';
 import { Intersection, Raycaster } from '@modules/renderer/engine/core/Raycaster.js';
+import { Material } from '@modules/renderer/engine/entities/materials/Material.js';
+import { NodeMaterial } from '@modules/renderer/engine/nodes/materials/NodeMaterial.js';
 
 const _inverseMatrix = new Mat4();
 const _ray = new Ray();
 const _sphere = new Sphere();
 const _position = Vec3.new();
 
-export class Points extends Entity {
+export class Points<G extends Geometry = any, M extends Material | NodeMaterial = any> extends Entity {
   declare isPoints: true;
-  declare geometry: Geometry;
-  declare material: PointsMaterial;
   morphTargetInfluences: number[];
   morphTargetDictionary: Record<string, number>;
 
-  constructor(geometry: Geometry, material: PointsMaterial) {
-    super();
-
-    this.geometry = geometry;
-    this.material = material;
+  constructor(
+    public geometry: G,
+    public material: M,
+    parameters?: EntityParameters,
+  ) {
+    super(parameters);
 
     this.updateMorphTargets();
   }

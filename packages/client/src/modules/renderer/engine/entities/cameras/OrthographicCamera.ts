@@ -1,38 +1,27 @@
-import { Camera } from './Camera.js';
+import { Camera, CameraParameters, CameraView } from './Camera.js';
 
 export class OrthographicCamera extends Camera {
   declare isOrthographicCamera: true;
+  view: CameraView;
   zoom: number;
-  view: {
-    enabled: boolean;
-    fullWidth: number;
-    fullHeight: number;
-    offsetX: number;
-    offsetY: number;
-    width: number;
-    height: number;
-  } | null;
+  left: number;
+  right: number;
+  top: number;
+  bottom: number;
+  near: number;
+  far: number;
 
-  constructor(
-    public left: number = -1,
-    public right: number = 1,
-    public top: number = 1,
-    public bottom: number = -1,
-    public near: number = 0.1,
-    public far: number = 2000,
-  ) {
-    super();
+  constructor(parameters?: OrthographicCameraParameters) {
+    super(parameters);
 
-    this.zoom = 1;
-    this.view = null;
-
-    this.left = left;
-    this.right = right;
-    this.top = top;
-    this.bottom = bottom;
-
-    this.near = near;
-    this.far = far;
+    this.zoom = parameters?.zoom ?? 1;
+    this.view = parameters?.view ?? CameraView.new();
+    this.left = parameters?.left ?? -1;
+    this.right = parameters?.right ?? 1;
+    this.top = parameters?.top ?? 1;
+    this.bottom = parameters?.bottom ?? -1;
+    this.near = parameters?.near ?? 0.1;
+    this.far = parameters?.far ?? 2000;
 
     this.updateProjectionMatrix();
   }
@@ -42,18 +31,6 @@ export class OrthographicCamera extends Camera {
   }
 
   setViewOffset(fullWidth: number, fullHeight: number, x: number, y: number, width: number, height: number): this {
-    if (this.view === null) {
-      this.view = {
-        enabled: true,
-        fullWidth: 1,
-        fullHeight: 1,
-        offsetX: 0,
-        offsetY: 0,
-        width: 1,
-        height: 1,
-      };
-    }
-
     this.view.enabled = true;
     this.view.fullWidth = fullWidth;
     this.view.fullHeight = fullHeight;
@@ -67,9 +44,7 @@ export class OrthographicCamera extends Camera {
   }
 
   clearViewOffset(): this {
-    if (this.view !== null) {
-      this.view.enabled = false;
-    }
+    this.view.enabled = false;
 
     this.updateProjectionMatrix();
     return this;
@@ -104,3 +79,14 @@ export class OrthographicCamera extends Camera {
 }
 
 OrthographicCamera.prototype.isOrthographicCamera = true;
+
+export interface OrthographicCameraParameters extends CameraParameters {
+  left?: number;
+  right?: number;
+  top?: number;
+  bottom?: number;
+  near?: number;
+  far?: number;
+  zoom?: number;
+  view?: CameraView;
+}

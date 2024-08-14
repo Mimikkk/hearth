@@ -2,52 +2,31 @@ import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
 import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
 import { Mat4 } from '../math/Mat4.js';
 import { Triangle } from '../math/Triangle.js';
-import { Entity } from '../core/Entity.js';
+import { Entity, EntityParameters } from '../core/Entity.js';
 import { Geometry } from '@modules/renderer/engine/core/Geometry.js';
 import { Buffer } from '../core/Buffer.js';
 import { SpriteMaterial } from '@modules/renderer/engine/entities/materials/SpriteMaterial.js';
 import { Intersection, Raycaster } from '../core/Raycaster.js';
 import { PerspectiveCamera } from '@modules/renderer/engine/entities/cameras/PerspectiveCamera.js';
-import { BufferStep } from '@modules/renderer/engine/hearth/constants.js';
 import { Attribute } from '@modules/renderer/engine/core/Attribute.js';
+import { lazy } from '@modules/renderer/engine/math/types.js';
 
 export class Sprite extends Entity {
   declare isSprite: true;
-
   center: Vec2;
   geometry: Geometry;
-  material: SpriteMaterial;
 
-  constructor(material: SpriteMaterial) {
-    super();
+  constructor(
+    public material: SpriteMaterial,
+    parameters?: SpriteParameters,
+  ) {
+    super(parameters);
 
-    this.isSprite = true;
-
-    if (_geometry === undefined) {
-      _geometry = new Geometry();
-
-      const float32Array = new Float32Array([
-        -0.5, -0.5, 0, 0, 0, 0.5, -0.5, 0, 1, 0, 0.5, 0.5, 0, 1, 1, -0.5, 0.5, 0, 0, 1,
-      ]);
-
-      const buffer = new Buffer(float32Array, 5);
-
-      _geometry.setIndex([0, 1, 2, 0, 2, 3]);
-      _geometry.setAttribute('position', new Attribute(buffer, 3, 0, BufferStep.Vertex, undefined));
-      _geometry.setAttribute('uv', new Attribute(buffer, 2, 3, BufferStep.Vertex, undefined));
-    }
-
-    this.geometry = _geometry;
-    this.material = material;
-
-    this.center = Vec2.new(0.5, 0.5);
+    this.geometry = geometry();
+    this.center = parameters?.center ?? Vec2.new(0.5, 0.5);
   }
 
   raycast(raycaster: Raycaster, intersects: Intersection[]): void {
-    if (raycaster.camera === null) {
-      throw Error('Sprite: "Raycaster.camera" needs to be set in order to raycast against sprites.');
-    }
-
     _worldScale.fromMat4Scale(this.matrixWorld);
 
     _viewWorldMatrix.from(raycaster.camera.matrixWorld);
@@ -110,6 +89,10 @@ export class Sprite extends Entity {
   }
 }
 
+export interface SpriteParameters extends EntityParameters {
+  center?: Vec2;
+}
+
 const _intersect = Vec3.new();
 const _worldScale = Vec3.new();
 
@@ -125,7 +108,16 @@ const _uv0 = Vec2.new();
 const _uv1 = Vec2.new();
 const _uv2 = Vec2.new();
 
-let _geometry: Geometry;
+const geometry = lazy(() => {
+  const geometry = new Geometry();
+
+  const buffer = Buffer.f32([-0.5, -0.5, 0, 0, 0, 0.5, -0.5, 0, 1, 0, 0.5, 0.5, 0, 1, 1, -0.5, 0.5, 0, 0, 1], 5);
+  geometry.setIndex([0, 1, 2, 0, 2, 3]);
+  geometry.setAttribute('position', Attribute.use(buffer, 3, 0));
+  geometry.setAttribute('uv', Attribute.use(buffer, 2, 3));
+
+  return geometry;
+});
 Sprite.prototype.isSprite = true;
 
 const _triangle = new Triangle();

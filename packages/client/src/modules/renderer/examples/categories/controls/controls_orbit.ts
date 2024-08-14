@@ -12,6 +12,7 @@ import {
   OrthographicCamera,
   SphereGeometry,
   SpotLight,
+  ICamera,
 } from '@modules/renderer/engine/engine.js';
 import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitControls.js';
 import { ColorMap } from '@modules/renderer/engine/math/Color.js';
@@ -39,7 +40,7 @@ const createSphere = (geometry: Geometry, x: number, y: number, z: number) => {
   return mesh;
 };
 
-const useOrbitControls = (camera: PerspectiveCamera | OrthographicCamera, canvas: HTMLCanvasElement) => {
+const useOrbitControls = (camera: ICamera, canvas: HTMLCanvasElement) => {
   const controls = new OrbitControls(camera, canvas);
   controls.minDistance = 1;
   controls.maxDistance = 10;

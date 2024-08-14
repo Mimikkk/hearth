@@ -1,4 +1,4 @@
-import { Entity } from '../../core/Entity.js';
+import { Entity, EntityParameters } from '../../core/Entity.js';
 import { PerspectiveCamera } from './PerspectiveCamera.js';
 import { CubeRenderTarget } from '@modules/renderer/engine/hearth/core/CubeRenderTarget.js';
 import { Scene } from '@modules/renderer/engine/entities/scenes/Scene.js';
@@ -12,29 +12,20 @@ export class CubeCamera extends Entity {
   renderTarget: CubeRenderTarget;
   activeMipmapLevel: number;
 
-  constructor(near: number, far: number, renderTarget: CubeRenderTarget) {
-    super();
+  constructor(parameters: CubeCameraParameters) {
+    super(parameters);
+    const { near, far, target } = parameters;
 
-    this.renderTarget = renderTarget;
+    this.renderTarget = target;
     this.activeMipmapLevel = 0;
 
-    const cameraPX = new PerspectiveCamera(fov, aspect, near, far);
-    cameraPX.layers = this.layers;
-
-    const cameraNX = new PerspectiveCamera(fov, aspect, near, far);
-    cameraNX.layers = this.layers;
-
-    const cameraPY = new PerspectiveCamera(fov, aspect, near, far);
-    cameraPY.layers = this.layers;
-
-    const cameraNY = new PerspectiveCamera(fov, aspect, near, far);
-    cameraNY.layers = this.layers;
-
-    const cameraPZ = new PerspectiveCamera(fov, aspect, near, far);
-    cameraPZ.layers = this.layers;
-
-    const cameraNZ = new PerspectiveCamera(fov, aspect, near, far);
-    cameraNZ.layers = this.layers;
+    const params = { fov, aspect, near, far, layers: this.layers };
+    const cameraPX = new PerspectiveCamera(params);
+    const cameraNX = new PerspectiveCamera(params);
+    const cameraPY = new PerspectiveCamera(params);
+    const cameraNY = new PerspectiveCamera(params);
+    const cameraPZ = new PerspectiveCamera(params);
+    const cameraNZ = new PerspectiveCamera(params);
 
     cameraPX.lookAt(-1, 0, 0);
     cameraNX.up.set(0, -1, 0);
@@ -102,4 +93,11 @@ export class CubeCamera extends Entity {
 
     renderTarget.texture.usePmremUpdate = true;
   }
+}
+
+export interface CubeCameraParameters extends EntityParameters {
+  near: number;
+  far: number;
+  target: CubeRenderTarget;
+  activeMipmapLevel?: number;
 }

@@ -3,7 +3,7 @@ import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
 import { Sphere } from '../math/Sphere.js';
 import { Ray } from '../math/Ray.js';
 import { Mat4 } from '../math/Mat4.js';
-import { Entity } from '../core/Entity.js';
+import { Entity, EntityParameters } from '../core/Entity.js';
 import { Triangle } from '../math/Triangle.js';
 import { Side } from '../constants.js';
 import { Geometry } from '@modules/renderer/engine/core/Geometry.js';
@@ -15,16 +15,15 @@ import { NodeMaterial } from '@modules/renderer/engine/nodes/materials/NodeMater
 export class Mesh<G extends Geometry = any, M extends Material | NodeMaterial = any> extends Entity {
   declare isMesh: true;
 
-  geometry: G;
-  material: M;
   morphTargetInfluences: number[];
   morphTargetDictionary: Record<string, number>;
 
-  constructor(geometry: G, material: M) {
-    super();
-
-    this.geometry = geometry;
-    this.material = material;
+  constructor(
+    public geometry: G,
+    public material: M,
+    parameters?: EntityParameters,
+  ) {
+    super(parameters);
 
     this.updateMorphTargets();
   }

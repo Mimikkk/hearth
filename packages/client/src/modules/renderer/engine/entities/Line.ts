@@ -1,31 +1,25 @@
 import { Sphere } from '../math/Sphere.js';
 import { Ray } from '../math/Ray.js';
 import { Mat4 } from '../math/Mat4.js';
-import { Entity } from '../core/Entity.js';
+import { Entity, EntityParameters } from '../core/Entity.js';
 import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
-import { LineBasicMaterial } from '@modules/renderer/engine/entities/materials/LineBasicMaterial.js';
 import { Attribute } from '@modules/renderer/engine/core/Attribute.js';
 import { Material } from '@modules/renderer/engine/entities/materials/Material.js';
 import { Intersection, Raycaster } from '@modules/renderer/engine/core/Raycaster.js';
 import { LineSegments } from '@modules/renderer/engine/entities/LineSegments.js';
 import { Line3 } from '@modules/renderer/engine/math/Line3.js';
-import { LineGeometry } from '@modules/renderer/engine/entities/lines/LineGeometry.js';
 import { Geometry } from '@modules/renderer/engine/core/Geometry.js';
+import { NodeMaterial } from '@modules/renderer/engine/nodes/materials/NodeMaterial.js';
 
-const _start = Vec3.new();
-const _end = Vec3.new();
-const _inverseMatrix = new Mat4();
-const _ray = new Ray();
-const _sphere = new Sphere();
-
-export class Line extends Entity {
+export class Line<G extends Geometry = any, M extends Material | NodeMaterial = any> extends Entity {
   declare isLine: true;
 
-  material: Material;
-  geometry: Geometry;
-
-  constructor(geometry: Geometry, material: LineBasicMaterial) {
-    super();
+  constructor(
+    public geometry: G,
+    public material: M,
+    parameters?: EntityParameters,
+  ) {
+    super(parameters);
 
     this.geometry = geometry;
     this.material = material;
@@ -177,4 +171,9 @@ export class Line extends Entity {
 
 Line.prototype.isLine = true;
 
+const _start = Vec3.new();
+const _end = Vec3.new();
+const _inverseMatrix = new Mat4();
+const _ray = new Ray();
+const _sphere = new Sphere();
 const _line = Line3.new();
