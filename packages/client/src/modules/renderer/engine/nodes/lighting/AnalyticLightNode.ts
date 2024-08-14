@@ -54,9 +54,11 @@ export class AnalyticLightNode extends LightingNode {
   setupShadow(builder: NodeBuilder): void {
     let shadowNode = this.shadowNode;
 
-    if (shadowNode === null) {
-      if (overrideMaterial === null) {
+    console.log({ shadowNode, overrideMaterial });
+    if (!shadowNode) {
+      if (!overrideMaterial) {
         overrideMaterial = builder.createNodeMaterial();
+
         overrideMaterial.fragmentNode = vec4(0, 0, 0, 1);
         overrideMaterial.isShadowNodeMaterial = true;
       }

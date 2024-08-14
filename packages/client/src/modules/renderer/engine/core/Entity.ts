@@ -346,28 +346,6 @@ export class Entity {
     return this.remove(...this.children);
   }
 
-  attach(object: Entity): this {
-    this.updateWorldMatrix(true, false);
-
-    _m1.from(this.matrixWorld).invert();
-
-    if (object.parent !== null) {
-      object.parent.updateWorldMatrix(true, false);
-
-      _m1.mul(object.parent.matrixWorld);
-    }
-
-    object.applyMat4(_m1);
-
-    object.removeFromParent();
-    object.parent = this!;
-    this.children.push(object);
-
-    object.updateWorldMatrix(false, true);
-
-    return this;
-  }
-
   getObjectById(id: number): Entity | undefined {
     return this.getObjectByProperty('id', id);
   }

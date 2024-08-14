@@ -8,6 +8,8 @@ import type { CubeTexture } from '@modules/renderer/engine/entities/textures/Cub
 import { EnvironmentNode } from '@modules/renderer/engine/nodes/lighting/EnvironmentNode.js';
 import { FogNode } from '@modules/renderer/engine/nodes/fog/FogNode.js';
 import { Node } from '@modules/renderer/engine/nodes/core/Node.js';
+import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
+import { ICamera } from '@modules/renderer/engine/entities/cameras/Camera.js';
 
 export class Scene extends Entity {
   declare isScene: true;
@@ -44,6 +46,10 @@ export class Scene extends Entity {
     const scene = new Scene();
     scene.add(...entities);
     return scene;
+  }
+
+  attach(hearth: Hearth, camera: ICamera): void {
+    hearth.animation.before.push(() => hearth.render(this, camera));
   }
 
   copy(source: this, recursive?: boolean): this {
