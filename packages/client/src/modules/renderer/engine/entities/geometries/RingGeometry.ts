@@ -83,7 +83,7 @@ export interface RingGeometryConfiguration {
   thetaLength: number;
 }
 
-export const configure = (parameters?: RingGeometryParameters): RingGeometryConfiguration => ({
+const configure = (parameters?: RingGeometryParameters): RingGeometryConfiguration => ({
   innerRadius: parameters?.innerRadius ?? 0.5,
   outerRadius: parameters?.outerRadius ?? 1,
   thetaSegments: parameters?.thetaSegments ?? 32,

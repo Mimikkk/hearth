@@ -209,7 +209,7 @@ export interface TextureConfiguration {
   useUpdate: boolean;
 }
 
-export const configure = <T>(parameters?: TextureParameters<T>): TextureConfiguration => {
+const configure = <T>(parameters?: TextureParameters<T>): TextureConfiguration => {
   return {
     internalFormat: parameters?.internalFormat ?? null,
     name: parameters?.name ?? '',

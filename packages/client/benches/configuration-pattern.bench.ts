@@ -60,7 +60,7 @@ namespace final_pattern {
   export interface Options extends Partial<Configuration> {}
 
   export const initial: Configuration = { a: 'a' };
-  export const configure = (options?: Options): Configuration => ({ a: options?.a ?? initial.a });
+  const configure = (options?: Options): Configuration => ({ a: options?.a ?? initial.a });
 }
 
 describe('Bench - Configuration Pattern', () => {

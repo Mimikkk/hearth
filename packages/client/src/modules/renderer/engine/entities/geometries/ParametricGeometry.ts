@@ -92,7 +92,7 @@ export interface ParametricGeometryConfiguration {
   stacks: number;
 }
 
-export const configure = (parameters: ParametricGeometryParameters): ParametricGeometryConfiguration => ({
+const configure = (parameters: ParametricGeometryParameters): ParametricGeometryConfiguration => ({
   fn: parameters.fn,
   slices: parameters?.slices ?? 8,
   stacks: parameters?.stacks ?? 8,

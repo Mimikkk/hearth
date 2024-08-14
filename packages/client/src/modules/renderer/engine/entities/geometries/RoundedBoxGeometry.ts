@@ -140,7 +140,7 @@ export interface RoundedBoxGeometryConfiguration {
   radius: number;
 }
 
-export const configure = (parameters?: RoundedBoxGeometryParameters): RoundedBoxGeometryConfiguration => ({
+const configure = (parameters?: RoundedBoxGeometryParameters): RoundedBoxGeometryConfiguration => ({
   width: parameters?.width ?? 1,
   height: parameters?.height ?? 1,
   depth: parameters?.depth ?? 1,

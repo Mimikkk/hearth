@@ -93,7 +93,7 @@ export interface DodecahedronGeometryConfiguration {
   detail: number;
 }
 
-export const configure = (parameters?: DodecahedronGeometryParameters): DodecahedronGeometryConfiguration => ({
+const configure = (parameters?: DodecahedronGeometryParameters): DodecahedronGeometryConfiguration => ({
   radius: parameters?.radius ?? 1,
   detail: parameters?.detail ?? 0,
 });

@@ -71,7 +71,7 @@ export interface PlaneGeometryConfiguration {
   heightSegments: number;
 }
 
-export const configure = (parameters?: PlaneGeometryParameters): PlaneGeometryConfiguration => ({
+const configure = (parameters?: PlaneGeometryParameters): PlaneGeometryConfiguration => ({
   width: parameters?.width ?? 1,
   height: parameters?.height ?? 1,
   widthSegments: parameters?.widthSegments ?? 1,

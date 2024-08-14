@@ -207,7 +207,7 @@ export interface PolyhedronGeometryConfiguration {
   detail: number;
 }
 
-export const configure = (parameters?: PolyhedronGeometryParameters): PolyhedronGeometryConfiguration => ({
+const configure = (parameters?: PolyhedronGeometryParameters): PolyhedronGeometryConfiguration => ({
   vertices: parameters?.vertices ?? [],
   indices: parameters?.indices ?? [],
   radius: parameters?.radius ?? 1,

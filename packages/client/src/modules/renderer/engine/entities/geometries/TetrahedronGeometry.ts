@@ -19,7 +19,7 @@ export interface TetrahedronGeometryConfiguration {
   detail: number;
 }
 
-export const configure = (parameters?: TetrahedronGeometryParameters): TetrahedronGeometryConfiguration => ({
+const configure = (parameters?: TetrahedronGeometryParameters): TetrahedronGeometryConfiguration => ({
   radius: parameters?.radius ?? 1,
   detail: parameters?.detail ?? 0,
 });

@@ -62,7 +62,7 @@ export interface IcosahedronGeometryConfiguration {
   detail: number;
 }
 
-export const configure = (parameters?: IcosahedronGeometryParameters): IcosahedronGeometryConfiguration => ({
+const configure = (parameters?: IcosahedronGeometryParameters): IcosahedronGeometryConfiguration => ({
   radius: parameters?.radius ?? 1,
   detail: parameters?.detail ?? 0,
 });
