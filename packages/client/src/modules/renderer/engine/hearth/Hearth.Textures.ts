@@ -230,7 +230,7 @@ export class HearthTextures extends DataMap<any, any> {
 
   needsMipmaps(texture: Texture): boolean {
     if (texture.isEnvironment()) return true;
-    return CompressedTexture.is(texture);
+    return CompressedTexture.is(texture) || texture.useMipmap;
   }
 
   createSampler(texture: Texture): GPUSampler {
