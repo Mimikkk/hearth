@@ -5,28 +5,10 @@ import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
 import { clamp } from '@modules/renderer/engine/math/MathUtils.js';
 
 export class LatheGeometry extends Geometry {
-  declare parameters: {
-    points: Vec2[];
-    segments: number;
-    phiStart: number;
-    phiLength: number;
-  };
-
-  constructor(
-    points: Vec2[] = [Vec2.new(0, -0.5), Vec2.new(0.5, 0), Vec2.new(0, 0.5)],
-    segments: number = 12,
-    phiStart: number = 0,
-    phiLength: number = Math.PI * 2,
-  ) {
+  constructor(parameters?: LatheGeometryConfiguration) {
     super();
 
-    this.parameters = {
-      points: points,
-      segments: segments,
-      phiStart: phiStart,
-      phiLength: phiLength,
-    };
-
+    let { segments, phiLength, phiStart, points } = configure(parameters);
     segments = Math.floor(segments);
 
     phiLength = clamp(phiLength, 0, Math.PI * 2);
@@ -137,3 +119,24 @@ export class LatheGeometry extends Geometry {
     this.setAttribute('normal', new Attribute(new Float32Array(normals), 3));
   }
 }
+
+export interface LatheGeometryParameters {
+  points?: Vec2[];
+  segments?: number;
+  phiStart?: number;
+  phiLength?: number;
+}
+
+export interface LatheGeometryConfiguration {
+  points: Vec2[];
+  segments: number;
+  phiStart: number;
+  phiLength: number;
+}
+
+const configure = (parameters?: LatheGeometryParameters): LatheGeometryConfiguration => ({
+  points: parameters?.points ?? [Vec2.new(0, -0.5), Vec2.new(0.5, 0), Vec2.new(0, 0.5)],
+  segments: parameters?.segments ?? 12,
+  phiStart: parameters?.phiStart ?? 0,
+  phiLength: parameters?.phiLength ?? Math.PI * 2,
+});

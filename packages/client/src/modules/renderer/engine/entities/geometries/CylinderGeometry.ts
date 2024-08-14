@@ -4,39 +4,11 @@ import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
 import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
 
 export class CylinderGeometry extends Geometry {
-  declare parameters: {
-    radiusTop: number;
-    radiusBottom: number;
-    height: number;
-    radialSegments: number;
-    heightSegments: number;
-    openEnded: boolean;
-    thetaStart: number;
-    thetaLength: number;
-  };
-
-  constructor(
-    radiusTop = 1,
-    radiusBottom = 1,
-    height = 1,
-    radialSegments = 32,
-    heightSegments = 1,
-    openEnded = false,
-    thetaStart = 0,
-    thetaLength = Math.PI * 2,
-  ) {
+  constructor(parameters?: CylinderGeometryParameters) {
     super();
 
-    this.parameters = {
-      radiusTop: radiusTop,
-      radiusBottom: radiusBottom,
-      height: height,
-      radialSegments: radialSegments,
-      heightSegments: heightSegments,
-      openEnded: openEnded,
-      thetaStart: thetaStart,
-      thetaLength: thetaLength,
-    };
+    let { radiusTop, radiusBottom, height, radialSegments, heightSegments, openEnded, thetaStart, thetaLength } =
+      configure(parameters);
 
     const scope = this;
 
@@ -186,3 +158,36 @@ export class CylinderGeometry extends Geometry {
     }
   }
 }
+
+export interface CylinderGeometryParameters {
+  radiusTop?: number;
+  radiusBottom?: number;
+  height?: number;
+  radialSegments?: number;
+  heightSegments?: number;
+  openEnded?: boolean;
+  thetaStart?: number;
+  thetaLength?: number;
+}
+
+export interface CylinderGeometryConfiguration {
+  radiusTop: number;
+  radiusBottom: number;
+  height: number;
+  radialSegments: number;
+  heightSegments: number;
+  openEnded: boolean;
+  thetaStart: number;
+  thetaLength: number;
+}
+
+const configure = (parameters?: CylinderGeometryParameters): CylinderGeometryConfiguration => ({
+  radiusTop: parameters?.radiusTop ?? 1,
+  radiusBottom: parameters?.radiusBottom ?? 1,
+  height: parameters?.height ?? 1,
+  radialSegments: parameters?.radialSegments ?? 32,
+  heightSegments: parameters?.heightSegments ?? 1,
+  openEnded: parameters?.openEnded ?? false,
+  thetaStart: parameters?.thetaStart ?? 0,
+  thetaLength: parameters?.thetaLength ?? Math.PI * 2,
+});

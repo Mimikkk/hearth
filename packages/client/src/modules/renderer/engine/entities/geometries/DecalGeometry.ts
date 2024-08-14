@@ -17,6 +17,7 @@ import { Mesh } from '@modules/renderer/engine/entities/Mesh.js';
 import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
 import { Euler } from '@modules/renderer/engine/math/Euler.js';
 import { Mat4 } from '@modules/renderer/engine/math/Mat4.js';
+import { Attribute } from '@modules/renderer/engine/core/Attribute.js';
 
 export class DecalGeometry extends Geometry {
   constructor(mesh: Mesh, position: Vec3, orientation: Euler, size: Vec3) {
@@ -37,9 +38,9 @@ export class DecalGeometry extends Geometry {
 
     generate();
 
-    this.setAttribute('position', new BufferAttribute(new Float32Array(vertices), 3));
-    this.setAttribute('normal', new BufferAttribute(new Float32Array(normals), 3));
-    this.setAttribute('uv', new BufferAttribute(new Float32Array(uvs), 2));
+    this.setAttribute('position', new Attribute(new Float32Array(vertices), 3));
+    this.setAttribute('normal', new Attribute(new Float32Array(normals), 3));
+    this.setAttribute('uv', new Attribute(new Float32Array(uvs), 2));
 
     function generate() {
       let decalVertices: DecalVertex[] = [];

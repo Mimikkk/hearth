@@ -133,7 +133,7 @@ export abstract class Curve<T extends Vec2 | Vec3> {
 
   computeFrenetFrames(
     segments: number,
-    closed?: number,
+    closed?: boolean,
   ): {
     tangents: Vec3[];
     normals: Vec3[];

@@ -60,7 +60,7 @@ const useAnimation = (item: Entity, animations: AnimationClip[]) => {
   return mixer;
 };
 const createPortals = () => {
-  const sphere = new SphereGeometry(0.3, 32, 16);
+  const sphere = new SphereGeometry({ radius: 0.3 });
   const createPortal = (backdropNode: Node, backdropAlphaNode?: Node) => {
     const distance = 1;
     const id = portals.children.length;

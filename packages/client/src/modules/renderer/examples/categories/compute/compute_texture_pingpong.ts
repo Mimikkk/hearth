@@ -29,7 +29,7 @@ const createStorageTexture = () => {
   return texture;
 };
 const createPlane = (texture: Texture): Mesh => {
-  const geometry = new PlaneGeometry(1, 1);
+  const geometry = new PlaneGeometry({ width: 1, height: 1 });
   const material = new MeshBasicMaterial({ color: 0xffffff, map: texture });
 
   return new Mesh(geometry, material);

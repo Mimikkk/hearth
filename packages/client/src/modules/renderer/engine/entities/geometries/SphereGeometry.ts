@@ -1,39 +1,13 @@
 import { Geometry } from '@modules/renderer/engine/core/Geometry.js';
 import { Attribute } from '@modules/renderer/engine/core/Attribute.js';
 import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
+import { Buffer } from '@modules/renderer/engine/core/Buffer.js';
 
 export class SphereGeometry extends Geometry {
-  declare parameters: {
-    radius: number;
-    widthSegments: number;
-    heightSegments: number;
-    phiStart: number;
-    phiLength: number;
-    thetaStart: number;
-    thetaLength: number;
-  };
-
-  constructor(
-    radius: number = 1,
-    widthSegments: number = 32,
-    heightSegments: number = 16,
-    phiStart: number = 0,
-    phiLength: number = Math.PI * 2,
-    thetaStart: number = 0,
-    thetaLength: number = Math.PI,
-  ) {
+  constructor(parameters?: SphereGeometryParameters) {
     super();
 
-    this.parameters = {
-      radius: radius,
-      widthSegments: widthSegments,
-      heightSegments: heightSegments,
-      phiStart: phiStart,
-      phiLength: phiLength,
-      thetaStart: thetaStart,
-      thetaLength: thetaLength,
-    };
-
+    let { radius, widthSegments, heightSegments, phiStart, phiLength, thetaStart, thetaLength } = configure(parameters);
     widthSegments = Math.max(3, Math.floor(widthSegments));
     heightSegments = Math.max(2, Math.floor(heightSegments));
 
@@ -82,7 +56,6 @@ export class SphereGeometry extends Geometry {
 
       grid.push(verticesRow);
     }
-
     for (let iy = 0; iy < heightSegments; iy++) {
       for (let ix = 0; ix < widthSegments; ix++) {
         const a = grid[iy][ix + 1];
@@ -96,8 +69,38 @@ export class SphereGeometry extends Geometry {
     }
 
     this.setIndex(indices);
-    this.setAttribute('position', new Attribute(new Float32Array(vertices), 3));
-    this.setAttribute('normal', new Attribute(new Float32Array(normals), 3));
-    this.setAttribute('uv', new Attribute(new Float32Array(uvs), 2));
+    this.setAttribute('position', Attribute.use(Buffer.f32(vertices, 3)));
+    this.setAttribute('normal', Attribute.use(Buffer.f32(normals, 3)));
+    this.setAttribute('uv', Attribute.use(Buffer.f32(uvs, 2)));
   }
 }
+
+export interface SphereGeometryParameters {
+  radius?: number;
+  widthSegments?: number;
+  heightSegments?: number;
+  phiStart?: number;
+  phiLength?: number;
+  thetaStart?: number;
+  thetaLength?: number;
+}
+
+export interface SphereGeometryConfiguration {
+  radius: number;
+  widthSegments: number;
+  heightSegments: number;
+  phiStart: number;
+  phiLength: number;
+  thetaStart: number;
+  thetaLength: number;
+}
+
+const configure = (parameters?: SphereGeometryParameters): SphereGeometryConfiguration => ({
+  radius: parameters?.radius ?? 1,
+  widthSegments: parameters?.widthSegments ?? 32,
+  heightSegments: parameters?.heightSegments ?? 16,
+  phiStart: parameters?.phiStart ?? 0,
+  phiLength: parameters?.phiLength ?? Math.PI * 2,
+  thetaStart: parameters?.thetaStart ?? 0,
+  thetaLength: parameters?.thetaLength ?? Math.PI,
+});

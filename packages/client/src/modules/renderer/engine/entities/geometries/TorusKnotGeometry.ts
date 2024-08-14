@@ -3,34 +3,10 @@ import { Attribute } from '@modules/renderer/engine/core/Attribute.js';
 import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
 
 export class TorusKnotGeometry extends Geometry {
-  declare parameters: {
-    radius: number;
-    tube: number;
-    tubularSegments: number;
-    radialSegments: number;
-    p: number;
-    q: number;
-  };
-
-  constructor(
-    radius: number = 1,
-    tube: number = 0.4,
-    tubularSegments: number = 64,
-    radialSegments: number = 8,
-    p: number = 2,
-    q: number = 3,
-  ) {
+  constructor(parameters?: TorusKnotGeometryParameters) {
     super();
 
-    this.parameters = {
-      radius: radius,
-      tube: tube,
-      tubularSegments: tubularSegments,
-      radialSegments: radialSegments,
-      p: p,
-      q: q,
-    };
-
+    let { p, q, radialSegments, radius, tube, tubularSegments } = configure(parameters);
     tubularSegments = Math.floor(tubularSegments);
     radialSegments = Math.floor(radialSegments);
 
@@ -112,3 +88,30 @@ export class TorusKnotGeometry extends Geometry {
     }
   }
 }
+
+export interface TorusKnotGeometryParameters {
+  radius?: number;
+  tube?: number;
+  tubularSegments?: number;
+  radialSegments?: number;
+  p?: number;
+  q?: number;
+}
+
+export interface TorusKnotGeometryConfiguration {
+  radius: number;
+  tube: number;
+  tubularSegments: number;
+  radialSegments: number;
+  p: number;
+  q: number;
+}
+
+const configure = (parameters?: TorusKnotGeometryParameters): TorusKnotGeometryConfiguration => ({
+  radius: parameters?.radius ?? 1,
+  tube: parameters?.tube ?? 0.4,
+  tubularSegments: parameters?.tubularSegments ?? 64,
+  radialSegments: parameters?.radialSegments ?? 8,
+  p: parameters?.p ?? 2,
+  q: parameters?.q ?? 3,
+});

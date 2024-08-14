@@ -3,61 +3,34 @@ import { Attribute } from '@modules/renderer/engine/core/Attribute.js';
 import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
 
 export class WireframeGeometry extends Geometry {
-  declare parameters: {
-    geometry: Geometry;
-  };
-
   constructor(geometry: Geometry) {
     super();
 
-    this.parameters = {
-      geometry: geometry,
-    };
+    const vertices = [];
+    const edges = new Set<string>();
 
-    if (geometry !== null) {
-      const vertices = [];
-      const edges = new Set<string>();
+    const start = Vec3.new();
+    const end = Vec3.new();
 
-      const start = Vec3.new();
-      const end = Vec3.new();
+    if (geometry.index !== null) {
+      const position = geometry.attributes.position;
+      const indices = geometry.index;
+      let groups = geometry.groups;
 
-      if (geometry.index !== null) {
-        const position = geometry.attributes.position;
-        const indices = geometry.index;
-        let groups = geometry.groups;
+      if (groups.length === 0) {
+        groups = [{ start: 0, count: indices.count, materialIndex: 0 }];
+      }
 
-        if (groups.length === 0) {
-          groups = [{ start: 0, count: indices.count, materialIndex: 0 }];
-        }
+      for (let o = 0, ol = groups.length; o < ol; ++o) {
+        const group = groups[o];
 
-        for (let o = 0, ol = groups.length; o < ol; ++o) {
-          const group = groups[o];
+        const groupStart = group.start;
+        const groupCount = group.count;
 
-          const groupStart = group.start;
-          const groupCount = group.count;
-
-          for (let i = groupStart, l = groupStart + groupCount; i < l; i += 3) {
-            for (let j = 0; j < 3; j++) {
-              const index1 = indices.getX(i + j);
-              const index2 = indices.getX(i + ((j + 1) % 3));
-
-              start.fromAttribute(position, index1);
-              end.fromAttribute(position, index2);
-
-              if (isUniqueEdge(start, end, edges) === true) {
-                vertices.push(start.x, start.y, start.z);
-                vertices.push(end.x, end.y, end.z);
-              }
-            }
-          }
-        }
-      } else {
-        const position = geometry.attributes.position;
-
-        for (let i = 0, l = position.count / 3; i < l; i++) {
+        for (let i = groupStart, l = groupStart + groupCount; i < l; i += 3) {
           for (let j = 0; j < 3; j++) {
-            const index1 = 3 * i + j;
-            const index2 = 3 * i + ((j + 1) % 3);
+            const index1 = indices.getX(i + j);
+            const index2 = indices.getX(i + ((j + 1) % 3));
 
             start.fromAttribute(position, index1);
             end.fromAttribute(position, index2);
@@ -69,9 +42,26 @@ export class WireframeGeometry extends Geometry {
           }
         }
       }
+    } else {
+      const position = geometry.attributes.position;
 
-      this.setAttribute('position', new Attribute(new Float32Array(vertices), 3));
+      for (let i = 0, l = position.count / 3; i < l; i++) {
+        for (let j = 0; j < 3; j++) {
+          const index1 = 3 * i + j;
+          const index2 = 3 * i + ((j + 1) % 3);
+
+          start.fromAttribute(position, index1);
+          end.fromAttribute(position, index2);
+
+          if (isUniqueEdge(start, end, edges) === true) {
+            vertices.push(start.x, start.y, start.z);
+            vertices.push(end.x, end.y, end.z);
+          }
+        }
+      }
     }
+
+    this.setAttribute('position', new Attribute(new Float32Array(vertices), 3));
   }
 }
 

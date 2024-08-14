@@ -6,9 +6,7 @@ import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
 import { Box3 } from '@modules/renderer/engine/math/Box3.js';
 import { Sphere } from '@modules/renderer/engine/math/Sphere.js';
 
-export class InstancedPointsGeometry extends Geometry {
-  declare isInstancedPointsGeometry: true;
-
+export class PointsGeometry extends Geometry {
   constructor() {
     super();
 
@@ -90,7 +88,5 @@ export class InstancedPointsGeometry extends Geometry {
     return this;
   }
 }
-
-InstancedPointsGeometry.prototype.isInstancedPointsGeometry = true;
 
 const _vector = Vec3.new();

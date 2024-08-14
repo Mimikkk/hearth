@@ -4,22 +4,9 @@ import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
 import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
 
 export class PolyhedronGeometry extends Geometry {
-  declare parameters: {
-    vertices: number[];
-    indices: number[];
-    radius: number;
-    detail: number;
-  };
-
-  constructor(vertices: number[] = [], indices: number[] = [], radius: number = 1, detail: number = 0) {
+  constructor(parameters: PolyhedronGeometryParameters) {
     super();
-
-    this.parameters = {
-      vertices: vertices,
-      indices: indices,
-      radius: radius,
-      detail: detail,
-    };
+    const { vertices, indices, radius, detail } = configure(parameters);
 
     const vertexBuffer: number[] = [];
     const uvBuffer: number[] = [];
@@ -205,3 +192,24 @@ export class PolyhedronGeometry extends Geometry {
     }
   }
 }
+
+export interface PolyhedronGeometryParameters {
+  vertices?: number[];
+  indices?: number[];
+  radius?: number;
+  detail?: number;
+}
+
+export interface PolyhedronGeometryConfiguration {
+  vertices: number[];
+  indices: number[];
+  radius: number;
+  detail: number;
+}
+
+export const configure = (parameters?: PolyhedronGeometryParameters): PolyhedronGeometryConfiguration => ({
+  vertices: parameters?.vertices ?? [],
+  indices: parameters?.indices ?? [],
+  radius: parameters?.radius ?? 1,
+  detail: parameters?.detail ?? 0,
+});

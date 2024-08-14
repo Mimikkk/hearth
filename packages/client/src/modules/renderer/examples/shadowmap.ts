@@ -106,7 +106,7 @@ async function init() {
   scene.add(pillar3);
   scene.add(pillar4);
 
-  const planeGeometry = new Engine.PlaneGeometry(200, 200);
+  const planeGeometry = new Engine.PlaneGeometry({ width: 200, height: 200 });
   const planeMaterial = new Engine.MeshPhongMaterial({
     color: 0x999999,
     shininess: 0,

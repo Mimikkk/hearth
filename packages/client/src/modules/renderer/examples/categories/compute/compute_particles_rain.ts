@@ -121,7 +121,7 @@ const createRainParticles = () => {
   material.depthTest = true;
   material.transparent = true;
 
-  const mesh = new Mesh(new PlaneGeometry(0.1, 2), material);
+  const mesh = new Mesh(new PlaneGeometry({ width: 0.1, height: 2 }), material);
   mesh.isInstancedMesh = true;
   mesh.count = maxCount / 2;
 
@@ -145,9 +145,9 @@ const createRainRipples = () => {
   material.depthTest = true;
   material.transparent = true;
 
-  const surface = new PlaneGeometry(2.5, 2.5).rotateX(-Math.PI / 2);
-  const xRipple = new PlaneGeometry(1, 2).rotateY(-Math.PI / 2);
-  const zRipple = new PlaneGeometry(1, 2);
+  const surface = new PlaneGeometry({ width: 2.5, height: 2.5 }).rotateX(-Math.PI / 2);
+  const xRipple = new PlaneGeometry({ width: 1, height: 2 }).rotateY(-Math.PI / 2);
+  const zRipple = new PlaneGeometry({ width: 1, height: 2 });
 
   const geometry = GeometryUtils.mergeGeometries([surface, xRipple, zRipple]);
 
@@ -158,7 +158,7 @@ const createRainRipples = () => {
   return mesh;
 };
 const createFloor = () => {
-  const geometry = new PlaneGeometry(1000, 1000).rotateX(-Math.PI / 2);
+  const geometry = new PlaneGeometry({ width: 1000, height: 1000 }).rotateX(-Math.PI / 2);
   const material = new MeshBasicMaterial({ color: 0x050505 });
 
   return new Mesh(geometry, material);

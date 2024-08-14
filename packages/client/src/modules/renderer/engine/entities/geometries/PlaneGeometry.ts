@@ -2,22 +2,9 @@ import { Geometry } from '@modules/renderer/engine/core/Geometry.js';
 import { Attribute } from '@modules/renderer/engine/core/Attribute.js';
 
 export class PlaneGeometry extends Geometry {
-  declare parameters: {
-    width: number;
-    height: number;
-    widthSegments: number;
-    heightSegments: number;
-  };
-
-  constructor(width = 1, height = 1, widthSegments = 1, heightSegments = 1) {
+  constructor(parameters?: PlaneGeometryParameters) {
     super();
-
-    this.parameters = {
-      width: width,
-      height: height,
-      widthSegments: widthSegments,
-      heightSegments: heightSegments,
-    };
+    const { width, height, widthSegments, heightSegments } = configure(parameters);
 
     const width_half = width / 2;
     const height_half = height / 2;
@@ -69,3 +56,24 @@ export class PlaneGeometry extends Geometry {
     this.setAttribute('uv', new Attribute(new Float32Array(uvs), 2));
   }
 }
+
+export interface PlaneGeometryParameters {
+  width?: number;
+  height?: number;
+  widthSegments?: number;
+  heightSegments?: number;
+}
+
+export interface PlaneGeometryConfiguration {
+  width: number;
+  height: number;
+  widthSegments: number;
+  heightSegments: number;
+}
+
+export const configure = (parameters?: PlaneGeometryParameters): PlaneGeometryConfiguration => ({
+  width: parameters?.width ?? 1,
+  height: parameters?.height ?? 1,
+  widthSegments: parameters?.widthSegments ?? 1,
+  heightSegments: parameters?.heightSegments ?? 1,
+});

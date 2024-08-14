@@ -50,8 +50,8 @@ const createGround = () => {
 
 const camera = createCamera();
 
-const center = createSphere(new SphereGeometry(0.1, 32, 24), 0, 0, 0);
-const sphere = createSphere(new SphereGeometry(0.25, 32, 24), 1, 0, 0);
+const center = createSphere(new SphereGeometry({ radius: 0.1 }), 0, 0, 0);
+const sphere = createSphere(new SphereGeometry({ radius: 0.25 }), 1, 0, 0);
 const ground = createGround();
 
 const scene = createScene();

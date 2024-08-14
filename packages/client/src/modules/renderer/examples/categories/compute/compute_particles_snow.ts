@@ -138,7 +138,7 @@ const createParticles = (posBuffer: StorageBufferNode, layer: number) => {
   return particles;
 };
 const createFloor = () => {
-  const geometry = new PlaneGeometry(100, 100).rotateX(-Math.PI / 2);
+  const geometry = new PlaneGeometry({ width: 100, height: 100 }).rotateX(-Math.PI / 2);
   const material = new MeshStandardMaterial({
     color: 0x0c1e1e,
     roughness: 0.5,

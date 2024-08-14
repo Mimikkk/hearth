@@ -56,7 +56,7 @@ const createTexturedPlane = (storageTexture: Texture) => {
   const material = new MeshBasicNodeMaterial({ color: 0x00ff00 });
   material.colorNode = texture(storageTexture);
 
-  return new Mesh(new PlaneGeometry(1, 1), material);
+  return new Mesh(new PlaneGeometry({ width: 1, height: 1 }), material);
 };
 
 const [storageTexture, updateTexture] = createComputeTexture();

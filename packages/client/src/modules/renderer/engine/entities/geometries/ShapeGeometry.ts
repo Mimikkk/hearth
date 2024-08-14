@@ -5,21 +5,9 @@ import { ShapeUtils } from '@modules/renderer/engine/utils/ShapeUtils.js';
 import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
 
 export class ShapeGeometry extends Geometry {
-  declare parameters: {
-    shapes: Shape | Shape[];
-    curveSegments: number;
-  };
-
-  constructor(
-    shapes: Shape | Shape[] = new Shape([Vec2.new(0, 0.5), Vec2.new(-0.5, -0.5), Vec2.new(0.5, -0.5)]),
-    curveSegments: number = 12,
-  ) {
+  constructor(parameters?: ShapeGeometryParameters) {
     super();
-
-    this.parameters = {
-      shapes: shapes,
-      curveSegments: curveSegments,
-    };
+    const { shapes, curveSegments } = configure(parameters);
 
     const indices: number[] = [];
     const vertices: number[] = [];
@@ -94,3 +82,18 @@ export class ShapeGeometry extends Geometry {
     }
   }
 }
+
+export interface ShapeGeometryParameters {
+  shapes: Shape | Shape[];
+  curveSegments: number;
+}
+
+export interface ShapeGeometryConfiguration {
+  shapes: Shape | Shape[];
+  curveSegments: number;
+}
+
+const configure = (parameters?: ShapeGeometryParameters): ShapeGeometryConfiguration => ({
+  shapes: parameters?.shapes ?? new Shape([Vec2.new(0, 0.5), Vec2.new(-0.5, -0.5), Vec2.new(0.5, -0.5)]),
+  curveSegments: parameters?.curveSegments ?? 12,
+});

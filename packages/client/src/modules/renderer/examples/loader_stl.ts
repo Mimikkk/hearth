@@ -30,7 +30,10 @@ async function init() {
   scene.background = Color.new(0x72645b);
   scene.fog = new Fog(0x72645b, 2, 15);
 
-  const plane = new Mesh(new PlaneGeometry(40, 40), new MeshPhongMaterial({ color: 0xcbcbcb, specular: 0x474747 }));
+  const plane = new Mesh(
+    new PlaneGeometry({ width: 40, height: 40 }),
+    new MeshPhongMaterial({ color: 0xcbcbcb, specular: 0x474747 }),
+  );
   plane.setRotationX(-Math.PI / 2);
   plane.position.y = -0.5;
   scene.add(plane);

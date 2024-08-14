@@ -28,55 +28,23 @@ import { Shape } from '@modules/renderer/engine/math/curves/Shape.js';
 import { ShapeUtils } from '@modules/renderer/engine/utils/ShapeUtils.js';
 import { Curve } from '@modules/renderer/engine/math/curves/Curve.js';
 
-export interface UVGenerator {
-  generateTopUV(geometry: ExtrudeGeometry, vertices: number[], indexA: number, indexB: number, indexC: number): Vec2[];
-
-  generateSideWallUV(
-    geometry: ExtrudeGeometry,
-    vertices: number[],
-    indexA: number,
-    indexB: number,
-    indexC: number,
-    indexD: number,
-  ): Vec2[];
-}
-
-export interface ExtrudeGeometryOptions {
-  curveSegments?: number;
-  steps?: number;
-  depth?: number;
-  bevelEnabled?: boolean;
-  bevelThickness?: number;
-  bevelSize?: number;
-  bevelOffset?: number;
-  bevelSegments?: number;
-  extrudePath?: Curve<Vec3>;
-  UVGenerator?: UVGenerator;
-}
-
 export class ExtrudeGeometry extends Geometry {
-  declare parameters: {
-    shapes: Shape | Shape[];
-    options: ExtrudeGeometryOptions;
-  };
-
-  constructor(
-    shapes: Shape | Shape[] = new Shape([
-      Vec2.new(0.5, 0.5),
-      Vec2.new(-0.5, 0.5),
-      Vec2.new(-0.5, -0.5),
-      Vec2.new(0.5, -0.5),
-    ]),
-    options: ExtrudeGeometryOptions = {},
-  ) {
+  constructor(parameters: ExtrudeGeometryParameters) {
     super();
 
-    this.parameters = {
-      shapes: shapes,
-      options: options,
-    };
-
-    shapes = Array.isArray(shapes) ? shapes : [shapes];
+    let {
+      shapes,
+      bevelEnabled,
+      bevelOffset,
+      bevelSegments,
+      bevelSize,
+      bevelThickness,
+      curveSegments,
+      depth,
+      extrudePath,
+      steps,
+      UVGenerator: uvgen,
+    } = configure(parameters);
 
     const scope = this;
 
@@ -95,20 +63,6 @@ export class ExtrudeGeometry extends Geometry {
 
     function addShape(shape: Shape) {
       const placeholder: number[] = [];
-
-      const curveSegments = options.curveSegments !== undefined ? options.curveSegments : 12;
-      const steps = options.steps !== undefined ? options.steps : 1;
-      const depth = options.depth !== undefined ? options.depth : 1;
-
-      let bevelEnabled = options.bevelEnabled !== undefined ? options.bevelEnabled : true;
-      let bevelThickness = options.bevelThickness !== undefined ? options.bevelThickness : 0.2;
-      let bevelSize = options.bevelSize !== undefined ? options.bevelSize : bevelThickness - 0.1;
-      let bevelOffset = options.bevelOffset !== undefined ? options.bevelOffset : 0;
-      let bevelSegments = options.bevelSegments !== undefined ? options.bevelSegments : 3;
-
-      const extrudePath = options.extrudePath;
-
-      const uvgen = options.UVGenerator !== undefined ? options.UVGenerator : WorldUVGenerator;
 
       let extrudePts,
         extrudeByPath = false;
@@ -493,6 +447,19 @@ export class ExtrudeGeometry extends Geometry {
   }
 }
 
+export interface UVGenerator {
+  generateTopUV(geometry: ExtrudeGeometry, vertices: number[], indexA: number, indexB: number, indexC: number): Vec2[];
+
+  generateSideWallUV(
+    geometry: ExtrudeGeometry,
+    vertices: number[],
+    indexA: number,
+    indexB: number,
+    indexC: number,
+    indexD: number,
+  ): Vec2[];
+}
+
 const WorldUVGenerator: UVGenerator = {
   generateTopUV(geometry, vertices, indexA, indexB, indexC) {
     const a_x = vertices[indexA * 3];
@@ -526,3 +493,45 @@ const WorldUVGenerator: UVGenerator = {
     }
   },
 };
+
+export interface ExtrudeGeometryParameters {
+  shapes: Shape | Shape[];
+  curveSegments?: number;
+  steps?: number;
+  depth?: number;
+  bevelEnabled?: boolean;
+  bevelThickness?: number;
+  bevelSize?: number;
+  bevelOffset?: number;
+  bevelSegments?: number;
+  extrudePath?: Curve<Vec3>;
+  UVGenerator?: UVGenerator;
+}
+
+export interface ExtrudeGeometryConfiguration {
+  shapes: Shape[];
+  curveSegments: number;
+  steps: number;
+  depth: number;
+  bevelEnabled: boolean;
+  bevelThickness: number;
+  bevelSize: number;
+  bevelOffset: number;
+  bevelSegments: number;
+  extrudePath?: Curve<Vec3>;
+  UVGenerator: UVGenerator;
+}
+
+const configure = (parameters: ExtrudeGeometryParameters): ExtrudeGeometryConfiguration => ({
+  shapes: Array.isArray(parameters.shapes) ? parameters.shapes : [parameters.shapes],
+  curveSegments: parameters.curveSegments ?? 12,
+  steps: parameters.steps ?? 1,
+  depth: parameters.depth ?? 1,
+  bevelEnabled: parameters.bevelEnabled ?? true,
+  bevelThickness: parameters.bevelThickness ?? 0.2,
+  bevelSize: parameters.bevelSize ?? (parameters.bevelThickness ?? 0.2) - 0.1,
+  bevelOffset: parameters.bevelOffset ?? 0,
+  bevelSegments: parameters.bevelSegments ?? 3,
+  extrudePath: parameters.extrudePath,
+  UVGenerator: parameters.UVGenerator ?? WorldUVGenerator,
+});

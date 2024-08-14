@@ -28,7 +28,7 @@ const loadCarbon = async () => {
   diffuse.minFilter = GPUFilterModeType.Linear;
   diffuse.useMipmap = false;
 
-  return new Mesh(new PlaneGeometry(2, 2), new MeshBasicMaterial({ map: diffuse }));
+  return new Mesh(new PlaneGeometry({ width: 2, height: 2 }), new MeshBasicMaterial({ map: diffuse }));
 };
 
 const carbon = await loadCarbon();

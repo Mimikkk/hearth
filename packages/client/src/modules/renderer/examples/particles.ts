@@ -64,7 +64,7 @@ async function init() {
   smokeNodeMaterial.depthWrite = false;
   smokeNodeMaterial.transparent = true;
 
-  const smokeInstancedSprite = new Engine.Mesh(new Engine.PlaneGeometry(1, 1), smokeNodeMaterial);
+  const smokeInstancedSprite = new Engine.Mesh(new Engine.PlaneGeometry({ width: 1, height: 1 }), smokeNodeMaterial);
   smokeInstancedSprite.scale.setScalar(400);
   smokeInstancedSprite.isInstancedMesh = true;
   smokeInstancedSprite.count = 2000;
@@ -79,7 +79,7 @@ async function init() {
   fireNodeMaterial.transparent = true;
   fireNodeMaterial.depthWrite = false;
 
-  const fireInstancedSprite = new Engine.Mesh(new Engine.PlaneGeometry(1, 1), fireNodeMaterial);
+  const fireInstancedSprite = new Engine.Mesh(new Engine.PlaneGeometry({ width: 1, height: 1 }), fireNodeMaterial);
   fireInstancedSprite.scale.setScalar(400);
   fireInstancedSprite.isInstancedMesh = true;
   fireInstancedSprite.count = 100;

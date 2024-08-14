@@ -58,7 +58,7 @@ async function init() {
 
   const material = new Engine.MeshPhongMaterial({ color: 0x808080 });
 
-  const geometry = new Engine.PlaneGeometry(200, 200);
+  const geometry = new Engine.PlaneGeometry({ width: 200, height: 200 });
 
   const mesh = new Engine.Mesh(geometry, material);
   mesh.setRotationX(-Math.PI * 0.5);

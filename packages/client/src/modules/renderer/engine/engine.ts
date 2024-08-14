@@ -73,9 +73,6 @@ export * from './core/Clock.js';
 export * from './core/Geometry.js';
 export * from './core/Raycaster.js';
 export * from './core/RaycastLayers.js';
-// physics
-export * from './physics/RapierPhysics.js';
-export * from './physics/AmmoPhysics.js';
 // entities
 export * from './entities/Group.js';
 export * from './entities/Points.js';
@@ -115,7 +112,7 @@ export * from './entities/geometries/DodecahedronGeometry.js';
 export * from './entities/geometries/EdgesGeometry.js';
 export * from './entities/geometries/ExtrudeGeometry.js';
 export * from './entities/geometries/IcosahedronGeometry.js';
-export * from './entities/geometries/InstancedPointsGeometry.js';
+export * from './entities/geometries/PointsGeometry.js';
 export * from './entities/geometries/LatheGeometry.js';
 export * from './entities/geometries/OctahedronGeometry.js';
 export * from './entities/geometries/ParametricGeometry.js';

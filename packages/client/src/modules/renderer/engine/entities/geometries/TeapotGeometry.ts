@@ -5,15 +5,7 @@ import { Vec4 } from '@modules/renderer/engine/math/Vec4.js';
 import { Attribute } from '@modules/renderer/engine/core/Attribute.js';
 
 export class TeapotGeometry extends Geometry {
-  constructor(
-    size: number = 50,
-    segments: number = 10,
-    bottom: boolean = true,
-    lid: boolean = true,
-    body: boolean = true,
-    fitLid: boolean = true,
-    blinn: boolean = true,
-  ) {
+  constructor(parameters?: TeapotGeometryParameters) {
     const teapotPatches = [
       0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 3, 16, 17, 18, 7, 19, 20, 21, 11, 22, 23, 24, 15, 25, 26,
       27, 18, 28, 29, 30, 21, 31, 32, 33, 24, 34, 35, 36, 27, 37, 38, 39, 30, 40, 41, 0, 33, 42, 43, 4, 36, 44, 45, 8,
@@ -37,7 +29,6 @@ export class TeapotGeometry extends Geometry {
       275, 276, 273, 277, 278, 279, 113, 112, 111, 104, 265, 265, 265, 265, 276, 280, 281, 282, 279, 283, 284, 285, 104,
       103, 102, 95, 265, 265, 265, 265, 282, 286, 287, 266, 285, 288, 289, 270, 95, 94, 93, 92,
     ];
-
     const teapotVertices = [
       1.4, 0, 2.4, 1.4, -0.784, 2.4, 0.784, -1.4, 2.4, 0, -1.4, 2.4, 1.3375, 0, 2.53125, 1.3375, -0.749, 2.53125, 0.749,
       -1.3375, 2.53125, 0, -1.3375, 2.53125, 1.4375, 0, 2.53125, 1.4375, -0.805, 2.53125, 0.805, -1.4375, 2.53125, 0,
@@ -85,8 +76,8 @@ export class TeapotGeometry extends Geometry {
       0.075, -0.84, -1.5, 0.075, 0, -1.5, 0.075, 0.798, -1.425, 0, 1.425, -0.798, 0, 0.84, -1.5, 0.075, 1.5, -0.84,
       0.075,
     ];
-
     super();
+    let { blinn, body, bottom, fitLid, lid, segments, size } = configure(parameters);
 
     segments = Math.max(2, Math.floor(segments));
 
@@ -306,3 +297,35 @@ export class TeapotGeometry extends Geometry {
     this.calcBoundSphere();
   }
 }
+
+export interface TeapotGeometryParameters {
+  size?: number;
+  segments?: number;
+  bottom?: boolean;
+  body?: boolean;
+  fitLid?: boolean;
+  blinn?: boolean;
+  lid?: boolean;
+}
+
+export interface TeapotGeometryConfiguration {
+  size: number;
+  segments: number;
+  bottom: boolean;
+  body: boolean;
+  fitLid: boolean;
+  blinn: boolean;
+  lid: boolean;
+}
+
+const configure = (parameters?: TeapotGeometryParameters): TeapotGeometryConfiguration => {
+  return {
+    size: parameters?.size ?? 50,
+    segments: parameters?.segments ?? 10,
+    bottom: parameters?.bottom ?? true,
+    body: parameters?.body ?? true,
+    lid: parameters?.lid ?? true,
+    fitLid: parameters?.fitLid ?? true,
+    blinn: parameters?.blinn ?? true,
+  };
+};

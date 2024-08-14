@@ -129,8 +129,8 @@ describe('Math - Box3', () => {
 
   it('fromObject/precise', () => {
     const box = Box3.fromParams(0, 0, 0, 1, 1, 1);
-    const object = new Mesh(new SphereGeometry(1, 32, 32));
-    const child = new Mesh(new SphereGeometry(2, 32, 32));
+    const object = new Mesh(new SphereGeometry({ radius: 1 }));
+    const child = new Mesh(new SphereGeometry({ radius: 2 }));
     object.add(child);
 
     const c = Box3.fromParams(0, 0, 0, 1, 1, 1);

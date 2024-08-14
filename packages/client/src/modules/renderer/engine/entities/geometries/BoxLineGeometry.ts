@@ -2,15 +2,9 @@ import { Geometry } from '@modules/renderer/engine/core/Geometry.js';
 import { Attribute } from '@modules/renderer/engine/core/Attribute.js';
 
 export class BoxLineGeometry extends Geometry {
-  constructor(
-    width: number = 1,
-    height: number = 1,
-    depth: number = 1,
-    widthSegments: number = 1,
-    heightSegments: number = 1,
-    depthSegments: number = 1,
-  ) {
+  constructor(parameters?: BoxLineGeometryParameters) {
     super();
+    let { width, height, depth, widthSegments, heightSegments, depthSegments } = configure(parameters);
 
     widthSegments = Math.floor(widthSegments);
     heightSegments = Math.floor(heightSegments);
@@ -60,3 +54,30 @@ export class BoxLineGeometry extends Geometry {
     this.setAttribute('position', new Attribute(new Float32Array(vertices), 3));
   }
 }
+
+export interface BoxLineGeometryParameters {
+  width?: number;
+  height?: number;
+  depth?: number;
+  widthSegments?: number;
+  heightSegments?: number;
+  depthSegments?: number;
+}
+
+export interface BoxLineGeometryConfiguration {
+  width: number;
+  height: number;
+  depth: number;
+  widthSegments: number;
+  heightSegments: number;
+  depthSegments: number;
+}
+
+const configure = (parameters?: BoxLineGeometryParameters): BoxLineGeometryConfiguration => ({
+  width: parameters?.width ?? 1,
+  height: parameters?.height ?? 1,
+  depth: parameters?.depth ?? 1,
+  widthSegments: parameters?.widthSegments ?? 1,
+  heightSegments: parameters?.heightSegments ?? 1,
+  depthSegments: parameters?.depthSegments ?? 1,
+});

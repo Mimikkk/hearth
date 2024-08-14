@@ -65,7 +65,7 @@ const clock = new Clock();
 const points = new Group();
 const spheres = new Group();
 
-const geometry = new SphereGeometry(0.25, 32, 24);
+const geometry = new SphereGeometry({ radius: 0.25 });
 
 const smb = SpriteMaterialBuilder.create({ height: 256, width: 256 }).addCircle({ radius: 128 }).addText('+');
 

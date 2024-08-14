@@ -44,7 +44,7 @@ async function init() {
   camera.add(cameraLight);
   scene.add(camera);
 
-  const geometry = new Engine.PlaneGeometry(1000, 1000);
+  const geometry = new Engine.PlaneGeometry({ width: 1000, height: 2 });
   geometry.rotateX(-Math.PI / 2);
 
   const plane = new Engine.Mesh(geometry, new Engine.MeshBasicMaterial({ color: 0x000000, visible: true }));

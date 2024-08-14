@@ -66,7 +66,7 @@ async function init() {
   });
 
   const plane = new Engine.Mesh(
-    new Engine.PlaneGeometry(10000, 10000),
+    new Engine.PlaneGeometry({ width: 10000, height: 10000 }),
     new Engine.MeshBasicMaterial({ color: 0xffffff, opacity: 0.5, transparent: true }),
   );
   plane.position.y = 100;

@@ -33,7 +33,10 @@ function getUv(
 }
 
 export class RoundedBoxGeometry extends BoxGeometry {
-  constructor(width: number = 1, height: number = 1, depth: number = 1, segments: number = 2, radius: number = 0.1) {
+  constructor(parameters?: RoundedBoxGeometryParameters) {
+    const config = configure(parameters);
+    let { width, height, depth, segments, radius } = config;
+
     segments = segments * 2 + 1;
 
     radius = Math.min(width / 2, height / 2, depth / 2, radius);
@@ -120,3 +123,27 @@ export class RoundedBoxGeometry extends BoxGeometry {
     }
   }
 }
+
+export interface RoundedBoxGeometryParameters {
+  width?: number;
+  height?: number;
+  depth?: number;
+  segments?: number;
+  radius?: number;
+}
+
+export interface RoundedBoxGeometryConfiguration {
+  width: number;
+  height: number;
+  depth: number;
+  segments: number;
+  radius: number;
+}
+
+export const configure = (parameters?: RoundedBoxGeometryParameters): RoundedBoxGeometryConfiguration => ({
+  width: parameters?.width ?? 1,
+  height: parameters?.height ?? 1,
+  depth: parameters?.depth ?? 1,
+  segments: parameters?.segments ?? 2,
+  radius: parameters?.radius ?? 0.1,
+});

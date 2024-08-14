@@ -6,40 +6,11 @@ import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
 import { Curve } from '@modules/renderer/engine/math/curves/Curve.js';
 
 export class TubeGeometry extends Geometry {
-  declare parameters: {
-    path: Curve<Vec3>;
-    tubularSegments: number;
-    radius: number;
-    radialSegments: number;
-    closed: boolean;
-  };
-
-  tangents: Vec3[];
-  normals: Vec3[];
-  binormals: Vec3[];
-
-  constructor(
-    path: QuadraticBezierCurve3 = new QuadraticBezierCurve3(Vec3.new(-1, -1, 0), Vec3.new(-1, 1, 0), Vec3.new(1, 1, 0)),
-    tubularSegments: number = 64,
-    radius: number = 1,
-    radialSegments: number = 8,
-    closed: boolean = false,
-  ) {
+  constructor(parameters?: TubeGeometryParameters) {
     super();
 
-    this.parameters = {
-      path: path,
-      tubularSegments: tubularSegments,
-      radius: radius,
-      radialSegments: radialSegments,
-      closed: closed,
-    };
-
+    let { path, tubularSegments, radius, radialSegments, closed } = configure(parameters);
     const frames = path.computeFrenetFrames(tubularSegments, closed);
-
-    this.tangents = frames.tangents;
-    this.normals = frames.normals;
-    this.binormals = frames.binormals;
 
     const vertex = Vec3.new();
     const normal = Vec3.new();
@@ -123,3 +94,27 @@ export class TubeGeometry extends Geometry {
     }
   }
 }
+
+export interface TubeGeometryParameters {
+  path?: Curve<Vec3>;
+  tubularSegments?: number;
+  radius?: number;
+  radialSegments?: number;
+  closed?: boolean;
+}
+
+export interface TubeGeometryConfiguration {
+  path: Curve<Vec3>;
+  tubularSegments: number;
+  radius: number;
+  radialSegments: number;
+  closed: boolean;
+}
+
+const configure = (parameters?: TubeGeometryParameters): TubeGeometryConfiguration => ({
+  path: parameters?.path ?? new QuadraticBezierCurve3(Vec3.new(-1, -1, 0), Vec3.new(-1, 1, 0), Vec3.new(1, 1, 0)),
+  tubularSegments: parameters?.tubularSegments ?? 64,
+  radius: parameters?.radius ?? 1,
+  radialSegments: parameters?.radialSegments ?? 8,
+  closed: parameters?.closed ?? false,
+});

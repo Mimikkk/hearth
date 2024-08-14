@@ -25,7 +25,7 @@ import { MeshPhongMaterial } from '@modules/renderer/engine/entities/materials/M
 import { Mesh } from '@modules/renderer/engine/entities/Mesh.js';
 
 const createGround = () => {
-  const geometry = new PlaneGeometry(200, 200);
+  const geometry = new PlaneGeometry({ width: 200, height: 200 });
   const material = new MeshPhongMaterial({ color: 0x999999 });
   const mesh = new Mesh(geometry, material);
 

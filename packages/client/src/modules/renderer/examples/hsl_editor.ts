@@ -35,7 +35,7 @@ scene.background = Color.new(0x222222);
 const material = new NodeMaterial();
 material.fragmentNode = vec4(0, 0, 0, 1);
 
-const mesh = new Mesh(new PlaneGeometry(1, 1), material);
+const mesh = new Mesh(new PlaneGeometry({ width: 1, height: 1 }), material);
 scene.add(mesh);
 
 const options: {

@@ -4,33 +4,10 @@ import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
 import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
 
 export class RingGeometry extends Geometry {
-  declare parameters: {
-    innerRadius: number;
-    outerRadius: number;
-    thetaSegments: number;
-    phiSegments: number;
-    thetaStart: number;
-    thetaLength: number;
-  };
-
-  constructor(
-    innerRadius: number = 0.5,
-    outerRadius: number = 1,
-    thetaSegments: number = 32,
-    phiSegments: number = 1,
-    thetaStart: number = 0,
-    thetaLength: number = Math.PI * 2,
-  ) {
+  constructor(parameters?: RingGeometryParameters) {
     super();
 
-    this.parameters = {
-      innerRadius: innerRadius,
-      outerRadius: outerRadius,
-      thetaSegments: thetaSegments,
-      phiSegments: phiSegments,
-      thetaStart: thetaStart,
-      thetaLength: thetaLength,
-    };
+    let { innerRadius, outerRadius, thetaSegments, phiSegments, thetaStart, thetaLength } = configure(parameters);
 
     thetaSegments = Math.max(3, thetaSegments);
     phiSegments = Math.max(1, phiSegments);
@@ -87,3 +64,30 @@ export class RingGeometry extends Geometry {
     this.setAttribute('uv', new Attribute(new Float32Array(uvs), 2));
   }
 }
+
+export interface RingGeometryParameters {
+  innerRadius?: number;
+  outerRadius?: number;
+  thetaSegments?: number;
+  phiSegments?: number;
+  thetaStart?: number;
+  thetaLength?: number;
+}
+
+export interface RingGeometryConfiguration {
+  innerRadius: number;
+  outerRadius: number;
+  thetaSegments: number;
+  phiSegments: number;
+  thetaStart: number;
+  thetaLength: number;
+}
+
+export const configure = (parameters?: RingGeometryParameters): RingGeometryConfiguration => ({
+  innerRadius: parameters?.innerRadius ?? 0.5,
+  outerRadius: parameters?.outerRadius ?? 1,
+  thetaSegments: parameters?.thetaSegments ?? 32,
+  phiSegments: parameters?.phiSegments ?? 1,
+  thetaStart: parameters?.thetaStart ?? 0,
+  thetaLength: parameters?.thetaLength ?? Math.PI * 2,
+});

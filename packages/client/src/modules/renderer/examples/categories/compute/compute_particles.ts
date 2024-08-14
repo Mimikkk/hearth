@@ -62,14 +62,14 @@ const createParticle = async () => {
   material.depthTest = true;
   material.transparent = true;
 
-  const particles = new InstancedMesh(new PlaneGeometry(1, 1), material, count);
+  const particles = new InstancedMesh(new PlaneGeometry(), material, count);
   particles.useFrustumCull = false;
 
   return particles;
 };
 const createGrid = () => new GridVisualizer({ size: 100, divisions: 40, centerColor: 0x222222, lineColor: 0x222222 });
 const createPlane = () => {
-  const geometry = new PlaneGeometry(1000, 1000).rotateX(-Math.PI / 2);
+  const geometry = new PlaneGeometry({ width: 1000, height: 1000 }).rotateX(-Math.PI / 2);
   const material = new MeshBasicMaterial({ visible: false });
 
   return new Mesh(geometry, material);

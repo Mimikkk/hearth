@@ -6,7 +6,6 @@ import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 import { GUI } from 'lil-gui';
 
 import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitControls.js';
-import { Side } from '@modules/renderer/engine/engine.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let camera, scene, hearth, startTime, object;
@@ -72,7 +71,7 @@ async function init() {
   scene.add(object);
 
   const ground = new Engine.Mesh(
-    new Engine.PlaneGeometry(9, 9, 1, 1),
+    new Engine.PlaneGeometry({ width: 9, height: 9, heightSegments: 1, widthSegments: 1 }),
     new MeshPhongNodeMaterial({ color: 0xa0adaf, shininess: 150 }),
   );
 

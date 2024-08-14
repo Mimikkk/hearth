@@ -79,7 +79,7 @@ async function init() {
     document.getElementById('val_right').innerHTML = 'not supported';
   }
 
-  const geometry = new Engine.PlaneGeometry(100, 100);
+  const geometry = new Engine.PlaneGeometry({ width: 100, height: 100 });
 
   const mesh1 = new Engine.Mesh(geometry, material1);
   mesh1.setRotationX(-Math.PI / 2);

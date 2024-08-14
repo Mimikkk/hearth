@@ -11,9 +11,9 @@ export class CircleGeometry extends Geometry {
     thetaLength: number;
   };
 
-  constructor(radius = 1, segments = 32, thetaStart = 0, thetaLength = Math.PI * 2) {
+  constructor(parameters?: CircleGeometryParameters) {
     super();
-    this.parameters = { radius, segments, thetaStart, thetaLength };
+    let { radius, segments, thetaStart, thetaLength } = configure(parameters);
     segments = Math.max(3, segments);
 
     const indices: number[] = [];
@@ -54,3 +54,24 @@ export class CircleGeometry extends Geometry {
     this.setAttribute('uv', new Attribute(new Float32Array(uvs), 2));
   }
 }
+
+export interface CircleGeometryParameters {
+  radius?: number;
+  segments?: number;
+  thetaStart?: number;
+  thetaLength?: number;
+}
+
+export interface CircleGeometryConfiguration {
+  radius: number;
+  segments: number;
+  thetaStart: number;
+  thetaLength: number;
+}
+
+const configure = (parameters?: CircleGeometryParameters): CircleGeometryConfiguration => ({
+  radius: parameters?.radius ?? 1,
+  segments: parameters?.segments ?? 32,
+  thetaStart: parameters?.thetaStart ?? 0,
+  thetaLength: parameters?.thetaLength ?? Math.PI * 2,
+});

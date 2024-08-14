@@ -65,7 +65,7 @@ export class HearthBackground extends DataMap<any, any> {
         nodeMaterial.fragmentNode = backgroundMeshNode;
 
         sceneData.backgroundMeshNode = backgroundMeshNode;
-        sceneData.backgroundMesh = backgroundMesh = new Mesh(new SphereGeometry(1, 32, 32), nodeMaterial);
+        sceneData.backgroundMesh = backgroundMesh = new Mesh(new SphereGeometry(), nodeMaterial);
         backgroundMesh.useFrustumCull = false;
 
         backgroundMesh.onBeforeRender = function (hearth: Hearth, scene: Scene, camera: Camera) {

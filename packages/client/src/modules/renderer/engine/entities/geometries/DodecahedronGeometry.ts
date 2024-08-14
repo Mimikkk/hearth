@@ -1,15 +1,11 @@
 import { PolyhedronGeometry } from './PolyhedronGeometry.js';
 
 export class DodecahedronGeometry extends PolyhedronGeometry {
-  declare parameters: {
-    radius: number;
-    detail: number;
-  };
-
-  constructor(radius: number = 1, detail: number = 0) {
+  constructor(parameters?: DodecahedronGeometryParameters) {
     const t = (1 + Math.sqrt(5)) / 2;
     const r = 1 / t;
 
+    let { radius, detail } = configure(parameters);
     const vertices: number[] = [
       -1,
       -1,
@@ -83,8 +79,21 @@ export class DodecahedronGeometry extends PolyhedronGeometry {
       17, 1, 12, 14, 1, 14, 5, 1, 5, 9,
     ];
 
-    super(vertices, indices, radius, detail);
-
-    this.parameters = { radius, detail };
+    super({ vertices, indices, radius, detail });
   }
 }
+
+export interface DodecahedronGeometryParameters {
+  radius?: number;
+  detail?: number;
+}
+
+export interface DodecahedronGeometryConfiguration {
+  radius: number;
+  detail: number;
+}
+
+export const configure = (parameters?: DodecahedronGeometryParameters): DodecahedronGeometryConfiguration => ({
+  radius: parameters?.radius ?? 1,
+  detail: parameters?.detail ?? 0,
+});

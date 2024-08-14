@@ -3,36 +3,10 @@ import { Attribute } from '@modules/renderer/engine/core/Attribute.js';
 import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
 
 export class BoxGeometry extends Geometry {
-  declare parameters: {
-    width: number;
-    height: number;
-    depth: number;
-    widthSegments: number;
-    heightSegments: number;
-    depthSegments: number;
-  };
-
-  constructor(
-    width: number = 1,
-    height: number = 1,
-    depth: number = 1,
-    widthSegments: number = 1,
-    heightSegments: number = 1,
-    depthSegments: number = 1,
-  ) {
+  constructor(parameters?: BoxGeometryParameters) {
     super();
-
-    this.parameters = {
-      width: width,
-      height: height,
-      depth: depth,
-      widthSegments: widthSegments,
-      heightSegments: heightSegments,
-      depthSegments: depthSegments,
-    };
-
+    let { width, height, depth, widthSegments, heightSegments, depthSegments } = configure(parameters);
     const scope = this;
-
     widthSegments = Math.floor(widthSegments);
     heightSegments = Math.floor(heightSegments);
     depthSegments = Math.floor(depthSegments);
@@ -46,15 +20,10 @@ export class BoxGeometry extends Geometry {
     let groupStart = 0;
 
     buildPlane('z', 'y', 'x', -1, -1, depth, height, width, depthSegments, heightSegments, 0);
-
     buildPlane('z', 'y', 'x', 1, -1, depth, height, -width, depthSegments, heightSegments, 1);
-
     buildPlane('x', 'z', 'y', 1, 1, width, depth, height, widthSegments, depthSegments, 2);
-
     buildPlane('x', 'z', 'y', 1, -1, width, depth, -height, widthSegments, depthSegments, 3);
-
     buildPlane('x', 'y', 'z', 1, -1, width, height, depth, widthSegments, heightSegments, 4);
-
     buildPlane('x', 'y', 'z', -1, -1, width, height, -depth, widthSegments, heightSegments, 5);
 
     this.setIndex(indices);
@@ -137,3 +106,30 @@ export class BoxGeometry extends Geometry {
     }
   }
 }
+
+export interface BoxGeometryParameters {
+  width?: number;
+  height?: number;
+  depth?: number;
+  widthSegments?: number;
+  heightSegments?: number;
+  depthSegments?: number;
+}
+
+export interface BoxGeometryConfiguration {
+  width: number;
+  height: number;
+  depth: number;
+  widthSegments: number;
+  heightSegments: number;
+  depthSegments: number;
+}
+
+const configure = (parameters?: BoxGeometryParameters): BoxGeometryConfiguration => ({
+  width: parameters?.width ?? 1,
+  height: parameters?.height ?? 1,
+  depth: parameters?.depth ?? 1,
+  widthSegments: parameters?.widthSegments ?? 1,
+  heightSegments: parameters?.heightSegments ?? 1,
+  depthSegments: parameters?.depthSegments ?? 1,
+});

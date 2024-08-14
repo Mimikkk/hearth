@@ -91,9 +91,6 @@ export const Example = {
   Collisions: {
     Octree: 'octree_collisions',
   },
-  Physics: {
-    Ammo: 'physics_ammo',
-  },
 };
 
 export type ExampleName = keyof typeof Example;

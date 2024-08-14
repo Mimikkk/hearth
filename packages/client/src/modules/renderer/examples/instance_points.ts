@@ -8,7 +8,7 @@ import { GUI } from 'lil-gui';
 import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitControls.js';
 
 import { InstancedPoints } from '@modules/renderer/engine/entities/InstancedPoints.js';
-import { InstancedPointsGeometry } from '@modules/renderer/engine/entities/geometries/InstancedPointsGeometry.js';
+import { PointsGeometry } from '@modules/renderer/engine/entities/geometries/PointsGeometry.js';
 
 import { color, InstancedPointsNodeMaterial } from '@modules/renderer/engine/nodes/nodes.js';
 
@@ -66,7 +66,7 @@ async function init() {
     colors.push(pointColor.r, pointColor.g, pointColor.b);
   }
 
-  const geometry = new InstancedPointsGeometry();
+  const geometry = new PointsGeometry();
   geometry.setPositions(positions);
   geometry.setColors(colors);
 

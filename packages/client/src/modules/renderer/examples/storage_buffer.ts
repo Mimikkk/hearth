@@ -106,7 +106,7 @@ async function init() {
     return color;
   })();
 
-  const plane = new Engine.Mesh(new Engine.PlaneGeometry(1, 1), material);
+  const plane = new Engine.Mesh(new Engine.PlaneGeometry({ width: 1, height: 1 }), material);
   scene.add(plane);
 
   const hearth = await Hearth.as({ trackTimestamp: true });

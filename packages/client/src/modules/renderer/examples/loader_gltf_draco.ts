@@ -28,7 +28,10 @@ async function init() {
   scene.background = Color.new(0x443333);
   scene.fog = new Fog(0x443333, 1, 4);
 
-  const plane = new Mesh(new PlaneGeometry(8, 8), new MeshPhongMaterial({ color: 0xcbcbcb, specular: 0x101010 }));
+  const plane = new Mesh(
+    new PlaneGeometry({ width: 8, height: 8 }),
+    new MeshPhongMaterial({ color: 0xcbcbcb, specular: 0x101010 }),
+  );
   plane.setRotationX(-Math.PI / 2);
   plane.position.y = 0.03;
   plane.useShadowReceive = true;

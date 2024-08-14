@@ -9,20 +9,9 @@ export class ParametricGeometry extends Geometry {
     stacks: number;
   };
 
-  constructor(
-    func = (u: number, v: number, target: Vec3): void => {
-      target.set(u, v, Math.cos(u) * Math.sin(v));
-    },
-    slices = 8,
-    stacks = 8,
-  ) {
+  constructor(parameters: ParametricGeometryParameters) {
     super();
-
-    this.parameters = {
-      func: func,
-      slices: slices,
-      stacks: stacks,
-    };
+    const { fn, slices, stacks } = configure(parameters);
 
     const indices = [];
     const vertices = [];
@@ -46,22 +35,22 @@ export class ParametricGeometry extends Geometry {
       for (let j = 0; j <= slices; j++) {
         const u = j / slices;
 
-        func(u, v, p0);
+        fn(u, v, p0);
         vertices.push(p0.x, p0.y, p0.z);
 
         if (u - EPS >= 0) {
-          func(u - EPS, v, p1);
+          fn(u - EPS, v, p1);
           pu.asSub(p0, p1);
         } else {
-          func(u + EPS, v, p1);
+          fn(u + EPS, v, p1);
           pu.asSub(p1, p0);
         }
 
         if (v - EPS >= 0) {
-          func(u, v - EPS, p1);
+          fn(u, v - EPS, p1);
           pv.asSub(p0, p1);
         } else {
-          func(u, v + EPS, p1);
+          fn(u, v + EPS, p1);
           pv.asSub(p1, p0);
         }
 
@@ -90,3 +79,21 @@ export class ParametricGeometry extends Geometry {
     this.setAttribute('uv', new Attribute(new Float32Array(uvs), 2));
   }
 }
+
+export interface ParametricGeometryParameters {
+  fn: (u: number, v: number, into: Vec3) => void;
+  slices?: number;
+  stacks?: number;
+}
+
+export interface ParametricGeometryConfiguration {
+  fn: (u: number, v: number, into: Vec3) => void;
+  slices: number;
+  stacks: number;
+}
+
+export const configure = (parameters: ParametricGeometryParameters): ParametricGeometryConfiguration => ({
+  fn: parameters.fn,
+  slices: parameters?.slices ?? 8,
+  stacks: parameters?.stacks ?? 8,
+});

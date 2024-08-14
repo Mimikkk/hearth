@@ -1,30 +1,42 @@
 import { FontManager } from '@modules/renderer/engine/loaders/fonts/FontManager.js';
 import {
   ExtrudeGeometry,
-  ExtrudeGeometryOptions,
+  ExtrudeGeometryParameters,
 } from '@modules/renderer/engine/entities/geometries/ExtrudeGeometry.js';
-
-export interface TextGeometryParameters extends ExtrudeGeometryOptions {
-  font: FontManager;
-  size?: number;
-  depth?: number;
-  bevelEnabled?: boolean;
-  curveSegments?: number;
-  bevelThickness?: number;
-  bevelSize?: number;
-  bevelOffset?: number;
-  bevelSegments?: number;
-}
 
 export class TextGeometry extends ExtrudeGeometry {
   constructor(text: string, parameters: TextGeometryParameters) {
-    parameters.size ??= 100;
-    parameters.depth ??= 50;
-    parameters.bevelThickness ??= 10;
-    parameters.bevelSize ??= 8;
-    parameters.bevelEnabled ??= false;
-
-    const shapes = parameters.font.createShapes(text, parameters.size);
-    super(shapes, parameters);
+    const configuration = configure(parameters);
+    const shapes = configuration.font.createShapes(text, configuration.size);
+    super({ ...parameters, ...configuration, shapes });
   }
 }
+
+export interface TextGeometryParameters extends ExtrudeGeometryParameters {
+  font: FontManager;
+  size?: number;
+}
+
+export interface TextGeometryConfiguration {
+  font: FontManager;
+  size: number;
+  depth: number;
+  bevelEnabled: boolean;
+  curveSegments: number;
+  bevelThickness: number;
+  bevelSize: number;
+  bevelOffset: number;
+  bevelSegments: number;
+}
+
+const configure = (parameters: TextGeometryParameters): TextGeometryConfiguration => ({
+  font: parameters.font,
+  size: parameters.size ?? 100,
+  depth: parameters.depth ?? 50,
+  bevelEnabled: parameters.bevelEnabled ?? false,
+  curveSegments: parameters.curveSegments ?? 12,
+  bevelThickness: parameters.bevelThickness ?? 10,
+  bevelSize: parameters.bevelSize ?? 8,
+  bevelOffset: parameters.bevelOffset ?? 0,
+  bevelSegments: parameters.bevelSegments ?? 3,
+});

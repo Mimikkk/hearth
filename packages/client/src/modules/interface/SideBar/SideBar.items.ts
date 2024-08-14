@@ -190,12 +190,9 @@ export const SideBarItems: AccordionItem[] = [
     ],
   },
   {
-    id: 'physics',
-    title: 'Physics',
+    id: 'collisions',
+    title: 'Collisions',
     icon: 'SiAtom',
-    children: [
-      { id: Example.Physics.Ammo, title: 'Ammo' },
-      { id: Example.Collisions.Octree, title: 'Octree collisions' },
-    ],
+    children: [{ id: Example.Collisions.Octree, title: 'Octree collisions' }],
   },
 ];

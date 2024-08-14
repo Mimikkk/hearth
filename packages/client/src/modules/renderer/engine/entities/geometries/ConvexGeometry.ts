@@ -7,22 +7,15 @@ export class ConvexGeometry extends Geometry {
   constructor(points: Vec3[] = []) {
     super();
 
-
-
     const vertices = [];
     const normals = [];
-
     const convexHull = new ConvexHull().setFromPoints(points);
-
-
 
     const faces = convexHull.faces;
 
     for (let i = 0; i < faces.length; i++) {
       const face = faces[i];
       let edge = face.edge!;
-
-
 
       do {
         const point = edge.head().point;
@@ -33,8 +26,6 @@ export class ConvexGeometry extends Geometry {
         edge = edge.next!;
       } while (edge !== face.edge);
     }
-
-
 
     this.setAttribute('position', new Attribute(new Float32Array(vertices), 3));
     this.setAttribute('normal', new Attribute(new Float32Array(normals), 3));

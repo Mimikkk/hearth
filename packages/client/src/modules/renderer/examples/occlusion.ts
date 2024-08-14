@@ -31,12 +31,12 @@ const attachOcclusion = (item: Mesh, to: Mesh) => {
   to.useOcclusion = true;
 };
 const createPlane = () => {
-  const geometry = new PlaneGeometry(2, 2);
+  const geometry = new PlaneGeometry({ width: 2, height: 2 });
   const material = new MeshPhongNodeMaterial({ color: 0x00ff00 });
   return new Mesh(geometry, material);
 };
 const createSphere = () => {
-  const geometry = new SphereGeometry(0.5);
+  const geometry = new SphereGeometry({ radius: 0.5 });
   const material = new MeshPhongNodeMaterial({ color: 0xffff00 });
   return new Mesh(geometry, material);
 };

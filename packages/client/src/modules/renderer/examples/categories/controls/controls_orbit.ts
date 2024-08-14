@@ -55,8 +55,8 @@ const light = createLight();
 const camera = createCamera();
 camera.add(light);
 
-const reference = createSphere(new SphereGeometry(0.1, 32, 24), 0, 0, 0);
-const sphere = createSphere(new SphereGeometry(0.25, 32, 24), 1, 0, 0);
+const reference = createSphere(new SphereGeometry({ radius: 0.1 }), 0, 0, 0);
+const sphere = createSphere(new SphereGeometry({ radius: 0.25 }), 1, 0, 0);
 
 const scene = createScene();
 

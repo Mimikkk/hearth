@@ -11,8 +11,9 @@ import { Material } from '@modules/renderer/engine/entities/materials/Material.j
 import { Intersection, Raycaster } from '../core/Raycaster.js';
 import { Attribute } from '@modules/renderer/engine/core/Attribute.js';
 import { NodeMaterial } from '@modules/renderer/engine/nodes/materials/NodeMaterial.js';
+import { MeshBasicMaterial } from '@modules/renderer/engine/entities/materials/MeshBasicMaterial.js';
 
-export class Mesh<G extends Geometry = any, M extends Material | NodeMaterial = any> extends Entity {
+export class Mesh<G extends Geometry = any, M extends Material | NodeMaterial = MeshBasicMaterial> extends Entity {
   declare isMesh: true;
 
   morphTargetInfluences: number[];
@@ -20,7 +21,7 @@ export class Mesh<G extends Geometry = any, M extends Material | NodeMaterial = 
 
   constructor(
     public geometry: G,
-    public material: M,
+    public material: M = new MeshBasicMaterial() as unknown as M,
     parameters?: EntityParameters,
   ) {
     super(parameters);

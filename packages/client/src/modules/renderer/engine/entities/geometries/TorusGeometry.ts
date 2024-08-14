@@ -3,25 +3,10 @@ import { Attribute } from '@modules/renderer/engine/core/Attribute.js';
 import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
 
 export class TorusGeometry extends Geometry {
-  declare parameters: {
-    radius: number;
-    tube: number;
-    radialSegments: number;
-    tubularSegments: number;
-    arc: number;
-  };
-
-  constructor(radius = 1, tube = 0.4, radialSegments = 12, tubularSegments = 48, arc = Math.PI * 2) {
+  constructor(parameters?: TorusGeometryParameters) {
     super();
 
-    this.parameters = {
-      radius: radius,
-      tube: tube,
-      radialSegments: radialSegments,
-      tubularSegments: tubularSegments,
-      arc: arc,
-    };
-
+    let { arc, radialSegments, radius, tube, tubularSegments } = configure(parameters);
     radialSegments = Math.floor(radialSegments);
     tubularSegments = Math.floor(tubularSegments);
 
@@ -74,3 +59,27 @@ export class TorusGeometry extends Geometry {
     this.setAttribute('uv', new Attribute(new Float32Array(uvs), 2));
   }
 }
+
+export interface TorusGeometryParameters {
+  radius?: number;
+  tube?: number;
+  radialSegments?: number;
+  tubularSegments?: number;
+  arc?: number;
+}
+
+export interface TorusGeometryConfiguration {
+  radius: number;
+  tube: number;
+  radialSegments: number;
+  tubularSegments: number;
+  arc: number;
+}
+
+const configure = (parameters?: TorusGeometryParameters): TorusGeometryConfiguration => ({
+  radius: parameters?.radius ?? 1,
+  tube: parameters?.tube ?? 0.4,
+  radialSegments: parameters?.radialSegments ?? 12,
+  tubularSegments: parameters?.tubularSegments ?? 48,
+  arc: parameters?.arc ?? Math.PI * 2,
+});

@@ -13,11 +13,6 @@ export class EdgesGeometry extends Geometry {
   constructor(geometry: Geometry | null = null, thresholdAngle: number = 1) {
     super();
 
-    this.parameters = {
-      geometry: geometry,
-      thresholdAngle: thresholdAngle,
-    };
-
     if (geometry !== null) {
       const precisionPoints = 4;
       const precision = Math.pow(10, precisionPoints);
