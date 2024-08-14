@@ -36,15 +36,4 @@ export class LineBasicMaterial extends Material {
   setValues(values?: LineBasicMaterialParameters): void {
     super.setValues(values);
   }
-
-  copy(source: this): this {
-    super.copy(source);
-    this.color.from(source.color);
-    this.map = source.map;
-    this.linewidth = source.linewidth;
-    this.linecap = source.linecap;
-    this.linejoin = source.linejoin;
-    this.fog = source.fog;
-    return this;
-  }
 }

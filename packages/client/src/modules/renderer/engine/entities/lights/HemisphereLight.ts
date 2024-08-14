@@ -14,14 +14,6 @@ export class HemisphereLight extends Light<undefined> {
 
     this.groundColor = Color.new(groundColor);
   }
-
-  copy(source: this, recursive?: boolean): this {
-    super.copy(source, recursive);
-
-    this.groundColor.from(source.groundColor);
-
-    return this;
-  }
 }
 
 HemisphereLight.prototype.isHemisphereLight = true;

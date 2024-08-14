@@ -105,47 +105,6 @@ export class MeshToonMaterial extends Material {
   setValues(parameters?: MeshToonMaterialParameters): void {
     super.setValues(parameters);
   }
-
-  copy(source: this): this {
-    super.copy(source);
-
-    this.color.from(source.color);
-
-    this.map = source.map;
-    this.gradientMap = source.gradientMap;
-
-    this.lightMap = source.lightMap;
-    this.lightMapIntensity = source.lightMapIntensity;
-
-    this.aoMap = source.aoMap;
-    this.aoMapIntensity = source.aoMapIntensity;
-
-    this.emissive.from(source.emissive);
-    this.emissiveMap = source.emissiveMap;
-    this.emissiveIntensity = source.emissiveIntensity;
-
-    this.bumpMap = source.bumpMap;
-    this.bumpScale = source.bumpScale;
-
-    this.normalMap = source.normalMap;
-    this.normalMapType = source.normalMapType;
-    this.normalScale.from(source.normalScale);
-
-    this.displacementMap = source.displacementMap;
-    this.displacementScale = source.displacementScale;
-    this.displacementBias = source.displacementBias;
-
-    this.alphaMap = source.alphaMap;
-
-    this.wireframe = source.wireframe;
-    this.wireframeLinewidth = source.wireframeLinewidth;
-    this.wireframeLinecap = source.wireframeLinecap;
-    this.wireframeLinejoin = source.wireframeLinejoin;
-
-    this.fog = source.fog;
-
-    return this;
-  }
 }
 
 MeshToonMaterial.prototype.isMeshToonMaterial = true;

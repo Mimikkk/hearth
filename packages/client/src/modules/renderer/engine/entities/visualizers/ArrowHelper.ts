@@ -76,13 +76,4 @@ export class ArrowHelper extends Entity {
     (this.line.material as MeshBasicMaterial).color.set(color);
     (this.cone.material as LineBasicMaterial).color.set(color);
   }
-
-  copy(source: this): this {
-    super.copy(source, false);
-
-    this.line.copy(source.line);
-    this.cone.copy(source.cone);
-
-    return this;
-  }
 }

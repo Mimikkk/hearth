@@ -57,28 +57,6 @@ export class MeshNormalMaterial extends Material {
   setValues(values?: MeshNormalMaterialParameters): void {
     super.setValues(values);
   }
-
-  copy(source: this): this {
-    super.copy(source);
-
-    this.bumpMap = source.bumpMap;
-    this.bumpScale = source.bumpScale;
-
-    this.normalMap = source.normalMap;
-    this.normalMapType = source.normalMapType;
-    this.normalScale.from(source.normalScale);
-
-    this.displacementMap = source.displacementMap;
-    this.displacementScale = source.displacementScale;
-    this.displacementBias = source.displacementBias;
-
-    this.wireframe = source.wireframe;
-    this.wireframeLinewidth = source.wireframeLinewidth;
-
-    this.flatShading = source.flatShading;
-
-    return this;
-  }
 }
 
 MeshNormalMaterial.prototype.isMeshNormalMaterial = true;

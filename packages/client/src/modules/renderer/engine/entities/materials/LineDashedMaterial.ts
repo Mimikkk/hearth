@@ -23,12 +23,4 @@ export class LineDashedMaterial extends LineBasicMaterial {
   setValues(values?: LineDashedMaterialParameters): void {
     super.setValues(values);
   }
-
-  copy(source: this): this {
-    super.copy(source);
-    this.scale = source.scale;
-    this.dashSize = source.dashSize;
-    this.gapSize = source.gapSize;
-    return this;
-  }
 }

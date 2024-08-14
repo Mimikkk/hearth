@@ -514,50 +514,6 @@ export class Entity {
     }
     return this;
   }
-
-  clone(recursive: boolean = true): Entity {
-    return new this.constructor().copy(this, recursive);
-  }
-
-  copy(source: Entity, recursive: boolean = true) {
-    this.name = source.name;
-
-    this.up.from(source.up);
-
-    this.position.from(source.position);
-    this.quaternion.from(source.quaternion);
-    this.scale.from(source.scale);
-
-    this.matrix.from(source.matrix);
-    this.matrixWorld.from(source.matrixWorld);
-
-    this.useLocalAutoUpdate = source.useLocalAutoUpdate;
-
-    this.useWorldAutoUpdate = source.useWorldAutoUpdate;
-    this.useWorldUpdate = source.useWorldUpdate;
-
-    this.layers.mask = source.layers.mask;
-    this.visible = source.visible;
-
-    this.useShadowCast = source.useShadowCast;
-    this.useShadowReceive = source.useShadowReceive;
-
-    this.useFrustumCull = source.useFrustumCull;
-    this.renderOrder = source.renderOrder;
-
-    this.animations = source.animations.slice();
-
-    this.extra = JSON.parse(JSON.stringify(source.extra));
-
-    if (recursive) {
-      for (let i = 0; i < source.children.length; i++) {
-        const child = source.children[i];
-        this.add(child.clone());
-      }
-    }
-
-    return this;
-  }
 }
 
 Entity.prototype.isEntity = true;

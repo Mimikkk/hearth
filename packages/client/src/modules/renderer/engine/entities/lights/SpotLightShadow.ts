@@ -29,14 +29,6 @@ export class SpotLightShadow extends LightShadow<PerspectiveCamera> {
     super.updateMatrices(light);
     return this;
   }
-
-  copy(source: this): this {
-    super.copy(source);
-
-    this.focus = source.focus;
-
-    return this;
-  }
 }
 
 SpotLightShadow.prototype.isSpotLightShadow = true;

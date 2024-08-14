@@ -85,20 +85,4 @@ export class LightShadow<C extends Camera = Camera> {
   getFrameExtents() {
     return this._frameExtents;
   }
-
-  copy(source: this, recursive?: boolean): this {
-    this.camera = source.camera.clone();
-
-    this.bias = source.bias;
-    this.radius = source.radius;
-
-    this.mapSize.from(source.mapSize);
-
-    return this;
-  }
-
-  clone(): this {
-    //@ts-expect-error
-    return new this.constructor().copy(this);
-  }
 }

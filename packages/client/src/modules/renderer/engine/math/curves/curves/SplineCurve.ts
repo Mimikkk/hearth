@@ -27,20 +27,6 @@ export class SplineCurve extends Curve<Vec2> {
 
     return point;
   }
-
-  copy(source: this): this {
-    super.copy(source);
-
-    this.points = [];
-
-    for (let i = 0, l = source.points.length; i < l; i++) {
-      const point = source.points[i];
-
-      this.points.push(point.clone());
-    }
-
-    return this;
-  }
 }
 
 SplineCurve.prototype.isSplineCurve = true;

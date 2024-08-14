@@ -51,25 +51,6 @@ export class Scene extends Entity {
   attach(hearth: Hearth, camera: ICamera): void {
     hearth.animation.before.push(() => hearth.render(this, camera));
   }
-
-  copy(source: this, recursive?: boolean): this {
-    super.copy(source, recursive);
-
-    if (source.background !== null) this.background = source.background.clone();
-    if (source.environment !== null) this.environment = source.environment.clone();
-    if (source.fog !== null) this.fog = source.fog.clone();
-
-    this.backgroundBlurriness = source.backgroundBlurriness;
-    this.backgroundIntensity = source.backgroundIntensity;
-    this.backgroundRotation.from(source.backgroundRotation);
-    this.environmentRotation.from(source.environmentRotation);
-
-    if (source.overrideMaterial !== null) this.overrideMaterial = source.overrideMaterial.clone();
-
-    this.useLocalAutoUpdate = source.useLocalAutoUpdate;
-
-    return this;
-  }
 }
 
 Scene.prototype.isScene = true;

@@ -32,18 +32,4 @@ export class Shape extends Path {
       holes: this.getPointsHoles(divisions),
     };
   }
-
-  copy(source: this): this {
-    super.copy(source);
-
-    this.holes = [];
-
-    for (let i = 0, l = source.holes.length; i < l; i++) {
-      const hole = source.holes[i];
-
-      this.holes.push(hole.clone());
-    }
-
-    return this;
-  }
 }

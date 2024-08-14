@@ -60,25 +60,6 @@ export class EllipseCurve extends Curve<Vec2> {
 
     return point.set(x, y);
   }
-
-  copy(source: this): this {
-    super.copy(source);
-
-    this.aX = source.aX;
-    this.aY = source.aY;
-
-    this.xRadius = source.xRadius;
-    this.yRadius = source.yRadius;
-
-    this.aStartAngle = source.aStartAngle;
-    this.aEndAngle = source.aEndAngle;
-
-    this.aClockwise = source.aClockwise;
-
-    this.aRotation = source.aRotation;
-
-    return this;
-  }
 }
 
 EllipseCurve.prototype.isEllipseCurve = true;

@@ -1,8 +1,8 @@
 import { Texture } from '@modules/renderer/engine/entities/textures/Texture.js';
 import { ColorSpace, Mapping, PixelFormat, TextureDataType, TextureFormat } from '../../constants.js';
 import { Vec4 } from '../../math/Vec4.js';
-import { Source } from '@modules/renderer/engine/entities/textures/Source.js';
 import { GPUAddressModeType, GPUFilterModeType } from '@modules/renderer/engine/hearth/constants.js';
+import { cloneDeep } from 'lodash-es';
 
 export class RenderTarget {
   declare isRenderTarget: true;
@@ -47,7 +47,7 @@ export class RenderTarget {
 
     const count = config.count;
     for (let i = 0; i < count; i++) {
-      this.textures[i] = texture.clone();
+      this.textures[i] = cloneDeep(texture);
       this.textures[i].isRenderTargetTexture = true;
     }
 
@@ -81,40 +81,6 @@ export class RenderTarget {
 
     this.viewport.set(0, 0, width, height);
     this.scissor.set(0, 0, width, height);
-    return this;
-  }
-
-  clone() {
-    return new this.constructor().copy(this);
-  }
-
-  copy(source: this): this {
-    this.width = source.width;
-    this.height = source.height;
-    this.depth = source.depth;
-
-    this.scissor.from(source.scissor);
-    this.scissorTest = source.scissorTest;
-
-    this.viewport.from(source.viewport);
-
-    this.textures.length = 0;
-
-    for (let i = 0, il = source.textures.length; i < il; i++) {
-      this.textures[i] = source.textures[i].clone();
-      this.textures[i].isRenderTargetTexture = true;
-    }
-
-    const image = Object.assign({}, source.texture.image);
-    this.texture.source = new Source(image);
-
-    this.depthBuffer = source.depthBuffer;
-    this.stencilBuffer = source.stencilBuffer;
-
-    if (source.depthTexture !== null) this.depthTexture = source.depthTexture.clone();
-
-    this.samples = source.samples;
-
     return this;
   }
 }

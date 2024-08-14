@@ -218,18 +218,6 @@ export class Attribute<T extends TypedArray = any> {
     return this;
   }
 
-  copy(source: Attribute<T>): this {
-    this.source = source.source;
-    this.usage = source.usage;
-    this.name = source.name;
-
-    return this;
-  }
-
-  clone(): Attribute<T> {
-    return new Attribute(this.array, this.stride).copy(this);
-  }
-
   get format(): GPUVertexFormat {
     const { span } = this;
     const { type, elementByteSize } = this.source;

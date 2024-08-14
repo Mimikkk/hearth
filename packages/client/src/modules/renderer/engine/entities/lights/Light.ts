@@ -15,15 +15,6 @@ export class Light<S extends LightShadow | undefined = any> extends Entity {
     this.color = Color.new(color);
     this.intensity = intensity;
   }
-
-  copy(source: this, recursive?: boolean): this {
-    super.copy(source, recursive);
-
-    this.color.from(source.color);
-    this.intensity = source.intensity;
-
-    return this;
-  }
 }
 
 Light.prototype.isLight = true;

@@ -23,17 +23,6 @@ export class PointLight extends Light<PointLightShadow> {
   set power(power: number) {
     this.intensity = power / (4 * Math.PI);
   }
-
-  copy(source: this, recursive?: boolean): this {
-    super.copy(source, recursive);
-
-    this.distance = source.distance;
-    this.decay = source.decay;
-
-    this.shadow = source.shadow.clone();
-
-    return this;
-  }
 }
 
 PointLight.prototype.isPointLight = true;

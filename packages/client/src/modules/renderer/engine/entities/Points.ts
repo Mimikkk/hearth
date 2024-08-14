@@ -28,15 +28,6 @@ export class Points extends Entity {
     this.updateMorphTargets();
   }
 
-  copy(source: this, recursive?: boolean): this {
-    super.copy(source, recursive);
-
-    this.material = source.material;
-    this.geometry = source.geometry;
-
-    return this;
-  }
-
   raycast(raycaster: Raycaster, intersects: Intersection[]): void {
     const geometry = this.geometry;
     const matrixWorld = this.matrixWorld;

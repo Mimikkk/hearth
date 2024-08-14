@@ -33,23 +33,6 @@ export class Mesh<G extends Geometry = any, M extends Material | NodeMaterial = 
     return value?.isMesh === true;
   }
 
-  copy(source: this, recursive?: boolean): this {
-    super.copy(source, recursive);
-
-    if (source.morphTargetInfluences !== undefined) {
-      this.morphTargetInfluences = source.morphTargetInfluences.slice();
-    }
-
-    if (source.morphTargetDictionary !== undefined) {
-      this.morphTargetDictionary = Object.assign({}, source.morphTargetDictionary);
-    }
-
-    this.material = source.material;
-    this.geometry = source.geometry;
-
-    return this;
-  }
-
   updateMorphTargets() {
     const geometry = this.geometry;
     if (!geometry) return;

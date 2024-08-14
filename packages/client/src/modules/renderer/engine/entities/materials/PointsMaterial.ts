@@ -36,19 +36,6 @@ export class PointsMaterial extends Material {
   setValues(values?: PointsMaterialParameters): void {
     super.setValues(values);
   }
-
-  copy(source: this): this {
-    super.copy(source);
-
-    this.color.from(source.color);
-    this.map = source.map;
-    this.alphaMap = source.alphaMap;
-    this.size = source.size;
-    this.sizeAttenuation = source.sizeAttenuation;
-    this.fog = source.fog;
-
-    return this;
-  }
 }
 
 PointsMaterial.prototype.isPointsMaterial = true;

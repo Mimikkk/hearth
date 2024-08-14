@@ -17,15 +17,6 @@ export class DirectionalLight extends Light<DirectionalLightShadow> {
     this.target = new Entity();
     this.shadow = new DirectionalLightShadow();
   }
-
-  copy(source: this): this {
-    super.copy(source);
-
-    this.target = source.target.clone();
-    this.shadow = source.shadow.clone();
-
-    return this;
-  }
 }
 
 DirectionalLight.prototype.isDirectionalLight = true;

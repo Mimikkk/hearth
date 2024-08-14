@@ -65,21 +65,6 @@ export class SkinnedMesh extends Mesh {
     }
   }
 
-  copy(source: this, recursive?: boolean): this {
-    super.copy(source, recursive);
-
-    this.bindMode = source.bindMode;
-    this.bindMatrix.from(source.bindMatrix);
-    this.bindMatrixInverse.from(source.bindMatrixInverse);
-
-    this.skeleton = source.skeleton;
-
-    if (source.boundBox !== null) this.boundBox = source.boundBox.clone();
-    if (source.boundSphere !== null) this.boundSphere = source.boundSphere.clone();
-
-    return this;
-  }
-
   raycast(raycaster: Raycaster, intersects: Intersection[]): void {
     const material = this.material;
     const matrixWorld = this.matrixWorld;

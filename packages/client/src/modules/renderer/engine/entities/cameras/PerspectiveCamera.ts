@@ -52,25 +52,6 @@ export class PerspectiveCamera extends Camera {
     return value && value.isPerspectiveCamera;
   }
 
-  copy(source: PerspectiveCamera, recursive?: boolean): this {
-    super.copy(source, recursive);
-
-    this.fov = source.fov;
-    this.zoom = source.zoom;
-
-    this.near = source.near;
-    this.far = source.far;
-    this.focus = source.focus;
-
-    this.aspect = source.aspect;
-    this.view = source.view === null ? null : Object.assign({}, source.view);
-
-    this.filmGaugeMM = source.filmGaugeMM;
-    this.filmOffsetMM = source.filmOffsetMM;
-
-    return this;
-  }
-
   setFocalLength(focalLength: number): this {
     const vExtentSlope = (0.5 * this.getFilmHeight()) / focalLength;
 

@@ -33,15 +33,6 @@ export class Line extends Entity {
     this.updateMorphTargets();
   }
 
-  copy(source: this, recursive?: boolean): this {
-    super.copy(source, recursive);
-
-    this.material = source.material;
-    this.geometry = source.geometry;
-
-    return this;
-  }
-
   computeLineDistances() {
     const geometry = this.geometry;
 

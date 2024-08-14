@@ -134,12 +134,4 @@ export class Path extends CurvePath<Vec2> {
 
     return this;
   }
-
-  copy(source: this): this {
-    super.copy(source);
-
-    this.currentPoint.from(source.currentPoint);
-
-    return this;
-  }
 }

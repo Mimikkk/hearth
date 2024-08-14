@@ -22,17 +22,6 @@ class CubicBezierCurve extends Curve<Vec2> {
 
     return point;
   }
-
-  copy(source: this): this {
-    super.copy(source);
-
-    this.v0.from(source.v0);
-    this.v1.from(source.v1);
-    this.v2.from(source.v2);
-    this.v3.from(source.v3);
-
-    return this;
-  }
 }
 
 export { CubicBezierCurve };

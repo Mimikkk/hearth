@@ -20,15 +20,6 @@ export class RectAreaLight extends Light<undefined> {
   set power(power) {
     this.intensity = power / (this.width * this.height * Math.PI);
   }
-
-  copy(source: this, recursive?: boolean): this {
-    super.copy(source, recursive);
-
-    this.width = source.width;
-    this.height = source.height;
-
-    return this;
-  }
 }
 
 RectAreaLight.prototype.isRectAreaLight = true;

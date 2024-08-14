@@ -86,12 +86,4 @@ export class RingGeometry extends Geometry {
     this.setAttribute('normal', new Attribute(new Float32Array(normals), 3));
     this.setAttribute('uv', new Attribute(new Float32Array(uvs), 2));
   }
-
-  copy(source: this): this {
-    super.copy(source);
-
-    this.parameters = Object.assign({}, source.parameters);
-
-    return this;
-  }
 }

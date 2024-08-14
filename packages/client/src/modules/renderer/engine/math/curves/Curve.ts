@@ -213,14 +213,4 @@ export abstract class Curve<T extends Vec2 | Vec3> {
 
     return { tangents, normals, binormals };
   }
-
-  clone() {
-    return new this.constructor().copy(this);
-  }
-
-  copy(source: this): this {
-    this.arcLengthDivisions = source.arcLengthDivisions;
-
-    return this;
-  }
 }

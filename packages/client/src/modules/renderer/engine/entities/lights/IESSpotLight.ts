@@ -17,12 +17,4 @@ export class IESSpotLight extends SpotLight {
 
     this.iesMap = null;
   }
-
-  copy(source: this, recursive?: boolean): this {
-    super.copy(source, recursive);
-
-    this.iesMap = source.iesMap;
-
-    return this;
-  }
 }

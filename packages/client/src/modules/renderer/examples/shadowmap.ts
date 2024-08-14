@@ -3,8 +3,9 @@ import * as Engine from '@modules/renderer/engine/engine.js';
 import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 
 import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitControls.js';
-import { MeshPhongNodeMaterial, vec4, vertexIndex } from '@modules/renderer/engine/nodes/nodes.js';
+import { hsl, MeshPhongNodeMaterial, vec4, vertexIndex } from '@modules/renderer/engine/nodes/nodes.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
+import { cloneDeep } from 'lodash-es';
 
 let camera, scene, hearth, clock;
 let dirLight, spotLight;
@@ -60,7 +61,7 @@ async function init() {
     specular: 0x222222,
   });
 
-  const materialCustomShadow = material.clone();
+  const materialCustomShadow = cloneDeep(material);
   materialCustomShadow.transparent = true;
 
   const materialColor = vec4(1, 0, 1, 0.5);

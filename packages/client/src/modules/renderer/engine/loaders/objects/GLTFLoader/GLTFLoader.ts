@@ -49,6 +49,7 @@ import { LineSegments } from '@modules/renderer/engine/entities/LineSegments.js'
 import { PerspectiveCamera } from '@modules/renderer/engine/entities/cameras/PerspectiveCamera.js';
 import { radianToDegree } from '@modules/renderer/engine/math/MathUtils.js';
 import { VectorKeyframeTrack } from '@modules/renderer/engine/animation/tracks/VectorKeyframeTrack.ts';
+import { cloneDeep } from 'lodash-es';
 
 export type PluginFn = (parser: Parser) => Plugin;
 
@@ -1423,7 +1424,7 @@ class GLTFTextureTransformExtension implements Plugin {
       return texture;
     }
 
-    texture = texture.clone();
+    texture = cloneDeep(texture);
 
     if (transform.texCoord !== undefined) {
       texture.channel = transform.texCoord;
@@ -2300,7 +2301,7 @@ class Parser {
     const options = this.options;
 
     if (this.sourceCache[sourceIndex] !== undefined) {
-      return this.sourceCache[sourceIndex].then(texture => texture.clone());
+      return this.sourceCache[sourceIndex].then(texture => texture);
     }
 
     const sourceDef = json.images[sourceIndex];
@@ -2367,7 +2368,7 @@ class Parser {
       if (!texture) return null;
 
       if (mapDef.texCoord !== undefined && mapDef.texCoord > 0) {
-        texture = texture.clone();
+        texture = texture;
         texture.channel = mapDef.texCoord;
       }
 
@@ -2415,8 +2416,9 @@ class Parser {
 
       if (!pointsMaterial) {
         pointsMaterial = new PointsMaterial();
-        Material.prototype.copy.call(pointsMaterial, material);
-        pointsMaterial.color.copy(material.color);
+        Object.assign(pointsMaterial, cloneDeep(material));
+
+        pointsMaterial.color.from(material.color);
         pointsMaterial.map = material.map;
         pointsMaterial.sizeAttenuation = false;
 
@@ -2431,8 +2433,8 @@ class Parser {
 
       if (!lineMaterial) {
         lineMaterial = new LineBasicMaterial();
-        Material.prototype.copy.call(lineMaterial, material);
-        lineMaterial.color.copy(material.color);
+        Material.prototype.from.call(lineMaterial, material);
+        lineMaterial.color.from(material.color);
         lineMaterial.map = material.map;
 
         this.cache.add(cacheKey, lineMaterial);
@@ -2451,7 +2453,7 @@ class Parser {
       let cachedMaterial = this.cache.get(cacheKey);
 
       if (!cachedMaterial) {
-        cachedMaterial = material.clone();
+        cachedMaterial = cloneDeep(material);
 
         if (useVertexColors) cachedMaterial.vertexColors = true;
         if (useFlatShading) cachedMaterial.flatShading = true;

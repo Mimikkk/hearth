@@ -88,12 +88,4 @@ export class BoxHelper extends LineSegments {
 
     return this;
   }
-
-  copy(source: this, recursive?: boolean): this {
-    super.copy(source, recursive);
-
-    this.object = source.object;
-
-    return this;
-  }
 }

@@ -111,12 +111,4 @@ export class TorusKnotGeometry extends Geometry {
       position.z = radius * Math.sin(quOverP) * 0.5;
     }
   }
-
-  copy(source: this): this {
-    super.copy(source);
-
-    this.parameters = Object.assign({}, source.parameters);
-
-    return this;
-  }
 }

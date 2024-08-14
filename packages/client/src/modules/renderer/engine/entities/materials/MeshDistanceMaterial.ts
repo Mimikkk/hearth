@@ -37,20 +37,6 @@ export class MeshDistanceMaterial extends Material {
   setValues(values?: MeshDistanceMaterialParameters): void {
     super.setValues(values);
   }
-
-  copy(source: this): this {
-    super.copy(source);
-
-    this.map = source.map;
-
-    this.alphaMap = source.alphaMap;
-
-    this.displacementMap = source.displacementMap;
-    this.displacementScale = source.displacementScale;
-    this.displacementBias = source.displacementBias;
-
-    return this;
-  }
 }
 
 MeshDistanceMaterial.prototype.isMeshDistanceMaterial = true;

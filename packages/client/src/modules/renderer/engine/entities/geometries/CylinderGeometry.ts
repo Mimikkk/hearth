@@ -185,12 +185,4 @@ export class CylinderGeometry extends Geometry {
       groupStart += groupCount;
     }
   }
-
-  copy(source: this): this {
-    super.copy(source);
-
-    this.parameters = Object.assign({}, source.parameters);
-
-    return this;
-  }
 }

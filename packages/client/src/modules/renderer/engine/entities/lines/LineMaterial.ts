@@ -114,7 +114,7 @@ export class LineMaterial extends Material {
   }
 
   set resolution(value: Vec2) {
-    this.uniforms.resolution.value.copy(value);
+    this.uniforms.resolution.value.from(value);
   }
 
   get alphaToCoverage(): boolean {

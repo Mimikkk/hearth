@@ -20,16 +20,6 @@ export class Camera extends Entity {
     this.projectionMatrixInverse = parameters?.projectionMatrixInverse ?? Mat4.new();
   }
 
-  copy(source: Camera, recursive?: boolean): this {
-    super.copy(source as unknown as Entity, recursive);
-
-    this.matrixWorldInverse.from(source.matrixWorldInverse);
-    this.projectionMatrix.from(source.projectionMatrix);
-    this.projectionMatrixInverse.from(source.projectionMatrixInverse);
-
-    return this;
-  }
-
   getWorldDirection(target: Vec3): Vec3 {
     return super.getWorldDirection(target).negate();
   }

@@ -136,12 +136,4 @@ export class BoxGeometry extends Geometry {
       numberOfVertices += vertexCounter;
     }
   }
-
-  copy(source: this) {
-    super.copy(source);
-
-    this.parameters = Object.assign({}, source.parameters);
-
-    return this;
-  }
 }

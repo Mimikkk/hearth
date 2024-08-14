@@ -72,37 +72,6 @@ export class MeshMatcapMaterial extends Material {
   setValues(values?: MeshMatcapMaterialParameters): void {
     super.setValues(values);
   }
-
-  copy(source: this): this {
-    super.copy(source);
-
-    this.defines = { MATCAP: '' };
-
-    this.color.from(source.color);
-
-    this.matcap = source.matcap;
-
-    this.map = source.map;
-
-    this.bumpMap = source.bumpMap;
-    this.bumpScale = source.bumpScale;
-
-    this.normalMap = source.normalMap;
-    this.normalMapType = source.normalMapType;
-    this.normalScale.from(source.normalScale);
-
-    this.displacementMap = source.displacementMap;
-    this.displacementScale = source.displacementScale;
-    this.displacementBias = source.displacementBias;
-
-    this.alphaMap = source.alphaMap;
-
-    this.flatShading = source.flatShading;
-
-    this.fog = source.fog;
-
-    return this;
-  }
 }
 
 MeshMatcapMaterial.prototype.isMeshMatcapMaterial = true;

@@ -18,6 +18,7 @@ import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 
 import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitControls.js';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
+import { cloneDeep } from 'lodash-es';
 
 let camera, sceneMain, scenePortal, hearth;
 let clock;
@@ -76,7 +77,7 @@ async function init() {
         const children = object.children[0].children;
 
         const applyFX = index => {
-          children[index].material = children[index].material.clone();
+          children[index].material = cloneDeep(children[index].material);
           children[index].material.colorNode = colorNode;
           children[index].material.wireframe = true;
         };

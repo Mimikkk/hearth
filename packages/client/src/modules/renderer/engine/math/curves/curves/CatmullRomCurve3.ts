@@ -120,24 +120,6 @@ class CatmullRomCurve3 extends Curve<Vec3> {
 
     return point;
   }
-
-  copy(source: this): this {
-    super.copy(source);
-
-    this.points = [];
-
-    for (let i = 0, l = source.points.length; i < l; i++) {
-      const point = source.points[i];
-
-      this.points.push(point.clone());
-    }
-
-    this.closed = source.closed;
-    this.curveType = source.curveType;
-    this.tension = source.tension;
-
-    return this;
-  }
 }
 
 export { CatmullRomCurve3 };

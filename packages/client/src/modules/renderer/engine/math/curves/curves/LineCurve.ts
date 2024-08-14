@@ -35,15 +35,6 @@ export class LineCurve extends Curve<Vec2> {
   getTangentAt(u: number, optionalTarget: Vec2 = Vec2.new()): Vec2 {
     return this.getTangent(u, optionalTarget);
   }
-
-  copy(source: this): this {
-    super.copy(source);
-
-    this.v1.from(source.v1);
-    this.v2.from(source.v2);
-
-    return this;
-  }
 }
 
 LineCurve.prototype.isLineCurve = true;

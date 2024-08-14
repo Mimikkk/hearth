@@ -40,21 +40,6 @@ export class SpotLight extends Light<SpotLightShadow> {
   set power(power) {
     this.intensity = power / Math.PI;
   }
-
-  copy(source: this, recursive?: boolean): this {
-    super.copy(source, recursive);
-
-    this.distance = source.distance;
-    this.angle = source.angle;
-    this.penumbra = source.penumbra;
-    this.decay = source.decay;
-
-    this.target = source.target.clone();
-
-    this.shadow = source.shadow.clone();
-
-    return this;
-  }
 }
 
 SpotLight.prototype.isSpotLight = true;

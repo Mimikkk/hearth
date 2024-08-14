@@ -103,12 +103,4 @@ export class EdgesGeometry extends Geometry {
       this.setAttribute('position', new Attribute(new Float32Array(vertices), 3));
     }
   }
-
-  copy(source: this): this {
-    super.copy(source);
-
-    this.parameters = Object.assign({}, source.parameters);
-
-    return this;
-  }
 }

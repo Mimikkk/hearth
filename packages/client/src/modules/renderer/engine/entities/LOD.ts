@@ -32,22 +32,6 @@ export class LOD extends Entity {
     this.autoUpdate = true;
   }
 
-  copy(source: this, recursive?: boolean): this {
-    super.copy(source, recursive);
-
-    const levels = source.levels;
-
-    for (let i = 0, l = levels.length; i < l; i++) {
-      const level = levels[i];
-
-      this.addLevel(level.object.clone(), level.distance, level.hysteresis);
-    }
-
-    this.autoUpdate = source.autoUpdate;
-
-    return this;
-  }
-
   addLevel(object: Entity, distance: number, hysteresis: number): this {
     distance = Math.abs(distance);
 

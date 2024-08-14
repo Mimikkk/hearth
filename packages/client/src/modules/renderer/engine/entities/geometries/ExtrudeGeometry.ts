@@ -302,10 +302,9 @@ export class ExtrudeGeometry extends Geometry {
         if (!extrudeByPath) {
           v(vert.x, vert.y, 0);
         } else {
-          normal!.copy(splineTube!.normals[0]).scale(vert.x);
-          binormal!.copy(splineTube!.binormals[0]).scale(vert.y);
-
-          position2!.copy(extrudePts![0]).add(normal!).add(binormal!);
+          normal!.from(splineTube!.normals[0]).scale(vert.x);
+          binormal!.from(splineTube!.binormals[0]).scale(vert.y);
+          position2!.from(extrudePts![0]).add(normal!).add(binormal!);
 
           v(position2!.x, position2!.y, position2!.z);
         }
@@ -318,10 +317,9 @@ export class ExtrudeGeometry extends Geometry {
           if (!extrudeByPath) {
             v(vert.x, vert.y, (depth / steps) * s);
           } else {
-            normal!.copy(splineTube!.normals[s]).scale(vert.x);
-            binormal!.copy(splineTube!.binormals[s]).scale(vert.y);
-
-            position2!.copy(extrudePts![s]).add(normal!).add(binormal!);
+            normal!.from(splineTube!.normals[s]).scale(vert.x);
+            binormal!.from(splineTube!.binormals[s]).scale(vert.y);
+            position2!.from(extrudePts![s]).add(normal!).add(binormal!);
 
             v(position2!.x, position2!.y, position2!.z);
           }
@@ -492,14 +490,6 @@ export class ExtrudeGeometry extends Geometry {
         uvArray.push(Vec2.y);
       }
     }
-  }
-
-  copy(source: this): this {
-    super.copy(source);
-
-    this.parameters = Object.assign({}, source.parameters);
-
-    return this;
   }
 }
 

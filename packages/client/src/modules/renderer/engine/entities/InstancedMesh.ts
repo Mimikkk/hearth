@@ -98,21 +98,6 @@ export class InstancedMesh extends Mesh {
     }
   }
 
-  copy(source: this, recursive?: boolean): this {
-    super.copy(source, recursive);
-
-    this.instanceMatrix.copy(source.instanceMatrix);
-
-    if (source.instanceColor !== null) this.instanceColor = source.instanceColor.clone();
-
-    this.count = source.count;
-
-    if (source.boundBox !== null) this.boundBox = source.boundBox.clone();
-    if (source.boundSphere !== null) this.boundSphere = source.boundSphere.clone();
-
-    return this;
-  }
-
   getColorAt(index: number, color: Color): void {
     color.fromArray(this.instanceColor!.array as never, index * 3);
   }

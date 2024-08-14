@@ -137,52 +137,6 @@ export class Texture<T = any> {
     return this;
   }
 
-  clone(): Texture {
-    return new this.constructor(undefined!).copy(this);
-  }
-
-  copy(source: this): this {
-    this.name = source.name;
-
-    this.source = source.source;
-    this.mipmaps = source.mipmaps.slice(0);
-
-    this.mapping = source.mapping;
-    this.channel = source.channel;
-
-    this.wrapS = source.wrapS;
-    this.wrapT = source.wrapT;
-
-    this.magFilter = source.magFilter;
-    this.minFilter = source.minFilter;
-
-    this.anisotropy = source.anisotropy;
-
-    this.format = source.format;
-    this.internalFormat = source.internalFormat;
-    this.type = source.type;
-
-    this.offset.from(source.offset);
-    this.repeat.from(source.repeat);
-    this.center.from(source.center);
-    this.rotation = source.rotation;
-
-    this.useLocalAutoUpdate = source.useLocalAutoUpdate;
-    this.matrix.from(source.matrix);
-
-    this.useMipmap = source.useMipmap;
-    this.usePremultiplyAlpha = source.usePremultiplyAlpha;
-    this.flipY = source.flipY;
-    this.unpackAlignment = source.unpackAlignment;
-    this.colorSpace = source.colorSpace;
-
-    this.extra = JSON.parse(JSON.stringify(source.extra));
-
-    this.useUpdate = true;
-
-    return this;
-  }
-
   set useUpdate(value: boolean) {
     if (value === true) {
       this.version++;

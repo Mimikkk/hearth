@@ -128,20 +128,4 @@ export class CurvePath<T extends Vec2 | Vec3> extends Curve<T> {
 
     return points;
   }
-
-  copy(source: this): this {
-    super.copy(source);
-
-    this.curves = [];
-
-    for (let i = 0, l = source.curves.length; i < l; i++) {
-      const curve = source.curves[i];
-
-      this.curves.push(curve.clone());
-    }
-
-    this.autoClose = source.autoClose;
-
-    return this;
-  }
 }

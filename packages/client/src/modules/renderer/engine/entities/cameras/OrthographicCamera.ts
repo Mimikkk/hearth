@@ -41,22 +41,6 @@ export class OrthographicCamera extends Camera {
     return value?.isOrthographicCamera === true;
   }
 
-  copy(source: OrthographicCamera, recursive?: boolean): this {
-    super.copy(source, recursive);
-
-    this.left = source.left;
-    this.right = source.right;
-    this.top = source.top;
-    this.bottom = source.bottom;
-    this.near = source.near;
-    this.far = source.far;
-
-    this.zoom = source.zoom;
-    this.view = source.view === null ? null : Object.assign({}, source.view);
-
-    return this;
-  }
-
   setViewOffset(fullWidth: number, fullHeight: number, x: number, y: number, width: number, height: number): this {
     if (this.view === null) {
       this.view = {

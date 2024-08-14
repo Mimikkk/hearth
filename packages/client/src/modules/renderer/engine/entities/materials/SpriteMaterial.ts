@@ -45,24 +45,6 @@ export class SpriteMaterial extends Material {
   setValues(parameters?: SpriteMaterialParameters): void {
     super.setValues(parameters);
   }
-
-  copy(source: this): this {
-    super.copy(source);
-
-    this.color.from(source.color);
-
-    this.map = source.map;
-
-    this.alphaMap = source.alphaMap;
-
-    this.rotation = source.rotation;
-
-    this.sizeAttenuation = source.sizeAttenuation;
-
-    this.fog = source.fog;
-
-    return this;
-  }
 }
 
 SpriteMaterial.prototype.isSpriteMaterial = true;

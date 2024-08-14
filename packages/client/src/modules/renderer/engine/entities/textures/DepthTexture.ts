@@ -24,14 +24,6 @@ export class DepthTexture extends Texture {
   static is(value: any): value is DepthTexture {
     return value.isDepthTexture;
   }
-
-  copy(source: this): this {
-    super.copy(source);
-
-    this.compare = source.compare;
-
-    return this;
-  }
 }
 
 DepthTexture.prototype.isDepthTexture = true;

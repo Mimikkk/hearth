@@ -30,7 +30,7 @@ export class InstanceUniformNode extends Node {
 
     const meshColor = mesh.color;
 
-    this.uniformNode.value.copy(meshColor);
+    this.uniformNode.value.from(meshColor);
   }
 
   setup() {

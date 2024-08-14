@@ -46,25 +46,6 @@ export class MeshDepthMaterial extends Material {
   setValues(values?: MeshDepthMaterialParameters): void {
     super.setValues(values);
   }
-
-  copy(source: this): this {
-    super.copy(source);
-
-    this.depthPacking = source.depthPacking;
-
-    this.map = source.map;
-
-    this.alphaMap = source.alphaMap;
-
-    this.displacementMap = source.displacementMap;
-    this.displacementScale = source.displacementScale;
-    this.displacementBias = source.displacementBias;
-
-    this.wireframe = source.wireframe;
-    this.wireframeLinewidth = source.wireframeLinewidth;
-
-    return this;
-  }
 }
 
 MeshDepthMaterial.prototype.isMeshDepthMaterial = true;

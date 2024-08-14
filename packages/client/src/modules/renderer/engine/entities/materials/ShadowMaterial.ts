@@ -25,15 +25,6 @@ export class ShadowMaterial extends Material {
   setValues(values?: MaterialParameters) {
     super.setValues(values);
   }
-
-  copy(source: this): this {
-    super.copy(source);
-
-    this.color.from(source.color);
-    this.fog = source.fog;
-
-    return this;
-  }
 }
 
 ShadowMaterial.prototype.isShadowMaterial = true;

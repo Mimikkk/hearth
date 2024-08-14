@@ -108,15 +108,6 @@ export class Sprite extends Entity {
       object: this,
     });
   }
-
-  copy(source: this, recursive?: boolean): this {
-    super.copy(source, recursive);
-
-    if (source.center !== undefined) this.center.from(source.center);
-    this.material = source.material;
-
-    return this;
-  }
 }
 
 const _intersect = Vec3.new();
