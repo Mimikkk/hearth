@@ -1,5 +1,5 @@
 import { Mat4 } from '../../math/Mat4.js';
-import { Entity } from '../../core/Entity.js';
+import { Entity, EntityParameters } from '../../core/Entity.js';
 import type { Vec3 } from '../../math/Vec3.js';
 import type { PerspectiveCamera } from '@modules/renderer/engine/entities/cameras/PerspectiveCamera.js';
 import type { OrthographicCamera } from '@modules/renderer/engine/entities/cameras/OrthographicCamera.js';
@@ -12,13 +12,12 @@ export class Camera extends Entity {
   projectionMatrix: Mat4;
   projectionMatrixInverse: Mat4;
 
-  constructor() {
-    super();
+  constructor(parameters?: CameraParameters) {
+    super(parameters);
 
-    this.matrixWorldInverse = new Mat4();
-
-    this.projectionMatrix = new Mat4();
-    this.projectionMatrixInverse = new Mat4();
+    this.matrixWorldInverse = parameters?.matrixWorldInverse ?? Mat4.new();
+    this.projectionMatrix = parameters?.projectionMatrix ?? Mat4.new();
+    this.projectionMatrixInverse = parameters?.projectionMatrixInverse ?? Mat4.new();
   }
 
   copy(source: Camera, recursive?: boolean): this {
@@ -50,10 +49,12 @@ export class Camera extends Entity {
 
     return this;
   }
-
-  clone(): this {
-    return new this.constructor().copy(this);
-  }
 }
 
 Camera.prototype.isCamera = true;
+
+export interface CameraParameters extends EntityParameters {
+  matrixWorldInverse?: Mat4;
+  projectionMatrix?: Mat4;
+  projectionMatrixInverse?: Mat4;
+}

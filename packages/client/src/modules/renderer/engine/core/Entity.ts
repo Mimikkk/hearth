@@ -562,7 +562,7 @@ export class Entity {
 
 Entity.prototype.isEntity = true;
 
-interface EntityParameters {
+export interface EntityParameters {
   name?: string;
   position?: Vec3;
   quaternion?: Quaternion;
