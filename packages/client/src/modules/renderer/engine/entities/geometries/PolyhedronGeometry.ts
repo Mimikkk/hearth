@@ -4,7 +4,7 @@ import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
 import { Vec2 } from '@modules/renderer/engine/math/Vec2.js';
 
 export class PolyhedronGeometry extends Geometry {
-  constructor(parameters: PolyhedronGeometryParameters) {
+  constructor(parameters?: PolyhedronGeometryParameters) {
     super();
     const { vertices, indices, radius, detail } = configure(parameters);
 

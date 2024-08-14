@@ -320,7 +320,7 @@ export interface TeapotGeometryConfiguration {
 
 const configure = (parameters?: TeapotGeometryParameters): TeapotGeometryConfiguration => {
   return {
-    size: parameters?.size ?? 50,
+    size: parameters?.size ?? 1,
     segments: parameters?.segments ?? 10,
     bottom: parameters?.bottom ?? true,
     body: parameters?.body ?? true,

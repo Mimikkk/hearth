@@ -108,8 +108,8 @@ export interface TorusKnotGeometryConfiguration {
 }
 
 const configure = (parameters?: TorusKnotGeometryParameters): TorusKnotGeometryConfiguration => ({
-  radius: parameters?.radius ?? 1,
-  tube: parameters?.tube ?? 0.4,
+  radius: parameters?.radius ?? 0.1,
+  tube: parameters?.tube ?? 0.1,
   tubularSegments: parameters?.tubularSegments ?? 64,
   radialSegments: parameters?.radialSegments ?? 8,
   p: parameters?.p ?? 2,

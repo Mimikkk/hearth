@@ -114,7 +114,7 @@ export interface TubeGeometryConfiguration {
 const configure = (parameters?: TubeGeometryParameters): TubeGeometryConfiguration => ({
   path: parameters?.path ?? new QuadraticBezierCurve3(Vec3.new(-1, -1, 0), Vec3.new(-1, 1, 0), Vec3.new(1, 1, 0)),
   tubularSegments: parameters?.tubularSegments ?? 64,
-  radius: parameters?.radius ?? 1,
+  radius: parameters?.radius ?? 0.1,
   radialSegments: parameters?.radialSegments ?? 8,
   closed: parameters?.closed ?? false,
 });

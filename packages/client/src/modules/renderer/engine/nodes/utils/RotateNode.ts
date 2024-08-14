@@ -2,20 +2,22 @@ import { TempNode } from '../core/TempNode.js';
 import { mat2, mat4, vec4 } from '../shadernode/ShaderNode.primitves.ts';
 import { cos, sin } from '../math/MathNode.js';
 import { implCommand } from '@modules/renderer/engine/nodes/core/Node.commands.js';
+import { Node } from '../core/Node.js';
+import { NodeBuilder } from '@modules/renderer/engine/nodes/builder/NodeBuilder.js';
 
 export class RotateNode extends TempNode {
-  constructor(positionNode, rotationNode) {
+  constructor(
+    public positionNode: Node,
+    public rotationNode: Node,
+  ) {
     super();
-
-    this.positionNode = positionNode;
-    this.rotationNode = rotationNode;
   }
 
-  getNodeType(builder) {
+  getNodeType(builder: NodeBuilder) {
     return this.positionNode.getNodeType(builder);
   }
 
-  setup(builder) {
+  setup(builder: NodeBuilder) {
     const { rotationNode, positionNode } = this;
 
     const nodeType = this.getNodeType(builder);
