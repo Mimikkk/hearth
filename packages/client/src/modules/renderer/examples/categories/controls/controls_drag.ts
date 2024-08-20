@@ -1,4 +1,4 @@
-import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
+import { useWindowResizer, WindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
 import { PerspectiveCamera } from '@modules/renderer/engine/entities/cameras/PerspectiveCamera.js';
 import { Scene } from '@modules/renderer/engine/entities/scenes/Scene.js';
@@ -55,12 +55,7 @@ const sphere2 = BoundSphereVisualizer.attach(box2);
 
 const scene = createScene().add(camera, reference, box1, box2, sphere1, sphere2);
 
-const hearth = await Hearth.as({
-  async animate() {
-    await hearth.render(scene, camera);
-  },
-});
-
+const hearth = await Hearth.as();
 const orbit = OrbitControls.attach(hearth, camera);
 const controls = DragControls.attach(hearth, camera, [box1, box2], {
   onDragStart() {
@@ -70,8 +65,8 @@ const controls = DragControls.attach(hearth, camera, [box1, box2], {
     orbit.enabled = true;
   },
 });
-
-useWindowResizer(hearth, camera);
+WindowResizer.attach(hearth, camera);
+scene.attach(hearth, camera);
 
 interface State {
   drag: {
