@@ -38,7 +38,7 @@ and WebGPU API. It is designed to be a simple-to-use engine for creating rendera
 - **Sound System**: Hearth has a sound system that allows you to play sounds within your scenes.
 - **Pipelines**: Hearth allows for render/compute/compile passes to be created and managed.
 - **Post Processing**: Hearth has a post-processing system that allows you to apply post-processing effects to your scenes.
-- Check the code for the rest of the features. (I will update as the project reaches satisfactory state)
+- Check the code for the rest of features. (I will update as the project reaches satisfactory state)
 
 
 ## Remaining elements before release
