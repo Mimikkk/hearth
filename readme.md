@@ -1,6 +1,6 @@
 # Hearth
 
-Reimagining of the [three.js](https://github.com/mrdoob/three.js) engine with full typescript supported. Hearth is a
+Reimagining of the [three.js](https://github.com/mrdoob/three.js) engine with full typescript and WebGPU supported. Hearth is a
 rendering engine written in typescript
 and WebGPU API. It is designed to be a simple-to-use engine for creating renderable scenes in the browser.
 
