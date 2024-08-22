@@ -21,7 +21,7 @@ and WebGPU API. It is designed to be a simple-to-use engine for creating rendera
 - **Math**: Hearth reworked math classes to be more typesafe and easier to use with modern typescript features.
 - **Shader Graph**: Hearth version does not use proxy objects to create shaders which makes it easier to create custom
   shader node classes and use them in the shader graph. Shader graph system is more direct and less resource
-  intensive this way. Its also typed. unlike three.js mess.
+  intensive this way. Its also typed and allows easier extension. unlike three.js mess.
 - **Engine**: The renderer and the engine are Not separated in Hearth. The renderer is a component of the hearth. The
   same goes for all the needless classes that three.js had. Hearth is more modular, more concise, and more typesafe.
 
@@ -36,6 +36,10 @@ and WebGPU API. It is designed to be a simple-to-use engine for creating rendera
 - **Asset Management**: Hearth has an asset management system that allows you to load and manage assets.
 - **Animation System**: Hearth has an animation system that allows you to animate objects in your scenes.
 - **Sound System**: Hearth has a sound system that allows you to play sounds within your scenes.
+- **Pipelines**: Hearth allows for render/compute/compile passes to be created and managed.
+- **Post Processing**: Hearth has a post-processing system that allows you to apply post-processing effects to your scenes.
+- Check the code for the rest of the features. (I will update as the project reaches satisfactory state)
+
 
 ## Remaining elements before release
 
