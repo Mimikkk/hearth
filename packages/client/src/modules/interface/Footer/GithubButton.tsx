@@ -32,7 +32,7 @@ export const GithubButton = () => {
   const theme = useTheme();
 
   return (
-    <Button href="https://www.github.com/Mimikkk/webgpu" variant="text" title="Github repository">
+    <Button href="https://www.github.com/Mimikkk/hearth" variant="text" title="Github repository">
       <Show when={theme.mode() === 'dark'} fallback={<GithubBlack />}>
         <GithubWhite />
       </Show>
