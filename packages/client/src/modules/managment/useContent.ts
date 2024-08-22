@@ -9,7 +9,7 @@ const createExampleSearch = () => createSearchString<ExampleName | ''>(ExampleNs
 export const [useContent, ContentProvider] = createContext(() => {
   const [selectedExample, selectExample] = createExampleSearch();
   const [isCollapsed, , toggleCollapsed] = SearchStorage.bool(ExampleNs.Search.CollapseId, 'example-collapse', false);
-  const [showCode, , toggleCode] = SearchStorage.bool('code', 'show-code', false);
+  const [showCode, , toggleCode] = SearchStorage.bool(ExampleNs.Search.PreviewId, 'show-code', false);
 
   return {
     selectedExample,

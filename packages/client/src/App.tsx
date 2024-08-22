@@ -3,7 +3,7 @@ import { ContentProvider } from '@modules/managment/useContent.js';
 import { Layout } from '@modules/interface/Layout.js';
 
 export const App = () => (
-  <ThemeProvider key="dark-mode">
+  <ThemeProvider key="theme-mode">
     <ContentProvider>
       <Layout />
     </ContentProvider>
