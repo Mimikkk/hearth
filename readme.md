@@ -1,6 +1,7 @@
 # Hearth
 
-Reimagining of the [three.js](https://github.com/mrdoob/three.js) engine with full typescript and WebGPU supported. Hearth is a
+Reimagining of the [three.js](https://github.com/mrdoob/three.js) engine with full typescript and WebGPU supported.
+Hearth is a
 rendering engine written in typescript
 and WebGPU API. It is designed to be a simple-to-use engine for creating renderable scenes in the browser.
 
@@ -25,9 +26,9 @@ and WebGPU API. It is designed to be a simple-to-use engine for creating rendera
 - **Engine**: The renderer and the engine are Not separated in Hearth. The renderer is a component of the hearth. The
   same goes for all the needless classes that three.js had. Hearth is more modular, more concise, and more typesafe.
 
-##### Currently, a work in progress prototype and not ready for production use.
-
 ##### Check out [caniuse.com](https://caniuse.com/webgpu) to see if your browser supports WebGPU.
+
+##### Currently, the cooking is in progress - the prototype is not ready for production use.
 
 ## Features
 
@@ -37,9 +38,9 @@ and WebGPU API. It is designed to be a simple-to-use engine for creating rendera
 - **Animation System**: Hearth has an animation system that allows you to animate objects in your scenes.
 - **Sound System**: Hearth has a sound system that allows you to play sounds within your scenes.
 - **Pipelines**: Hearth allows for render/compute/compile passes to be created and managed.
-- **Post Processing**: Hearth has a post-processing system that allows you to apply post-processing effects to your scenes.
+- **Post Processing**: Hearth has a post-processing system that allows you to apply post-processing effects to your
+  scenes.
 - Check the code for the rest of features. (I will update as the project reaches satisfactory state)
-
 
 ## Remaining elements before release
 
