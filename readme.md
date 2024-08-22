@@ -4,7 +4,7 @@ Reimagining of the [three.js](https://github.com/mrdoob/three.js) engine with fu
 rendering engine written in typescript
 and WebGPU API. It is designed to be a simple-to-use engine for creating renderable scenes in the browser.
 
-base difference between three.js and Hearth:
+### Difference between three.js and Hearth:
 
 - **WebGPU**: Hearth is built on top of the WebGPU API, which is the successor to WebGL. It does not support
   WebGL.
@@ -37,7 +37,7 @@ base difference between three.js and Hearth:
 - **Animation System**: Hearth has an animation system that allows you to animate objects in your scenes.
 - **Sound System**: Hearth has a sound system that allows you to play sounds within your scenes.
 
-##### Remaining features to work on
+## Remaining elements before release
 
 - Casting and receiving shadows are currently broken.
 - Most of the examples need to be updated to the new API.
