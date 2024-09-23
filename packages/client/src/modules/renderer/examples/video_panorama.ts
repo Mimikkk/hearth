@@ -1,5 +1,5 @@
-import * as Engine from '@modules/renderer/engine/engine.js';
-import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
+import * as Engine from '@mimi/hearth';
+import { Hearth } from '@mimi/hearth';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let camera, scene, hearth;

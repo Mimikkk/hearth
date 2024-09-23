@@ -1,22 +1,15 @@
-import * as Engine from '@modules/renderer/engine/engine.js';
-import {
-  color,
-  lights,
-  MeshStandardNodeMaterial,
-  normalMap,
-  rangeFog,
-  texture,
-} from '@modules/renderer/engine/nodes/nodes.js';
+import * as Engine from '@mimi/hearth';
+import { color, lights, MeshStandardNodeMaterial, normalMap, rangeFog, texture } from '@mimi/hearth';
 
 import { GUI } from 'lil-gui';
 
-import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitControls.js';
-import { TeapotGeometry } from '@modules/renderer/engine/entities/geometries/TeapotGeometry.js';
+import { OrbitControls } from '@mimi/hearth';
+import { TeapotGeometry } from '@mimi/hearth';
 
-import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
-import { TextureLoader } from '@modules/renderer/engine/loaders/textures/TextureLoader/TextureLoader.js';
+import { Hearth } from '@mimi/hearth';
+import { TextureLoader } from '@mimi/hearth';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
-import { GPUAddressModeType } from '@modules/renderer/engine/engine.js';
+import { GPUAddressModeType } from '@mimi/hearth';
 
 let camera, scene, hearth, light1, light2, light3, light4, controls;
 

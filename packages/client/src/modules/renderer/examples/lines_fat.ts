@@ -13,12 +13,8 @@ import {
   PerspectiveCamera,
   Scene,
   Vec3,
-} from '@modules/renderer/engine/engine.js';
-import {
-  Line2NodeMaterial,
-  LineBasicNodeMaterial,
-  LineDashedNodeMaterial,
-} from '@modules/renderer/engine/nodes/nodes.js';
+} from '@mimi/hearth';
+import { Line2NodeMaterial, LineBasicNodeMaterial, LineDashedNodeMaterial } from '@mimi/hearth';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 import { MiniUi } from '@mimi/mini-ui';
 

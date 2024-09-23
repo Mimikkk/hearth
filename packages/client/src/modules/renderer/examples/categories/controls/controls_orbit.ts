@@ -1,9 +1,9 @@
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
-import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
-import { PerspectiveCamera } from '@modules/renderer/engine/entities/cameras/PerspectiveCamera.js';
-import { Scene } from '@modules/renderer/engine/entities/scenes/Scene.js';
-import { normalWorld } from '@modules/renderer/engine/nodes/accessors/NormalNode.js';
-import { color } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.primitves.js';
+import { Hearth } from '@mimi/hearth';
+import { PerspectiveCamera } from '@mimi/hearth';
+import { Scene } from '@mimi/hearth';
+import { normalWorld } from '@mimi/hearth';
+import { color } from '@mimi/hearth';
 import {
   Geometry,
   Fog,
@@ -13,10 +13,10 @@ import {
   SphereGeometry,
   SpotLight,
   ICamera,
-} from '@modules/renderer/engine/engine.js';
-import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitControls.js';
-import { ColorMap } from '@modules/renderer/engine/math/Color.js';
-import { Random } from '@modules/renderer/engine/math/random.js';
+} from '@mimi/hearth';
+import { OrbitControls } from '@mimi/hearth';
+import { ColorMap } from '@mimi/hearth';
+import { Random } from '@mimi/hearth';
 import { MiniUi } from '@mimi/mini-ui';
 
 const createCamera = () => {

@@ -11,7 +11,7 @@ import {
   vec3,
   viewportSharedTexture,
   viewportTopLeft,
-} from '@modules/renderer/engine/nodes/nodes.js';
+} from '@mimi/hearth/nodes';
 import {
   AnimationClip,
   AnimationMixer,
@@ -31,9 +31,11 @@ import {
   SpotLight,
   ToneMapping,
   Vec3,
-} from '@modules/renderer/engine/engine.js';
-import { degreeToRadian } from '@modules/renderer/engine/math/MathUtils.js';
+} from '@mimi/hearth';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
+
+const DegreeToRadian = Math.PI / 180;
+const degreeToRadian = (degrees: number): number => degrees * DegreeToRadian;
 
 const createCamera = () => {
   const camera = new PerspectiveCamera();

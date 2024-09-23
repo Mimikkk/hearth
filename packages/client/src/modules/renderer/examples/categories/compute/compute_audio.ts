@@ -1,22 +1,12 @@
-import * as Engine from '@modules/renderer/engine/engine.js';
-import { Attribute } from '@modules/renderer/engine/engine.js';
-import {
-  color,
-  f32,
-  instanceIndex,
-  storage,
-  texture,
-  hsl,
-  uniform,
-  viewportTopLeft,
-  TypeName,
-} from '@modules/renderer/engine/nodes/nodes.js';
+import * as Engine from '@mimi/hearth';
+import { Attribute } from '@mimi/hearth';
+import { color, f32, instanceIndex, storage, texture, hsl, uniform, viewportTopLeft, TypeName } from '@mimi/hearth';
 
 import { GUI } from 'lil-gui';
 
-import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
+import { Hearth } from '@mimi/hearth';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
-import { GPUBufferBindingTypeType, BufferStep } from '@modules/renderer/engine/hearth/constants.js';
+import { GPUBufferBindingTypeType, BufferStep } from '@mimi/hearth';
 
 let camera, scene, hearth;
 let computeNode;

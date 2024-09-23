@@ -1,9 +1,9 @@
-import * as Engine from '@modules/renderer/engine/engine.js';
-import { PointsNodeMaterial, skinning, uniform } from '@modules/renderer/engine/nodes/nodes.js';
+import * as Engine from '@mimi/hearth';
+import { PointsNodeMaterial, skinning, uniform } from '@mimi/hearth';
 
-import { GLTFLoader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/GLTFLoader.js';
+import { GLTFLoader } from '@mimi/hearth';
 
-import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
+import { Hearth } from '@mimi/hearth';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let camera, scene, hearth;

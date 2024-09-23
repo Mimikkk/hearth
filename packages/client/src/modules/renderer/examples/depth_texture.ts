@@ -1,12 +1,12 @@
-import * as Engine from '@modules/renderer/engine/engine.js';
-import { MeshBasicNodeMaterial, texture } from '@modules/renderer/engine/nodes/nodes.js';
+import * as Engine from '@mimi/hearth';
+import { MeshBasicNodeMaterial, texture } from '@mimi/hearth';
 
-import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
+import { Hearth } from '@mimi/hearth';
 
-import { QuadMesh } from '@modules/renderer/engine/entities/QuadMesh.js';
+import { QuadMesh } from '@mimi/hearth';
 
-import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitControls.js';
-import { TextureDataType } from '@modules/renderer/engine/engine.js';
+import { OrbitControls } from '@mimi/hearth';
+import { TextureDataType } from '@mimi/hearth';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let camera, scene, controls, hearth;

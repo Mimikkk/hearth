@@ -1,21 +1,13 @@
-import * as Engine from '@modules/renderer/engine/engine.js';
-import {
-  color,
-  MeshStandardNodeMaterial,
-  mix,
-  oscSine,
-  pass,
-  range,
-  timerLocal,
-} from '@modules/renderer/engine/nodes/nodes.js';
+import * as Engine from '@mimi/hearth';
+import { color, MeshStandardNodeMaterial, mix, oscSine, pass, range, timerLocal } from '@mimi/hearth';
 
-import { GLTFLoader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/GLTFLoader.js';
+import { GLTFLoader } from '@mimi/hearth';
 
-import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
-import { HearthPostprocess } from '@modules/renderer/engine/hearth/Hearth.Postprocess.js';
+import { Hearth } from '@mimi/hearth';
+import { HearthPostprocess } from '@mimi/hearth';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
-import { BufferStep } from '@modules/renderer/engine/hearth/constants.js';
-import { Attribute, Buffer } from '@modules/renderer/engine/engine.js';
+import { BufferStep } from '@mimi/hearth';
+import { Attribute, Buffer } from '@mimi/hearth';
 
 let camera, scene, hearth;
 let postProcessing;

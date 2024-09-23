@@ -1,9 +1,9 @@
-import * as Engine from '@modules/renderer/engine/engine.js';
+import * as Engine from '@mimi/hearth';
 
-import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
+import { Hearth } from '@mimi/hearth';
 
-import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitControls.js';
-import { hsl, MeshPhongNodeMaterial, vec4, vertexIndex } from '@modules/renderer/engine/nodes/nodes.js';
+import { OrbitControls } from '@mimi/hearth';
+import { hsl, MeshPhongNodeMaterial, vec4, vertexIndex } from '@mimi/hearth';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 import { cloneDeep } from 'lodash-es';
 

@@ -1,22 +1,13 @@
-import * as Engine from '@modules/renderer/engine/engine.js';
-import {
-  color,
-  mix,
-  positionLocal,
-  range,
-  SpriteNodeMaterial,
-  texture,
-  timerLocal,
-  uv,
-} from '@modules/renderer/engine/nodes/nodes.js';
+import * as Engine from '@mimi/hearth';
+import { color, mix, positionLocal, range, SpriteNodeMaterial, texture, timerLocal, uv } from '@mimi/hearth';
 
 import { GUI } from 'lil-gui';
 
-import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
+import { Hearth } from '@mimi/hearth';
 
-import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitControls.js';
-import { Blending } from '@modules/renderer/engine/engine.js';
-import { TextureLoader } from '@modules/renderer/engine/loaders/textures/TextureLoader/TextureLoader.js';
+import { OrbitControls } from '@mimi/hearth';
+import { Blending } from '@mimi/hearth';
+import { TextureLoader } from '@mimi/hearth';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 import { MiniUi } from '@mimi/mini-ui';
 

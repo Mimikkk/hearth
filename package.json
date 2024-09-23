@@ -21,9 +21,8 @@
   "name": "mimi",
   "scripts": {
     "preinstall": "npx only-allow pnpm",
-    "build": "pnpm run build:library -c blue.bold",
-    "build:hearth": "cd packages/hearth && pnpm run build",
     "build:basis": "cd packages/basis && pnpm run build",
+    "build:hearth": "cd packages/hearth && pnpm run build",
     "build:mini-ui": "cd packages/mini-ui && pnpm run build",
     "dev": "concurrently 'pnpm:dev:client' -c blue.bold",
     "redev": "pnpm run build && pnpm run dev",

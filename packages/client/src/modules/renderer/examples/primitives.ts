@@ -1,9 +1,9 @@
 import { WindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
-import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
-import { PerspectiveCamera } from '@modules/renderer/engine/entities/cameras/PerspectiveCamera.js';
-import { Scene } from '@modules/renderer/engine/entities/scenes/Scene.js';
-import { normalLocal, normalWorld } from '@modules/renderer/engine/nodes/accessors/NormalNode.js';
-import { color } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.primitves.js';
+import { Hearth } from '@mimi/hearth';
+import { PerspectiveCamera } from '@mimi/hearth';
+import { Scene } from '@mimi/hearth';
+import { normalLocal, normalWorld } from '@mimi/hearth';
+import { color } from '@mimi/hearth';
 import {
   AmbientLight,
   BoxGeometry,
@@ -30,10 +30,10 @@ import {
   TorusGeometry,
   TorusKnotGeometry,
   TubeGeometry,
-} from '@modules/renderer/engine/engine.js';
-import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitControls.js';
-import { MeshStandardNodeMaterial } from '@modules/renderer/engine/nodes/materials/MeshStandardNodeMaterial.js';
-import { timerLocal } from '@modules/renderer/engine/nodes/utils/TimerNode.js';
+} from '@mimi/hearth';
+import { OrbitControls } from '@mimi/hearth';
+import { MeshStandardNodeMaterial } from '@mimi/hearth';
+import { timerLocal } from '@mimi/hearth';
 
 const container = document.createElement('div');
 document.body.appendChild(container);

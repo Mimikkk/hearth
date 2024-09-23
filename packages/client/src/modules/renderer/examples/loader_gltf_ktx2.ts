@@ -1,16 +1,16 @@
-import { GLTFLoader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/GLTFLoader.js';
-import { KTX2Loader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/KTX2Loader.js';
+import { GLTFLoader } from '@mimi/hearth';
+import { KTX2Loader } from '@mimi/hearth';
 import { MeshoptDecoder } from 'meshoptimizer';
 
-import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitControls.js';
+import { OrbitControls } from '@mimi/hearth';
 
-import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
+import { Hearth } from '@mimi/hearth';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
-import { ToneMapping } from '@modules/renderer/engine/constants.js';
-import { PerspectiveCamera } from '@modules/renderer/engine/entities/cameras/PerspectiveCamera.js';
-import { Scene } from '@modules/renderer/engine/entities/scenes/Scene.js';
-import { Color } from '@modules/renderer/engine/math/Color.js';
-import { PointLight } from '@modules/renderer/engine/entities/lights/PointLight.js';
+import { ToneMapping } from '@mimi/hearth';
+import { PerspectiveCamera } from '@mimi/hearth';
+import { Scene } from '@mimi/hearth';
+import { Color } from '@mimi/hearth';
+import { PointLight } from '@mimi/hearth';
 
 init();
 

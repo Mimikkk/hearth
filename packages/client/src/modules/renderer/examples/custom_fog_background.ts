@@ -1,16 +1,16 @@
-import * as Engine from '@modules/renderer/engine/engine.js';
+import * as Engine from '@mimi/hearth';
 
-import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
-import { HearthPostprocess } from '@modules/renderer/engine/hearth/Hearth.Postprocess.js';
+import { Hearth } from '@mimi/hearth';
+import { HearthPostprocess } from '@mimi/hearth';
 
-import { color, pass, rangeFog } from '@modules/renderer/engine/nodes/nodes.js';
+import { color, pass, rangeFog } from '@mimi/hearth';
 
-import { RGBELoader } from '@modules/renderer/engine/loaders/textures/RGBELoader/RGBELoader.js';
+import { RGBELoader } from '@mimi/hearth';
 
-import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitControls.js';
-import { GLTFLoader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/GLTFLoader.js';
+import { OrbitControls } from '@mimi/hearth';
+import { GLTFLoader } from '@mimi/hearth';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
-import { ToneMapping } from '@modules/renderer/engine/engine.js';
+import { ToneMapping } from '@mimi/hearth';
 
 let camera, scene, hearth;
 let postProcessing;

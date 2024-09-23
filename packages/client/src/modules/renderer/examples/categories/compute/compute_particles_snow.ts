@@ -21,7 +21,7 @@ import {
   ToneMapping,
   Vec2,
   Vec3,
-} from '@modules/renderer/engine/engine.js';
+} from '@mimi/hearth';
 import {
   color,
   hsl,
@@ -42,15 +42,15 @@ import {
   vec2,
   vec3,
   viewportTopLeft,
-} from '@modules/renderer/engine/nodes/nodes.js';
+} from '@mimi/hearth';
 
-import { TeapotGeometry } from '@modules/renderer/engine/entities/geometries/TeapotGeometry.js';
+import { TeapotGeometry } from '@mimi/hearth';
 
-import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
+import { Hearth } from '@mimi/hearth';
 
-import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitControls.js';
+import { OrbitControls } from '@mimi/hearth';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
-import { BufferStep, GPUBufferBindingTypeType } from '@modules/renderer/engine/hearth/constants.js';
+import { BufferStep, GPUBufferBindingTypeType } from '@mimi/hearth';
 import { Stats } from '../../ui/stats.js';
 
 const maxCount = 100000;

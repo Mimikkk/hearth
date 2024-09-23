@@ -1,7 +1,7 @@
 import { useWindowResizer, WindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
-import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
-import { PerspectiveCamera } from '@modules/renderer/engine/entities/cameras/PerspectiveCamera.js';
-import { Scene } from '@modules/renderer/engine/entities/scenes/Scene.js';
+import { Hearth } from '@mimi/hearth';
+import { PerspectiveCamera } from '@mimi/hearth';
+import { Scene } from '@mimi/hearth';
 import {
   AxisMode,
   BoxGeometry,
@@ -12,14 +12,14 @@ import {
   OrbitControls,
   SpotLight,
   TransformMode,
-} from '@modules/renderer/engine/engine.js';
-import { DragControls } from '@modules/renderer/engine/entities/controls/DragControls.js';
+} from '@mimi/hearth';
+import { DragControls } from '@mimi/hearth';
 import { MiniUi } from '@mimi/mini-ui';
-import { ColorMap } from '@modules/renderer/engine/math/Color.js';
-import { Random } from '@modules/renderer/engine/math/random.js';
-import { normalWorld } from '@modules/renderer/engine/nodes/accessors/NormalNode.js';
-import { color } from '@modules/renderer/engine/nodes/shadernode/ShaderNode.primitves.js';
-import { BoundSphereVisualizer } from '@modules/renderer/engine/entities/visualizers/BoundSphereVisualizer.js';
+import { ColorMap } from '@mimi/hearth';
+import { Random } from '@mimi/hearth';
+import { normalWorld } from '@mimi/hearth';
+import { color } from '@mimi/hearth';
+import { BoundSphereVisualizer } from '@mimi/hearth';
 
 const createCamera = () => {
   const camera = new PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.25, 30);

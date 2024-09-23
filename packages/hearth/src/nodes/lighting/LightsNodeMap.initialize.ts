@@ -1,0 +1,20 @@
+import { SpotLightNode } from '../../nodes/lighting/SpotLightNode.js';
+import { AmbientLight } from '../../entities/lights/AmbientLight.js';
+import { DirectionalLight } from '../../entities/lights/DirectionalLight.js';
+import { HemisphereLight } from '../../entities/lights/HemisphereLight.js';
+import { PointLight } from '../../entities/lights/PointLight.js';
+import { SpotLight } from '../../entities/lights/SpotLight.js';
+import { PointLightNode } from '../../nodes/lighting/PointLightNode.js';
+import { AmbientLightNode } from '../../nodes/lighting/AmbientLightNode.js';
+import { DirectionalLightNode } from '../../nodes/lighting/DirectionalLightNode.js';
+import { LightNodeMap } from '../../nodes/lighting/LightsNodeMap.js';
+import { HemisphereLightNode } from '../../nodes/lighting/HemisphereLightNode.js';
+import { IESSpotLight } from '../../entities/lights/IESSpotLight.js';
+import { IESSpotLightNode } from '../../nodes/lighting/IESSpotLightNode.js';
+
+LightNodeMap.set(AmbientLight, AmbientLightNode);
+LightNodeMap.set(DirectionalLight, DirectionalLightNode);
+LightNodeMap.set(HemisphereLight, HemisphereLightNode);
+LightNodeMap.set(IESSpotLight, IESSpotLightNode);
+LightNodeMap.set(PointLight, PointLightNode);
+LightNodeMap.set(SpotLight, SpotLightNode);

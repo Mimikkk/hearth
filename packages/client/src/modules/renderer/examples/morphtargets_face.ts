@@ -1,11 +1,11 @@
-import * as Engine from '@modules/renderer/engine/engine.js';
+import * as Engine from '@mimi/hearth';
 
-import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
+import { Hearth } from '@mimi/hearth';
 
-import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitControls.js';
+import { OrbitControls } from '@mimi/hearth';
 
-import { GLTFLoader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/GLTFLoader.js';
-import { KTX2Loader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/KTX2Loader.js';
+import { GLTFLoader } from '@mimi/hearth';
+import { KTX2Loader } from '@mimi/hearth';
 import { MeshoptDecoder } from 'meshoptimizer';
 
 import { GUI } from 'lil-gui';

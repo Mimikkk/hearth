@@ -1,0 +1,19 @@
+import { Texture, TextureParameters } from '../textures/Texture.js';
+import { GPUFilterModeType } from '../../hearth/constants.js';
+
+export class StorageTexture extends Texture<{ width: number; height: number }> {
+  declare isStorageTexture: true;
+
+  constructor(parameters: StorageTextureParameters) {
+    super({
+      magFilter: GPUFilterModeType.Linear,
+      minFilter: GPUFilterModeType.Linear,
+      ...parameters,
+      image: { width: parameters.width, height: parameters.height },
+    });
+  }
+}
+
+StorageTexture.prototype.isStorageTexture = true;
+
+export type StorageTextureParameters = Omit<TextureParameters, 'image'> & { width: number; height: number };

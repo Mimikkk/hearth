@@ -1,5 +1,5 @@
-import * as Engine from '@modules/renderer/engine/engine.js';
-import { GPUFilterModeType } from '@modules/renderer/engine/engine.js';
+import * as Engine from '@mimi/hearth';
+import { GPUFilterModeType } from '@mimi/hearth';
 import {
   mix,
   normalWorld,
@@ -11,17 +11,17 @@ import {
   reflectVector,
   toneMapping,
   uniform,
-} from '@modules/renderer/engine/nodes/nodes.js';
+} from '@mimi/hearth';
 
-import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
+import { Hearth } from '@mimi/hearth';
 
-import { RGBMLoader } from '@modules/renderer/engine/loaders/textures/RGBMLoader/RGBMLoader.js';
+import { RGBMLoader } from '@mimi/hearth';
 
-import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitControls.js';
-import { GLTFLoader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/GLTFLoader.js';
+import { OrbitControls } from '@mimi/hearth';
+import { GLTFLoader } from '@mimi/hearth';
 
 import { GUI } from 'lil-gui';
-import { CubeTextureLoader } from '@modules/renderer/engine/loaders/textures/CubeTextureLoader/CubeTextureLoader.js';
+import { CubeTextureLoader } from '@mimi/hearth';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let camera, scene, hearth;

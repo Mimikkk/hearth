@@ -1,10 +1,10 @@
-import * as Engine from '@modules/renderer/engine/engine.js';
+import * as Engine from '@mimi/hearth';
 
 import { GUI } from 'lil-gui';
 
-import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
-import { HearthPostprocess } from '@modules/renderer/engine/hearth/Hearth.Postprocess.js';
-import { pass } from '@modules/renderer/engine/nodes/nodes.js';
+import { Hearth } from '@mimi/hearth';
+import { HearthPostprocess } from '@mimi/hearth';
+import { pass } from '@mimi/hearth';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let camera, scene, hearth;

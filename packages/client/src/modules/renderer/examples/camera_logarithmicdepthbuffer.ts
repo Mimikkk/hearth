@@ -1,13 +1,13 @@
-import * as Engine from '@modules/renderer/engine/engine.js';
-import { PerspectiveCamera, Scene } from '@modules/renderer/engine/engine.js';
+import * as Engine from '@mimi/hearth';
+import { PerspectiveCamera, Scene } from '@mimi/hearth';
 
-import { FontLoader } from '@modules/renderer/engine/loaders/fonts/FontLoader/FontLoader.js';
-import { TextGeometry } from '@modules/renderer/engine/entities/geometries/TextGeometry.js';
+import { FontLoader } from '@mimi/hearth';
+import { TextGeometry } from '@mimi/hearth';
 
-import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
-import { ColorRepresentation } from '@modules/renderer/engine/math/Color.js';
+import { Hearth } from '@mimi/hearth';
+import { ColorRepresentation } from '@mimi/hearth';
 import { clamp } from 'lodash-es';
-import { FontManager } from '@modules/renderer/engine/loaders/fonts/FontManager.js';
+import { FontManager } from '@mimi/hearth';
 
 let screensplit = 0.25;
 let screensplit_right = 0;

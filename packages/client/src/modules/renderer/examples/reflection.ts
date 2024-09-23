@@ -1,13 +1,4 @@
-import {
-  color,
-  MeshPhongNodeMaterial,
-  normalWorld,
-  pass,
-  reflector,
-  texture,
-  uv,
-  vignette,
-} from '@modules/renderer/engine/nodes/nodes.js';
+import { color, MeshPhongNodeMaterial, normalWorld, pass, reflector, texture, uv, vignette } from '@mimi/hearth';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 import {
   AnimationMixer,
@@ -25,7 +16,7 @@ import {
   Scene,
   TextureLoader,
   Vec3,
-} from '@modules/renderer/engine/engine.js';
+} from '@mimi/hearth';
 
 const createCamera = () => {
   const camera = new PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.25, 30);

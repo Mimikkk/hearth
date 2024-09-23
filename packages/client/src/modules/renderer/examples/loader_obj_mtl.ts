@@ -1,11 +1,11 @@
-import { Scene } from '@modules/renderer/engine/entities/scenes/Scene.js';
-import { PerspectiveCamera } from '@modules/renderer/engine/entities/cameras/PerspectiveCamera.js';
-import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
-import { MTLLoader } from '@modules/renderer/engine/loaders/objects/OBJLoader/MTLLoader/MTLLoader.js';
-import { OBJLoader } from '@modules/renderer/engine/loaders/objects/OBJLoader/OBJLoader.js';
-import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitControls.js';
-import { AmbientLight } from '@modules/renderer/engine/entities/lights/AmbientLight.js';
-import { PointLight } from '@modules/renderer/engine/entities/lights/PointLight.js';
+import { Scene } from '@mimi/hearth';
+import { PerspectiveCamera } from '@mimi/hearth';
+import { Hearth } from '@mimi/hearth';
+import { MTLLoader } from '@mimi/hearth';
+import { OBJLoader } from '@mimi/hearth';
+import { OrbitControls } from '@mimi/hearth';
+import { AmbientLight } from '@mimi/hearth';
+import { PointLight } from '@mimi/hearth';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let camera!: PerspectiveCamera;

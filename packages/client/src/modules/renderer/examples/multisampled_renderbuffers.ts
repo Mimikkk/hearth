@@ -1,11 +1,11 @@
-import * as Engine from '@modules/renderer/engine/engine.js';
-import { texture, MeshBasicNodeMaterial, MeshPhongNodeMaterial } from '@modules/renderer/engine/nodes/nodes.js';
+import * as Engine from '@mimi/hearth';
+import { texture, MeshBasicNodeMaterial, MeshPhongNodeMaterial } from '@mimi/hearth';
 
 import { GUI } from 'lil-gui';
 
-import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
+import { Hearth } from '@mimi/hearth';
 
-import { QuadMesh } from '@modules/renderer/engine/entities/QuadMesh.js';
+import { QuadMesh } from '@mimi/hearth';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let camera, scene, hearth;

@@ -1,19 +1,13 @@
-import * as Engine from '@modules/renderer/engine/engine.js';
-import {
-  cubeTexture,
-  MeshStandardNodeMaterial,
-  Node,
-  NodeUpdateStage,
-  uniform,
-} from '@modules/renderer/engine/nodes/nodes.js';
+import * as Engine from '@mimi/hearth';
+import { cubeTexture, MeshStandardNodeMaterial, Node, NodeUpdateStage, uniform } from '@mimi/hearth';
 
-import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
+import { Hearth } from '@mimi/hearth';
 
-import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitControls.js';
+import { OrbitControls } from '@mimi/hearth';
 
-import { TeapotGeometry } from '@modules/renderer/engine/entities/geometries/TeapotGeometry.js';
+import { TeapotGeometry } from '@mimi/hearth';
 
-import { CubeTextureLoader } from '@modules/renderer/engine/loaders/textures/CubeTextureLoader/CubeTextureLoader.js';
+import { CubeTextureLoader } from '@mimi/hearth';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 export class InstanceUniformNode extends Node {

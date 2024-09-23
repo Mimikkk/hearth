@@ -1,12 +1,12 @@
-import * as Engine from '@modules/renderer/engine/engine.js';
-import { createFlakesCanvas, GPUAddressModeType } from '@modules/renderer/engine/engine.js';
+import * as Engine from '@mimi/hearth';
+import { createFlakesCanvas, GPUAddressModeType } from '@mimi/hearth';
 
-import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
+import { Hearth } from '@mimi/hearth';
 
-import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitControls.js';
-import { HDRCubeTextureLoader } from '@modules/renderer/engine/loaders/textures/HDRCubeTextureLoader/HDRCubeTextureLoader.js';
+import { OrbitControls } from '@mimi/hearth';
+import { HDRCubeTextureLoader } from '@mimi/hearth';
 
-import { TextureLoader } from '@modules/renderer/engine/loaders/textures/TextureLoader/TextureLoader.js';
+import { TextureLoader } from '@mimi/hearth';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let container;

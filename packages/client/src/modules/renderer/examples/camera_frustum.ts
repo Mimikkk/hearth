@@ -1,5 +1,5 @@
-import { color, f32, MeshStandardNodeMaterial, normalWorld } from '@modules/renderer/engine/nodes/nodes.js';
-import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
+import { color, f32, MeshStandardNodeMaterial, normalWorld } from '@mimi/hearth';
+import { Hearth } from '@mimi/hearth';
 import {
   Camera,
   CameraVisualizer,
@@ -14,11 +14,11 @@ import {
   SphereGeometry,
   SpotLight,
   Sprite,
-} from '@modules/renderer/engine/engine.js';
+} from '@mimi/hearth';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 import { MiniUi } from '@mimi/mini-ui';
-import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitControls.js';
-import { SpriteMaterialBuilder } from '@modules/renderer/engine/entities/materials/SpriteMaterial.builder.js';
+import { OrbitControls } from '@mimi/hearth';
+import { SpriteMaterialBuilder } from '@mimi/hearth';
 
 const createCamera = () => {
   const perspectiveCamera = new PerspectiveCamera(80, window.innerWidth / window.innerHeight, 0.1, 100);

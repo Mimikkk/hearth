@@ -1,6 +1,6 @@
-import * as Engine from '@modules/renderer/engine/engine.js';
+import * as Engine from '@mimi/hearth';
 
-import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitControls.js';
+import { OrbitControls } from '@mimi/hearth';
 //import { GUI } from 'lil-gui';
 import {
   mix,
@@ -16,13 +16,13 @@ import {
   varying,
   vec2,
   vec4,
-} from '@modules/renderer/engine/nodes/nodes.js';
-import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
+} from '@mimi/hearth';
+import { Hearth } from '@mimi/hearth';
 
-import { QuadMesh } from '@modules/renderer/engine/entities/QuadMesh.js';
-import { TextureLoader } from '@modules/renderer/engine/loaders/textures/TextureLoader/TextureLoader.js';
+import { QuadMesh } from '@mimi/hearth';
+import { TextureLoader } from '@mimi/hearth';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
-import { GPUAddressModeType } from '@modules/renderer/engine/engine.js';
+import { GPUAddressModeType } from '@mimi/hearth';
 
 let camera, scene, hearth, torus;
 let quadMesh, renderTarget;

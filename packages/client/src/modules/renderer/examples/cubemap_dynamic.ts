@@ -1,16 +1,16 @@
-import * as Engine from '@modules/renderer/engine/engine.js';
-import { GPUFilterModeType } from '@modules/renderer/engine/engine.js';
-import * as Nodes from '@modules/renderer/engine/nodes/nodes.js';
+import * as Engine from '@mimi/hearth';
+import { GPUFilterModeType } from '@mimi/hearth';
+import * as Nodes from '@mimi/hearth';
 
-import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
+import { Hearth } from '@mimi/hearth';
 
-import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitControls.js';
+import { OrbitControls } from '@mimi/hearth';
 
 import { GUI } from 'lil-gui';
-import { RGBMLoader } from '@modules/renderer/engine/loaders/textures/RGBMLoader/RGBMLoader.js';
-import { TextureLoader } from '@modules/renderer/engine/loaders/textures/TextureLoader/TextureLoader.js';
+import { RGBMLoader } from '@mimi/hearth';
+import { TextureLoader } from '@mimi/hearth';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
-import { CubeRenderTarget } from '@modules/renderer/engine/hearth/core/CubeRenderTarget.js';
+import { CubeRenderTarget } from '@mimi/hearth';
 
 let camera, scene, hearth;
 let cube, sphere, torus, material;

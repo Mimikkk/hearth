@@ -7,10 +7,10 @@ import {
   Texture,
   TextureDataType,
   Vec2,
-} from '@modules/renderer/engine/engine.js';
-import { instanceIndex, texture, textureStore, uniform, wgsl } from '@modules/renderer/engine/nodes/nodes.js';
-import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
-import { StorageTexture } from '@modules/renderer/engine/entities/textures/StorageTexture.js';
+} from '@mimi/hearth';
+import { instanceIndex, texture, textureStore, uniform, wgsl } from '@mimi/hearth';
+import { Hearth } from '@mimi/hearth';
+import { StorageTexture } from '@mimi/hearth';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 const createCamera = () => {

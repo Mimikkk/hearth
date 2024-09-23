@@ -59,6 +59,9 @@ importers:
       '@mimi/basis':
         specifier: workspace:*
         version: link:../basis
+      '@mimi/hearth':
+        specifier: workspace:*
+        version: link:../hearth
       '@mimi/mini-ui':
         specifier: workspace:*
         version: link:../mini-ui
@@ -198,6 +201,112 @@ importers:
       vite-plugin-solid:
         specifier: ^2.10.2
         version: 2.10.2(solid-js@1.8.19)(vite@5.3.5(@types/node@20.14.12)(sass@1.53.0))
+      vite-plugin-svgr:
+        specifier: ^4.2.0
+        version: 4.2.0(rollup@4.19.1)(vite@5.3.5(@types/node@20.14.12)(sass@1.53.0))
+      vitest:
+        specifier: ^2.0.4
+        version: 2.0.4(@types/node@20.14.12)(jsdom@24.1.1(canvas@2.11.2))(sass@1.53.0)
+
+  packages/hearth:
+    dependencies:
+      '@mimi/basis':
+        specifier: workspace:*
+        version: link:../basis
+      ammo.js:
+        specifier: github:kripken/ammo.js
+        version: https://codeload.github.com/kripken/ammo.js/tar.gz/1ed8b58c7058a5f697f2642ceef8ee20fdd55e10
+      fflate:
+        specifier: ^0.8.2
+        version: 0.8.2
+      ktx-parse:
+        specifier: ^0.7.1
+        version: 0.7.1
+      lil-gui:
+        specifier: ^0.19.2
+        version: 0.19.2
+      lodash-es:
+        specifier: ^4.17.21
+        version: 4.17.21
+      meshoptimizer:
+        specifier: ^0.21.0
+        version: 0.21.0
+      opentype.js:
+        specifier: ^1.3.4
+        version: 1.3.4
+      potpack:
+        specifier: ^2.0.0
+        version: 2.0.0
+      stats-gl:
+        specifier: ^2.2.8
+        version: 2.2.8
+      tslib:
+        specifier: ^2.6.3
+        version: 2.6.3
+      typescript:
+        specifier: 5.5.4
+        version: 5.5.4
+      upng-js:
+        specifier: ^2.1.0
+        version: 2.1.0
+      utif:
+        specifier: ^3.1.0
+        version: 3.1.0
+      uuid:
+        specifier: ^10.0.0
+        version: 10.0.0
+      zstddec:
+        specifier: ^0.1.0
+        version: 0.1.0
+    devDependencies:
+      '@faker-js/faker':
+        specifier: ^8.4.1
+        version: 8.4.1
+      '@types/lodash-es':
+        specifier: ^4.17.12
+        version: 4.17.12
+      '@types/opentype.js':
+        specifier: ^1.3.8
+        version: 1.3.8
+      '@types/upng-js':
+        specifier: ^2.1.5
+        version: 2.1.5
+      '@types/utif':
+        specifier: ^3.0.5
+        version: 3.0.5
+      '@types/uuid':
+        specifier: ^10.0.0
+        version: 10.0.0
+      '@webgpu/types':
+        specifier: ^0.1.44
+        version: 0.1.44
+      a-path:
+        specifier: ^2.0.1
+        version: 2.0.1
+      concurrently:
+        specifier: ^8.2.2
+        version: 8.2.2
+      copyfiles:
+        specifier: ^2.4.1
+        version: 2.4.1
+      jsdom:
+        specifier: ^24.1.1
+        version: 24.1.1(canvas@2.11.2)
+      prettier:
+        specifier: ^3.3.3
+        version: 3.3.3
+      rimraf:
+        specifier: ^6.0.1
+        version: 6.0.1
+      vite:
+        specifier: ^5.3.5
+        version: 5.3.5(@types/node@20.14.12)(sass@1.53.0)
+      vite-plugin-arraybuffer:
+        specifier: ^0.0.8
+        version: 0.0.8
+      vite-plugin-dts:
+        specifier: ^3.9.1
+        version: 3.9.1(@types/node@20.14.12)(rollup@4.19.1)(typescript@5.5.4)(vite@5.3.5(@types/node@20.14.12)(sass@1.53.0))
       vite-plugin-svgr:
         specifier: ^4.2.0
         version: 4.2.0(rollup@4.19.1)(vite@5.3.5(@types/node@20.14.12)(sass@1.53.0))
@@ -5005,7 +5114,7 @@ snapshots:
       '@microsoft/api-extractor': 7.43.0(@types/node@20.14.12)
       '@rollup/pluginutils': 5.1.0(rollup@4.19.1)
       '@vue/language-core': 1.8.27(typescript@5.5.4)
-      debug: 4.3.4
+      debug: 4.3.6
       kolorist: 1.8.0
       magic-string: 0.30.10
       typescript: 5.5.4

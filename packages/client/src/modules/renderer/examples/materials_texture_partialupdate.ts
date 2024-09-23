@@ -9,12 +9,12 @@ import {
   PlaneGeometry,
   Scene,
   Vec2,
-} from '@modules/renderer/engine/engine.js';
-import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
-import { TextureLoader } from '@modules/renderer/engine/loaders/textures/TextureLoader/TextureLoader.js';
+} from '@mimi/hearth';
+import { Hearth } from '@mimi/hearth';
+import { TextureLoader } from '@mimi/hearth';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
-import { Random } from '@modules/renderer/engine/math/random.js';
-import { ColorMap } from '@modules/renderer/engine/math/Color.js';
+import { Random } from '@mimi/hearth';
+import { ColorMap } from '@mimi/hearth';
 
 const createCamera = () => {
   const camera = new PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.01, 10);

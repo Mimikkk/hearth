@@ -1,11 +1,11 @@
-import * as Engine from '@modules/renderer/engine/engine.js';
+import * as Engine from '@mimi/hearth';
 
 import { GUI } from 'lil-gui';
-import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitControls.js';
+import { OrbitControls } from '@mimi/hearth';
 
-import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
+import { Hearth } from '@mimi/hearth';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
-import { Attribute } from '@modules/renderer/engine/engine.js';
+import { Attribute } from '@mimi/hearth';
 
 let container, camera, scene, hearth, mesh;
 

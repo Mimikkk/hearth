@@ -16,7 +16,7 @@ import {
   TextureLoader,
   Vec2,
   Vec3,
-} from '@modules/renderer/engine/engine.js';
+} from '@mimi/hearth';
 import {
   f32,
   hsl,
@@ -28,7 +28,7 @@ import {
   TypeName,
   uniform,
   vec3,
-} from '@modules/renderer/engine/nodes/nodes.js';
+} from '@mimi/hearth';
 
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 import { MiniUi } from '@mimi/mini-ui';

@@ -1,12 +1,12 @@
-import * as Engine from '@modules/renderer/engine/engine.js';
+import * as Engine from '@mimi/hearth';
 
-import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
+import { Hearth } from '@mimi/hearth';
 
-import { IESSpotLight } from '@modules/renderer/engine/entities/lights/IESSpotLight.js';
+import { IESSpotLight } from '@mimi/hearth';
 
-import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitControls.js';
+import { OrbitControls } from '@mimi/hearth';
 
-import { IESLoader } from '@modules/renderer/engine/loaders/lights/IESLoader/IESLoader.js';
+import { IESLoader } from '@mimi/hearth';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let hearth, scene, camera;

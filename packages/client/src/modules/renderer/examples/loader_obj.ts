@@ -1,8 +1,8 @@
-import { AmbientLight, ColorSpace, PerspectiveCamera, PointLight, Scene } from '@modules/renderer/engine/engine.js';
-import { TextureLoader } from '@modules/renderer/engine/loaders/textures/TextureLoader/TextureLoader.js';
-import { OBJLoader } from '@modules/renderer/engine/loaders/objects/OBJLoader/OBJLoader.js';
-import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
-import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitControls.js';
+import { AmbientLight, ColorSpace, PerspectiveCamera, PointLight, Scene } from '@mimi/hearth';
+import { TextureLoader } from '@mimi/hearth';
+import { OBJLoader } from '@mimi/hearth';
+import { Hearth } from '@mimi/hearth';
+import { OrbitControls } from '@mimi/hearth';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let camera!: PerspectiveCamera;

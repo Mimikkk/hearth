@@ -1,12 +1,12 @@
-import * as Engine from '@modules/renderer/engine/engine.js';
+import * as Engine from '@mimi/hearth';
 
-import { MeshBasicNodeMaterial, normalWorld, pmremTexture, uniform } from '@modules/renderer/engine/nodes/nodes.js';
+import { MeshBasicNodeMaterial, normalWorld, pmremTexture, uniform } from '@mimi/hearth';
 
-import { PMREMGenerator } from '@modules/renderer/engine/hearth/PMREMGenerator.js';
+import { PMREMGenerator } from '@mimi/hearth';
 
-import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
+import { Hearth } from '@mimi/hearth';
 
-import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitControls.js';
+import { OrbitControls } from '@mimi/hearth';
 
 import { GUI } from 'lil-gui';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';

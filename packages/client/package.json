@@ -1,8 +1,9 @@
 {
   "author": "Daniel Zdancewicz <zdancewicz.daniel@gmail.com>",
   "dependencies": {
-    "@mimi/basis": "workspace:*",
+    "@mimi/basis":  "workspace:*",
     "@mimi/mini-ui": "workspace:*",
+    "@mimi/hearth": "workspace:*",
     "ammo.js": "github:kripken/ammo.js",
     "clsx": "^2.1.1",
     "fflate": "^0.8.2",
@@ -54,7 +55,7 @@
     "vite-plugin-svgr": "^4.2.0",
     "vitest": "^2.0.4"
   },
-  "homepage": "https://www.github.com/Mimikkk/webgpgu/client",
+  "homepage": "https://www.github.com/Mimikkk/hearth/packages/client",
   "keywords": [
     "WebGPU"
   ],

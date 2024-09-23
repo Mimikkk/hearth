@@ -1,8 +1,8 @@
-import * as Engine from '@modules/renderer/engine/engine.js';
-import { color, rangeFog, SpriteNodeMaterial, texture, extra, uv } from '@modules/renderer/engine/nodes/nodes.js';
+import * as Engine from '@mimi/hearth';
+import { color, rangeFog, SpriteNodeMaterial, texture, extra, uv } from '@mimi/hearth';
 
-import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
-import { TextureLoader } from '@modules/renderer/engine/loaders/textures/TextureLoader/TextureLoader.js';
+import { Hearth } from '@mimi/hearth';
+import { TextureLoader } from '@mimi/hearth';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let camera, scene, hearth;

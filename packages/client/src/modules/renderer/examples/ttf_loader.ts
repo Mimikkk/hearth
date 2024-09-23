@@ -1,9 +1,9 @@
-import * as Engine from '@modules/renderer/engine/engine.js';
-import { TTFLoader } from '@modules/renderer/engine/loaders/fonts/TTFLoader/TTFLoader.js';
-import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
-import { TextGeometry } from '@modules/renderer/engine/entities/geometries/TextGeometry.js';
+import * as Engine from '@mimi/hearth';
+import { TTFLoader } from '@mimi/hearth';
+import { Hearth } from '@mimi/hearth';
+import { TextGeometry } from '@mimi/hearth';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
-import { FontManager } from '@modules/renderer/engine/loaders/fonts/FontManager.js';
+import { FontManager } from '@mimi/hearth';
 
 let camera, cameraTarget, scene, hearth;
 let group, textMesh1, textMesh2, textGeo, material;

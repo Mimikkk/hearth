@@ -44,7 +44,6 @@
     }
   },
   "include": [
-    "../../node_modules/@webgpu/types",
     "declarations",
     "assets",
     "src"

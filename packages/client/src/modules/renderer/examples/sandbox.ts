@@ -1,4 +1,4 @@
-import * as Engine from '@modules/renderer/engine/engine.js';
+import * as Engine from '@mimi/hearth';
 import {
   attribute,
   checker,
@@ -14,15 +14,15 @@ import {
   timerLocal,
   uv,
   vec2,
-} from '@modules/renderer/engine/nodes/nodes.js';
+} from '@mimi/hearth';
 
-import { KTX2Loader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/KTX2Loader.js';
+import { KTX2Loader } from '@mimi/hearth';
 
-import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
-import { GPUAddressModeType, TextureFormat } from '@modules/renderer/engine/engine.js';
-import { TextureLoader } from '@modules/renderer/engine/loaders/textures/TextureLoader/TextureLoader.js';
+import { Hearth } from '@mimi/hearth';
+import { GPUAddressModeType, TextureFormat } from '@mimi/hearth';
+import { TextureLoader } from '@mimi/hearth';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
-import { Random } from '@modules/renderer/engine/math/random.js';
+import { Random } from '@mimi/hearth';
 
 let camera, scene, hearth;
 

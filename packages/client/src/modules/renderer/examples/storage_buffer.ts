@@ -1,20 +1,10 @@
-import * as Engine from '@modules/renderer/engine/engine.js';
-import { Attribute, Buffer } from '@modules/renderer/engine/engine.js';
-import {
-  f32,
-  instanceIndex,
-  MeshBasicNodeMaterial,
-  NodeStack,
-  storage,
-  hsl,
-  u32,
-  uv,
-  vec3,
-} from '@modules/renderer/engine/nodes/nodes.js';
+import * as Engine from '@mimi/hearth';
+import { Attribute, Buffer } from '@mimi/hearth';
+import { f32, instanceIndex, MeshBasicNodeMaterial, NodeStack, storage, hsl, u32, uv, vec3 } from '@mimi/hearth';
 
-import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
+import { Hearth } from '@mimi/hearth';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
-import { GPUBufferBindingTypeType, BufferStep } from '@modules/renderer/engine/hearth/constants.js';
+import { GPUBufferBindingTypeType, BufferStep } from '@mimi/hearth';
 
 init();
 

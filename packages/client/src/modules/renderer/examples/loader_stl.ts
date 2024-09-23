@@ -1,15 +1,15 @@
-import { PerspectiveCamera } from '@modules/renderer/engine/entities/cameras/PerspectiveCamera.js';
+import { PerspectiveCamera } from '@mimi/hearth';
 import { Vec3 } from '../engine/math/Vec3.js';
-import { Scene } from '@modules/renderer/engine/entities/scenes/Scene';
+import { Scene } from '@mimi/hearth';
 import { Color } from '../engine/math/Color';
-import { Fog } from '@modules/renderer/engine/entities/scenes/Fog';
-import { Mesh } from '@modules/renderer/engine/entities/Mesh';
+import { Fog } from '@mimi/hearth';
+import { Mesh } from '@mimi/hearth';
 import { PlaneGeometry } from '../engine/geometries/PlaneGeometry';
-import { MeshPhongMaterial } from '@modules/renderer/engine/entities/materials/MeshPhongMaterial';
-import { STLLoader } from '@modules/renderer/engine/loaders/objects/STLLoader/STLLoader.js';
-import { HemisphereLight } from '@modules/renderer/engine/entities/lights/HemisphereLight';
-import { DirectionalLight } from '@modules/renderer/engine/entities/lights/DirectionalLight';
-import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
+import { MeshPhongMaterial } from '@mimi/hearth';
+import { STLLoader } from '@mimi/hearth';
+import { HemisphereLight } from '@mimi/hearth';
+import { DirectionalLight } from '@mimi/hearth';
+import { Hearth } from '@mimi/hearth';
 
 let container;
 

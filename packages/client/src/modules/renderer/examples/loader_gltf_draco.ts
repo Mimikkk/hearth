@@ -1,16 +1,16 @@
-import { PerspectiveCamera } from '@modules/renderer/engine/entities/cameras/PerspectiveCamera.js';
-import { Scene } from '@modules/renderer/engine/entities/scenes/Scene.js';
-import { Fog } from '@modules/renderer/engine/entities/scenes/Fog.js';
-import { Mesh } from '@modules/renderer/engine/entities/Mesh.js';
+import { PerspectiveCamera } from '@mimi/hearth';
+import { Scene } from '@mimi/hearth';
+import { Fog } from '@mimi/hearth';
+import { Mesh } from '@mimi/hearth';
 import { PlaneGeometry } from '../engine/geometries/PlaneGeometry.js';
-import { MeshPhongMaterial } from '@modules/renderer/engine/entities/materials/MeshPhongMaterial.js';
-import { HemisphereLight } from '@modules/renderer/engine/entities/lights/HemisphereLight.js';
-import { SpotLight } from '@modules/renderer/engine/entities/lights/SpotLight.js';
-import { MeshStandardMaterial } from '@modules/renderer/engine/entities/materials/MeshStandardMaterial.js';
-import { DRACOLoader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/DRACOLoader.js';
-import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
-import { Color } from '@modules/renderer/engine/math/Color.js';
-import { FileLoader } from '@modules/renderer/engine/loaders/files/FileLoader/FileLoader.js';
+import { MeshPhongMaterial } from '@mimi/hearth';
+import { HemisphereLight } from '@mimi/hearth';
+import { SpotLight } from '@mimi/hearth';
+import { MeshStandardMaterial } from '@mimi/hearth';
+import { DRACOLoader } from '@mimi/hearth';
+import { Hearth } from '@mimi/hearth';
+import { Color } from '@mimi/hearth';
+import { FileLoader } from '@mimi/hearth';
 
 let camera, scene, hearth;
 

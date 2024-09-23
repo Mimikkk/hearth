@@ -10,7 +10,7 @@ import {
   PerspectiveCamera,
   Scene,
   VideoTexture,
-} from '@modules/renderer/engine/engine.js';
+} from '@mimi/hearth';
 
 const createLight = () => {
   const light = new DirectionalLight(0xffffff, 7);

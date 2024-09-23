@@ -1,18 +1,12 @@
-import * as Engine from '@modules/renderer/engine/engine.js';
-import {
-  color,
-  lights,
-  MeshStandardNodeMaterial,
-  PointsNodeMaterial,
-  toneMapping,
-} from '@modules/renderer/engine/nodes/nodes.js';
+import * as Engine from '@mimi/hearth';
+import { color, lights, MeshStandardNodeMaterial, PointsNodeMaterial, toneMapping } from '@mimi/hearth';
 
-import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
+import { Hearth } from '@mimi/hearth';
 
-import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitControls.js';
+import { OrbitControls } from '@mimi/hearth';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
-import { Random } from '@modules/renderer/engine/math/random.js';
-import { LightModel } from '@modules/renderer/engine/nodes/functions/LightModel.js';
+import { Random } from '@mimi/hearth';
+import { LightModel } from '@mimi/hearth';
 
 class CustomLightingModel extends LightModel {
   direct({ lightColor, reflectedLight }, stack) {

@@ -1,10 +1,10 @@
-import * as Engine from '@modules/renderer/engine/engine.js';
-import { mix, normalWorld, oscSine, range, timerLocal } from '@modules/renderer/engine/nodes/nodes.js';
+import * as Engine from '@mimi/hearth';
+import { mix, normalWorld, oscSine, range, timerLocal } from '@mimi/hearth';
 
 import { GUI } from 'lil-gui';
 
-import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
-import { GeometryLoader } from '@modules/renderer/engine/loaders/geometries/GeometryLoader/GeometryLoader.js';
+import { Hearth } from '@mimi/hearth';
+import { GeometryLoader } from '@mimi/hearth';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let camera, scene, hearth;

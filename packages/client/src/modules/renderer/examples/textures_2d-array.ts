@@ -1,10 +1,10 @@
-import * as Engine from '@modules/renderer/engine/engine.js';
-import { MeshBasicNodeMaterial, oscTriangle, texture, timerLocal, uv } from '@modules/renderer/engine/nodes/nodes.js';
+import * as Engine from '@mimi/hearth';
+import { MeshBasicNodeMaterial, oscTriangle, texture, timerLocal, uv } from '@mimi/hearth';
 
-import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
+import { Hearth } from '@mimi/hearth';
 
 import { unzipSync } from 'fflate';
-import { FileLoader, ResponseType } from '@modules/renderer/engine/loaders/files/FileLoader/FileLoader.js';
+import { FileLoader, ResponseType } from '@mimi/hearth';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let camera, scene, mesh, hearth;

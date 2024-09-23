@@ -1,18 +1,18 @@
-import * as Engine from '@modules/renderer/engine/engine.js';
+import * as Engine from '@mimi/hearth';
 
-import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
+import { Hearth } from '@mimi/hearth';
 
 import Stats from 'stats-gl';
 
 import { GUI } from 'lil-gui';
-import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitControls.js';
+import { OrbitControls } from '@mimi/hearth';
 
-import { InstancedPoints } from '@modules/renderer/engine/entities/InstancedPoints.js';
-import { PointsGeometry } from '@modules/renderer/engine/entities/geometries/PointsGeometry.js';
+import { InstancedPoints } from '@mimi/hearth';
+import { PointsGeometry } from '@mimi/hearth';
 
-import { color, InstancedPointsNodeMaterial } from '@modules/renderer/engine/nodes/nodes.js';
+import { color, InstancedPointsNodeMaterial } from '@mimi/hearth';
 
-import * as GeometryUtils from '@modules/renderer/engine/utils/GeometryUtils.js';
+import * as GeometryUtils from '@mimi/hearth';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 let hearth, scene, camera, camera2, controls, backgroundNode;

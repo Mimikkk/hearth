@@ -9,20 +9,20 @@ import {
   positionView,
   positionWorld,
   timerLocal,
-} from '@modules/renderer/engine/nodes/nodes.js';
-import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
-import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitControls.js';
+} from '@mimi/hearth';
+import { Hearth } from '@mimi/hearth';
+import { OrbitControls } from '@mimi/hearth';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
-import { PerspectiveCamera } from '@modules/renderer/engine/entities/cameras/PerspectiveCamera.js';
-import { BoxGeometry } from '@modules/renderer/engine/entities/geometries/BoxGeometry.js';
-import { Scene } from '@modules/renderer/engine/entities/scenes/Scene.js';
-import { InstancedMesh } from '@modules/renderer/engine/entities/InstancedMesh.js';
-import { Entity } from '@modules/renderer/engine/core/Entity.js';
-import { Vec3 } from '@modules/renderer/engine/math/Vec3.js';
-import { HemisphereLight } from '@modules/renderer/engine/entities/lights/HemisphereLight.js';
-import { PlaneGeometry } from '@modules/renderer/engine/entities/geometries/PlaneGeometry.js';
-import { MeshPhongMaterial } from '@modules/renderer/engine/entities/materials/MeshPhongMaterial.js';
-import { Mesh } from '@modules/renderer/engine/entities/Mesh.js';
+import { PerspectiveCamera } from '@mimi/hearth';
+import { BoxGeometry } from '@mimi/hearth';
+import { Scene } from '@mimi/hearth';
+import { InstancedMesh } from '@mimi/hearth';
+import { Entity } from '@mimi/hearth';
+import { Vec3 } from '@mimi/hearth';
+import { HemisphereLight } from '@mimi/hearth';
+import { PlaneGeometry } from '@mimi/hearth';
+import { MeshPhongMaterial } from '@mimi/hearth';
+import { Mesh } from '@mimi/hearth';
 
 const createGround = () => {
   const geometry = new PlaneGeometry({ width: 200, height: 200 });

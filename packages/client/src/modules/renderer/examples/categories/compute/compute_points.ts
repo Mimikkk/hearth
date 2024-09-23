@@ -1,12 +1,4 @@
-import {
-  Attribute,
-  Buffer,
-  Geometry,
-  OrthographicCamera,
-  Points,
-  Scene,
-  Vec2,
-} from '@modules/renderer/engine/engine.js';
+import { Attribute, Buffer, Geometry, OrthographicCamera, Points, Scene, Vec2 } from '@mimi/hearth';
 import {
   attribute,
   color,
@@ -18,12 +10,12 @@ import {
   uniform,
   vec2,
   vec3,
-} from '@modules/renderer/engine/nodes/nodes.js';
+} from '@mimi/hearth';
 
-import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
+import { Hearth } from '@mimi/hearth';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
-import { BufferStep, GPUBufferBindingTypeType } from '@modules/renderer/engine/hearth/constants.js';
-import { TypeName } from '@modules/renderer/engine/nodes/builder/NodeBuilder.types.js';
+import { BufferStep, GPUBufferBindingTypeType } from '@mimi/hearth';
+import { TypeName } from '@mimi/hearth';
 import { MiniUi } from '@mimi/mini-ui';
 
 const count = 300000;

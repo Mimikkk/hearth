@@ -1,10 +1,10 @@
-import { Clock, Mapping, PerspectiveCamera, Scene, ToneMapping } from '@modules/renderer/engine/engine.js';
-import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
-import { RGBELoader } from '@modules/renderer/engine/loaders/textures/RGBELoader/RGBELoader.js';
-import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitControls.js';
-import { GLTFLoader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/GLTFLoader.js';
+import { Clock, Mapping, PerspectiveCamera, Scene, ToneMapping } from '@mimi/hearth';
+import { Hearth } from '@mimi/hearth';
+import { RGBELoader } from '@mimi/hearth';
+import { OrbitControls } from '@mimi/hearth';
+import { GLTFLoader } from '@mimi/hearth';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
-import { WorldAxesControls } from '@modules/renderer/engine/entities/controls/WorldAxesControls.js';
+import { WorldAxesControls } from '@mimi/hearth';
 
 let camera!: PerspectiveCamera;
 let scene!: Scene;

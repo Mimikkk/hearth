@@ -17,7 +17,7 @@ import {
   viewportSharedTexture,
   viewportTopLeft,
   vignette,
-} from '@modules/renderer/engine/nodes/nodes.js';
+} from '@mimi/hearth';
 import {
   AnimationMixer,
   BoxGeometry,
@@ -33,12 +33,12 @@ import {
   PerspectiveCamera,
   Scene,
   Vec3,
-} from '@modules/renderer/engine/engine.js';
-import { GLTFLoader } from '@modules/renderer/engine/loaders/objects/GLTFLoader/GLTFLoader.js';
-import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
-import { OrbitControls } from '@modules/renderer/engine/entities/controls/OrbitControls.js';
+} from '@mimi/hearth';
+import { GLTFLoader } from '@mimi/hearth';
+import { Hearth } from '@mimi/hearth';
+import { OrbitControls } from '@mimi/hearth';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
-import { TextureLoader } from '@modules/renderer/engine/loaders/textures/TextureLoader/TextureLoader.js';
+import { TextureLoader } from '@mimi/hearth';
 
 const createCamera = () => {
   const camera = new PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.25, 30);

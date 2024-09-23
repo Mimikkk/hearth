@@ -1,0 +1,54 @@
+import { Node } from './Node.js';
+import { asCommand } from '../shadernode/ShaderNode.primitves.js';
+import { TypeName } from '../../nodes/builder/NodeBuilder.types.js';
+import { implCommand } from '../../nodes/core/Node.commands.js';
+import { NodeBuilder } from '../../nodes/builder/NodeBuilder.js';
+
+export class VarNode extends Node {
+  constructor(
+    public node: Node,
+    public name?: string,
+  ) {
+    super();
+  }
+
+  isGlobal(): boolean {
+    return true;
+  }
+
+  getHash(builder: NodeBuilder): string {
+    return this.name || super.getHash(builder);
+  }
+
+  getNodeType(builder: NodeBuilder): TypeName {
+    return this.node.getNodeType(builder);
+  }
+
+  generate(builder: NodeBuilder): string {
+    const { node, name } = this;
+
+    const type = TypeName.coerce(this.getNodeType(builder));
+
+    const nodeVar = builder.getVarFromNode(this, name, type);
+
+    const property = builder.getPropertyName(nodeVar);
+
+    const snippet = node.build(builder, nodeVar.type);
+
+    builder.addLineFlowCode(`${property} = ${snippet}`);
+
+    return property;
+  }
+}
+
+export const temp = asCommand(VarNode);
+
+export class ToVarNode extends VarNode {
+  constructor(node: Node, name?: string) {
+    super(node, name);
+    this.append();
+  }
+}
+
+implCommand('temp', VarNode);
+implCommand('toVar', ToVarNode);

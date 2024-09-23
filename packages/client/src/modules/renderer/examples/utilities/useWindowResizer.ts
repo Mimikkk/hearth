@@ -1,5 +1,5 @@
-import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
-import type { ICamera } from '@modules/renderer/engine/entities/cameras/Camera.js';
+import { Hearth } from '@mimi/hearth';
+import type { ICamera } from '@mimi/hearth';
 
 type ResizeFn = (hearth: Hearth, camera: ICamera) => void;
 const updateSize: ResizeFn = (hearth, camera) => {

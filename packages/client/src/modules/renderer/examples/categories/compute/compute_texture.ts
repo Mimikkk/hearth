@@ -1,4 +1,4 @@
-import { Mesh, OrthographicCamera, PlaneGeometry, Scene, Texture } from '@modules/renderer/engine/engine.js';
+import { Mesh, OrthographicCamera, PlaneGeometry, Scene, Texture } from '@mimi/hearth';
 import {
   f32,
   hsl,
@@ -10,10 +10,10 @@ import {
   timerLocal,
   uvec2,
   vec4,
-} from '@modules/renderer/engine/nodes/nodes.js';
+} from '@mimi/hearth';
 
-import { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
-import { StorageTexture } from '@modules/renderer/engine/entities/textures/StorageTexture.js';
+import { Hearth } from '@mimi/hearth';
+import { StorageTexture } from '@mimi/hearth';
 import { useWindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 const createCamera = () => {

@@ -8,8 +8,8 @@ import {
   PlaneGeometry,
   Scene,
   SphereGeometry,
-} from '@modules/renderer/engine/engine.js';
-import { color, MeshPhongNodeMaterial, occlude } from '@modules/renderer/engine/nodes/nodes.js';
+} from '@mimi/hearth';
+import { color, MeshPhongNodeMaterial, occlude } from '@mimi/hearth';
 import { WindowResizer } from '@modules/renderer/examples/utilities/useWindowResizer.js';
 
 const createCamera = () => {

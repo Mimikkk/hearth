@@ -1,6 +1,6 @@
-import type { Hearth } from '@modules/renderer/engine/hearth/Hearth.js';
-import type { HearthStatistics } from '@modules/renderer/engine/hearth/Hearth.Statistics.js';
-import { GPUFeature } from '@modules/renderer/engine/hearth/constants.js';
+import type { Hearth } from '@mimi/hearth';
+import type { HearthStatistics } from '@mimi/hearth';
+import { GPUFeature } from '@mimi/hearth';
 
 class Panel {
   canvas: HTMLCanvasElement;
