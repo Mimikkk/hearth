@@ -1,4 +1,4 @@
-import { defineConfig } from "npm:vite";
+import { defineConfig } from "vite";
 import solid from "vite-plugin-solid";
 import { createResolveAlias } from "../../../configurations/vite/vite.resolver.ts";
 
@@ -12,5 +12,10 @@ export default defineConfig({
   },
   resolve: {
     alias: createResolveAlias(["@mimi/hearth"]),
+  },
+  css: {
+    modules: {
+      localsConvention: "camelCaseOnly",
+    },
   },
 });

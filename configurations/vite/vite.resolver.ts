@@ -1,5 +1,5 @@
 import { dirname, fromFileUrl, resolve } from "jsr:@std/path";
-import type { AliasOptions, BuildOptions, ResolverFunction } from "npm:vite";
+import type { AliasOptions, BuildOptions, ResolverFunction } from "vite";
 import { dependencies, entry, type LibraryName } from "../library/libraries.config.ts";
 
 export const resolveRoot = () => resolve(dirname(fromFileUrl(import.meta.url)), "../../");

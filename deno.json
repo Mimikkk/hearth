@@ -9,23 +9,24 @@
             "DOM.Iterable",
             "ESNext",
             "deno.ns"
-        ]
+        ],
+        "types": ["./configurations/ts/css-modules.d.ts"]
     },
     "unstable": ["webgpu"],
     "nodeModulesDir": "auto",
+    "vendor": true,
     "fmt": {
         "indentWidth": 2,
         "lineWidth": 120,
         "semiColons": true,
         "include": [
-            "scripts",
-            "configurations",
-            "templates",
-            "workspace",
-            "deno.jsonc"
+            "scripts/**/*",
+            "configurations/**/*",
+            "templates/**/*",
+            "workspace/**/*",
+            "deno.json"
         ],
-        "exclude": ["workspace/apps/web/build"],
-        "types": ["configurations/ts/css-modules.d.ts"]
+        "exclude": ["workspace/apps/web/build", ".vite"]
     },
     "workspace": {
         "members": [
@@ -37,5 +38,8 @@
         "dev:web": "cd workspace/apps/web && deno task dev",
         "test": "deno test -A",
         "build": "deno run -A scripts/build.ts"
+    },
+    "imports": {
+        "vite": "npm:vite@5.4.10"
     }
 }
