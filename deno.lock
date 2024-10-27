@@ -1,9 +1,16 @@
 {
   "version": "4",
   "specifiers": {
+    "jsr:@std/path@*": "1.0.7",
     "npm:solid-js@1.9.1": "1.9.1_seroval@1.1.1",
     "npm:vite-plugin-solid@2.1.0": "2.1.0_@babel+core@7.26.0_solid-js@1.9.1__seroval@1.1.1",
+    "npm:vite@*": "5.4.10",
     "npm:vite@5.4.10": "5.4.10"
+  },
+  "jsr": {
+    "@std/path@1.0.7": {
+      "integrity": "76a689e07f0e15dcc6002ec39d0866797e7156629212b28f27179b8a5c3b33a1"
+    }
   },
   "npm": {
     "@ampproject/remapping@2.3.0": {
