@@ -1,4 +1,4 @@
-name: Deploy - Examples
+name: Deploy - Web
 on:
   push:
     branches: ["main"]
@@ -17,11 +17,11 @@ jobs:
           deno-version: v2.x
       - name: Install Dependencies
         run: deno install --allow-scripts
-      - name: Build Hearth - Examples
-        run: deno task build --name examples
+      - name: Build Hearth - Web
+        run: deno task build --name web
       - name: Deploy to Deno Deploy
         uses: denoland/deployctl@v1
         with:
-          project: hearth-examples
+          project: hearth-web
           entrypoint: https://deno.land/std/http/file_server.ts
-          root: workspace/apps/examples/build
+          root: workspace/apps/web/build
