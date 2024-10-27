@@ -1,0 +1,27 @@
+name: Deploy - Examples
+on:
+  push:
+    branches: ["main"]
+permissions:
+  id-token: write
+  contents: read
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup Repo
+        uses: actions/checkout@v4
+      - name: Setup Deno
+        uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+      - name: Install Dependencies
+        run: deno install --allow-scripts
+      - name: Build Hearth - Examples
+        run: deno task build --name examples
+      - name: Deploy to Deno Deploy
+        uses: denoland/deployctl@v1
+        with:
+          project: hearth-examples
+          entrypoint: https://deno.land/std/http/file_server.ts
+          root: workspace/apps/examples/build

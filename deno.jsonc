@@ -1,0 +1,34 @@
+{
+    "license": "MIT",
+    "compilerOptions": {
+        "strict": true,
+        "jsx": "precompile",
+        "jsxImportSource": "solid-js",
+        "lib": [
+            "DOM",
+            "DOM.Iterable",
+            "ESNext",
+            "deno.ns"
+        ]
+    },
+    "unstable": ["webgpu"],
+    "nodeModulesDir": "auto",
+    "fmt": {
+        "indentWidth": 2,
+        "lineWidth": 120,
+        "semiColons": true,
+        "include": ["scripts", "configurations", "templates", "workspace", "deno.jsonc"],
+        "exclude": ["workspace/apps/web/build"]
+    },
+    "workspace": {
+        "members": [
+            "workspace/apps/web",
+            "workspace/libs/hearth"
+        ]
+    },
+    "tasks": {
+        "dev:web": "cd workspace/apps/web && deno task dev",
+        "test": "deno test -A",
+        "build": "deno run -A scripts/build.ts"
+    }
+}
