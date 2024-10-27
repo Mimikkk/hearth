@@ -17,8 +17,15 @@
         "indentWidth": 2,
         "lineWidth": 120,
         "semiColons": true,
-        "include": ["scripts", "configurations", "templates", "workspace", "deno.jsonc"],
-        "exclude": ["workspace/apps/web/build"]
+        "include": [
+            "scripts",
+            "configurations",
+            "templates",
+            "workspace",
+            "deno.jsonc"
+        ],
+        "exclude": ["workspace/apps/web/build"],
+        "types": ["configurations/ts/css-modules.d.ts"]
     },
     "workspace": {
         "members": [
