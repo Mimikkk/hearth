@@ -1,42 +1,27 @@
-import type { JSXElement } from "solid-js";
-import { createSignal } from "solid-js";
+import cx from "clsx";
+import { SplitPanel } from "./components/containers/SplitPanel/SplitPanel.tsx";
 
-export const Sidebar = () => {
-  return <div class="bg-gray-200 p-4">Sidebar</div>;
+export const Sidebar = (props: { class?: string }) => {
+  return <div class={cx("bg-gray-200 p-4", props.class)}>Sidebar</div>;
 };
 
-export const Content = () => {
-  return <div class="bg-gray-100 p-4">Content</div>;
+export const Content = (props: { class?: string }) => {
+  return <div class={cx("bg-gray-100 p-4", props.class)}>Content</div>;
 };
 
-export const Footer = () => {
-  return <div class="bg-gray-200 p-4">Footer</div>;
+export const Footer = (props: { class?: string }) => {
+  return <div class={cx("bg-gray-200 p-4", props.class)}>Footer</div>;
 };
 
-export const ResizerLine = () => {
-  return <div class="bg-gray-300 h-2 w-full" />;
-};
-
-interface ResizableTwoSplitBoxProps {
-  first: JSXElement;
-  second: JSXElement;
-}
-
-export const ResizableTwoSplitBox = (props: ResizableTwoSplitBoxProps) => {
-  const [isResizing, setIsResizing] = createSignal(false);
-
+export const App = () => {
   return (
-    <div class="flex flex-col">
-      {props.first}
-      <ResizerLine />
-      {props.second}
+    <div class="flex flex-col gap-2">
+      <SplitPanel
+        first={<Sidebar class="min-w-12" />}
+        second={<Content class="flex-grow" />}
+        direction="horizontal"
+      />
+      <Footer />
     </div>
   );
 };
-
-export const App = () => (
-  <div class="flex flex-col gap-2">
-    <ResizableTwoSplitBox first={<Sidebar />} second={<Content />} />
-    <Footer />
-  </div>
-);

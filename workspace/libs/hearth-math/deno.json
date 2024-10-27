@@ -1,6 +1,6 @@
 {
-  "name": "@mimi/lib-template",
-  "version": "0.0.0",
+  "name": "@mimi/hearth-math",
+  "version": "0.0.2",
   "exports": "./src/mod.ts",
   "license": "MIT",
   "publish": {

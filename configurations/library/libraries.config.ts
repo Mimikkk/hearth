@@ -6,9 +6,11 @@ export const config = createLibraryConfig({
   },
   libraries: {
     "@mimi/hearth": "workspace/libs/hearth",
+    "@mimi/hearth-math": "workspace/libs/hearth-math",
   },
   dependencies: {
-    "@mimi/hearth": [],
+    "@mimi/hearth": ["@mimi/hearth-math"],
+    "@mimi/hearth-math": [],
   },
 });
 

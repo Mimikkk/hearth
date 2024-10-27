@@ -31,7 +31,8 @@
     "workspace": {
         "members": [
             "workspace/apps/web",
-            "workspace/libs/hearth"
+            "workspace/libs/hearth",
+            "workspace/libs/hearth-math"
         ]
     },
     "tasks": {
@@ -41,5 +42,10 @@
     },
     "imports": {
         "vite": "npm:vite@5.4.10"
+    },
+    "lint": {
+        "rules": {
+            "exclude": ["no-namespace", "no-explicit-any"]
+        }
     }
 }
