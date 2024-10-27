@@ -5,10 +5,10 @@ export const config = createLibraryConfig({
     "web": "workspace/apps/web",
   },
   libraries: {
-    "hearth": "workspace/libs/hearth",
+    "@mimi/hearth": "workspace/libs/hearth",
   },
   dependencies: {
-    "hearth": [],
+    "@mimi/hearth": [],
   },
 });
 
