@@ -1,1 +1,1 @@
-export const App = () => <h1>Hello World</h1>;
+export const App = () => <h1>Hello Deno Deploy</h1>;

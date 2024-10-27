@@ -22,6 +22,6 @@ jobs:
       - name: Deploy to Deno Deploy
         uses: denoland/deployctl@v1
         with:
-          project: hearth-web
+          project: hearth
           entrypoint: https://deno.land/std/http/file_server.ts
           root: workspace/apps/web/build
