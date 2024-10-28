@@ -1,0 +1,35 @@
+.icon {
+  @apply flex items-center justify-center gap-2 aspect-square;
+  @apply stroke-1 stroke-secondary-7 text-secondary-dark;
+
+
+  &.size {
+    &-xs {
+      @apply h-4;
+    }
+
+    &-sm {
+      @apply h-5;
+    }
+
+    &-md {
+      @apply h-6;
+    }
+
+    &-lg {
+      @apply h-8;
+    }
+
+    &-xl {
+      @apply h-10;
+    }
+
+    &-2xl {
+      @apply h-12;
+    }
+
+    &-3xl {
+      @apply h-14;
+    }
+  }
+}
