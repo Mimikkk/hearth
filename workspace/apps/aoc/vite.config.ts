@@ -11,7 +11,7 @@ export default defineConfig({
     port: 8080,
   },
   resolve: {
-    alias: createAlias(["@mimi/hearth", "@mimi/hearth-math"]),
+    alias: createAlias(["@mimi/aoc"]),
   },
   css: {
     modules: {

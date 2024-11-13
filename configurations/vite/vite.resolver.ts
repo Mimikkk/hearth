@@ -1,29 +1,28 @@
-import { dirname, fromFileUrl, resolve } from "jsr:@std/path";
 import type { AliasOptions, BuildOptions, ResolverFunction } from "vite";
-import { dependencies, entry, type LibraryName } from "../library/libraries.config.ts";
+import { type LibraryName, resolver } from "../library/libraries.config.ts";
 
-export const resolveRoot = () => resolve(dirname(fromFileUrl(import.meta.url)), "../../");
+export const createAliasResolver = (): ResolverFunction => async (slug: string) => {
+  const library = resolver.find(slug);
+  if (!library) throw new Error(`Library not found: '${slug}'`);
 
-export interface CreateResolverOptions {
-  root: string;
-}
+  const json = await resolver.jsonOf(library);
+  const entries = json.exports;
+  if (!entries) throw new Error(`Library has no exports: '${library}'`);
 
-export const createResolver = ({ root }: CreateResolverOptions): ResolverFunction => (slug: string) => {
-  const resolvedId = resolve(root, slug);
+  const entry = typeof entries === "string" ? entries : entries[slug.replace(library, ".")];
+  if (!entry) throw new Error(`Library has no entry for slug: '${slug}'`);
 
-  return { id: resolvedId, attributes: { path: resolvedId } };
+  const path = resolver.entryOf(library, entry);
+  return { id: path, attributes: { path } };
 };
 
-const _resolver = createResolver({ root: resolveRoot() });
+const _resolver = createAliasResolver();
 
-export const createResolveAlias = (
-  libaries: LibraryName[],
-  resolver: ResolverFunction = _resolver,
-): AliasOptions =>
-  dependencies(libaries).map((name) => ({
-    find: name,
-    replacement: entry(name),
-    customResolver: resolver,
+export const createAlias = (libaries: LibraryName[], aliasResolver: ResolverFunction = _resolver): AliasOptions =>
+  resolver.dependencies(libaries).map((library) => ({
+    find: library,
+    replacement: library,
+    customResolver: aliasResolver,
   }));
 
 export const createLibraryBuild = (): BuildOptions => ({

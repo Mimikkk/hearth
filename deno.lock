@@ -1,11 +1,17 @@
 {
   "version": "4",
   "specifiers": {
+    "jsr:@cliffy/command@1.0.0-rc.7": "1.0.0-rc.7",
+    "jsr:@cliffy/flags@1.0.0-rc.7": "1.0.0-rc.7",
+    "jsr:@cliffy/internal@1.0.0-rc.7": "1.0.0-rc.7",
+    "jsr:@cliffy/table@1.0.0-rc.7": "1.0.0-rc.7",
     "jsr:@std/assert@^1.0.6": "1.0.6",
     "jsr:@std/expect@*": "1.0.6",
+    "jsr:@std/fmt@~1.0.2": "1.0.3",
     "jsr:@std/internal@^1.0.4": "1.0.4",
     "jsr:@std/path@*": "1.0.7",
     "jsr:@std/testing@*": "1.0.3",
+    "jsr:@std/text@~1.0.7": "1.0.8",
     "npm:@types/node@*": "22.5.4",
     "npm:autoprefixer@10.4.20": "10.4.20_postcss@8.4.47",
     "npm:clsx@2.1.1": "2.1.1",
@@ -17,6 +23,31 @@
     "npm:vite@5.4.10": "5.4.10"
   },
   "jsr": {
+    "@cliffy/command@1.0.0-rc.7": {
+      "integrity": "1288808d7a3cd18b86c24c2f920e47a6d954b7e23cadc35c8cbd78f8be41f0cd",
+      "dependencies": [
+        "jsr:@cliffy/flags",
+        "jsr:@cliffy/internal",
+        "jsr:@cliffy/table",
+        "jsr:@std/fmt",
+        "jsr:@std/text"
+      ]
+    },
+    "@cliffy/flags@1.0.0-rc.7": {
+      "integrity": "318d9be98f6a6417b108e03dec427dea96cdd41a15beb21d2554ae6da450a781",
+      "dependencies": [
+        "jsr:@std/text"
+      ]
+    },
+    "@cliffy/internal@1.0.0-rc.7": {
+      "integrity": "10412636ab3e67517d448be9eaab1b70c88eba9be22617b5d146257a11cc9b17"
+    },
+    "@cliffy/table@1.0.0-rc.7": {
+      "integrity": "9fdd9776eda28a0b397981c400eeb1aa36da2371b43eefe12e6ff555290e3180",
+      "dependencies": [
+        "jsr:@std/fmt"
+      ]
+    },
     "@std/assert@1.0.6": {
       "integrity": "1904c05806a25d94fe791d6d883b685c9e2dcd60e4f9fc30f4fc5cf010c72207",
       "dependencies": [
@@ -30,6 +61,9 @@
         "jsr:@std/internal"
       ]
     },
+    "@std/fmt@1.0.3": {
+      "integrity": "97765c16aa32245ff4e2204ecf7d8562496a3cb8592340a80e7e554e0bb9149f"
+    },
     "@std/internal@1.0.4": {
       "integrity": "62e8e4911527e5e4f307741a795c0b0a9e6958d0b3790716ae71ce085f755422"
     },
@@ -42,6 +76,9 @@
         "jsr:@std/assert",
         "jsr:@std/internal"
       ]
+    },
+    "@std/text@1.0.8": {
+      "integrity": "40ba34caa095f393e78796e5eda37b8b4e2cc6cfd6f51f34658ad7487b1451e4"
     }
   },
   "npm": {
@@ -1321,6 +1358,18 @@
       "npm:vite@5.4.10"
     ],
     "members": {
+      "workspace/apps/aoc": {
+        "dependencies": [
+          "npm:autoprefixer@10.4.20",
+          "npm:clsx@2.1.1",
+          "npm:postcss@8.4.47",
+          "npm:solid-icons@1.1.0",
+          "npm:solid-js@1.9.1",
+          "npm:tailwindcss@3.4.14",
+          "npm:vite-plugin-solid@2.1.0",
+          "npm:vite@5.4.10"
+        ]
+      },
       "workspace/apps/web": {
         "dependencies": [
           "npm:autoprefixer@10.4.20",

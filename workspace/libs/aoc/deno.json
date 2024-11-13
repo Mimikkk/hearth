@@ -1,0 +1,20 @@
+{
+  "name": "@mimi/aoc",
+  "version": "0.0.2",
+  "exports": {
+    "./2022": "./src/2022/mod.ts"
+  },
+  "license": "MIT",
+  "tasks": {
+    "build": "vite build"
+  },
+  "publish": {
+    "include": [
+      "src",
+      "readme.md"
+    ],
+    "exclude": [
+      "**/*.test.ts"
+    ]
+  }
+}

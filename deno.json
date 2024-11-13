@@ -32,11 +32,14 @@
         "members": [
             "workspace/apps/web",
             "workspace/libs/hearth",
-            "workspace/libs/hearth-math"
+            "workspace/libs/hearth-math",
+            "workspace/apps/aoc",
+            "workspace/libs/aoc"
         ]
     },
     "tasks": {
         "dev:web": "cd workspace/apps/web && deno task dev",
+        "dev:aoc": "cd workspace/apps/aoc && deno task dev",
         "test": "deno test -A",
         "build": "deno run -A scripts/build.ts"
     },
