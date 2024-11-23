@@ -2,6 +2,7 @@
   "name": "@mimi/aoc",
   "version": "0.0.2",
   "exports": {
+    ".": "./src/mod.ts",
     "./2022": "./src/2022/mod.ts"
   },
   "license": "MIT",

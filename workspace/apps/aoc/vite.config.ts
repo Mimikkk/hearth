@@ -9,6 +9,9 @@ export default defineConfig({
   plugins: [solid() as PluginOption],
   server: {
     port: 8080,
+    fs: {
+      strict: false,
+    },
   },
   resolve: {
     alias: createAlias(["@mimi/aoc"]),

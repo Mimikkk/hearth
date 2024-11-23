@@ -9,5 +9,6 @@ describe("Configuration - Vite - resolver", () => {
     const resolver = alias[0].customResolver as (value: string) => ReturnType<ResolverFunction>;
 
     expect(resolver("@mimi/aoc/2022")).not.toThrow();
+    expect(resolver("@mimi/aoc")).not.toThrow();
   });
 });
