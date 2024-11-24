@@ -9,7 +9,7 @@ export const Urls = {
       real: new URL("./resources/day-01-real-hard.txt", import.meta.url),
     },
   },
-} as const satisfies Record<number, Record<Difficulty, Record<InputType, URL>>>;
+} as const satisfies Record<string, Record<Difficulty, Record<InputType, URL>>>;
 
 export type Level = keyof typeof Urls;
 export type InputType = "test" | "real";
