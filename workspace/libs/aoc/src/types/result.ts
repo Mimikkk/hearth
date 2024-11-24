@@ -21,4 +21,7 @@ export namespace Result {
     const r = await result;
     return r.ok ? ok(await fn(r.value)) : err(r.error);
   };
+
+  export const val = <T, E>(result: Result<T, E>): T | undefined => result.ok ? result.value : undefined;
+  export const aval = async <T, E>(result: Promise<Result<T, E>>): Promise<T | undefined> => val(await result);
 }
