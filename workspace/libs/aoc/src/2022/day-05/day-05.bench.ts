@@ -1,9 +1,9 @@
 import { createPuzzleBench } from "../../utils/create-puzzle-bench.ts";
-import puzzle from "./day-04.ts";
+import puzzle from "./day-05.ts";
 
 await createPuzzleBench({
   year: 2022,
-  day: 4,
+  day: 5,
   baseline: puzzle,
   implementations: [],
   testEasy: true,
