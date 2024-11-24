@@ -17,5 +17,8 @@ export namespace Result {
   export const map = <T, E, R>(result: Result<T, E>, fn: (value: T) => R) =>
     result.ok ? ok(fn(result.value)) : err(result.error);
 
-  export const amap = async <T, E, R>(result: Promise<Result<T, E>>, fn: (value: T) => R) => map(await result, fn);
+  export const amap = async <T, E, R>(result: Promise<Result<T, E>>, fn: (value: T) => R) => {
+    const r = await result;
+    return r.ok ? ok(await fn(r.value)) : err(r.error);
+  };
 }

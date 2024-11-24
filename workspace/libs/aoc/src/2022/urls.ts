@@ -1,5 +1,5 @@
 export const Urls = {
-  1: {
+  day01: {
     easy: {
       test: new URL("./resources/day-01-test-easy.txt", import.meta.url),
       real: new URL("./resources/day-01-real-easy.txt", import.meta.url),

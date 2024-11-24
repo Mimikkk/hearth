@@ -1,14 +1,6 @@
-import { Result } from "../../types/result.ts";
-import { Files } from "../../utils/files.ts";
+import { Puzzle } from "../../types/puzzle.ts";
 import { sum } from "../../utils/math.ts";
 import { Str } from "../../utils/text.ts";
-import { Urls } from "../urls.ts";
-
-export const easy = () =>
-  Result.amap(Files.lines(Urls[1].easy.real), (lines) => top1(lines.map((line) => line === "" ? null : +line)));
-
-export const hard = () =>
-  Result.amap(Files.lines(Urls[1].hard.real), (lines) => topN(lines.map((line) => line === "" ? null : +line), 3));
 
 const top1 = (values: (number | null)[]): number => {
   let max = 0;
@@ -49,20 +41,7 @@ const iterateSums = (values: (number | null)[], onSum: (total: number) => void) 
   onSum(sum);
 };
 
-interface Challenge<R, T1, T2 = T1> {
-  prepare?: (value: T1) => T2;
-  task: (value: T2) => R;
-}
-
-interface Day<T, R1, R2, I1 = T, I2 = T> {
-  prepare: (content: string) => T;
-  easy: Challenge<R1, T, I1>;
-  hard: Challenge<R2, T, I2>;
-}
-
-const day = <T, R1, R2, I1 = T, I2 = T>(day: Day<T, R1, R2, I1, I2>): Day<T, R1, R2, I1, I2> => day;
-
-export default day({
+export default Puzzle.create({
   prepare: (text) => Str.lines(text).map((line) => line === "" ? null : +line),
   easy: { task: top1 },
   hard: { task: top3 },

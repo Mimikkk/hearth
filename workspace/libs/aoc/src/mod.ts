@@ -1,3 +1,4 @@
+export * from "./types/puzzle.ts";
 export * from "./types/result.ts";
 export * from "./utils/files.ts";
 export * from "./utils/math.ts";
