@@ -25,6 +25,8 @@ export const createPuzzleBench = async <P extends Puzzle<any, any, any, any, any
 
     for (let i = 0; i < implementations.length; i++) {
       const implementation = implementations[i];
+      if (!implementation.configuration[difficulty]) continue;
+
       Deno.bench({ group, name: `implementation ${i}`, fn: () => implementation[difficulty](content) });
     }
   };

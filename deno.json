@@ -1,54 +1,70 @@
 {
-    "license": "MIT",
-    "compilerOptions": {
-        "strict": true,
-        "jsx": "precompile",
-        "jsxImportSource": "solid-js",
-        "lib": [
-            "DOM",
-            "DOM.Iterable",
-            "ESNext",
-            "deno.ns"
-        ],
-        "types": ["./configurations/ts/css-modules.d.ts"]
+  "license": "MIT",
+  "compilerOptions": {
+    "strict": true,
+    "jsx": "precompile",
+    "jsxImportSource": "solid-js",
+    "lib": [
+      "DOM",
+      "DOM.Iterable",
+      "ESNext",
+      "deno.ns"
+    ],
+    "types": ["./configurations/ts/css-modules.d.ts"]
+  },
+  "unstable": ["webgpu"],
+  "nodeModulesDir": "auto",
+  "vendor": true,
+  "fmt": {
+    "indentWidth": 2,
+    "lineWidth": 120,
+    "semiColons": true,
+    "include": [
+      "scripts/**/*",
+      "configurations/**/*",
+      "templates/**/*",
+      "workspace/**/*",
+      "deno.json"
+    ],
+    "exclude": ["workspace/apps/web/build", ".vite"]
+  },
+  "workspace": {
+    "members": [
+      "workspace/apps/web",
+      "workspace/libs/hearth",
+      "workspace/libs/hearth-math",
+      "workspace/apps/aoc",
+      "workspace/libs/aoc"
+    ]
+  },
+  "tasks": {
+    "dev:web": {
+      "description": "run web application",
+      "command": "cd workspace/apps/web && deno task dev"
     },
-    "unstable": ["webgpu"],
-    "nodeModulesDir": "auto",
-    "vendor": true,
-    "fmt": {
-        "indentWidth": 2,
-        "lineWidth": 120,
-        "semiColons": true,
-        "include": [
-            "scripts/**/*",
-            "configurations/**/*",
-            "templates/**/*",
-            "workspace/**/*",
-            "deno.json"
-        ],
-        "exclude": ["workspace/apps/web/build", ".vite"]
+    "dev:aoc": {
+      "description": "run web application",
+      "command": "cd workspace/apps/aoc && deno task dev"
     },
-    "workspace": {
-        "members": [
-            "workspace/apps/web",
-            "workspace/libs/hearth",
-            "workspace/libs/hearth-math",
-            "workspace/apps/aoc",
-            "workspace/libs/aoc"
-        ]
+    "test": {
+      "description": "run tests",
+      "command": "deno test -A"
     },
-    "tasks": {
-        "dev:web": "cd workspace/apps/web && deno task dev",
-        "dev:aoc": "cd workspace/apps/aoc && deno task dev",
-        "test": "deno test -A",
-        "build": "deno run -A scripts/build.ts"
+    "bench": {
+      "description": "run benchmarks",
+      "command": "deno bench -A"
     },
-    "imports": {
-        "vite": "npm:vite@5.4.10"
-    },
-    "lint": {
-        "rules": {
-            "exclude": ["no-namespace", "no-explicit-any"]
-        }
+    "build": {
+      "description": "build application",
+      "command": "deno run -A scripts/build-application.ts"
     }
+  },
+  "imports": {
+    "vite": "npm:vite@5.4.10"
+  },
+  "lint": {
+    "rules": {
+      "exclude": ["no-namespace", "no-explicit-any"]
+    }
+  }
 }

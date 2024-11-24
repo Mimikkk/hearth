@@ -5,8 +5,8 @@ export interface Challenge<R, T1, T2 = T1> {
 
 export interface PuzzleConfiguration<T, R1, R2, I1 = T, I2 = T> {
   prepare: (content: string) => T;
-  easy: Challenge<R1, T, I1>;
-  hard: Challenge<R2, T, I2>;
+  easy?: Challenge<R1, T, I1> | ((content: T) => R1);
+  hard?: Challenge<R2, T, I2> | ((content: T) => R2);
 }
 
 export class Puzzle<T, R1, R2, I1 = T, I2 = T> {
@@ -16,19 +16,24 @@ export class Puzzle<T, R1, R2, I1 = T, I2 = T> {
     return new this(configuration);
   }
 
-  constructor(private readonly configuration: PuzzleConfiguration<T, R1, R2, I1, I2>) {}
+  constructor(public readonly configuration: PuzzleConfiguration<T, R1, R2, I1, I2>) {}
 
   easy(content: string): R1 {
     const { configuration: { prepare, easy } } = this;
+    if (!easy) throw Error("Easy task is not defined");
 
     const prepared = prepare(content);
+    if (typeof easy === "function") return easy(prepared);
+
     return easy.task((easy.prepare?.(prepared) ?? prepared) as I1);
   }
 
   hard(content: string): R2 {
     const { configuration: { prepare, hard } } = this;
+    if (!hard) throw Error("Hard task is not defined");
 
     const prepared = prepare(content);
+    if (typeof hard === "function") return hard(prepared);
     return hard.task((hard.prepare?.(prepared) ?? prepared) as I2);
   }
 }
