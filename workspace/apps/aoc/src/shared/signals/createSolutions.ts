@@ -1,10 +1,10 @@
 import { Files, Puzzle } from "@mimi/aoc";
-import { Urls } from "@mimi/aoc/2022";
 import { createEffect, createResource } from "solid-js";
 import { createStore } from "solid-js/store";
+import { urlOf } from "../../../../../libs/aoc/src/2022/url-of.ts";
 
 export const createSolutions = <T, H, R>(puzzle: Puzzle<T, H, R>) => {
-  const [content] = createResource(() => Files.text(Urls.day01.easy.real));
+  const [content] = createResource(() => Files.text(urlOf(1, "real", "easy")));
 
   const [results, setResults] = createStore<{
     easy: ReturnType<typeof puzzle.easy> | null;

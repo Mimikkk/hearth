@@ -10,7 +10,6 @@
  * Puzzles.day01();
  */
 import day01 from "./day-01/day-01.ts";
-export { Urls } from "./urls.ts";
 
 export const Puzzles = {
   day01,
