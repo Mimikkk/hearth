@@ -9,24 +9,26 @@ export interface PuzzleConfiguration<T, R1, R2, I1 = T, I2 = T> {
   hard: Challenge<R2, T, I2>;
 }
 
-export class Puzzle<T, R1, R2> {
-  static create<T, R1, R2>(configuration: PuzzleConfiguration<T, R1, R2>): Puzzle<T, R1, R2> {
+export class Puzzle<T, R1, R2, I1 = T, I2 = T> {
+  static create<T, R1, R2, I1 = T, I2 = T>(
+    configuration: PuzzleConfiguration<T, R1, R2, I1, I2>,
+  ): Puzzle<T, R1, R2, I1, I2> {
     return new this(configuration);
   }
 
-  constructor(private readonly configuration: PuzzleConfiguration<T, R1, R2>) {}
+  constructor(private readonly configuration: PuzzleConfiguration<T, R1, R2, I1, I2>) {}
 
   easy(content: string): R1 {
     const { configuration: { prepare, easy } } = this;
 
     const prepared = prepare(content);
-    return easy.task(easy.prepare?.(prepared) ?? prepared);
+    return easy.task((easy.prepare?.(prepared) ?? prepared) as I1);
   }
 
   hard(content: string): R2 {
     const { configuration: { prepare, hard } } = this;
 
     const prepared = prepare(content);
-    return hard.task(hard.prepare?.(prepared) ?? prepared);
+    return hard.task((hard.prepare?.(prepared) ?? prepared) as I2);
   }
 }
