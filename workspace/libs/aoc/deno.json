@@ -6,6 +6,12 @@
     "./2022": "./src/2022/mod.ts"
   },
   "license": "MIT",
+  "tasks": {
+    "create-day": {
+      "description": "Create a puzzle for the given year and day",
+      "command": "deno run --allow-read --allow-write ./scripts/create-day.ts"
+    }
+  },
   "publish": {
     "include": [
       "src",

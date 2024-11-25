@@ -32,7 +32,7 @@ export const createPuzzleTest = <P extends Puzzle<any, any, any, any, any>>(
   describe(`Library - aoc - year ${year} - day ${dayStr}`, () => {
     if (easyTest !== undefined && puzzle.configuration.easy) {
       it("easy - test", async () => {
-        const content = Result.val(await Files.text(urlOf(year, day, "test", "easy")))!;
+        const content = Result.val(await Files.text(urlOf(year, day, "test-user")))!;
 
         tryStacklessAssert(() => expect(puzzle.easy(content)).toEqual(easyTest));
       });
@@ -40,7 +40,7 @@ export const createPuzzleTest = <P extends Puzzle<any, any, any, any, any>>(
 
     if (hardTest !== undefined && puzzle.configuration.hard) {
       it("hard - test", async () => {
-        const content = Result.val(await Files.text(urlOf(year, day, "test", "hard")))!;
+        const content = Result.val(await Files.text(urlOf(year, day, "test-user")))!;
 
         tryStacklessAssert(() => expect(puzzle.hard(content)).toEqual(hardTest));
       });
@@ -48,7 +48,7 @@ export const createPuzzleTest = <P extends Puzzle<any, any, any, any, any>>(
 
     if (realEasy !== undefined && puzzle.configuration.easy) {
       it("easy - real", async () => {
-        const content = Result.val(await Files.text(urlOf(year, day, "real", "easy")))!;
+        const content = Result.val(await Files.text(urlOf(year, day, "real-user")))!;
 
         tryStacklessAssert(() => expect(puzzle.easy(content)).toEqual(realEasy));
       });
@@ -56,7 +56,7 @@ export const createPuzzleTest = <P extends Puzzle<any, any, any, any, any>>(
 
     if (realHard !== undefined && puzzle.configuration.hard) {
       it("hard - real", async () => {
-        const content = Result.val(await Files.text(urlOf(year, day, "real", "hard")))!;
+        const content = Result.val(await Files.text(urlOf(year, day, "real-user")))!;
 
         tryStacklessAssert(() => expect(puzzle.hard(content)).toEqual(realHard));
       });

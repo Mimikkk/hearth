@@ -57,6 +57,10 @@
     "build": {
       "description": "build application",
       "command": "deno run -A scripts/build-application.ts"
+    },
+    "aoc:create-day": {
+      "description": "create a puzzle for the given year and day",
+      "command": "deno task --config workspace/libs/aoc/deno.json create-day"
     }
   },
   "imports": {

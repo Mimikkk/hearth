@@ -4,6 +4,6 @@ import { urlOf } from "./url-of.ts";
 
 describe("Library - aoc - utils - urlOf", () => {
   it("urlOf", () => {
-    expect(urlOf(2022, 1, "test", "easy")).toEqual(new URL("../2022/resources/day-01/test-easy.txt", import.meta.url));
+    expect(urlOf(2022, 1, "test-user")).toEqual(new URL("../2022/resources/day-01/test-user.txt", import.meta.url));
   });
 });
