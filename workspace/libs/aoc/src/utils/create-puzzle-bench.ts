@@ -20,14 +20,30 @@ export const createPuzzleBench = async <P extends Puzzle<any, any, any, any, any
   const benches = async (type: InputType, difficulty: Difficulty) => {
     const content = Result.val(await Files.text(urlOf(year, day, type)))!;
 
-    const group = `year ${year} - day ${dayStr} - ${type} - ${difficulty}`;
-    Deno.bench({ group, name: "baseline", fn: () => baseline[difficulty](content), baseline: true });
+    const group = `Library - aoc - year ${year} - day ${dayStr} - ${type} - ${difficulty}`;
+    Deno.bench({
+      group,
+      name: `year ${year} - day ${dayStr} - ${type} - ${difficulty} - baseline`,
+      fn: () => baseline[difficulty](content),
+      baseline: true,
+    });
 
     for (let i = 0; i < implementations.length; i++) {
       const implementation = implementations[i];
       if (!implementation.configuration[difficulty]) continue;
 
-      Deno.bench({ group, name: `implementation ${i}`, fn: () => implementation[difficulty](content) });
+      const expected = baseline[difficulty](content);
+      const actual = implementation[difficulty](content);
+      const bothCorrect = expected === actual;
+      if (!bothCorrect) {
+        throw new Error(`Implementation ${i} is invalid. Expected ${expected} but got ${actual}.`);
+      }
+
+      Deno.bench({
+        group,
+        name: `year ${year} - day ${dayStr} - ${type} - ${difficulty} - implementation ${i}`,
+        fn: () => implementation[difficulty](content),
+      });
     }
   };
 

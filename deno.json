@@ -65,6 +65,10 @@
     "aoc:test": {
       "description": "run tests for the given year",
       "command": "deno task test --filter aoc"
+    },
+    "aoc:bench": {
+      "description": "run benchmarks for the given year",
+      "command": "deno task bench"
     }
   },
   "imports": {
