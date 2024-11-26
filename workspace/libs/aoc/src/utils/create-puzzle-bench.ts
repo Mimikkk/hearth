@@ -31,8 +31,8 @@ export const createPuzzleBench = async <P extends Puzzle<any, any, any, any, any
     }
   };
 
-  if (testEasy) await benches("test-user", "easy");
-  if (realEasy) await benches("real-user", "easy");
-  if (testHard) await benches("test-user", "hard");
-  if (realHard) await benches("real-user", "hard");
+  if (testEasy) await benches("input-test", "easy");
+  if (realEasy) await benches("input-user", "easy");
+  if (testHard) await benches("input-test", "hard");
+  if (realHard) await benches("input-user", "hard");
 };
