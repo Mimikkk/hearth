@@ -1,3 +1,4 @@
+
 import { createPuzzleBench } from "../../utils/create-puzzle-bench.ts";
 import puzzle from "./day-06.ts";
 

@@ -12,13 +12,14 @@
     "jsr:@std/assert@*": "1.0.6",
     "jsr:@std/assert@^1.0.6": "1.0.6",
     "jsr:@std/assert@~1.0.6": "1.0.6",
+    "jsr:@std/dotenv@*": "0.225.2",
     "jsr:@std/encoding@~1.0.5": "1.0.5",
     "jsr:@std/expect@*": "1.0.6",
     "jsr:@std/fmt@~1.0.2": "1.0.3",
     "jsr:@std/fs@*": "1.0.6",
     "jsr:@std/internal@^1.0.4": "1.0.4",
     "jsr:@std/io@~0.224.9": "0.224.9",
-    "jsr:@std/path@*": "1.0.7",
+    "jsr:@std/path@*": "1.0.8",
     "jsr:@std/path@^1.0.8": "1.0.8",
     "jsr:@std/path@~1.0.6": "1.0.8",
     "jsr:@std/testing@*": "1.0.3",
@@ -92,6 +93,9 @@
       "dependencies": [
         "jsr:@std/internal"
       ]
+    },
+    "@std/dotenv@0.225.2": {
+      "integrity": "e2025dce4de6c7bca21dece8baddd4262b09d5187217e231b033e088e0c4dd23"
     },
     "@std/encoding@1.0.5": {
       "integrity": "ecf363d4fc25bd85bd915ff6733a7e79b67e0e7806334af15f4645c569fefc04"
