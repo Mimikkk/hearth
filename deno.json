@@ -61,6 +61,10 @@
     "aoc:create-day": {
       "description": "create a puzzle for the given year and day",
       "command": "deno task --config workspace/libs/aoc/deno.json create-day"
+    },
+    "aoc:test": {
+      "description": "run tests for the given year",
+      "command": "deno task test --filter aoc"
     }
   },
   "imports": {
