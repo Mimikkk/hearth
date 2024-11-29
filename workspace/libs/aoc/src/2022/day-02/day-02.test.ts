@@ -6,7 +6,7 @@ createPuzzleTest({
   day: 2,
   puzzle,
   easyTest: 15,
-  realEasy: 13052,
+  easyUser: 13052,
   hardTest: 12,
-  realHard: 13693,
+  hardUser: 13693,
 });

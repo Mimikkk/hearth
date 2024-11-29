@@ -12,12 +12,12 @@ interface PuzzleOptions<P extends Puzzle<any, any, any, any, any>> {
   puzzle: P;
   easyTest?: ReturnType<P["easy"]>;
   hardTest?: ReturnType<P["hard"]>;
-  realEasy?: ReturnType<P["easy"]>;
-  realHard?: ReturnType<P["hard"]>;
+  easyUser?: ReturnType<P["easy"]>;
+  hardUser?: ReturnType<P["hard"]>;
   easyTestInput?: string;
   hardTestInput?: string;
-  realEasyInput?: string;
-  realHardInput?: string;
+  easyUserInput?: string;
+  hardUserInput?: string;
 }
 
 const tryStacklessAssert = (callback: () => void) => {
@@ -36,12 +36,12 @@ export const createPuzzleTest = <P extends Puzzle<any, any, any, any, any>>(
     puzzle,
     easyTest,
     hardTest,
-    realEasy,
-    realHard,
+    easyUser,
+    hardUser,
     easyTestInput,
     hardTestInput,
-    realEasyInput,
-    realHardInput,
+    easyUserInput,
+    hardUserInput,
   }: PuzzleOptions<P>,
 ): void => {
   const dayStr = day.toString().padStart(2, "0");
@@ -62,19 +62,19 @@ export const createPuzzleTest = <P extends Puzzle<any, any, any, any, any>>(
       });
     }
 
-    if (realEasy !== undefined && puzzle.configuration.easy) {
+    if (easyUser !== undefined && puzzle.configuration.easy) {
       it("easy - real", async () => {
-        const content = realEasyInput ?? Result.val(await Files.text(urlOf(year, day, "input-user")))!;
+        const content = easyUserInput ?? Result.val(await Files.text(urlOf(year, day, "input-user")))!;
 
-        tryStacklessAssert(() => expect(puzzle.easy(content)).toEqual(realEasy));
+        tryStacklessAssert(() => expect(puzzle.easy(content)).toEqual(easyUser));
       });
     }
 
-    if (realHard !== undefined && puzzle.configuration.hard) {
+    if (hardUser !== undefined && puzzle.configuration.hard) {
       it("hard - real", async () => {
-        const content = realHardInput ?? Result.val(await Files.text(urlOf(year, day, "input-user")))!;
+        const content = hardUserInput ?? Result.val(await Files.text(urlOf(year, day, "input-user")))!;
 
-        tryStacklessAssert(() => expect(puzzle.hard(content)).toEqual(realHard));
+        tryStacklessAssert(() => expect(puzzle.hard(content)).toEqual(hardUser));
       });
     }
   });
