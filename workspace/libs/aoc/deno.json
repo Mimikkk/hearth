@@ -3,7 +3,8 @@
   "version": "0.0.2",
   "exports": {
     ".": "./src/mod.ts",
-    "./2022": "./src/2022/mod.ts"
+    "./2022": "./src/2022/mod.ts",
+    "./2024": "./src/2024/mod.ts"
   },
   "license": "MIT",
   "tasks": {
