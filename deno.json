@@ -10,7 +10,8 @@
       "ESNext",
       "deno.ns"
     ],
-    "types": ["./configurations/typescript/css-modules.d.ts"]
+    "types": ["./configurations/typescript/css-modules.d.ts"],
+    "noImplicitOverride": true
   },
   "unstable": ["webgpu"],
   "nodeModulesDir": "auto",

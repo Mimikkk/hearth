@@ -85,9 +85,53 @@ const maxScenicScore = (grid: number[][]): number => {
   const mMax = m - 1;
   const nMax = n - 1;
 
-  const dp = Array(m);
+  const calcLeftScore = (height: number, i: number, j: number): number => {
+    let score = 1;
+    let y = j;
+    while (--y > 0 && height > grid[i][y]) score += 1;
+    return score;
+  };
 
-  return 0;
+  const calcRightScore = (height: number, i: number, j: number): number => {
+    let score = 1;
+    let y = j;
+    while (++y < mMax && height > grid[i][y]) score += 1;
+    return score;
+  };
+
+  const calcUpScore = (height: number, i: number, j: number): number => {
+    let score = 1;
+    let x = i;
+    while (--x > 0 && height > grid[x][j]) score += 1;
+    return score;
+  };
+
+  const calcDownScore = (height: number, i: number, j: number): number => {
+    let score = 1;
+    let x = i;
+    while (++x < nMax && height > grid[x][j]) score += 1;
+    return score;
+  };
+
+  const calcScore = (height: number, i: number, j: number): number => {
+    const left = calcLeftScore(height, i, j);
+    const right = calcRightScore(height, i, j);
+    const up = calcUpScore(height, i, j);
+    const down = calcDownScore(height, i, j);
+    return left * right * up * down;
+  };
+
+  let maxScore = 0;
+  for (let i = 1; i < mMax; ++i) {
+    const row = grid[i];
+    for (let j = 1; j < nMax; ++j) {
+      const height = row[j];
+      const score = calcScore(height, i, j);
+      if (score > maxScore) maxScore = score;
+    }
+  }
+
+  return maxScore;
 };
 
 export default Puzzle.create({

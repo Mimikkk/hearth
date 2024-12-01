@@ -6,7 +6,7 @@ const isMarker = (value: Marker | Marker[]): value is Marker => typeof value[0] 
 
 export class GridVisualizer<T> {
   static create<T>(grid: T[][]): GridVisualizer<T> {
-    return new this(grid, grid.map((r) => r.map((c) => `${c}`)));
+    return new GridVisualizer(grid, grid.map((r) => r.map((c) => `${c}`)));
   }
 
   constructor(
@@ -14,7 +14,13 @@ export class GridVisualizer<T> {
     public grid: string[][],
     public m: number = grid.length,
     public n: number = grid[0]?.length ?? 0,
+    public on: boolean = true,
   ) {}
+
+  toggle(on?: boolean): this {
+    this.on = on ?? !this.on;
+    return this;
+  }
 
   #at(x: number, y: number): string {
     return colors.stripAnsiCode(this.grid[x][y]);
@@ -64,10 +70,10 @@ export class GridVisualizer<T> {
   }
 
   log() {
+    if (!this.on) return;
     const pad = "-".repeat(colors.stripAnsiCode(this.grid[0].join("")).length);
     const rows = this.grid.map((r) => r.join(""));
     const result = pad + "\n" + rows.join("\n") + "\n" + pad;
-
     console.log(result);
   }
 }

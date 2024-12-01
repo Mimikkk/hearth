@@ -7,4 +7,6 @@ createPuzzleTest({
   puzzle,
   easyTest: 21,
   easyUser: 1776,
+  hardTest: 8,
+  hardUser: 234416,
 });
