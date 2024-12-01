@@ -32,7 +32,6 @@ export const ButtonIcon = (props: ButtonIconProps) => {
 
   return (
     <button
-      accessKey={icon.icon}
       data-active={icon.active ? "" : undefined}
       class={cx(s.button, "relative", s[`size-${icon.size}`], s[`variant-${icon.variant}`], icon.class)}
       {...$}

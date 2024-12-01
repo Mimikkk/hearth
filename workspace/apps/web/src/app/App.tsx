@@ -4,7 +4,7 @@ import { Layout } from "./layout/Layout.tsx";
 
 export const App = () => (
   <ThemeProvider key="theme-mode">
-    <DevToolsProvider key="active-devtool">
+    <DevToolsProvider key="active-devtools">
       <Layout />
     </DevToolsProvider>
   </ThemeProvider>

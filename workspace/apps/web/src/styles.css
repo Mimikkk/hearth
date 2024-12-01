@@ -6,7 +6,7 @@ html {
   font-family: 'Encode Sans', serif;
   font-weight: 500;
   @apply bg-background-white;
-  @apply text-primary-dark;
+  @apply text-primary-white;
 }
 
 ::-webkit-scrollbar {

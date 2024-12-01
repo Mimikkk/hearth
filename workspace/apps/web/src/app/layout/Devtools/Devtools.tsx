@@ -1,1 +1,7 @@
-export const Devtools = () => <div class="bg-primary-1 absolute bottom-0 right-0 w-8 h-8"></div>;
+import { DevtoolsButton } from "../Devtools/DevtoolsButton.tsx";
+
+interface DevtoolsProps {
+  class?: string;
+}
+
+export const Devtools = (props: DevtoolsProps) => <DevtoolsButton class={props.class} />;
