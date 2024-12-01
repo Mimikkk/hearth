@@ -1,17 +1,13 @@
 /**
- * @module lib-a
+ * @module template-lib
  *
- * This module exports the `foo` function.
+ * @description
+ * This is a template library.
  *
  * @example
- * ```ts
- * import { foo } from "@mimi/lib-a";
- * foo(); // "foo"
- * ```
+ * import { foo } from "@mimi/template-lib";
+ *
+ * foo; // "bar"
  */
 
-/**
- * @description This function returns "foo".
- * @returns "foo"
- */
-export const foo = (): string => "foo";
+export const foo = "bar";

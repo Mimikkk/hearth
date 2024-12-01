@@ -1,0 +1,73 @@
+{
+  "license": "MIT",
+  "compilerOptions": {
+    "strict": true,
+    "jsx": "precompile",
+    "jsxImportSource": "solid-js",
+    "lib": [
+      "DOM",
+      "DOM.Iterable",
+      "ESNext",
+      "deno.ns"
+    ],
+    "types": ["./configurations/typescript/css-modules.d.ts"]
+  },
+  "unstable": ["webgpu"],
+  "nodeModulesDir": "auto",
+  "vendor": true,
+  "fmt": {
+    "indentWidth": 2,
+    "lineWidth": 120,
+    "semiColons": true,
+    "include": [
+      "scripts/**/*",
+      "configurations/**/*",
+      "templates/**/*",
+      "workspace/**/*",
+      "deno.json"
+    ],
+    "exclude": ["workspace/apps/web/build", ".vite"]
+  },
+  "workspace": {
+    "members": [
+      "workspace/apps/web",
+      "workspace/libs/hearth",
+      "workspace/libs/hearth-math",
+      "workspace/libs/ui-components",
+      "workspace/libs/ui-logic-components",
+      "workspace/libs/ui-signals",
+      "workspace/apps/aoc",
+      "workspace/libs/aoc"
+    ]
+  },
+  "tasks": {
+    "bench": {
+      "description": "run benchmarks",
+      "command": "deno bench -A"
+    },
+    "build": {
+      "description": "build application",
+      "command": "deno run -A scripts/build-application.ts"
+    },
+    "test": {
+      "description": "run tests",
+      "command": "deno test -A"
+    },
+    "use:aoc": {
+      "description": "use aoc application configuration",
+      "command": "deno task --config workspace/apps/aoc/deno.json"
+    },
+    "use:web": {
+      "description": "use web application configuration",
+      "command": "deno task --config workspace/apps/web/deno.json"
+    }
+  },
+  "imports": {
+    "vite": "npm:vite@5.4.10"
+  },
+  "lint": {
+    "rules": {
+      "exclude": ["no-namespace", "no-explicit-any"]
+    }
+  }
+}

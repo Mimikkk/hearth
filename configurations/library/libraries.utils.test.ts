@@ -101,4 +101,18 @@ describe("Configuration - Library - resolver", () => {
       'digraph LibraryDependencies {\n  "lib-a" -> "lib-b";\n  "lib-b" -> "lib-c";\n  "lib-c" -> "lib-d";\n}',
     );
   });
+
+  it("find library by path", () => {
+    const resolver = createLibraryResolver({
+      applications: {},
+      libraries: {
+        "lib-a": "path/to/lib-a",
+      },
+      dependencies: {
+        "lib-a": [],
+      },
+    });
+
+    expect(resolver.find("lib-a/path.ts")).toEqual("lib-a");
+  });
 });

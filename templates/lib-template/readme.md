@@ -1,3 +1,5 @@
-# Lib-A
+# Template Library
 
-## Description - Template
+# Description
+
+This is a template for a library.

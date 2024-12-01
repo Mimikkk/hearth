@@ -1,6 +1,3 @@
-# Hearth - WebGPU 3D Engine
+# Hearth
 
-## Structure
-
-- `workspace/apps/web` - The web application
-- `workspace/libs/hearth` - The 3D engine
+Collection of libraries and applications.

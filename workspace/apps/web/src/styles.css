@@ -1,0 +1,22 @@
+@import "../../../../configurations/tailwindcss/tailwind.styles.css";
+
+html {
+  @apply min-h-screen w-screen;
+
+  font-family: 'Encode Sans', serif;
+  font-weight: 500;
+  @apply bg-background-white;
+  @apply text-primary-white;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-primary-3 rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-primary-4;
+}

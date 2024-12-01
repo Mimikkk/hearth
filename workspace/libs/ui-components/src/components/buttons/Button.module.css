@@ -1,0 +1,80 @@
+.button {
+  @apply flex items-center justify-center px-2;
+  @apply transition-all duration-75;
+
+  &.size-xs {
+    @apply h-6;
+  }
+
+  &.size-sm {
+    @apply h-8;
+  }
+
+  &.size-md {
+    @apply h-10;
+  }
+
+  &.size-lg {
+    @apply h-12;
+  }
+
+  &.size-xl {
+    @apply h-24;
+  }
+
+  &.size-2xl {
+    @apply h-36;
+  }
+
+  &.size-3xl {
+    @apply h-48;
+  }
+
+  &.variant-contained {
+    @apply border border-accent-3 bg-secondary-3 rounded-sm;
+    @apply shadow-sm shadow-secondary-3;
+
+    &:hover,
+    &:focus-visible {
+      @apply border-accent-3 bg-secondary-4;
+      @apply text-accent-dark;
+    }
+
+    &:active {
+      @apply border-accent-1 bg-secondary-3;
+      @apply text-accent-9;
+    }
+  }
+
+  &.variant-outlined {
+    @apply border border-accent-5 bg-transparent rounded-sm;
+    @apply shadow-sm shadow-secondary-3;
+
+    &:hover,
+    &:focus-visible {
+      @apply border-accent-5 bg-secondary-3;
+      @apply text-accent-dark;
+    }
+
+    &:active {
+      @apply border-accent-5 bg-secondary-2;
+      @apply text-accent-9;
+    }
+  }
+
+  &.variant-text {
+    @apply rounded-full;
+
+    &:hover,
+    &:focus-visible {
+      @apply text-secondary-9;
+      @apply shadow-sm shadow-secondary-3;
+      @apply border-accent-4 bg-secondary-3;
+    }
+
+    &:active {
+      @apply text-secondary-8;
+      @apply border-accent-5 bg-secondary-2;
+    }
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "tasks": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "serve": "deno run --allow-net --allow-read jsr:@std/http/file-server build/",
+    "test": "deno test -RW",
+    "lint": "deno lint"
+  },
+  "imports": {
+    "vite": "npm:vite@5.4.10",
+    "solid-js": "npm:solid-js@1.9.1",
+    "solid-icons": "npm:solid-icons@1.1.0",
+    "vite-plugin-solid": "npm:vite-plugin-solid@2.1.0",
+    "tailwindcss": "npm:tailwindcss@3.4.14",
+    "postcss": "npm:postcss@8.4.47",
+    "autoprefixer": "npm:autoprefixer@10.4.20",
+    "clsx": "npm:clsx@2.1.1"
+  }
+}
