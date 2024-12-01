@@ -5,17 +5,27 @@ export type Marker = [x: number, y: number, mark: Mark] | [x: number, y: number]
 const isMarker = (value: Marker | Marker[]): value is Marker => typeof value[0] === "number";
 
 export class GridVisualizer<T> {
-  static create<T>(grid: T[][]): GridVisualizer<T> {
+  static new<T>(grid: T[][] = []): GridVisualizer<T> {
     return new GridVisualizer(grid, grid.map((r) => r.map((c) => `${c}`)));
   }
 
-  constructor(
+  static fromBounds<T>(x: number, y: number, into: GridVisualizer<T> = GridVisualizer.new<T>()) {
+    return into.fromBounds(x, y);
+  }
+
+  private constructor(
     public original: T[][],
     public grid: string[][],
     public m: number = grid.length,
     public n: number = grid[0]?.length ?? 0,
     public on: boolean = true,
+    public header: string = "",
+    public footer: string = "",
   ) {}
+
+  fromBounds(x: number, y: number) {
+    return GridVisualizer.new(Array.from({ length: x }, () => Array(y).fill(" ")));
+  }
 
   toggle(on?: boolean): this {
     this.on = on ?? !this.on;
@@ -52,6 +62,15 @@ export class GridVisualizer<T> {
     return this;
   }
 
+  fill(mark: Mark = colors.brightBlack) {
+    for (let i = 0; i < this.m; ++i) {
+      for (let j = 0; j < this.n; ++j) {
+        this.#highlight(i, j, mark);
+      }
+    }
+    return this;
+  }
+
   add(marker: Marker): this;
   add(markers: Marker | Marker[]): this;
   add(x: number, y: number, mark?: Mark): this;
@@ -69,11 +88,36 @@ export class GridVisualizer<T> {
     return this;
   }
 
+  setHeader(header: string): this {
+    this.header = header;
+    return this;
+  }
+
+  clearHeader() {
+    return this.setHeader("");
+  }
+
+  setFooter(footer: string): this {
+    this.footer = footer;
+    return this;
+  }
+
+  clearFooter(): this {
+    return this.setFooter("");
+  }
+
   log() {
     if (!this.on) return;
     const pad = "-".repeat(colors.stripAnsiCode(this.grid[0].join("")).length);
     const rows = this.grid.map((r) => r.join(""));
-    const result = pad + "\n" + rows.join("\n") + "\n" + pad;
-    console.log(result);
+    const result = [];
+
+    result.push(pad);
+    if (this.header) result.push(this.header);
+    result.push(...rows);
+    if (this.footer) result.push(this.footer);
+    result.push(pad);
+
+    console.log(result.join("\n"));
   }
 }

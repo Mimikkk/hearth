@@ -1,6 +1,6 @@
 import { Puzzle } from "../../types/puzzle.ts";
-import { sum } from "../../utils/math.ts";
-import { Str } from "../../utils/strs.ts";
+import { sum } from "../../utils/math.ns.ts";
+import { Str } from "../../utils/str.ns.ts";
 
 enum Outcome {
   Win = "win",
@@ -176,7 +176,7 @@ const decodeAsMoves = (codes: string[]): Match => codes.map(decodeRound);
 
 const decodeAsSet = (codes: string[]): Match => codes.map(decodeSetRound);
 
-export default Puzzle.create({
+export default Puzzle.new({
   prepare: Str.lines,
   easy: {
     prepare: decodeAsMoves,

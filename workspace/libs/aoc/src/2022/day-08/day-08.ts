@@ -1,5 +1,5 @@
 import { Puzzle } from "../../types/puzzle.ts";
-import { Str } from "../../utils/strs.ts";
+import { Str } from "../../utils/str.ns.ts";
 
 const parseGrid = (lines: string[]): number[][] => {
   const m = lines.length;
@@ -134,7 +134,7 @@ const maxScenicScore = (grid: number[][]): number => {
   return maxScore;
 };
 
-export default Puzzle.create({
+export default Puzzle.new({
   prepare: (content: string) => parseGrid(Str.lines(content)),
   easy: countVisibleTrees,
   hard: maxScenicScore,

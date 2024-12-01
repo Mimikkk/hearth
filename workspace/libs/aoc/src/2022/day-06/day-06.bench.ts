@@ -1,9 +1,9 @@
 import { Puzzle } from "../../types/puzzle.ts";
 import { createPuzzleBench } from "../../utils/create-puzzle-bench.ts";
-import { Str } from "../../utils/strs.ts";
+import { Str } from "../../utils/str.ns.ts";
 import puzzle from "./day-06.ts";
 
-const stackless = Puzzle.create({
+const stackless = Puzzle.new({
   prepare: Str.trim,
   hard(code) {
     const n = 14;

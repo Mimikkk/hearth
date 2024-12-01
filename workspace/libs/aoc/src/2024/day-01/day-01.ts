@@ -1,6 +1,6 @@
 import { Puzzle } from "../../types/puzzle.ts";
 import { createCounter } from "../../utils/collections.ts";
-import { Str } from "../../utils/strs.ts";
+import { Str } from "../../utils/str.ns.ts";
 
 const whitespaceRe = /\s+/;
 const parseLists = (content: string): [number[], number[]] => {
@@ -40,7 +40,7 @@ const calculateSimmilarity = ([a, b]: [number[], number[]]) => {
   return similarity;
 };
 
-export default Puzzle.create({
+export default Puzzle.new({
   prepare: parseLists,
   easy: calculateDistance,
   hard: calculateSimmilarity,

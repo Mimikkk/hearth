@@ -1,5 +1,5 @@
 import { Puzzle } from "../../types/puzzle.ts";
-import { Str } from "../../utils/strs.ts";
+import { Str } from "../../utils/str.ns.ts";
 
 const findFirst4UniqueString = (code: string): number | null => {
   const len = code.length;
@@ -36,7 +36,7 @@ const findFirstNUniqueString = (code: string, n: number): number | null => {
 
 const findFirst14UniqueString = (code: string): number | null => findFirstNUniqueString(code, 14);
 
-export default Puzzle.create({
+export default Puzzle.new({
   prepare: Str.trim,
   easy: findFirst4UniqueString,
   hard: findFirst14UniqueString,

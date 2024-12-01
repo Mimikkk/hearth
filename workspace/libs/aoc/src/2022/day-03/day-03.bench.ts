@@ -2,7 +2,7 @@ import { Puzzle, Str } from "../../mod.ts";
 import { createPuzzleBench } from "../../utils/create-puzzle-bench.ts";
 import puzzle, { priorityOf } from "./day-03.ts";
 
-const boomerloop = Puzzle.create({
+const boomerloop = Puzzle.new({
   prepare: Str.lines,
   easy(rucksacks) {
     let total = 0;

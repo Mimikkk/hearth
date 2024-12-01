@@ -10,7 +10,7 @@ export interface PuzzleConfiguration<T, R1, R2, I1 = T, I2 = T> {
 }
 
 export class Puzzle<T, R1, R2, I1 = T, I2 = T> {
-  static create<T, R1, R2, I1 = T, I2 = T>(
+  static new<T, R1, R2, I1 = T, I2 = T>(
     configuration: PuzzleConfiguration<T, R1, R2, I1, I2>,
   ): Puzzle<T, R1, R2, I1, I2> {
     return new this(configuration);
@@ -35,5 +35,13 @@ export class Puzzle<T, R1, R2, I1 = T, I2 = T> {
     const prepared = prepare(content);
     if (typeof hard === "function") return hard(prepared);
     return hard.task((hard.prepare?.(prepared) ?? prepared) as I2);
+  }
+
+  with(configuration: Partial<PuzzleConfiguration<T, R1, R2, I1, I2>>): Puzzle<T, R1, R2, I1, I2> {
+    return new Puzzle({
+      prepare: configuration.prepare ?? this.configuration.prepare,
+      easy: configuration.easy ?? this.configuration.easy,
+      hard: configuration.hard ?? this.configuration.hard,
+    });
   }
 }

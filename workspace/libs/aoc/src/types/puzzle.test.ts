@@ -2,7 +2,7 @@ import { expect } from "jsr:@std/expect";
 import { describe, it } from "jsr:@std/testing/bdd";
 import { Puzzle } from "./puzzle.ts";
 
-const puzzle = Puzzle.create({
+const puzzle = Puzzle.new({
   prepare: (text) => text + "foo",
   easy: {
     prepare: (value) => value + "bar",

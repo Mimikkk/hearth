@@ -1,5 +1,5 @@
 import { Puzzle } from "../../types/puzzle.ts";
-import { Str } from "../../utils/strs.ts";
+import { Str } from "../../utils/str.ns.ts";
 
 type Range = [from: number, to: number];
 const hasFullOverlap = ([aFrom, aTo]: Range, [bFrom, bTo]: Range) => {
@@ -23,7 +23,7 @@ const countBy = <T>(items: T[], predicate: (item: T) => boolean): number => {
   return count;
 };
 
-export default Puzzle.create({
+export default Puzzle.new({
   prepare: (content) =>
     Str.lines(content).map((s) => s.split(",").map((s) => s.split("-").map(Number))) as [Range, Range][],
   easy: (ranges) => countBy(ranges, ([a, b]) => hasFullOverlap(a, b)),

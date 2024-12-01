@@ -54,6 +54,10 @@
       "description": "run tests",
       "command": "deno test -A"
     },
+    "use:aoclib": {
+      "description": "use aoc library configuration",
+      "command": "deno task --config workspace/libs/aoc/deno.json"
+    },
     "use:aoc": {
       "description": "use aoc application configuration",
       "command": "deno task --config workspace/apps/aoc/deno.json"
@@ -68,7 +72,7 @@
   },
   "lint": {
     "rules": {
-      "exclude": ["no-namespace", "no-explicit-any"]
+      "exclude": ["no-namespace", "no-explicit-any", "no-misused-new"]
     }
   }
 }

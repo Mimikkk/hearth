@@ -1,8 +1,8 @@
 import { Puzzle } from "../../types/puzzle.ts";
-import { Str } from "../../utils/strs.ts";
+import { Str } from "../../utils/str.ns.ts";
 
 class Location {
-  static create() {
+  static new() {
     return new this([], [""]);
   }
   private constructor(private location: string[], private paths: string[]) {}
@@ -40,7 +40,7 @@ class Location {
 }
 
 const calcuateSizes = (lines: string[]) => {
-  const location = Location.create();
+  const location = Location.new();
 
   const parents = new Map<string, string>();
   const counts = new Map<string, number>();
@@ -113,7 +113,7 @@ const findSmallestToRemove = (sizes: Map<string, number>, value: number): number
   return min;
 };
 
-export default Puzzle.create({
+export default Puzzle.new({
   prepare: Str.lines,
   easy: (lines) => sumOverSize(calcuateSizes(lines), 100_000),
   hard: (lines) => findSmallestToRemove(calcuateSizes(lines), 30_000_000),

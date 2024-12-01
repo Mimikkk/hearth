@@ -67,7 +67,7 @@ const readTopAfterMoves = (stacks: Stack[], moves: Move[], onMove: HandleMove): 
 
 const readTop = (stacks: Stack[]): string => stacks.map((stack) => stack[stack.length - 1]).join("");
 
-export default Puzzle.create({
+export default Puzzle.new({
   prepare(content) {
     const [stacksLines, moveLines] = splitLines(Str.lines(content));
     return [parseStacks(stacksLines), parseMoves(moveLines)] as const;

@@ -1,5 +1,5 @@
 import { Puzzle } from "../../types/puzzle.ts";
-import { Str } from "../../utils/strs.ts";
+import { Str } from "../../utils/str.ns.ts";
 
 const codeOf = (code: string) => code.charCodeAt(0);
 const isUppercase = (code: string) => code >= "A" && code <= "Z";
@@ -54,7 +54,7 @@ const findCommonItemInGroup = (group: string[]): string | undefined => {
   return undefined;
 };
 
-export default Puzzle.create({
+export default Puzzle.new({
   prepare: Str.lines,
   easy(rucksacks) {
     let total = 0;
