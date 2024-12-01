@@ -1,35 +1,32 @@
 .icon {
   @apply flex items-center justify-center gap-2 aspect-square;
-  @apply stroke-1 stroke-secondary-7 text-secondary-dark;
+  @apply stroke-[1] stroke-secondary-7 text-secondary-dark;
 
+  &.size-xs {
+    @apply h-4;
+  }
 
-  &.size {
-    &-xs {
-      @apply h-4;
-    }
+  &.size-sm {
+    @apply h-5;
+  }
 
-    &-sm {
-      @apply h-5;
-    }
+  &.size-md {
+    @apply h-6;
+  }
 
-    &-md {
-      @apply h-6;
-    }
+  &.size-lg {
+    @apply h-8;
+  }
 
-    &-lg {
-      @apply h-8;
-    }
+  &.size-xl {
+    @apply h-10;
+  }
 
-    &-xl {
-      @apply h-10;
-    }
+  &.size-2xl {
+    @apply h-12;
+  }
 
-    &-2xl {
-      @apply h-12;
-    }
-
-    &-3xl {
-      @apply h-14;
-    }
+  &.size-3xl {
+    @apply h-14;
   }
 }

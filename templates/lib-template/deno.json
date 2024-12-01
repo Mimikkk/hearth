@@ -1,0 +1,15 @@
+{
+  "name": "@mimi/template-lib",
+  "version": "0.0.0",
+  "exports": "./src/mod.ts",
+  "license": "MIT",
+  "publish": {
+    "include": [
+      "src",
+      "readme.md"
+    ],
+    "exclude": [
+      "**/*.test.ts"
+    ]
+  }
+}

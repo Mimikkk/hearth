@@ -1,99 +1,89 @@
-:global(.dark) {
-  .button {
-    &.variant {
-      &-text {
-        @apply bg-opacity-0;
-      }
-    }
+:global(.dark) .button {
+  &.variant-text {
+    @apply bg-opacity-0;
   }
 }
-
 
 .button {
   @apply flex items-center justify-center gap-2 aspect-square;
   @apply rounded-full transition-all duration-75;
+  @apply text-primary-7;
 
-  &.size {
-    &-xs {
-      @apply h-5 text-xs;
+  &.size-xs {
+    @apply h-5 text-xs;
+  }
+
+  &.size-sm {
+    @apply h-6 text-sm;
+  }
+
+  &.size-md {
+    @apply h-8;
+  }
+
+  &.size-lg {
+    @apply h-10 text-lg;
+  }
+
+  &.size-xl {
+    @apply h-14 text-xl;
+  }
+
+  &.size-2xl {
+    @apply h-24 text-2xl;
+  }
+
+  &.size-3xl {
+    @apply h-36 text-3xl;
+  }
+
+  &.variant-text {
+    @apply border border-accent-3;
+    @apply bg-secondary-4;
+    @apply rounded-full;
+
+    &:hover,
+    &:focus-visible {
+      @apply text-secondary-9;
+      @apply shadow-sm shadow-secondary-3;
+      @apply border-accent-4 bg-secondary-3;
     }
 
-    &-sm {
-      @apply h-6 text-sm;
+    &:active {
+      @apply text-secondary-8;
+      @apply border-accent-5 bg-secondary-2;
     }
 
-    &-md {
-      @apply h-8;
-    }
+    &[data-active] {
+      @apply border-accent-3;
 
-    &-lg {
-      @apply h-10 text-lg;
-    }
-
-    &-xl {
-      @apply h-14 text-xl;
-    }
-
-    &-2xl {
-      @apply h-24 text-2xl;
-    }
-
-    &-3xl {
-      @apply h-36 text-3xl;
+      &:hover {
+        @apply border-accent-5;
+      }
     }
   }
 
-  @apply text-primary-7;
+  &.variant-contained {
+    @apply border border-secondary-3 bg-secondary-4 rounded-sm;
+    @apply shadow-sm shadow-secondary-3;
+    @apply px-1;
 
-  &.variant {
-    &-text {
-      @apply border border-accent-3;
-      @apply bg-secondary-4;
-      @apply rounded-full;
-
-      &:hover, &:focus-visible {
-        @apply text-secondary-9;
-        @apply shadow-sm shadow-secondary-3;
-
-        @apply border-accent-4 bg-secondary-3;
-      }
-
-      &:active {
-        @apply text-secondary-8;
-        @apply border-accent-5 bg-secondary-2
-      }
-
-      &[data-active] {
-        @apply border-accent-3;
-
-        &:hover {
-          @apply border-accent-5;
-        }
-      }
+    &:hover,
+    &:focus-visible {
+      @apply text-secondary-9;
+      @apply border-accent-4 bg-secondary-3;
     }
 
+    &:active {
+      @apply text-secondary-8;
+      @apply border-accent-5 bg-secondary-2;
+    }
 
-    &-contained {
-      @apply border border-secondary-3 bg-secondary-4 rounded-sm;
-      @apply shadow-sm shadow-secondary-3;
-      @apply px-1;
+    &[data-active] {
+      @apply border-accent-3;
 
-      &:hover, &:focus-visible {
-        @apply text-secondary-9;
-        @apply border-accent-4 bg-secondary-3;
-      }
-
-      &:active {
-        @apply text-secondary-8;
-        @apply border-accent-5 bg-secondary-2;
-      }
-
-      &[data-active] {
-        @apply border-accent-3;
-
-        &:hover {
-          @apply border-accent-5;
-        }
+      &:hover {
+        @apply border-accent-5;
       }
     }
   }
