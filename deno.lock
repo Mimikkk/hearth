@@ -30,6 +30,7 @@
     "npm:postcss@8.4.47": "8.4.47",
     "npm:solid-icons@1.1.0": "1.1.0_solid-js@1.9.1__seroval@1.1.1",
     "npm:solid-js@1.9.1": "1.9.1_seroval@1.1.1",
+    "npm:tailwindcss@3.4.11": "3.4.11_postcss@8.4.47",
     "npm:tailwindcss@3.4.14": "3.4.14_postcss@8.4.47",
     "npm:vite-plugin-solid@2.1.0": "2.1.0_@babel+core@7.26.0_solid-js@1.9.1__seroval@1.1.1",
     "npm:vite@5.4.10": "5.4.10"
@@ -1283,6 +1284,33 @@
     "supports-preserve-symlinks-flag@1.0.0": {
       "integrity": "sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w=="
     },
+    "tailwindcss@3.4.11_postcss@8.4.47": {
+      "integrity": "sha512-qhEuBcLemjSJk5ajccN9xJFtM/h0AVCPaA6C92jNP+M2J8kX+eMJHI7R2HFKUvvAsMpcfLILMCFYSeDwpMmlUg==",
+      "dependencies": [
+        "@alloc/quick-lru",
+        "arg",
+        "chokidar",
+        "didyoumean",
+        "dlv",
+        "fast-glob",
+        "glob-parent@6.0.2",
+        "is-glob",
+        "jiti",
+        "lilconfig@2.1.0",
+        "micromatch",
+        "normalize-path",
+        "object-hash",
+        "picocolors",
+        "postcss",
+        "postcss-import",
+        "postcss-js",
+        "postcss-load-config",
+        "postcss-nested",
+        "postcss-selector-parser",
+        "resolve",
+        "sucrase"
+      ]
+    },
     "tailwindcss@3.4.14_postcss@8.4.47": {
       "integrity": "sha512-IcSvOcTRcUtQQ7ILQL5quRDg7Xs93PdJEk1ZLbhhvJc7uj/OAhYOnruEiwnGgBvUtaUAJ8/mhSw1o8L2jCiENA==",
       "dependencies": [
@@ -1438,6 +1466,16 @@
           "npm:tailwindcss@3.4.14",
           "npm:vite-plugin-solid@2.1.0",
           "npm:vite@5.4.10"
+        ]
+      },
+      "workspace/libs/ui-components": {
+        "dependencies": [
+          "npm:autoprefixer@10.4.20",
+          "npm:clsx@2.1.1",
+          "npm:postcss@8.4.47",
+          "npm:solid-icons@1.1.0",
+          "npm:solid-js@1.9.1",
+          "npm:tailwindcss@3.4.14"
         ]
       }
     }

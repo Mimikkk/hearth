@@ -1,6 +1,4 @@
-import { createKeyboardShortcut } from "../../../shared/createKeyboardShorcut.tsx";
-import { createStorageSignal } from "../../../shared/createStorageSignal.tsx";
-import { createContext } from "../../../shared/logic/createContext.tsx";
+import { createContext, createKeyboardShortcut, createStorageSignal } from "@mimi/ui-signals";
 
 interface UseDevTools {
   key: string;

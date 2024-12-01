@@ -3,7 +3,7 @@ import { createEffect, createResource } from "solid-js";
 import { createStore } from "solid-js/store";
 
 export const createSolutions = <T, H, R>(puzzle: Puzzle<T, H, R>) => {
-  const [content] = createResource(() => Files.text(urlOf(2022, 1, "real", "easy")));
+  const [content] = createResource(() => Files.text(urlOf(2022, 1, "input-test")));
 
   const [results, setResults] = createStore<{
     easy: ReturnType<typeof puzzle.easy> | null;

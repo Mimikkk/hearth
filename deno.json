@@ -10,7 +10,7 @@
       "ESNext",
       "deno.ns"
     ],
-    "types": ["./configurations/ts/css-modules.d.ts"]
+    "types": ["./configurations/typescript/css-modules.d.ts"]
   },
   "unstable": ["webgpu"],
   "nodeModulesDir": "auto",
@@ -33,6 +33,9 @@
       "workspace/apps/web",
       "workspace/libs/hearth",
       "workspace/libs/hearth-math",
+      "workspace/libs/ui-components",
+      "workspace/libs/ui-logic-components",
+      "workspace/libs/ui-signals",
       "workspace/apps/aoc",
       "workspace/libs/aoc"
     ]

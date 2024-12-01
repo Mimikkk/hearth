@@ -1,3 +1,0 @@
-# Lib-A
-
-## Description - Template

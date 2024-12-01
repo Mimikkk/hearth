@@ -1,4 +1,4 @@
-import { ButtonIcon } from "../../../components/buttons//ButtonIcon.tsx";
+import { ButtonIcon } from "@mimi/ui-components";
 import { useDevTools } from "./useDevtools.tsx";
 
 interface DevelopmentToolsButtonProps {

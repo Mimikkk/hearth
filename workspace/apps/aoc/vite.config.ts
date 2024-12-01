@@ -14,7 +14,12 @@ export default defineConfig({
     },
   },
   resolve: {
-    alias: createAlias(["@mimi/aoc"]),
+    alias: createAlias([
+      "@mimi/aoc",
+      "@mimi/ui-signals",
+      "@mimi/ui-components",
+      "@mimi/ui-logic-components",
+    ]),
   },
   css: {
     modules: {
