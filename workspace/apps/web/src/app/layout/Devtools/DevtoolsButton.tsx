@@ -1,11 +1,11 @@
 import { ButtonIcon } from "@mimi/ui-components";
 import { useDevTools } from "./useDevtools.tsx";
 
-interface DevelopmentToolsButtonProps {
+interface DevtoolsButtonProps {
   class?: string;
 }
 
-export const DevelopmentToolsButton = (props: DevelopmentToolsButtonProps) => {
+export const DevtoolsButton = (props: DevtoolsButtonProps) => {
   const { active, toggle } = useDevTools();
 
   return (

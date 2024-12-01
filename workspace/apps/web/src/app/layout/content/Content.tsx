@@ -1,5 +1,7 @@
-import cx from "clsx";
+interface ContentProps {
+  class?: string;
+}
 
-export const Content = (props: { class?: string }) => (
-  <div class={cx("bg-primary-1 p-4 h-full", props.class)}>Content</div>
-);
+export const Content = (props: ContentProps) => {
+  return <section class={props.class}>Main Content</section>;
+};
