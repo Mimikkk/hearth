@@ -5,6 +5,7 @@ import { ensureDir, exists } from "jsr:@std/fs";
 import { resolve } from "jsr:@std/path";
 import { Result } from "../src/mod.ts";
 const formatDay = (day: number) => day.toString().padStart(2, "0");
+
 namespace Validation {
   const Messages = {
     dayError: `- ${colors.bold.red("[Validation Error]")} ${colors.bold.yellow("Day")} must be between ${

@@ -41,18 +41,6 @@
     ]
   },
   "tasks": {
-    "dev:web": {
-      "description": "run web application",
-      "command": "cd workspace/apps/web && deno task dev"
-    },
-    "dev:aoc": {
-      "description": "run web application",
-      "command": "cd workspace/apps/aoc && deno task dev"
-    },
-    "test": {
-      "description": "run tests",
-      "command": "deno test -A"
-    },
     "bench": {
       "description": "run benchmarks",
       "command": "deno bench -A"
@@ -61,17 +49,17 @@
       "description": "build application",
       "command": "deno run -A scripts/build-application.ts"
     },
-    "aoc:create-day": {
-      "description": "create a puzzle for the given year and day",
-      "command": "deno task --config workspace/libs/aoc/deno.json create-day"
+    "test": {
+      "description": "run tests",
+      "command": "deno test -A"
     },
-    "aoc:test": {
-      "description": "run tests for the given year",
-      "command": "deno task test --filter aoc"
+    "use:aoc": {
+      "description": "use aoc application configuration",
+      "command": "deno task --config workspace/apps/aoc/deno.json"
     },
-    "aoc:bench": {
-      "description": "run benchmarks for the given year",
-      "command": "deno task bench"
+    "use:web": {
+      "description": "use web application configuration",
+      "command": "deno task --config workspace/apps/web/deno.json"
     }
   },
   "imports": {
