@@ -52,12 +52,6 @@ class Knot {
   id(): number {
     return ((this.location.x & 0xFFFF) << 16) | (this.location.y & 0xFFFF);
   }
-
-  static unpackCoords(packed: number): [number, number] {
-    const x = (packed >> 16) << 16 >> 16;
-    const y = (packed & 0xFFFF) << 16 >> 16;
-    return [x, y];
-  }
 }
 
 class Rope {
