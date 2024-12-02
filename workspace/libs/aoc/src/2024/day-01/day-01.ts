@@ -1,6 +1,6 @@
 import { Puzzle } from "../../types/puzzle.ts";
 import { createCounter } from "../../utils/collections.ts";
-import { Str } from "../../utils/str.ns.ts";
+import { Str } from "../../utils/strs.ts";
 
 const whitespaceRe = /\s+/;
 const parseLists = (content: string): [number[], number[]] => {

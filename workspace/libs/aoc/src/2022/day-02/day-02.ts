@@ -1,6 +1,6 @@
 import { Puzzle } from "../../types/puzzle.ts";
-import { sum } from "../../utils/math.ns.ts";
-import { Str } from "../../utils/str.ns.ts";
+import { sum } from "../../utils/maths.ts";
+import { Str } from "../../utils/strs.ts";
 
 enum Outcome {
   Win = "win",

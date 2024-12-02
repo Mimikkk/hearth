@@ -1,6 +1,6 @@
 import { Vec2 } from "../../types/math/Vec2.ts";
 import { Puzzle } from "../../types/puzzle.ts";
-import { Str } from "../../utils/str.ns.ts";
+import { Str } from "../../utils/strs.ts";
 
 enum Direction {
   Up = "U",

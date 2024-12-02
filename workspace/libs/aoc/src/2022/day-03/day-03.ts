@@ -1,5 +1,5 @@
 import { Puzzle } from "../../types/puzzle.ts";
-import { Str } from "../../utils/str.ns.ts";
+import { Str } from "../../utils/strs.ts";
 
 const codeOf = (code: string) => code.charCodeAt(0);
 const isUppercase = (code: string) => code >= "A" && code <= "Z";

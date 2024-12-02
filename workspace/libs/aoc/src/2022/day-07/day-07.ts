@@ -1,5 +1,5 @@
 import { Puzzle } from "../../types/puzzle.ts";
-import { Str } from "../../utils/str.ns.ts";
+import { Str } from "../../utils/strs.ts";
 
 class Location {
   static new() {

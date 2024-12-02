@@ -1,5 +1,5 @@
 import { Result } from "../types/result.ts";
-import { Str } from "./str.ns.ts";
+import { Str } from "./strs.ts";
 
 const FileError = "Failed to fetch file: File does not exist.";
 const HtmlError = "Failed to fetch file: File is HTML.";
