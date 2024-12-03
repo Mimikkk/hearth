@@ -27,8 +27,7 @@ const collectMultiplication = (content: string, from: number): [value: number | 
 const sumMultiplications = (content: string) => {
   let result = 0;
 
-  let i = 0;
-  while (++i < content.length) {
+  for (let i = 0; i < content.length; ++i) {
     if (isPattern(content, i, "mul(")) {
       const [value, next] = collectMultiplication(content, i + 4);
       if (value !== null) result += value;
@@ -43,8 +42,7 @@ const sumEnablingMultiplications = (content: string) => {
   let result = 0;
   let enabled = true;
 
-  let i = 0;
-  while (++i < content.length) {
+  for (let i = 0; i < content.length; ++i) {
     if (enabled && isPattern(content, i, "mul(")) {
       const [value, next] = collectMultiplication(content, i + 4);
       if (value !== null) result += value;
