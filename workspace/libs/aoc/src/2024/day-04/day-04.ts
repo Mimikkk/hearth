@@ -16,31 +16,26 @@ const countXmas = (grid: string[][]): number => {
   const n = grid.length;
   const m = grid[0]?.length ?? 0;
 
-  const stack: [x: number, y: number, ConnectionKey][] = [];
   for (let i = 0; i < n; ++i) {
     const row = grid[i];
     for (let j = 0; j < m; ++j) {
       if (row[j] !== "X") continue;
-      stack.push([i, j, "M"]);
-    }
-  }
 
-  while (stack.length) {
-    const [x, y, needle] = stack.pop()!;
+      const needle = "M";
+      for (let i = 0; i < neighbours.length; ++i) {
+        const [x, y] = neighbours[i];
 
-    for (let i = 0; i < neighbours.length; ++i) {
-      const [dx, dy] = neighbours[i];
-
-      let key: ConnectionKey | undefined = needle;
-      let xi = x + dx;
-      let xj = y + dy;
-      while (grid[xi]?.[xj] === key) {
-        xi += dx;
-        xj += dy;
-        key = connections.get(key);
-        if (key) continue;
-        count += 1;
-        break;
+        let key: ConnectionKey | undefined = needle;
+        let xi = x + i;
+        let xj = y + j;
+        while (grid[xi]?.[xj] === key) {
+          xi += x;
+          xj += y;
+          key = connections.get(key);
+          if (key) continue;
+          count += 1;
+          break;
+        }
       }
     }
   }
