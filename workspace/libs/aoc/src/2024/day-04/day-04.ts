@@ -12,25 +12,26 @@ const connections = new Map<ConnectionKey, ConnectionKey>([
 ]);
 
 const countXmas = (grid: string[][]): number => {
-  let count = 0;
   const n = grid.length;
   const m = grid[0]?.length ?? 0;
 
+  let count = 0;
   for (let i = 0; i < n; ++i) {
     const row = grid[i];
     for (let j = 0; j < m; ++j) {
       if (row[j] !== "X") continue;
 
-      const needle = "M";
+      const x = i;
+      const y = j;
       for (let i = 0; i < neighbours.length; ++i) {
-        const [x, y] = neighbours[i];
+        const [dx, dy] = neighbours[i];
 
-        let key: ConnectionKey | undefined = needle;
-        let xi = x + i;
-        let xj = y + j;
+        let key: ConnectionKey | undefined = "M";
+        let xi = dx + x;
+        let xj = dy + y;
         while (grid[xi]?.[xj] === key) {
-          xi += x;
-          xj += y;
+          xi += dx;
+          xj += dy;
           key = connections.get(key);
           if (key) continue;
           count += 1;
