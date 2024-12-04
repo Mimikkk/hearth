@@ -72,7 +72,7 @@ export class GridVisualizer<T> {
   }
 
   add(marker: Marker): this;
-  add(markers: Marker | Marker[]): this;
+  add(markers: Marker[]): this;
   add(x: number, y: number, mark?: Mark): this;
   add(value: number | Marker | Marker[], y?: number, mark?: Mark): this {
     if (typeof value === "number") {
