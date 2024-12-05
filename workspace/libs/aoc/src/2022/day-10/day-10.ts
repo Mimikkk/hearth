@@ -64,7 +64,7 @@ const readCrtMessage = (instructions: Instruction[]): string => {
 
     if (isVisible) line[needlePosition] = "#";
 
-    if (needlePosition === 39) {
+    if (needlePosition === width - 1) {
       lines.push(line.join(""));
       line = Array(width).fill(".");
     }
