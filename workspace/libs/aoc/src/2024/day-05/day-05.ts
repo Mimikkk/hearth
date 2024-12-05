@@ -2,11 +2,11 @@ import { Puzzle } from "../../types/puzzle.ts";
 import { Str } from "../../utils/strs.ts";
 
 interface Pages {
-  rules: Map<number, number[]>;
+  rules: Map<number, Set<number>>;
   lists: number[][];
 }
 
-const prepareConnections = (content: string): Pages => {
+const preparePages = (content: string): Pages => {
   const lines = Str.lines(content);
 
   const rulesLines: string[] = [];
@@ -24,11 +24,11 @@ const prepareConnections = (content: string): Pages => {
 
     let list = rules.get(before);
     if (list === undefined) {
-      list = [];
+      list = new Set();
       rules.set(before, list);
     }
 
-    list.push(after);
+    list.add(after);
   }
 
   const lists = listsLines.map((line) => line.split(",").map(Number));
@@ -36,15 +36,15 @@ const prepareConnections = (content: string): Pages => {
   return { rules, lists };
 };
 
-const isCorrect = (list: number[], rules: Map<number, number[]>): boolean => {
+const isCorrect = (list: number[], rules: Map<number, Set<number>>): boolean => {
   for (let i = 0; i < list.length; ++i) {
-    const ruling = rules.get(list[i]);
-    if (ruling === undefined) continue;
+    const pages = rules.get(list[i]);
+    if (pages === undefined) continue;
 
     for (let j = i + 1; j < list.length; ++j) {
       const value = list[j];
 
-      if (ruling.includes(value)) return false;
+      if (pages.has(value)) return false;
     }
   }
 
@@ -62,10 +62,10 @@ const sumCorrectMiddlePageNumbers = ({ rules, lists }: Pages) => {
   return sum;
 };
 
-const sortByRules = (list: number[], rules: Map<number, number[]>): number[] =>
-  list.sort((a, b) => rules.get(a)?.includes(b) ? -1 : 1);
+const sortByRules = (list: number[], rules: Map<number, Set<number>>): number[] =>
+  list.sort((a, b) => rules.get(a)?.has(b) ? -1 : 1);
 
-const sumFixedIncorrentMiddlePageNumbers = ({ rules, lists }: Pages) => {
+const sumFixedIncorrectMiddlePageNumbers = ({ rules, lists }: Pages) => {
   let sum = 0;
   for (let i = 0; i < lists.length; ++i) {
     const list = lists[i];
@@ -78,7 +78,7 @@ const sumFixedIncorrentMiddlePageNumbers = ({ rules, lists }: Pages) => {
 };
 
 export default Puzzle.new({
-  prepare: prepareConnections,
+  prepare: preparePages,
   easy: sumCorrectMiddlePageNumbers,
-  hard: sumFixedIncorrentMiddlePageNumbers,
+  hard: sumFixedIncorrectMiddlePageNumbers,
 });
