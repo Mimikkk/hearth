@@ -33,6 +33,7 @@ export class GridVisualizer<T> {
   }
 
   #at(x: number, y: number): string {
+    console.log(this.grid.length, x, y);
     return colors.stripAnsiCode(this.grid[x][y]);
   }
 

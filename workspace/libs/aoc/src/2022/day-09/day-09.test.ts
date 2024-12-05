@@ -5,8 +5,10 @@ createPuzzleTest({
   year: 2022,
   day: 9,
   puzzle,
-  // easyTest: 13,
-  // easyUser: 6384,
+  easyTest: 13,
+  easyUser: 6384,
   hardTest: 36,
-  // hardUser: 6384,
+  hardUser: 2734,
+  easyTestInput: "type:input-test-easy",
+  hardTestInput: "type:input-test-hard",
 });
