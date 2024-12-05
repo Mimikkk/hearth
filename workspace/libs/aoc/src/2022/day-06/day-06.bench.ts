@@ -33,8 +33,6 @@ const stackless = Puzzle.new({
 });
 
 await createPuzzleBench({
-  year: 2022,
-  day: 6,
   baseline: puzzle,
   implementations: [stackless],
   // testEasy: true,

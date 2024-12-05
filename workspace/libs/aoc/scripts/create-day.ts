@@ -48,28 +48,24 @@ import { Puzzle } from "../../types/puzzle.ts";
 import { Str } from "../../utils/strs.ts";
 
 export default Puzzle.new({
-  prepare: () => Str.lines,
+  prepare: Str.lines,
   easy: () => 0,
   hard: () => 0,
 });
 `,
-    test: (year: number, day: number) => `
+    test: (day: number) => `
 import { createPuzzleTest } from "../../utils/create-puzzle-test.ts";
 import puzzle from "./day-${formatDay(day)}.ts";
 
 createPuzzleTest({
-  year: ${year},
-  day: ${day},
   puzzle,
 });
 `,
-    bench: (year: number, day: number) => `
+    bench: (day: number) => `
 import { createPuzzleBench } from "../../utils/create-puzzle-bench.ts";
 import puzzle from "./day-${formatDay(day)}.ts";
 
 await createPuzzleBench({
-  year: ${year},
-  day: ${day},
   baseline: puzzle,
   implementations: [],
   testEasy: true,
@@ -106,14 +102,14 @@ await createPuzzleBench({
     return filesToCreate;
   };
 
-  export const createFiles = async (yearDir: string, year: number, day: number) => {
+  export const createFiles = async (yearDir: string, day: number) => {
     const dayDir = resolve(yearDir, `day-${formatDay(day)}`);
     await ensureDir(dayDir);
 
     const files: CreatableFile<string>[] = [
       { path: `day-${formatDay(day)}.ts`, content: Templates.puzzle },
-      { path: `day-${formatDay(day)}.test.ts`, content: Templates.test(year, day) },
-      { path: `day-${formatDay(day)}.bench.ts`, content: Templates.bench(year, day) },
+      { path: `day-${formatDay(day)}.test.ts`, content: Templates.test(day) },
+      { path: `day-${formatDay(day)}.bench.ts`, content: Templates.bench(day) },
     ];
 
     const filesToCreate = await filterFiles(files, dayDir);
@@ -219,10 +215,8 @@ await new Command()
 
     const yearDir = resolve(Deno.cwd(), "src", `${year}`);
 
-    console.log();
-
     console.log(colors.green("Creating puzzle files..."));
-    await Creator.createFiles(yearDir, year, day);
+    await Creator.createFiles(yearDir, day);
 
     console.log();
 

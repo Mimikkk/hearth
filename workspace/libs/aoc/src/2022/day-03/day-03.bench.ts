@@ -68,8 +68,6 @@ const findCommonItem = (group: string[]): string | undefined => {
 };
 
 await createPuzzleBench({
-  year: 2022,
-  day: 3,
   baseline: puzzle,
   implementations: [boomerloop],
   testEasy: true,

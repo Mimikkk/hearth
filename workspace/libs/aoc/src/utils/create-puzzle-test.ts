@@ -6,9 +6,7 @@ import { Result } from "../types/result.ts";
 import { Files } from "./files.ts";
 import { type InputType, urlOf } from "./url-of.ts";
 
-interface PuzzleOptions<P extends Puzzle<any, any, any, any, any>> {
-  year: number;
-  day: number;
+interface PuzzleTestOptions<P extends Puzzle<any, any, any, any, any>> {
   puzzle: P;
   easyTest?: ReturnType<P["easy"]>;
   hardTest?: ReturnType<P["hard"]>;
@@ -29,10 +27,24 @@ const tryStacklessAssert = (callback: () => void) => {
   }
 };
 
+const dayAndYearFromCallStack = () => {
+  const trace = Error().stack;
+
+  const callerLine = trace?.split("\n").at(-1);
+  let match = callerLine?.match(/at file:\/\/(.+\.ts)/);
+  if (!match) throw Error("Invalid path");
+
+  const filePath = match[1];
+  match = filePath.match(/\/(\d{4})\/day-(\d{2})\//);
+  if (!match) throw Error(`Invalid path: ${filePath}`);
+
+  const year = +match[1];
+  const day = +match[2];
+  return { year, day };
+};
+
 export const createPuzzleTest = <P extends Puzzle<any, any, any, any, any>>(
   {
-    year,
-    day,
     puzzle,
     easyTest,
     hardTest,
@@ -42,8 +54,10 @@ export const createPuzzleTest = <P extends Puzzle<any, any, any, any, any>>(
     hardTestInput = "type:input-test",
     easyUserInput = "type:input-user",
     hardUserInput = "type:input-user",
-  }: PuzzleOptions<P>,
+  }: PuzzleTestOptions<P>,
 ): void => {
+  const { year, day } = dayAndYearFromCallStack();
+
   const dayStr = day.toString().padStart(2, "0");
   const readContent = async (input: string): Promise<string> => {
     if (!input.startsWith("type:")) return input;

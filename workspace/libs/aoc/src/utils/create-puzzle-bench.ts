@@ -3,18 +3,35 @@ import { Result } from "../types/result.ts";
 import { Files } from "./files.ts";
 import { type Difficulty, type InputType, urlOf } from "./url-of.ts";
 
+const dayAndYearFromCallStack = () => {
+  const trace = Error().stack;
+
+  const callerLine = trace?.split("\n").at(-1);
+  let match = callerLine?.match(/at file:\/\/(.+\.ts)/);
+  if (!match) throw Error("Invalid path");
+
+  const filePath = match[1];
+  match = filePath.match(/\/(\d{4})\/day-(\d{2})\//);
+  if (!match) throw Error(`Invalid path: ${filePath}`);
+
+  const year = +match[1];
+  const day = +match[2];
+  return { year, day };
+};
+
+interface PuzzleBenchOptions<P extends Puzzle<any, any, any, any, any>> {
+  baseline: P;
+  implementations: P[];
+  testEasy?: boolean;
+  realEasy?: boolean;
+  testHard?: boolean;
+  realHard?: boolean;
+}
+
 export const createPuzzleBench = async <P extends Puzzle<any, any, any, any, any>>(
-  { year, day, baseline, implementations, testEasy, realEasy, testHard, realHard }: {
-    year: number;
-    day: number;
-    baseline: P;
-    implementations: P[];
-    testEasy?: boolean;
-    realEasy?: boolean;
-    testHard?: boolean;
-    realHard?: boolean;
-  },
+  { baseline, implementations, testEasy, realEasy, testHard, realHard }: PuzzleBenchOptions<P>,
 ) => {
+  const { year, day } = dayAndYearFromCallStack();
   const dayStr = day.toString().padStart(2, "0");
 
   const benches = async (type: InputType, difficulty: Difficulty) => {

@@ -25,8 +25,6 @@ const countSemiSafe = (lists: number[][]) =>
   }, 0);
 
 await createPuzzleBench({
-  year: 2024,
-  day: 2,
   baseline: puzzle,
   implementations: [puzzle.with({
     easy: countSafe,

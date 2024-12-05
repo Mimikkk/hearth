@@ -2,8 +2,6 @@ import { createPuzzleTest } from "../../utils/create-puzzle-test.ts";
 import puzzle from "./day-09.ts";
 
 createPuzzleTest({
-  year: 2022,
-  day: 9,
   puzzle,
   easyTest: 13,
   easyUser: 6384,
