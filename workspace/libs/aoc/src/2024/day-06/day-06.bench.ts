@@ -44,8 +44,8 @@ const countPossibleLoops = (board: Board): number => {
 await createPuzzleBench({
   baseline: puzzle,
   implementations: [],
-  // testEasy: true,
-  // testHard: true,
-  // realEasy: true,
+  testEasy: true,
+  testHard: true,
+  realEasy: true,
   realHard: true,
 });
