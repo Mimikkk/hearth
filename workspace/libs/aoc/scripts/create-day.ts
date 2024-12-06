@@ -93,7 +93,7 @@ await createPuzzleBench({
     for (const file of files) {
       const fullPath = resolve(dir, file.path);
       if (await exists(fullPath)) {
-        console.log(Messages.skip(file.path));
+        console.info(Messages.skip(file.path));
         continue;
       }
       filesToCreate.push(file);
@@ -116,7 +116,7 @@ await createPuzzleBench({
 
     for (const file of filesToCreate) {
       await Deno.writeTextFile(resolve(dayDir, file.path), file.content);
-      console.log(Messages.created(file.path));
+      console.info(Messages.created(file.path));
     }
   };
 
@@ -132,15 +132,15 @@ await createPuzzleBench({
     const filesToCreate = await filterFiles(files, resDir);
 
     for (const file of filesToCreate) {
-      console.log(Messages.fetching(file.path));
+      console.info(Messages.fetching(file.path));
       const content = await file.content();
       if (!content.ok) {
-        console.log(content.error);
+        console.info(content.error);
         continue;
       }
 
       await Deno.writeTextFile(resolve(resDir, file.path), content.value);
-      console.log(Messages.created(file.path));
+      console.info(Messages.created(file.path));
     }
   };
 }
@@ -209,20 +209,20 @@ await new Command()
     if (!day) day = await Prompt.day();
     const validation = Validation.validate(year, day, Network.session());
     if (!validation.ok) {
-      console.log(validation.error.join("\n"));
+      console.info(validation.error.join("\n"));
       Deno.exit(1);
     }
 
     const yearDir = resolve(Deno.cwd(), "src", `${year}`);
 
-    console.log(colors.green("Creating puzzle files..."));
+    console.info(colors.green("Creating puzzle files..."));
     await Creator.createFiles(yearDir, day);
 
-    console.log();
+    console.info();
 
-    console.log(colors.green("Creating resources..."));
+    console.info(colors.green("Creating resources..."));
     await Creator.createResources(yearDir, year, day);
 
-    console.log(colors.bold.green("Done!"));
+    console.info(colors.bold.green("Done!"));
   })
   .parse(Deno.args);

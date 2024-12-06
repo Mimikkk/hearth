@@ -5,26 +5,57 @@ export type Marker = [x: number, y: number, mark: Mark] | [x: number, y: number]
 const isMarker = (value: Marker | Marker[]): value is Marker => typeof value[0] === "number";
 
 export class GridVisualizer<T> {
-  static new<T>(grid: T[][] = []): GridVisualizer<T> {
-    return new GridVisualizer(grid, grid.map((r) => r.map((c) => `${c}`)));
+  static new<T>(
+    grid: string[][] = [],
+    on: boolean = true,
+    header: string = "",
+    footer: string = "",
+  ): self<T> {
+    return new Self(grid, on, header, footer);
   }
 
-  static fromBounds<T>(x: number, y: number, into: GridVisualizer<T> = GridVisualizer.new<T>()) {
+  static from<T>(visualizer: self<T>, into: self<T> = Self.new<T>()): self<T> {
+    return into.from(visualizer);
+  }
+
+  static fromBounds<T>(x: number, y: number, into: self<T> = Self.new<T>()): self<T> {
     return into.fromBounds(x, y);
   }
 
+  static fromGrid<T>(grid: T[][], into: self<T> = Self.new<T>()): self<T> {
+    return into.fromGrid(grid);
+  }
+
   private constructor(
-    public original: T[][],
     public grid: string[][],
-    public m: number = grid.length,
-    public n: number = grid[0]?.length ?? 0,
-    public on: boolean = true,
-    public header: string = "",
-    public footer: string = "",
+    public on: boolean,
+    public header: string,
+    public footer: string,
   ) {}
 
-  fromBounds(x: number, y: number) {
-    return GridVisualizer.new(Array.from({ length: x }, () => Array(y).fill(" ")));
+  get m(): number {
+    return this.grid.length;
+  }
+
+  get n(): number {
+    return this.grid[0]?.length ?? 0;
+  }
+
+  from(visualizer: self<T>): this {
+    this.grid = structuredClone(visualizer.grid);
+    this.on = visualizer.on;
+    this.header = visualizer.header;
+    this.footer = visualizer.footer;
+    return this;
+  }
+
+  fromBounds(x: number, y: number): this {
+    return this.fromGrid(Array.from({ length: x }, () => Array(y).fill(" ")));
+  }
+
+  fromGrid(grid: T[][]): this {
+    this.grid = grid.map((r) => r.map((c) => `${c}`));
+    return this;
   }
 
   toggle(on?: boolean): this {
@@ -33,7 +64,6 @@ export class GridVisualizer<T> {
   }
 
   #at(x: number, y: number): string {
-    console.log(this.grid.length, x, y);
     return colors.stripAnsiCode(this.grid[x][y]);
   }
 
@@ -107,9 +137,9 @@ export class GridVisualizer<T> {
     return this.setFooter("");
   }
 
-  log() {
-    if (!this.on) return;
-    const pad = "-".repeat(colors.stripAnsiCode(this.grid[0].join("")).length);
+  log(): this {
+    if (!this.on) return this;
+    const pad = colors.brightBlack("-".repeat(colors.stripAnsiCode(this.grid[0].join("")).length));
     const rows = this.grid.map((r) => r.join(""));
     const result = [];
 
@@ -119,6 +149,10 @@ export class GridVisualizer<T> {
     if (this.footer) result.push(this.footer);
     result.push(pad);
 
-    console.log(result.join("\n"));
+    console.info(result.join("\n"));
+    return this;
   }
 }
+
+type self<T> = GridVisualizer<T>;
+const Self = GridVisualizer;
