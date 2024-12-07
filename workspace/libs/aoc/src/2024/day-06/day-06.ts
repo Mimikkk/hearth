@@ -18,57 +18,6 @@ export enum Direction {
 }
 
 export namespace Direction {
-  export const ascii = (from: Direction, to: Direction): string => {
-    switch (from) {
-      case Direction.Right:
-        switch (to) {
-          case Direction.Right:
-            return "─";
-          case Direction.Up:
-            return "┘";
-          case Direction.Down:
-            return "┐";
-          default:
-            return "?";
-        }
-      case Direction.Left:
-        switch (to) {
-          case Direction.Left:
-            return "─";
-          case Direction.Up:
-            return "└";
-          case Direction.Down:
-            return "┌";
-          default:
-            return "?";
-        }
-      case Direction.Up:
-        switch (to) {
-          case Direction.Up:
-            return "│";
-          case Direction.Right:
-            return "┌";
-          case Direction.Left:
-            return "┐";
-          default:
-            return "?";
-        }
-      case Direction.Down:
-        switch (to) {
-          case Direction.Down:
-            return "│";
-          case Direction.Right:
-            return "└";
-          case Direction.Left:
-            return "┘";
-          default:
-            return "?";
-        }
-      default:
-        return "?";
-    }
-  };
-
   export const rightOf = (direction: Direction): Direction => {
     switch (direction) {
       case Direction.Up:

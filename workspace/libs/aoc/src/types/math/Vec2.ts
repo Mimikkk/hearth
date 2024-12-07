@@ -39,16 +39,16 @@ export class Vec2 {
     return this.addXY(x, y);
   }
 
-  addXY(dx: number, dy: number): this {
-    return this.set(this.x + dx, this.y + dy);
+  addXY(x: number, y: number): this {
+    return this.set(this.x + x, this.y + y);
   }
 
-  addX(offset: number): this {
-    return this.setX(this.x + offset);
+  addX(x: number): this {
+    return this.setX(this.x + x);
   }
 
-  addY(offset: number): this {
-    return this.setY(this.y + offset);
+  addY(y: number): this {
+    return this.setY(this.y + y);
   }
 
   static sub(first: Const<self>, second: Const<self>, into: self = Self.new()): self {
@@ -59,16 +59,16 @@ export class Vec2 {
     return this.subXY(x, y);
   }
 
-  subXY(dx: number, dy: number): this {
-    return this.set(this.x - dx, this.y - dy);
+  subXY(x: number, y: number): this {
+    return this.set(this.x - x, this.y - y);
   }
 
-  subX(offset: number): this {
-    return this.setX(this.x - offset);
+  subX(x: number): this {
+    return this.setX(this.x - x);
   }
 
-  subY(offset: number): this {
-    return this.setY(this.y - offset);
+  subY(y: number): this {
+    return this.setY(this.y - y);
   }
 
   static equals(first: Const<self>, second: Const<self>): boolean {
