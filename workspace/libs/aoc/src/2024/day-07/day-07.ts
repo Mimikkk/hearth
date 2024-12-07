@@ -16,67 +16,45 @@ const parseEquations = (content: string): Equation[] =>
     };
   });
 
-const isMulAddValid = ({ result, operands }: Equation): boolean => {
+const validateEquation = (
+  { result, operands }: Equation,
+  operations: Map<string, (a: number, b: number) => number>,
+): boolean => {
   const operandCount = operands.length;
-  const operartionCount = operandCount - 1;
-  const operations = ["+", "*"];
+  const operationCount = operandCount - 1;
+  const operationKeys = Array.from(operations.keys());
 
-  const combinations = operations.length ** operartionCount;
+  const combinations = operationKeys.length ** operationCount;
 
   for (let i = 0; i < combinations; ++i) {
     let value = operands[0];
     let combination = i;
 
-    for (let j = 0; j < operartionCount; ++j) {
-      const operation = operations[combination % operations.length];
-      combination = Math.floor(combination / operations.length);
+    for (let j = 0; j < operationCount; ++j) {
+      const operation = operationKeys[combination % operationKeys.length];
+      combination = ~~(combination / operationKeys.length);
 
-      if (operation === "+") {
-        value += operands[j + 1];
-      } else {
-        value *= operands[j + 1];
-      }
+      value = operations.get(operation)!(value, operands[j + 1]);
     }
 
-    if (value === result) {
-      return true;
-    }
+    if (value === result) return true;
   }
 
   return false;
 };
 
-const isMulAddJoinValid = ({ result, operands }: Equation): boolean => {
-  const operandCount = operands.length;
-  const operartionCount = operandCount - 1;
-  const operations = ["+", "*", "||"];
+const MulAdd = new Map<string, (a: number, b: number) => number>([
+  ["+", (a, b) => a + b],
+  ["*", (a, b) => a * b],
+]);
+const MulAddJoin = new Map<string, (a: number, b: number) => number>([
+  ["+", (a, b) => a + b],
+  ["*", (a, b) => a * b],
+  ["||", (a, b) => +`${a}${b}`],
+]);
+const isValidMulAdd = (equation: Equation): boolean => validateEquation(equation, MulAdd);
 
-  const combinations = operations.length ** operartionCount;
-
-  for (let i = 0; i < combinations; ++i) {
-    let value = operands[0];
-    let combination = i;
-
-    for (let j = 0; j < operartionCount; ++j) {
-      const operation = operations[combination % operations.length];
-      combination = Math.floor(combination / operations.length);
-
-      if (operation === "+") {
-        value += operands[j + 1];
-      } else if (operation === "*") {
-        value *= operands[j + 1];
-      } else {
-        value = +`${value}${operands[j + 1]}`;
-      }
-    }
-
-    if (value === result) {
-      return true;
-    }
-  }
-
-  return false;
-};
+const isValidMulAddJoin = (equation: Equation): boolean => validateEquation(equation, MulAddJoin);
 
 const sumValidEquationSums = (equations: Equation[], validate: (equation: Equation) => boolean) => {
   let sum = 0;
@@ -94,6 +72,6 @@ const sumValidEquationSums = (equations: Equation[], validate: (equation: Equati
 
 export default Puzzle.new({
   prepare: parseEquations,
-  easy: (equations) => sumValidEquationSums(equations, isMulAddValid),
-  hard: (equations) => sumValidEquationSums(equations, isMulAddJoinValid),
+  easy: (equations) => sumValidEquationSums(equations, isValidMulAdd),
+  hard: (equations) => sumValidEquationSums(equations, isValidMulAddJoin),
 });
