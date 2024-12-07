@@ -18,10 +18,7 @@ const parseEquations = (content: string): Equation[] =>
 
 type OperationMap = Map<string, (a: number, b: number) => number>;
 
-const validateEquation = (
-  { result, operands }: Equation,
-  operations: OperationMap,
-): boolean => {
+const validateEquation = ({ result, operands }: Equation, operations: OperationMap): boolean => {
   const operandCount = operands.length;
   const operationCount = operandCount - 1;
   const operationKeys = Array.from(operations.keys());
@@ -45,18 +42,23 @@ const validateEquation = (
   return false;
 };
 
-const MulAdd: OperationMap = new Map([
+const createStrategy = (
+  operations: [operator: string, resolve: (a: number, b: number) => number][],
+): (equation: Equation) => boolean => {
+  const map: OperationMap = new Map(operations);
+  return (equation: Equation): boolean => validateEquation(equation, map);
+};
+
+const isValidMulAdd = createStrategy([
   ["+", (a, b) => a + b],
   ["*", (a, b) => a * b],
 ]);
-const MulAddJoin: OperationMap = new Map([
+
+const isValidMulAddJoin = createStrategy([
   ["+", (a, b) => a + b],
   ["*", (a, b) => a * b],
   ["||", (a, b) => +`${a}${b}`],
 ]);
-const isValidMulAdd = (equation: Equation): boolean => validateEquation(equation, MulAdd);
-
-const isValidMulAddJoin = (equation: Equation): boolean => validateEquation(equation, MulAddJoin);
 
 const sumValidEquationSums = (equations: Equation[], validate: (equation: Equation) => boolean) => {
   let sum = 0;
