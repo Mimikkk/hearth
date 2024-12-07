@@ -16,9 +16,11 @@ const parseEquations = (content: string): Equation[] =>
     };
   });
 
+type OperationMap = Map<string, (a: number, b: number) => number>;
+
 const validateEquation = (
   { result, operands }: Equation,
-  operations: Map<string, (a: number, b: number) => number>,
+  operations: OperationMap,
 ): boolean => {
   const operandCount = operands.length;
   const operationCount = operandCount - 1;
@@ -43,11 +45,11 @@ const validateEquation = (
   return false;
 };
 
-const MulAdd = new Map<string, (a: number, b: number) => number>([
+const MulAdd: OperationMap = new Map([
   ["+", (a, b) => a + b],
   ["*", (a, b) => a * b],
 ]);
-const MulAddJoin = new Map<string, (a: number, b: number) => number>([
+const MulAddJoin: OperationMap = new Map([
   ["+", (a, b) => a + b],
   ["*", (a, b) => a * b],
   ["||", (a, b) => +`${a}${b}`],
