@@ -152,6 +152,6 @@ const solve = ([monkeys, lcm]: [monkeys: Monkey[], lcm: number], rounds: number,
 
 export default Puzzle.new({
   prepare: Parser.parseMonkeys,
-  easy: (monkeys) => solve(monkeys, 20, (value) => ~~(value / 3)),
+  easy: (monkeys) => solve(monkeys, 20, (value) => Math.floor(value / 3)),
   hard: (monkeys) => solve(monkeys, 10_000, (value) => value),
 });
