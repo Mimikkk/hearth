@@ -9,7 +9,7 @@ const countPossibleLoops = (board: Board): number => {
   const guard = Guard.from(start);
   const positions = new Set<number>();
   while (board.inBounds(guard.position)) {
-    const id = Ids.fromVec2(guard.position);
+    const id = Ids.v2i32(guard.position);
     positions.add(id);
 
     Movement.step(guard, board);
@@ -18,7 +18,7 @@ const countPossibleLoops = (board: Board): number => {
   let count = 0;
   for (const id of positions) {
     const guard = Guard.from(start);
-    const next = Ids.toVec2(id);
+    const next = Ids.i32v2(id);
 
     const previous = board.grid[next.x][next.y];
     board.grid[next.x][next.y] = Tile.Obstacle;

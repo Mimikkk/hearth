@@ -159,7 +159,7 @@ const countStepsTillOutOfBounds = (board: Board): number => {
 
   const visited = new Set<number>();
   while (board.inBounds(guard.position)) {
-    const id = Ids.fromVec2(guard.position);
+    const id = Ids.v2i32(guard.position);
     visited.add(id);
 
     Movement.step(guard, board);
@@ -175,7 +175,7 @@ const countPossibleLoops = (board: Board): number => {
   const guard = Guard.from(start);
   const positions = new Set<number>();
   while (board.inBounds(guard.position)) {
-    const id = Ids.fromVec2(guard.position);
+    const id = Ids.v2i32(guard.position);
 
     if (!positions.has(id) && Movement.isLoop(start, guard.position, board)) {
       positions.add(id);

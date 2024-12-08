@@ -8,6 +8,8 @@ export namespace Str {
     return lines;
   };
 
+  export const grid = (value: string): string[][] => lines(value).map((l) => l.split(""));
+
   export const trimlines = (strings: TemplateStringsArray, ...values: unknown[]): string => {
     const str = String.raw({ raw: strings }, ...values).replace(startNewlineRe, "");
     const lines = Str.lines(str);
