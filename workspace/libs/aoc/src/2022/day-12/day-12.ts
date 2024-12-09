@@ -76,7 +76,7 @@ const neighbours = [
   [-1, 0],
   [1, 0],
 ];
-const findShortestPathLength = ({ from, to, heights }: Input): number => {
+const findShortestPathLength = ({ starts: [from], destination: to, heights }: Input): number => {
   const stack: [x: number, y: number, length: number][] = [[from.x, from.y, 0]];
 
   const visited = new Set<string>();
@@ -113,7 +113,7 @@ const findShortestPathLength = ({ from, to, heights }: Input): number => {
 
   return shortest;
 };
-const findShortestPathLengthMS = ({ starts, destination, heights }: Input2): number => {
+const findShortestPathLengthMS = ({ starts, destination, heights }: Input): number => {
   const stack: [x: number, y: number, length: number][] = starts.map(({ x, y }) => [x, y, 0]);
 
   const visited = new Set<string>();
@@ -152,7 +152,7 @@ const findShortestPathLengthMS = ({ starts, destination, heights }: Input2): num
 };
 
 export default Puzzle.new({
-  prepare: parseInput2,
+  prepare: parseInput,
   easy: findShortestPathLength,
   hard: findShortestPathLengthMS,
 });
