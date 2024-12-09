@@ -9,10 +9,18 @@ export class Vec2 {
     return into.from(value);
   }
 
+  static fromArray(array: number[], offset: number = 0, into: self = Self.new()): self {
+    return into.fromArray(array, offset);
+  }
+
   private constructor(public x: number, public y: number) {}
 
   from({ x, y }: Const<self>): this {
     return this.set(x, y);
+  }
+
+  fromArray(array: number[], offset: number = 0): this {
+    return this.set(array[offset + 0], array[offset + 1]);
   }
 
   set(x: number, y: number): this {
@@ -81,6 +89,12 @@ export class Vec2 {
 
   clone(into: self = Self.new()): self {
     return into.from(this);
+  }
+
+  toArray(offset: number = 0, into: number[] = []) {
+    into[offset + 0] = this.x;
+    into[offset + 1] = this.y;
+    return into;
   }
 }
 

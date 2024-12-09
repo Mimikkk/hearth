@@ -1,8 +1,9 @@
 import { colors } from "jsr:@cliffy/ansi@1.0.0-rc.7/colors";
+import { Const } from "../types/const.ts";
 
 export type Mark = string | ((value: string) => string);
 export type Marker = [x: number, y: number, mark: Mark] | [x: number, y: number];
-const isMarker = (value: Marker | Marker[]): value is Marker => typeof value[0] === "number";
+const isMarker = (value: Const<Marker> | Const<Marker[]>): value is Marker => typeof value[0] === "number";
 
 export class GridVisualizer<T> {
   static new<T>(
@@ -67,9 +68,9 @@ export class GridVisualizer<T> {
     return colors.stripAnsiCode(this.grid[x][y]);
   }
 
-  #highlight(marker: Marker): this;
+  #highlight(marker: Const<Marker>): this;
   #highlight(x: number, y: number, mark?: Mark): this;
-  #highlight(x: number | Marker, y?: number, mark: Mark = colors.brightYellow): this {
+  #highlight(x: number | Const<Marker>, y?: number, mark: Mark = colors.brightYellow): this {
     if (typeof x === "number") {
       const value = this.#at(x, y!);
       this.grid[x][y!] = typeof mark === "function" ? mark(value) : mark;
@@ -102,10 +103,10 @@ export class GridVisualizer<T> {
     return this;
   }
 
-  add(marker: Marker): this;
-  add(markers: Marker[]): this;
+  add(marker: Const<Marker>): this;
+  add(markers: Const<Marker[]>): this;
   add(x: number, y: number, mark?: Mark): this;
-  add(value: number | Marker | Marker[], y?: number, mark?: Mark): this {
+  add(value: number | Const<Marker> | Const<Marker[]>, y?: number, mark?: Mark): this {
     if (typeof value === "number") {
       return this.#highlight(value, y!, mark);
     }
@@ -113,7 +114,7 @@ export class GridVisualizer<T> {
     if (isMarker(value)) return this.#highlight(value);
 
     for (let i = 0; i < value.length; ++i) {
-      this.#highlight(value[i]);
+      this.#highlight(value[i] as Marker);
     }
 
     return this;
