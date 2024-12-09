@@ -64,13 +64,13 @@ const compactTightChecksum = (sizes: number[]): number => {
 };
 
 const compactLooseChecksum = (sizes: number[]): number => {
-  const segments: Segment[] = [];
+  const segments: Segment[] = Array(sizes.length);
 
   for (let i = 0, fileId = 0, offset = 0; i < sizes.length; offset += sizes[i++]) {
     if (i % 2 === 0) {
-      segments.push({ id: fileId++, index: offset, size: sizes[i] });
+      segments[i] = { id: fileId++, index: offset, size: sizes[i] };
     } else {
-      segments.push({ id: null, index: offset, size: sizes[i] });
+      segments[i] = { id: null, index: offset, size: sizes[i] };
     }
   }
 
@@ -82,12 +82,14 @@ const compactLooseChecksum = (sizes: number[]): number => {
       const none = segments[j];
       if (none.id !== null || none.size < some.size) continue;
 
-      segments.splice(i, 1);
+      for (let k = i - 1; k >= j; --k) segments[k + 1] = segments[k];
+      segments[j] = some;
       some.index = none.index;
-      segments.splice(j, 0, some);
 
-      none.size -= some.size;
-      none.index += some.size;
+      none.size = none.size - some.size;
+      none.index = none.index + some.size;
+      segments[j + 1] = none;
+
       break;
     }
   }
