@@ -9,57 +9,52 @@ interface Segment {
 const parseSizes = (content: string) => content.split("").map((n) => +n);
 
 const compactTightChecksum = (sizes: number[]): number => {
-  let freeSize = 0;
-  let fileSize = 0;
+  let total = 0;
   for (let i = 0; i < sizes.length; ++i) {
-    if (i % 2 === 0) {
-      fileSize += sizes[i];
-    } else {
-      freeSize += sizes[i];
-    }
+    total += sizes[i];
   }
-  const totalSize = fileSize + freeSize;
 
-  const segments = new Array(totalSize).fill(null);
-  const fileSegments: Segment[] = Array(fileSize);
-  const freeSegments: Segment[] = Array(freeSize);
-
-  for (let i = 0, fileId = 0, offset = 0, fileIndex = 0, freeIndex = 0; i < sizes.length; offset += sizes[i++]) {
-    const value = sizes[i];
-    const endAt = offset + value;
+  const blocks: (number | null)[] = Array(total);
+  for (let i = 0, fileId = 0, blockId = 0; i < sizes.length; ++i) {
+    const size = sizes[i];
 
     if (i % 2 === 0) {
-      for (let j = offset; j < endAt; ++j) {
-        segments[j] = fileId;
-        fileSegments[fileIndex++] = { id: fileId, index: j, size: 1 };
+      for (let j = 0; j < size; ++j) {
+        blocks[blockId++] = fileId;
       }
 
       ++fileId;
     } else {
-      for (let j = offset; j < endAt; ++j) {
-        segments[j] = null;
-        freeSegments[freeIndex++] = { id: null, index: j, size: 1 };
+      for (let j = 0; j < size; ++j) {
+        blocks[blockId++] = null;
       }
     }
   }
 
-  freeSegments.reverse();
-  while (freeSegments.length > 0) {
-    const noneAt = segments.indexOf(null);
-    const file = fileSegments.pop()!;
+  let i = 0;
+  let j = blocks.length - 1;
+  while (i < j) {
+    while (blocks[i] !== null && i < blocks.length) ++i;
+    while (blocks[j] === null && j >= 0) --j;
 
-    if (noneAt > file.index) break;
+    if (i < j) {
+      const block = blocks[i];
+      blocks[i] = blocks[j];
+      blocks[j] = block;
+    }
 
-    const free = freeSegments.pop()!;
-    segments[free.index] = file.id;
-    segments[file.index] = null;
+    ++i;
+    --j;
   }
 
   let checksum = 0;
-  for (let i = 0; i < segments.length; ++i) {
-    if (segments[i] === null) break;
-    checksum += i * segments[i];
+  for (let i = 0; i < blocks.length; i++) {
+    const value = blocks[i];
+    if (value === null) continue;
+
+    checksum += value * i;
   }
+
   return checksum;
 };
 
