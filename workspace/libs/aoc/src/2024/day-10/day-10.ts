@@ -61,7 +61,6 @@ const countTrails = (heights: number[][]): number => {
   const inBounds = (x: number, y: number) => x >= 0 && x < n && y >= 0 && y < m;
 
   const stack: [number, number, number][] = [];
-
   const trails = new Set();
   let score = 0;
   for (let i = 0; i < n; ++i) {
