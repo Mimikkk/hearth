@@ -27,4 +27,22 @@ export namespace Str {
       .join("\n")
       .trimEnd();
   };
+
+  export const trimStart = (str: string, character: string): string => {
+    if (str.length === 1 || str[0] !== character) return str;
+
+    let i = 0;
+    while (i < str.length && str[i] === character) ++i;
+    if (i === str.length) return character;
+
+    return str.substring(i);
+  };
+
+  export const trimEnd = (str: string, character: string): string => {
+    if (str.length === 1 || str[str.length - 1] !== character) return str;
+
+    let i = str.length - 1;
+    while (i >= 0 && str[i] === character) --i;
+    return str.substring(0, i + 1);
+  };
 }
