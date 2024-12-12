@@ -120,6 +120,26 @@ export class GridVisualizer<T> {
     return this;
   }
 
+  remove(marker: Const<Marker>): this;
+  remove(markers: Const<Marker[]>): this;
+  remove(x: number, y: number): this;
+  remove(value: number | Const<Marker> | Const<Marker[]>, y?: number): this {
+    if (typeof value === "number") {
+      this.grid[value][y!] = colors.stripAnsiCode(this.grid[value][y!]);
+      return this;
+    }
+
+    if (isMarker(value)) {
+      return this.remove(value[0], value[1]);
+    }
+
+    for (let i = 0; i < value.length; ++i) {
+      this.remove(value[i] as Marker);
+    }
+
+    return this;
+  }
+
   setHeader(header: string): this {
     this.header = header;
     return this;
