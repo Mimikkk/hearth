@@ -9,7 +9,7 @@ const re = {
 interface ClawMachine {
   a: Vec2;
   b: Vec2;
-  price: Vec2;
+  prize: Vec2;
 }
 
 const parse = (content: string) => {
@@ -19,9 +19,9 @@ const parse = (content: string) => {
   for (let i = 0; i < lines.length; i += 4) {
     const a = Vec2.fromArray(lines[i].match(re.ints)!.map(Number));
     const b = Vec2.fromArray(lines[i + 1].match(re.ints)!.map(Number));
-    const price = Vec2.fromArray(lines[i + 2].match(re.ints)!.map(Number));
+    const prize = Vec2.fromArray(lines[i + 2].match(re.ints)!.map(Number));
 
-    claws.push({ a, b, price });
+    claws.push({ a, b, prize });
   }
 
   return claws;
@@ -30,7 +30,7 @@ const parse = (content: string) => {
 const PushACost = 3;
 const PushBCost = 1;
 const findCostToClawAPrize = (
-  { a: { x: ax, y: ay }, b: { x: bx, y: by }, price: { x: px, y: py } }: ClawMachine,
+  { a: { x: ax, y: ay }, b: { x: bx, y: by }, prize: { x: px, y: py } }: ClawMachine,
 ): number | undefined => {
   // Calculate determinant of matrix formed by button vectors
   const det = (ax * by) - (bx * ay);
@@ -56,8 +56,16 @@ const totalCostToClawAPrize = (claws: ClawMachine[]) => {
   return total;
 };
 
+const totalCostToClawErrorPrize = (claws: ClawMachine[]) => {
+  for (let i = 0; i < claws.length; ++i) {
+    claws[i].prize.addXY(1e13, 1e13);
+  }
+
+  return totalCostToClawAPrize(claws);
+};
+
 export default Puzzle.new({
   prepare: parse,
   easy: totalCostToClawAPrize,
-  hard: () => 0,
+  hard: totalCostToClawErrorPrize,
 });
