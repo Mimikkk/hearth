@@ -79,6 +79,22 @@ export class Vec2 {
     return this.setY(this.y - y);
   }
 
+  static manhattan(first: Const<self>, second: Const<self>): number {
+    return first.manhattan(second);
+  }
+
+  manhattan({ x, y }: Const<self>): number {
+    return Math.abs(this.x - x) + Math.abs(this.y - y);
+  }
+
+  static determinant(first: Const<self>, second: Const<self>): number {
+    return first.determinant(second);
+  }
+
+  determinant({ x, y }: Const<self>): number {
+    return this.x * y - this.y * x;
+  }
+
   static equals(first: Const<self>, second: Const<self>): boolean {
     return first.equals(second);
   }
