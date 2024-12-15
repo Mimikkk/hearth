@@ -158,8 +158,7 @@ export class GridVisualizer<T> {
     return this.setFooter("");
   }
 
-  log(): this {
-    if (!this.on) return this;
+  str(): string {
     const pad = colors.brightBlack("-".repeat(colors.stripAnsiCode(this.grid[0].join("")).length));
     const rows = this.grid.map((r) => r.join(""));
     const result = [];
@@ -170,7 +169,12 @@ export class GridVisualizer<T> {
     if (this.footer) result.push(this.footer);
     result.push(pad);
 
-    console.info(result.join("\n"));
+    return result.join("\n");
+  }
+
+  log(): this {
+    if (!this.on) return this;
+    console.info(this.str());
     return this;
   }
 }

@@ -13,6 +13,10 @@ export class Vec2 {
     return into.fromArray(array, offset);
   }
 
+  static fromParams(x: number, y: number, into: self = Self.new()): self {
+    return into.fromParams(x, y);
+  }
+
   private constructor(public x: number, public y: number) {}
 
   from({ x, y }: Const<self>): this {
@@ -21,6 +25,10 @@ export class Vec2 {
 
   fromArray(array: number[], offset: number = 0): this {
     return this.set(array[offset + 0], array[offset + 1]);
+  }
+
+  fromParams(x: number, y: number): this {
+    return this.set(x, y);
   }
 
   set(x: number, y: number): this {
@@ -77,6 +85,66 @@ export class Vec2 {
 
   subY(y: number): this {
     return this.setY(this.y - y);
+  }
+
+  static mod(first: Const<self>, second: Const<self>, into: self = Self.new()): self {
+    return into.from(first).mod(second);
+  }
+
+  mod({ x, y }: Const<self>): this {
+    return this.set(this.x % x, this.y % y);
+  }
+
+  modX(x: number): this {
+    return this.setX(this.x % x);
+  }
+
+  modY(y: number): this {
+    return this.setY(this.y % y);
+  }
+
+  modXY(x: number, y: number): this {
+    return this.set(this.x % x, this.y % y);
+  }
+
+  static max(first: Const<self>, second: Const<self>, into: self = Self.new()): self {
+    return into.from(first).max(second);
+  }
+
+  max({ x, y }: Const<self>): this {
+    return this.set(Math.max(this.x, x), Math.max(this.y, y));
+  }
+
+  maxX(x: number): this {
+    return this.setX(Math.max(this.x, x));
+  }
+
+  maxY(y: number): this {
+    return this.setY(Math.max(this.y, y));
+  }
+
+  maxXY(x: number, y: number): this {
+    return this.set(Math.max(this.x, x), Math.max(this.y, y));
+  }
+
+  static min(first: Const<self>, second: Const<self>, into: self = Self.new()): self {
+    return into.from(first).min(second);
+  }
+
+  min({ x, y }: Const<self>): this {
+    return this.set(Math.min(this.x, x), Math.min(this.y, y));
+  }
+
+  minX(x: number): this {
+    return this.setX(Math.min(this.x, x));
+  }
+
+  minY(y: number): this {
+    return this.setY(Math.min(this.y, y));
+  }
+
+  minXY(x: number, y: number): this {
+    return this.set(Math.min(this.x, x), Math.min(this.y, y));
   }
 
   static manhattan(first: Const<self>, second: Const<self>): number {
