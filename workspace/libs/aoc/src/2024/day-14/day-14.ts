@@ -4,7 +4,6 @@ import { Vec2 } from "../../types/math/Vec2.ts";
 import { Puzzle } from "../../types/puzzle.ts";
 import { Counter } from "../../utils/datatypes/counter.ts";
 import { Str } from "../../utils/strs.ts";
-import { GridVisualizer } from "../../visualizers/grid.ts";
 
 class Robot {
   static new(position: Vec2 = Vec2.new(), velocity: Vec2 = Vec2.new()): Robot {
@@ -73,24 +72,6 @@ const parseInput = (content: string): InputResult => {
   const board = Board.fromVec2(max.addXY(1, 1));
 
   return { robots, board };
-};
-
-const v = GridVisualizer.new();
-
-const visualize = (counter: Map<number, number>, board: Board) => {
-  v.fromBounds(board.m, board.n);
-
-  v
-    .add(
-      counter.entries().map(([id, count]) => {
-        const x = Ids.i32x(id);
-        const y = Ids.i32y(id);
-
-        return [y, x, count.toString()] as const;
-      }).toArray(),
-    );
-
-  return v.str();
 };
 
 const simulateRound = ({ robots, board }: InputResult) => {
