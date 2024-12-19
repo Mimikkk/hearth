@@ -23,19 +23,40 @@ interface PuzzleBenchOptions<P extends Puzzle<any, any, any, any, any>> {
   baseline: P;
   implementations: P[];
   testEasy?: boolean;
+  testEasyInput?: `type:${InputType}` | string;
   realEasy?: boolean;
+  realEasyInput?: `type:${InputType}` | string;
   testHard?: boolean;
+  testHardInput?: `type:${InputType}` | string;
   realHard?: boolean;
+  realHardInput?: `type:${InputType}` | string;
 }
 
 export const createPuzzleBench = async <P extends Puzzle<any, any, any, any, any>>(
-  { baseline, implementations, testEasy, realEasy, testHard, realHard }: PuzzleBenchOptions<P>,
+  {
+    baseline,
+    implementations,
+    testEasy,
+    realEasy,
+    testHard,
+    realHard,
+    testEasyInput = "input-test",
+    realEasyInput = "input-user",
+    testHardInput = "input-test",
+    realHardInput = "input-user",
+  }: PuzzleBenchOptions<P>,
 ) => {
   const { year, day } = dayAndYearFromCallStack();
   const dayStr = day.toString().padStart(2, "0");
+  const readContent = async (input: string): Promise<string> => {
+    if (!input.startsWith("type:")) return input;
 
-  const benches = async (type: InputType, difficulty: Difficulty) => {
-    const content = Result.val(await Files.text(urlOf(year, day, type)))!;
+    const type = input.slice(5);
+    return Result.val(await Files.text(urlOf(year, day, type as InputType)))!;
+  };
+
+  const benches = async (type: `type:${InputType}` | string, difficulty: Difficulty) => {
+    const content = await readContent(type);
 
     const group = `Library - aoc - year ${year} - day ${dayStr} - ${type} - ${difficulty}`;
     Deno.bench({
@@ -64,8 +85,8 @@ export const createPuzzleBench = async <P extends Puzzle<any, any, any, any, any
     }
   };
 
-  if (testEasy) await benches("input-test", "easy");
-  if (realEasy) await benches("input-user", "easy");
-  if (testHard) await benches("input-test", "hard");
-  if (realHard) await benches("input-user", "hard");
+  if (testEasy) await benches(testEasyInput, "easy");
+  if (realEasy) await benches(realEasyInput, "easy");
+  if (testHard) await benches(testHardInput, "hard");
+  if (realHard) await benches(realHardInput, "hard");
 };

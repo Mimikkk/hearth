@@ -1,4 +1,4 @@
-import { Vec2 } from "../../../types/math/Vec2.ts";
+import { Vec2 } from "../../../../types/math/Vec2.ts";
 import type { VecsColider } from "../classes/coliders/VecsColider.ts";
 import type { Obstacle } from "../classes/entities/Obstacle.ts";
 import type { Player } from "../classes/entities/Player.ts";

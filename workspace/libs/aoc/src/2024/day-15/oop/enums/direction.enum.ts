@@ -1,4 +1,4 @@
-import { Vec2 } from "../../../types/math/Vec2.ts";
+import { Vec2 } from "../../../../types/math/Vec2.ts";
 
 export enum Direction {
   Left = "<",

@@ -1,4 +1,4 @@
-import type { Const } from "../../../types/const.ts";
+import type { Const } from "../../../../types/const.ts";
 import type { Cloneable } from "../classes/Cloneable.ts";
 import { PuzzleInput } from "../classes/PuzzleInput.ts";
 import type { Direction } from "../enums/direction.enum.ts";

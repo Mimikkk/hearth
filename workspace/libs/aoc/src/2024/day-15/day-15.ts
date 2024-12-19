@@ -1,28 +1,49 @@
+import { Ids } from "../../types/math/Ids.ts";
 import { Vec2 } from "../../types/math/Vec2.ts";
 import { Puzzle } from "../../types/puzzle.ts";
 import { Str } from "../../utils/strs.ts";
-import { Board, Tile } from "./classes/entities/Board.ts";
-import { Obstacle } from "./classes/entities/Obstacle.ts";
-import { Player } from "./classes/entities/Player.ts";
-import { Walls } from "./classes/entities/Walls.ts";
-import { PuzzleInput } from "./classes/PuzzleInput.ts";
-import type { Direction } from "./enums/direction.enum.ts";
-import { Movement } from "./logic/movement.ts";
-import { Scores } from "./logic/scores.ts";
+
+enum Tile {
+  Wall = "#",
+  Obstacle = "O",
+  Player = "@",
+}
+
+enum Direction {
+  Up = "^",
+  Down = "v",
+  Left = "<",
+  Right = ">",
+}
+
+namespace Direction {
+  export const orthogonals: Record<Direction, Vec2> = {
+    [Direction.Up]: Vec2.new(-1, 0),
+    [Direction.Down]: Vec2.new(1, 0),
+    [Direction.Left]: Vec2.new(0, -1),
+    [Direction.Right]: Vec2.new(0, 1),
+  };
+}
 
 interface InputResult {
-  board: Board;
+  board: string[][];
   moves: Direction[];
 }
 
-const parseInput = (content: string): InputResult => {
+interface PuzzleInput {
+  obstacles: Vec2[][];
+  walls: Vec2[];
+  player: Vec2;
+  moves: Direction[];
+}
+
+export const parseInput = (content: string): InputResult => {
   const lines = Str.lines(content);
   let line: string | undefined;
   let i = 0;
 
-  const grid: Tile[][] = [];
-  while (line = lines[i++]) grid.push(line.split("") as Tile[]);
-  const board = Board.fromGrid(grid);
+  const board: Tile[][] = [];
+  while (line = lines[i++]) board.push(line.split("") as Tile[]);
 
   const moves: Direction[] = [];
   while (line = lines[i++]) moves.push(...line.split("") as Direction[]);
@@ -30,61 +51,101 @@ const parseInput = (content: string): InputResult => {
   return { board, moves };
 };
 
-const parseNarrow = ({ board, moves }: InputResult): PuzzleInput => {
-  let player!: Player;
-  const wallPositions: Vec2[] = [];
-  const obstacles: Obstacle[] = [];
-  for (let i = 0; i < board.n; ++i) {
-    for (let j = 0; j < board.m; ++j) {
-      const tile = board.getXY(i, j);
+export const parseNarrow = ({ board, moves }: InputResult): PuzzleInput => {
+  let player!: Vec2;
+  const walls = [];
+  const obstacles: Vec2[][] = [];
+
+  const n = board.length;
+  const m = board[0].length;
+  for (let i = 0; i < n; ++i) {
+    for (let j = 0; j < m; ++j) {
+      const tile = board[i][j];
 
       if (tile === Tile.Wall) {
-        wallPositions.push(Vec2.new(i, j));
+        walls.push(Vec2.new(i, j));
       } else if (tile === Tile.Obstacle) {
-        obstacles.push(Obstacle.fromVecs([Vec2.new(i, j)]));
+        obstacles.push([Vec2.new(i, j)]);
       } else if (tile === Tile.Player) {
-        player = Player.fromVec(Vec2.new(i, j));
+        player = Vec2.new(i, j);
       }
     }
   }
 
-  const walls = Walls.fromVecs(wallPositions);
-
-  return PuzzleInput.new(obstacles, walls, player, moves);
+  return { obstacles, walls, player, moves };
 };
 
-const parseWide = ({ board, moves }: InputResult): PuzzleInput => {
-  let player!: Player;
-  const wallPositions: Vec2[] = [];
-  const obstacles: Obstacle[] = [];
+export const parseWide = ({ board, moves }: InputResult): PuzzleInput => {
+  let player!: Vec2;
+  const walls: Vec2[] = [];
+  const obstacles: Vec2[][] = [];
 
-  for (let i = 0; i < board.n; ++i) {
-    for (let j = 0; j < board.m; ++j) {
+  const n = board.length;
+  const m = board[0].length;
+  for (let i = 0; i < n; ++i) {
+    for (let j = 0; j < m; ++j) {
       const x = i;
       const y = j * 2;
-      const tile = board.getXY(i, j);
+      const tile = board[i][j];
 
       if (tile === Tile.Wall) {
-        wallPositions.push(Vec2.new(x, y), Vec2.new(x, y + 1));
+        walls.push(Vec2.new(x, y), Vec2.new(x, y + 1));
       } else if (tile === Tile.Obstacle) {
-        obstacles.push(Obstacle.fromVecs([Vec2.new(x, y), Vec2.new(x, y + 1)]));
+        obstacles.push([Vec2.new(x, y), Vec2.new(x, y + 1)]);
       } else if (tile === Tile.Player) {
-        player = Player.fromVec(Vec2.new(x, y));
+        player = Vec2.new(x, y);
       }
     }
   }
 
-  const walls = Walls.fromVecs(wallPositions);
-
-  return PuzzleInput.new(obstacles, walls, player, moves);
+  return { obstacles, walls, player, moves };
 };
 
-const calculateTotalObstanceScoreAfterMoves = ({ obstacles, player, walls, moves }: PuzzleInput): number => {
-  for (let i = 0; i < moves.length; ++i) {
-    Movement.move(moves[i], player, obstacles, walls);
+const location = Vec2.new();
+export const move = (direction: Direction, player: Vec2, obstacles: Vec2[][], walls: Set<number>): void => {
+  const offset = Direction.orthogonals[direction];
+  const stack: Vec2[][] = [[player]];
+
+  const moveable: Vec2[][] = [];
+  while (stack.length) {
+    const colider = stack.pop()!;
+
+    for (let i = 0; i < colider.length; ++i) {
+      location.from(colider[i]).add(offset);
+
+      if (walls.has(Ids.v2i32(location))) return;
+
+      const obstacle = obstacles.find((o) =>
+        o !== colider &&
+        o.some(({ x, y }) => location.x === x && location.y === y)
+      );
+
+      if (!obstacle) continue;
+      if (stack.includes(obstacle)) continue;
+
+      stack.push(obstacle);
+    }
+
+    if (moveable.includes(colider)) continue;
+    moveable.push(colider);
   }
 
-  return Scores.obstacles(obstacles);
+  for (let i = 0; i < moveable.length; ++i) {
+    const positions = moveable[i];
+
+    for (let j = 0; j < positions.length; ++j) {
+      positions[j].add(offset);
+    }
+  }
+};
+
+export const calculateTotalObstanceScoreAfterMoves = ({ obstacles, player, walls, moves }: PuzzleInput): number => {
+  const wallsSet = new Set(walls.map(Ids.v2i32));
+  for (let i = 0; i < moves.length; ++i) {
+    move(moves[i], player, obstacles, wallsSet);
+  }
+
+  return obstacles.reduce((score, [{ x, y }]) => score + x * 100 + y, 0);
 };
 
 export default Puzzle.new({

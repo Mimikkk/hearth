@@ -1,7 +1,7 @@
 import { goTo } from "https://denopkg.com/iamnathanj/cursor@v2.2.0/mod.ts";
 import { colors } from "jsr:@cliffy/ansi@1.0.0-rc.7/colors";
 import { keypress } from "jsr:@cliffy/keypress@1.0.0-rc.7";
-import { GridVisualizer, type Marker } from "../../../visualizers/grid.ts";
+import { GridVisualizer, type Marker } from "../../../../visualizers/grid.ts";
 import type { Obstacle } from "../classes/entities/Obstacle.ts";
 import type { Player } from "../classes/entities/Player.ts";
 import type { Walls } from "../classes/entities/Walls.ts";

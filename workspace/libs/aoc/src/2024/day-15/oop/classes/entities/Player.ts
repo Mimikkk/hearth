@@ -1,5 +1,5 @@
-import type { Const } from "../../../../types/const.ts";
-import { Vec2 } from "../../../../types/math/Vec2.ts";
+import type { Const } from "../../../../../types/const.ts";
+import { Vec2 } from "../../../../../types/math/Vec2.ts";
 import { VecsColider } from "../coliders/VecsColider.ts";
 
 export class Player {

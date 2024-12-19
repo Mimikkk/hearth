@@ -1,6 +1,6 @@
-import type { Const } from "../../../../types/const.ts";
-import { Ids } from "../../../../types/math/Ids.ts";
-import type { Vec2 } from "../../../../types/math/Vec2.ts";
+import type { Const } from "../../../../../types/const.ts";
+import { Ids } from "../../../../../types/math/Ids.ts";
+import type { Vec2 } from "../../../../../types/math/Vec2.ts";
 import type { Cloneable } from "../Cloneable.ts";
 import type { IColider } from "./ICollider.ts";
 
