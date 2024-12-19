@@ -72,7 +72,7 @@
   },
   "lint": {
     "rules": {
-      "exclude": ["no-namespace", "no-explicit-any", "no-misused-new"]
+      "exclude": ["no-namespace", "no-explicit-any", "no-misused-new", "no-cond-assign"]
     }
   }
 }

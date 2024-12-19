@@ -7,6 +7,7 @@
     "jsr:@cliffy/flags@1.0.0-rc.7": "1.0.0-rc.7",
     "jsr:@cliffy/internal@1.0.0-rc.7": "1.0.0-rc.7",
     "jsr:@cliffy/keycode@1.0.0-rc.7": "1.0.0-rc.7",
+    "jsr:@cliffy/keypress@1.0.0-rc.7": "1.0.0-rc.7",
     "jsr:@cliffy/prompt@1.0.0-rc.7": "1.0.0-rc.7",
     "jsr:@cliffy/table@1.0.0-rc.7": "1.0.0-rc.7",
     "jsr:@std/assert@*": "1.0.6",
@@ -69,6 +70,13 @@
     },
     "@cliffy/keycode@1.0.0-rc.7": {
       "integrity": "5b3f6c33994e81a76b79f108b1989642ac22705840da33781f7972d7dff05503"
+    },
+    "@cliffy/keypress@1.0.0-rc.7": {
+      "integrity": "2453a63bf1cf097d6cd13c343cf4d4305b58266a0968f055fb4c49163f746cbd",
+      "dependencies": [
+        "jsr:@cliffy/internal",
+        "jsr:@cliffy/keycode"
+      ]
     },
     "@cliffy/prompt@1.0.0-rc.7": {
       "integrity": "a9cbd13acd8073558447cae8ca4cf593c09d23bcbe429cc63346920c21187b83",
@@ -1438,6 +1446,12 @@
     "yaml@2.6.0": {
       "integrity": "sha512-a6ae//JvKDEra2kdi1qzCyrJW/WZCgFi8ydDV+eXExl95t+5R+ijnqHJbz9tmMh8FUjx3iv2fCQ4dclAQlO2UQ=="
     }
+  },
+  "remote": {
+    "https://deno.land/std@0.83.0/encoding/utf8.ts": "1b7e77db9a12363c67872f8a208886ca1329f160c1ca9133b13d2ed399688b99",
+    "https://denopkg.com/iamnathanj/cursor@v2.2.0/cursor.ts": "587e489e4376c976d97dc2f3a6a35837d1a05028ca3d6696c4dc346210ac25f0",
+    "https://denopkg.com/iamnathanj/cursor@v2.2.0/deps.ts": "8143f9f9827d3bed7fa8516b8b72241f1499320902185679fb824f8cd6280145",
+    "https://denopkg.com/iamnathanj/cursor@v2.2.0/mod.ts": "ff50900f244a00b5515f5d19e9c66cec8aac3b1ac87f8ca51bb177393a8081dd"
   },
   "workspace": {
     "dependencies": [
