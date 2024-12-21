@@ -6,3 +6,5 @@
 **/.idea
 **/.env
 **/vendor
+**/target
+Cargo.lock

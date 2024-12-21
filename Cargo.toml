@@ -1,0 +1,15 @@
+[package]
+name = "hearth"
+version = "0.0.0"
+edition = "2024"
+
+[dependencies]
+indoc = "2.0.5"
+
+[dev-dependencies]
+pretty_assertions = "1.0"
+
+
+[lib]
+name = "aoc"
+path = "workspace/libs/aoc/src/2024/day-17/day-17.rs"

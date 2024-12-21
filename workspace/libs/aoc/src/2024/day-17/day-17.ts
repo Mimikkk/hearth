@@ -117,40 +117,40 @@ const runProgram = (input: PuzzleInput) => {
   const output = [];
   outer: while (index < endIndex) {
     const operation = program[index] as OperationCode;
-    const operand = program[index + 1] as OperandCode;
+    const literalOperand = program[index + 1] as OperandCode;
 
-    let value: number;
-    switch (operand) {
+    let comboOperand: number;
+    switch (literalOperand) {
       case OperandCode.Literal0: {
-        value = 0;
+        comboOperand = 0;
         break;
       }
       case OperandCode.Literal1: {
-        value = 1;
+        comboOperand = 1;
         break;
       }
       case OperandCode.Literal2: {
-        value = 2;
+        comboOperand = 2;
         break;
       }
       case OperandCode.Literal3: {
-        value = 3;
+        comboOperand = 3;
         break;
       }
       case OperandCode.AccessA: {
-        value = registerA;
+        comboOperand = registerA;
         break;
       }
       case OperandCode.AccessB: {
-        value = registerB;
+        comboOperand = registerB;
         break;
       }
       case OperandCode.AccessC: {
-        value = registerC;
+        comboOperand = registerC;
         break;
       }
       default: {
-        throw new Error(`Unknown operand: ${operand}`);
+        throw new Error(`Unknown operand: ${literalOperand}`);
       }
     }
     // console.log(`index    : ${colors.red(index.toString())}`);
@@ -165,33 +165,33 @@ const runProgram = (input: PuzzleInput) => {
 
     switch (operation) {
       case OperationCode.DivisionA: {
-        const result = Math.floor(registerA / (2 ** value));
+        const result = Math.floor(registerA / (2 ** comboOperand));
         registerA = result;
         break;
       }
       case OperationCode.DivisionB: {
-        const result = Math.floor(registerA / (2 ** value));
+        const result = Math.floor(registerA / (2 ** comboOperand));
         registerB = result;
         break;
       }
       case OperationCode.DivisionC: {
-        const result = Math.floor(registerA / (2 ** value));
+        const result = Math.floor(registerA / (2 ** comboOperand));
         registerC = result;
         break;
       }
       case OperationCode.XorOBIntoB: {
-        const result = registerB ^ operand;
+        const result = registerB ^ literalOperand;
         registerB = result;
         break;
       }
       case OperationCode.TakeO3IntoB: {
-        const result = value % 8;
+        const result = comboOperand % 8;
         registerB = result;
         break;
       }
       case OperationCode.JumpANotZeroToO: {
         if (registerA !== 0) {
-          index = operand;
+          index = literalOperand;
           continue outer;
         }
         break;
@@ -202,7 +202,7 @@ const runProgram = (input: PuzzleInput) => {
         break;
       }
       case OperationCode.Output: {
-        output.push(value % 8);
+        output.push(comboOperand % 8);
         break;
       }
       default: {
