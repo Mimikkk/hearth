@@ -5,4 +5,6 @@ createPuzzleTest({
   puzzle,
   easyTest: 7036,
   easyUser: 143564,
+  hardTest: 45,
+  hardUser: 593,
 });
