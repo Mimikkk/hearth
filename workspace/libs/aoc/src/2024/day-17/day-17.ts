@@ -128,29 +128,28 @@ const runProgram = (input: PuzzleInput) => {
   const runMove = (operation: OperationCode, operand: OperandCode) => {
     switch (operation) {
       case OperationCode.DivisionA: {
-        registerA = registerA >> readComboOperand(literalOperand);
+        registerA = registerA >> readComboOperand(operand);
         break;
       }
       case OperationCode.DivisionB: {
-        registerB = registerA >> readComboOperand(literalOperand);
+        registerB = registerA >> readComboOperand(operand);
         break;
       }
       case OperationCode.DivisionC: {
-        registerC = registerA >> readComboOperand(literalOperand);
+        registerC = registerA >> readComboOperand(operand);
         break;
       }
       case OperationCode.XorOBIntoB: {
-        registerB = registerB ^ literalOperand;
+        registerB = registerB ^ operand;
         break;
       }
       case OperationCode.TakeO3IntoB: {
-        registerB = readComboOperand(literalOperand) & 7;
+        registerB = readComboOperand(operand) & 7;
         break;
       }
       case OperationCode.JumpANotZeroToO: {
         if (registerA !== 0) {
-          index = literalOperand;
-          continue outer;
+          index = operand - 2;
         }
         break;
       }
@@ -160,7 +159,7 @@ const runProgram = (input: PuzzleInput) => {
         break;
       }
       case OperationCode.Output: {
-        output.push(readComboOperand(literalOperand) & 7);
+        output.push(readComboOperand(operand) & 7);
         break;
       }
       default: {
