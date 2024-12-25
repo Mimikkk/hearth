@@ -18,7 +18,7 @@ interface PuzzleInput {
 }
 
 const parseInput = (content: string): PuzzleInput => {
-  const tilemap = TileMap.fromGrid<Tile>(Str.lines(content).map((line) => line.split("")) as Tile[][]);
+  const tilemap = TileMap.fromGrid(Str.lines(content).map((line) => line.split("")) as Tile[][]);
 
   const start = tilemap.find(Tile.Start);
   if (!start) throw new Error("Start not found");
