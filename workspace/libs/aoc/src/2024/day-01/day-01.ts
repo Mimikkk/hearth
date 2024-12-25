@@ -1,5 +1,5 @@
 import { Puzzle } from "../../types/puzzle.ts";
-import { createCounter } from "../../utils/collections.ts";
+import { Counter } from "../../utils/datatypes/counter.ts";
 import { Str } from "../../utils/strs.ts";
 
 const whitespaceRe = /\s+/;
@@ -28,7 +28,7 @@ const calculateDistance = ([a, b]: [number[], number[]]) => {
 };
 
 const calculateSimmilarity = ([a, b]: [number[], number[]]) => {
-  const counts = createCounter(b);
+  const counts = Counter.fromArray(b);
 
   let similarity = 0;
   for (let i = 0; i < a.length; ++i) {
