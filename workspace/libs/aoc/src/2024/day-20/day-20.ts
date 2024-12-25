@@ -1,132 +1,92 @@
-// --- Day 20: Race Condition ---
-
-// The Historians are quite pixelated again. This time, a massive, black building looms over you - you're right outside the CPU!
-
-// While The Historians get to work, a nearby program sees that you're idle and challenges you to a race. Apparently, you've arrived just in time for the frequently-held race condition festival!
-
-// The race takes place on a particularly long and twisting code path; programs compete to see who can finish in the fewest picoseconds. The winner even gets their very own mutex!
-
-// They hand you a map of the racetrack (your puzzle input). For example:
-
-// ###############
-// #...#...#.....#
-// #.#.#.#.#.###.#
-// #S#...#.#.#...#
-// #######.#.#.###
-// #######.#.#...#
-// #######.#.###.#
-// ###..E#...#...#
-// ###.#######.###
-// #...###...#...#
-// #.#####.#.###.#
-// #.#...#.#.#...#
-// #.#.#.#.#.#.###
-// #...#...#...###
-// ###############
-
-// The map consists of track (.) - including the start (S) and end (E) positions (both of which also count as track) - and walls (#).
-
-// When a program runs through the racetrack, it starts at the start position. Then, it is allowed to move up, down, left, or right; each such move takes 1 picosecond. The goal is to reach the end position as quickly as possible. In this example racetrack, the fastest time is 84 picoseconds.
-
-// Because there is only a single path from the start to the end and the programs all go the same speed, the races used to be pretty boring. To make things more interesting, they introduced a new rule to the races: programs are allowed to cheat.
-
-// The rules for cheating are very strict. Exactly once during a race, a program may disable collision for up to 2 picoseconds. This allows the program to pass through walls as if they were regular track. At the end of the cheat, the program must be back on normal track again; otherwise, it will receive a segmentation fault and get disqualified.
-
-// So, a program could complete the course in 72 picoseconds (saving 12 picoseconds) by cheating for the two moves marked 1 and 2:
-
-// ###############
-// #...#...12....#
-// #.#.#.#.#.###.#
-// #S#...#.#.#...#
-// #######.#.#.###
-// #######.#.#...#
-// #######.#.###.#
-// ###..E#...#...#
-// ###.#######.###
-// #...###...#...#
-// #.#####.#.###.#
-// #.#...#.#.#...#
-// #.#.#.#.#.#.###
-// #...#...#...###
-// ###############
-
-// Or, a program could complete the course in 64 picoseconds (saving 20 picoseconds) by cheating for the two moves marked 1 and 2:
-
-// ###############
-// #...#...#.....#
-// #.#.#.#.#.###.#
-// #S#...#.#.#...#
-// #######.#.#.###
-// #######.#.#...#
-// #######.#.###.#
-// ###..E#...12..#
-// ###.#######.###
-// #...###...#...#
-// #.#####.#.###.#
-// #.#...#.#.#...#
-// #.#.#.#.#.#.###
-// #...#...#...###
-// ###############
-
-// This cheat saves 38 picoseconds:
-
-// ###############
-// #...#...#.....#
-// #.#.#.#.#.###.#
-// #S#...#.#.#...#
-// #######.#.#.###
-// #######.#.#...#
-// #######.#.###.#
-// ###..E#...#...#
-// ###.####1##.###
-// #...###.2.#...#
-// #.#####.#.###.#
-// #.#...#.#.#...#
-// #.#.#.#.#.#.###
-// #...#...#...###
-// ###############
-
-// This cheat saves 64 picoseconds and takes the program directly to the end:
-
-// ###############
-// #...#...#.....#
-// #.#.#.#.#.###.#
-// #S#...#.#.#...#
-// #######.#.#.###
-// #######.#.#...#
-// #######.#.###.#
-// ###..21...#...#
-// ###.#######.###
-// #...###...#...#
-// #.#####.#.###.#
-// #.#...#.#.#...#
-// #.#.#.#.#.#.###
-// #...#...#...###
-// ###############
-
-// Each cheat has a distinct start position (the position where the cheat is activated, just before the first move that is allowed to go through walls) and end position; cheats are uniquely identified by their start position and end position.
-
-// In this example, the total number of cheats (grouped by the amount of time they save) are as follows:
-
-//     There are 14 cheats that save 2 picoseconds.
-//     There are 14 cheats that save 4 picoseconds.
-//     There are 2 cheats that save 6 picoseconds.
-//     There are 4 cheats that save 8 picoseconds.
-//     There are 2 cheats that save 10 picoseconds.
-//     There are 3 cheats that save 12 picoseconds.
-//     There is one cheat that saves 20 picoseconds.
-//     There is one cheat that saves 36 picoseconds.
-//     There is one cheat that saves 38 picoseconds.
-//     There is one cheat that saves 40 picoseconds.
-//     There is one cheat that saves 64 picoseconds.
-
-// You aren't sure what the conditions of the racetrack will be like, so to give yourself as many options as possible, you'll need a list of the best cheats. How many cheats would save you at least 100 picoseconds?
-
+import { Ids } from "../../types/math/Ids.ts";
+import { Vec2 } from "../../types/math/Vec2.ts";
 import { Puzzle } from "../../types/puzzle.ts";
+import { TileMap } from "../../utils/datatypes/tilemap.ts";
 import { Str } from "../../utils/strs.ts";
 
+enum Tile {
+  Track = ".",
+  Wall = "#",
+  Start = "S",
+  End = "E",
+}
+
+interface PuzzleInput {
+  tilemap: TileMap<Tile>;
+  start: Vec2;
+  end: Vec2;
+}
+
+const parseInput = (content: string): PuzzleInput => {
+  const tilemap = TileMap.fromGrid<Tile>(Str.lines(content).map((line) => line.split("")) as Tile[][]);
+
+  const start = tilemap.find(Tile.Start);
+  if (!start) throw new Error("Start not found");
+
+  const end = tilemap.find(Tile.End);
+  if (!end) throw new Error("End not found");
+
+  return { tilemap, start, end };
+};
+
+const neighbours = [
+  Vec2.new(0, 1),
+  Vec2.new(0, -1),
+  Vec2.new(1, 0),
+  Vec2.new(-1, 0),
+];
+
+const findShortestPath = ({ tilemap, start, end }: PuzzleInput): Vec2[] | undefined => {
+  const queue: [position: Vec2, path: Vec2[]][] = [[start, [start]]];
+  const visited = new Set<number>();
+
+  while (queue.length) {
+    const [position, path] = queue.pop()!;
+
+    if (position.x === end.x && position.y === end.y) {
+      return path;
+    }
+
+    for (const neighbour of neighbours) {
+      const xdx = position.x + neighbour.x;
+      const ydy = position.y + neighbour.y;
+      if (!tilemap.inBounds(xdx, ydy)) continue;
+
+      if (tilemap.is(xdx, ydy, Tile.Wall)) continue;
+
+      const id = Ids.xyi32(xdx, ydy);
+      if (visited.has(id)) continue;
+      visited.add(id);
+
+      const next = Vec2.new(xdx, ydy);
+      queue.push([next, [...path, next]]);
+    }
+  }
+
+  return;
+};
+
+const countCheatAdvantagesOver = (input: PuzzleInput, duration: number, over: number): number => {
+  const path = findShortestPath(input);
+  if (!path) return 0;
+
+  let count = 0;
+  for (let i = 0; i < path.length; ++i) {
+    for (let j = i + 1; j < path.length; ++j) {
+      const distance = path[i].manhattan(path[j]);
+      const saved = j - i - distance;
+
+      if (distance > duration || saved < over) continue;
+
+      count += 1;
+    }
+  }
+
+  return count;
+};
+
 export default Puzzle.new({
-  prepare: Str.lines,
-  easy: () => 0,
-  hard: () => 0,
+  prepare: parseInput,
+  easy: (input) => countCheatAdvantagesOver(input, 2, 100),
+  hard: (input) => countCheatAdvantagesOver(input, 20, 100),
 });
