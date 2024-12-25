@@ -21,7 +21,7 @@ const parseInput = (content: string): PuzzleInput => {
   return { patterns, designs };
 };
 
-const countPossibleDesigns = ({ patterns, designs }: PuzzleInput) => {
+const countPossibleDesigns = ({ patterns, designs }: PuzzleInput): number => {
   const possible = new Set();
 
   const canMakeDesign = (patterns: string[], design: string) => {
@@ -60,7 +60,7 @@ const countPossibleDesigns = ({ patterns, designs }: PuzzleInput) => {
   return count;
 };
 
-const countPossibleDesignVariants = ({ patterns, designs }: PuzzleInput) => {
+const countPossibleDesignVariants = ({ patterns, designs }: PuzzleInput): number => {
   const indices = new Map<string, number>(designs.map((design, index) => [design, index]));
 
   const findMatches = memoize(
@@ -78,7 +78,7 @@ const countPossibleDesignVariants = ({ patterns, designs }: PuzzleInput) => {
     (design, position) => Ids.xyi32(indices.get(design)!, position),
   );
 
-  const countVariants = (design: string) => {
+  const countVariants = (design: string): number => {
     const counts = new Map<number, number>();
     const positions = new Set<number>();
 
